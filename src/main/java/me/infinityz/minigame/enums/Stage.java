@@ -1,5 +1,5 @@
 package me.infinityz.minigame.enums;
 
 public enum Stage {
-    LOBBY, INGAME, POSTGAME;
+    LOADING, LOBBY, SCATTER, INGAME, POSTGAME;
 }
