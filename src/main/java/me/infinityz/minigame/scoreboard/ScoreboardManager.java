@@ -9,6 +9,7 @@ import me.infinityz.minigame.UHC;
 public class ScoreboardManager {
     UHC instance;
     Map<String, IScoreboard> fastboardMap;
+    //TODO: Should all scoreboards be updated at once or independently?
 
     public ScoreboardManager(UHC instance) {
         this.instance = instance;
