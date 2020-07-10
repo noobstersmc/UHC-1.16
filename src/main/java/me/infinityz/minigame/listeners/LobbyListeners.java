@@ -14,7 +14,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitTask;
 
 import me.infinityz.minigame.UHC;
-import me.infinityz.minigame.events.ScatterLocationsFoundEvent;
 import me.infinityz.minigame.scoreboard.IScoreboard;
 import me.infinityz.minigame.scoreboard.LobbyScoreboard;
 
@@ -25,22 +24,20 @@ public class LobbyListeners implements Listener {
     public LobbyListeners(UHC instance) {
         this.instance = instance;
 
-        lobbyScoreboardTask =  Bukkit.getScheduler().runTaskTimerAsynchronously(instance, () -> {
+        lobbyScoreboardTask = Bukkit.getScheduler().runTaskTimerAsynchronously(instance, () -> {
 
-            if(UHC.color >= UHC.colors.size()) UHC.color = 1;
             instance.getScoreboardManager().getFastboardMap().values().forEach(all -> {
                 if (all instanceof LobbyScoreboard)
                     all.update();
             });
-            UHC.color++;
 
         }, 20, 2);
     }
-    
+
     public BukkitTask getLobbyScoreboardTask() {
         return lobbyScoreboardTask;
     }
-    
+
     @EventHandler
     public void onBlockBreak(BlockBreakEvent e) {
         e.setCancelled(true);
@@ -92,11 +89,5 @@ public class LobbyListeners implements Listener {
         }
     }
 
-    @EventHandler
-    public void onScatter(ScatterLocationsFoundEvent e){
-        Bukkit.broadcastMessage("scatter completed in " + (System.currentTimeMillis() - e.time) + "ms");
-        Bukkit.broadcastMessage(e.getLocations().size() + " locs");
-        
-    }
 
 }

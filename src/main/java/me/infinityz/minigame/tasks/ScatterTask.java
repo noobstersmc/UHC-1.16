@@ -1,7 +1,6 @@
 package me.infinityz.minigame.tasks;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -14,7 +13,7 @@ import me.infinityz.minigame.events.ScatterLocationsFoundEvent;
 public class ScatterTask extends BukkitRunnable {
     World world;
     int radius, distanceThreshold, quantity;
-    List<Location> locations;
+    HashSet<Location> locations;
     long time, start_time;
 
     public ScatterTask(World world, int radius, int distanceThreshold, int quantity) {
@@ -22,14 +21,14 @@ public class ScatterTask extends BukkitRunnable {
         this.radius = radius;
         this.distanceThreshold = distanceThreshold;
         this.quantity = quantity;
-        locations = new ArrayList<>();
+        locations = new HashSet<>();
         this.start_time = System.currentTimeMillis();
     }
 
     @Override
     public void run() {
         if (quantity <= 0) {
-            Bukkit.getPluginManager().callEvent(new ScatterLocationsFoundEvent(locations, this.start_time));
+            Bukkit.getPluginManager().callEvent(new ScatterLocationsFoundEvent(locations, this.start_time, this.getTaskId()));
             this.cancel();
             return;
         }
