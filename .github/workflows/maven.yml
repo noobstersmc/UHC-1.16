@@ -30,4 +30,4 @@ jobs:
     - uses: actions/upload-artifact@v2
       with:
         name: uhc
-        path: uhc-1.16-1.0-SNAPSHOT.jar
+        path: ./target/uhc-1.16-1.0-SNAPSHOT.jar
