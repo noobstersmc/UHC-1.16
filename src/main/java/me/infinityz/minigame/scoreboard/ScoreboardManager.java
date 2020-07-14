@@ -9,8 +9,8 @@ import org.bukkit.Bukkit;
 import me.infinityz.minigame.UHC;
 
 public class ScoreboardManager {
-    UHC instance;
-    Map<String, IScoreboard> fastboardMap;
+    private UHC instance;
+    private Map<String, IScoreboard> fastboardMap;
 
     public ScoreboardManager(UHC instance) {
         this.instance = instance;
@@ -22,11 +22,19 @@ public class ScoreboardManager {
             });
 
         }, 20, 5);
+
+        Bukkit.getScheduler().runTaskTimerAsynchronously(instance, () -> {
+            instance.getScoreboardManager().getFastboardMap().values().forEach(all -> {
+                all.runUpdates();
+            });
+
+        }, 20, 20);
+        
     }
     public void purgeScoreboards(){
 
         fastboardMap.entrySet().forEach(entry -> {
-            fastboardMap.remove(entry.getKey());
+            entry.getValue().delete();
         });
         fastboardMap.clear();
     }

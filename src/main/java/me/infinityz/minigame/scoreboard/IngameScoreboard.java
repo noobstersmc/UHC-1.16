@@ -10,15 +10,20 @@ public class IngameScoreboard extends IScoreboard {
     public IngameScoreboard(Player player) {
         super(player);
         this.updateTitle(ChatColor.BOLD + "UHC");
-        this.updateLines(ChatColor.GRAY + "Game Time: " + ChatColor.WHITE + "00:00:00", "", ChatColor.GRAY + "Kills:",
+        
+        this.updateLines(ChatColor.GRAY + "Game Time: " + ChatColor.WHITE + "00:00:00", "", 
+                ChatColor.GRAY + "Kills: "+ ChatColor.WHITE + "0",
                 ChatColor.GRAY + "Players: " + ChatColor.WHITE + Bukkit.getOnlinePlayers().size(),
+                "",
                 ChatColor.WHITE + "noobsters.net");
     }
 
     @Override
     public void update() {
-        this.updateLines(ChatColor.GRAY + "Game Time: " + ChatColor.WHITE + "00:00:00", "", ChatColor.GRAY + "Kills:",
+        this.updateLines(this.getLine(0), "", 
+                ChatColor.GRAY + "Kills: "+ ChatColor.WHITE + "0",
                 ChatColor.GRAY + "Players: " + ChatColor.WHITE + Bukkit.getOnlinePlayers().size(),
+                "",
                 ChatColor.WHITE + "noobsters.net");
     }
 

@@ -16,6 +16,16 @@ import me.infinityz.minigame.scoreboard.IngameScoreboard;
 public class GlobalListener implements Listener {
     UHC instance;
 
+    int time = 0;
+
+    String timeConvert(int t) {
+        int hours = t / 3600;
+        int minutes = (t % 3600) / 60;
+        int seconds = t % 60;
+
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+    }
+
     public GlobalListener(UHC instance) {
         this.instance = instance;
     }
@@ -43,7 +53,6 @@ public class GlobalListener implements Listener {
 
     }
 
-
     @EventHandler
     public void onScatter(ScatterLocationsFoundEvent e) {
         System.out.println("Scatter task completed in " + (System.currentTimeMillis() - e.getTime()));
@@ -53,25 +62,34 @@ public class GlobalListener implements Listener {
     }
 
     @EventHandler
-    public void onTeleportCompleted(TeleportationCompletedEvent e){
-        instance.getScoreboardManager().purgeScoreboards();
-        instance.getListenerManager().unregisterListener(instance.getListenerManager().getScatter());
+    public void onTeleportCompleted(TeleportationCompletedEvent e) {
+        Bukkit.broadcastMessage("Starting in 10 seconds...");
 
-        
-        //Remove all potion effects
-        Bukkit.getOnlinePlayers().forEach(players->{
-            //Send the new scoreboard;
-            IngameScoreboard sb = new IngameScoreboard(players);
-            sb.update();
-            instance.getScoreboardManager().getFastboardMap().put(players.getUniqueId().toString(), sb);
-            
-            players.getActivePotionEffects().forEach(all ->{
-                players.removePotionEffect(all.getType());
+        Bukkit.getScheduler().runTaskLater(instance, () -> {
+            instance.getScoreboardManager().purgeScoreboards();
+            instance.getListenerManager().unregisterListener(instance.getListenerManager().getScatter());
+            // Remove all potion effects
+            Bukkit.getOnlinePlayers().forEach(players -> {
+                // Send the new scoreboard;
+                IngameScoreboard sb = new IngameScoreboard(players);
+                sb.update();
+                instance.getScoreboardManager().getFastboardMap().put(players.getUniqueId().toString(), sb);
+
+                players.getActivePotionEffects().forEach(all -> {
+                    players.removePotionEffect(all.getType());
+                });
             });
-        });
 
-        instance.getListenerManager().registerListener(instance.getListenerManager().getIngameListeners());
-        
+            instance.getListenerManager().registerListener(instance.getListenerManager().getIngameListeners());
+            Bukkit.getScheduler().runTaskTimerAsynchronously(instance, () -> {
+                time++;
+                instance.getScoreboardManager().getFastboardMap().entrySet().forEach(entry -> {
+                    entry.getValue().updateLine(0, "Game Time: " + timeConvert(time));
+                });
+            }, 0, 20);
+
+        }, 20 * 10);
+
     }
 
 }

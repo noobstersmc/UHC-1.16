@@ -37,10 +37,8 @@ public class ScatterTask extends BukkitRunnable {
         L: while (quantity > 0) {
             if (time + 1000 <= System.currentTimeMillis())
                 break L;
-            Bukkit.broadcastMessage("tick");
             Location loc = findScatterLocation(world, radius);
             while (validate(loc, distanceThreshold) == false) {
-                Bukkit.broadcastMessage("tock");
                 loc = findScatterLocation(world, radius);
             }
             locations.add(centerLocation(loc));
