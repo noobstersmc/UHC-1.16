@@ -1,6 +1,5 @@
 package me.infinityz.minigame.listeners;
 
-import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -24,19 +23,12 @@ public class ScatterListeners implements Listener {
     public ScatterListeners(UHC instance) {
         this.instance = instance;
 
-        scatterScoreboardTask =  Bukkit.getScheduler().runTaskTimerAsynchronously(instance, () -> {
-            instance.getScoreboardManager().getFastboardMap().values().forEach(all -> {
-                if (all instanceof ScatterScoreboard)
-                    all.update();
-            });
-
-        }, 20, 10);
     }
-    
+
     public BukkitTask getLobbyScoreboardTask() {
         return scatterScoreboardTask;
     }
-    
+
     @EventHandler
     public void onBlockBreak(BlockBreakEvent e) {
         e.setCancelled(true);

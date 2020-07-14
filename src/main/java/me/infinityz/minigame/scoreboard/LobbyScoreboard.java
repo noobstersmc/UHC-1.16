@@ -9,14 +9,15 @@ public class LobbyScoreboard extends IScoreboard {
 
     public LobbyScoreboard(Player player) {
         super(player);
-        this.updateTitle("UHC");
-        this.updateLines("Players: " + Bukkit.getOnlinePlayers().size());
+        this.updateTitle(ChatColor.BOLD + "UHC");
+        this.updateLines(ChatColor.GRAY + "Players: " + ChatColor.WHITE + Bukkit.getOnlinePlayers().size(),
+                ChatColor.WHITE + "noobsters.net");
     }
 
     @Override
     public void update() {
-        this.updateLines(" Players: " + ChatColor.WHITE + Bukkit.getOnlinePlayers().size());
+        this.updateLines(ChatColor.GRAY + "Players: " + ChatColor.WHITE + Bukkit.getOnlinePlayers().size(),
+                ChatColor.WHITE + "noobsters.net");
     }
-
 
 }

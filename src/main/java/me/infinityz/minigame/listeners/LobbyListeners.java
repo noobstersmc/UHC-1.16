@@ -1,6 +1,5 @@
 package me.infinityz.minigame.listeners;
 
-import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -23,15 +22,6 @@ public class LobbyListeners implements Listener {
 
     public LobbyListeners(UHC instance) {
         this.instance = instance;
-
-        lobbyScoreboardTask = Bukkit.getScheduler().runTaskTimerAsynchronously(instance, () -> {
-
-            instance.getScoreboardManager().getFastboardMap().values().forEach(all -> {
-                if (all instanceof LobbyScoreboard)
-                    all.update();
-            });
-
-        }, 20, 2);
     }
 
     public BukkitTask getLobbyScoreboardTask() {
@@ -88,6 +78,5 @@ public class LobbyListeners implements Listener {
             sb.delete();
         }
     }
-
 
 }

@@ -4,6 +4,7 @@ gamerule naturalRegeneration false
 gamerule doDaylightCycle false
 gamerule doPatrolSpawning false 
 gamerule announceAdvancements false
+gamerule doWeatherCycle false
 difficulty peaceful
 setworldspawn 0 100 0
 worldborder center 0 0
