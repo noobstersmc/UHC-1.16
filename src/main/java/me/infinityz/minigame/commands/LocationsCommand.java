@@ -6,6 +6,7 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Subcommand;
+import co.aikar.commands.annotation.Syntax;
 import me.infinityz.minigame.UHC;
 
 @CommandPermission("uhc.admin")
@@ -19,6 +20,7 @@ public class LocationsCommand extends BaseCommand {
     }
 
     @Subcommand("scatter")
+    @Syntax("[world] &e- Uses the default world")
     public void start(CommandSender sender, String world) {
         sender.sendMessage("Start");
 
