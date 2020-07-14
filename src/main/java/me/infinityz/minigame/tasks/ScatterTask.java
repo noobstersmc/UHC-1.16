@@ -1,6 +1,7 @@
 package me.infinityz.minigame.tasks;
 
 import java.util.HashSet;
+import java.util.Iterator;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -28,15 +29,16 @@ public class ScatterTask extends BukkitRunnable {
     @Override
     public void run() {
         if (quantity <= 0) {
-            Bukkit.getPluginManager().callEvent(new ScatterLocationsFoundEvent(locations, this.start_time, this.getTaskId()));
+            Bukkit.getPluginManager()
+                    .callEvent(new ScatterLocationsFoundEvent(locations, this.start_time, this.getTaskId()));
             this.cancel();
             return;
         }
         time = System.currentTimeMillis();
 
-        L: while (quantity > 0) {
+        while (quantity > 0) {
             if (time + 1000 <= System.currentTimeMillis())
-                break L;
+                break;
             Location loc = findScatterLocation(world, radius);
             while (validate(loc, distanceThreshold) == false) {
                 loc = findScatterLocation(world, radius);
@@ -55,7 +57,7 @@ public class ScatterTask extends BukkitRunnable {
         loc = loc.getWorld().getHighestBlockAt(loc).getLocation();
         // Check if block is liquid, and above sea level, is it's bellow sea level it
         // can assumed that player spawned in a cave.
-        if (loc.getBlockY() < 60 ||  !isSafe(loc)) {
+        if (loc.getBlockY() < 60 || !isSafe(loc)) {
             // Since our critaria wasn't met, we'll have to recursively look for another
             // location.
             return findScatterLocation(world, radius);
@@ -70,11 +72,19 @@ public class ScatterTask extends BukkitRunnable {
     }
 
     private boolean validate(final Location loc, final int distance) {
-        for (Location location : this.locations) {
-            if (loc.distance(location) < distance) {
-                return false;
+        try {
+            Iterator<Location> iter = locations.iterator();
+            while (iter.hasNext()) {
+                Location oi = iter.next();
+                if (loc.distance(oi) < distance)
+                    return false;
             }
+            iter = null;
+        } catch (Exception e) {
+           System.err.println(e.toString() + " ocurred.");
         }
+        
+
         return true;
     }
 
