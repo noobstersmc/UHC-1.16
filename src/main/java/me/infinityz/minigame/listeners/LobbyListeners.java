@@ -82,7 +82,7 @@ public class LobbyListeners implements Listener {
         Player player = e.getPlayer();
         
         player.setGameMode(GameMode.SURVIVAL);
-        player.teleport(new Location(world, 0, world.getHighestBlockYAt(0, 0), 0));
+        player.teleport(new Location(world, 0.5, world.getHighestBlockYAt(0, 0)+10.5, 0.5));
         player.getInventory().clear();
         player.getInventory().setArmorContents(null);
         player.setHealth(20.0);

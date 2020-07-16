@@ -10,6 +10,7 @@ import org.bukkit.scoreboard.RenderType;
 import org.bukkit.scoreboard.Scoreboard;
 
 import co.aikar.commands.PaperCommandManager;
+import me.infinityz.minigame.commands.HelpopCommand;
 import me.infinityz.minigame.commands.LocationsCommand;
 import me.infinityz.minigame.commands.PVP;
 import me.infinityz.minigame.commands.StartCommand;
@@ -37,6 +38,7 @@ public class UHC extends JavaPlugin {
         commandManager.registerCommand(new LocationsCommand(this));
         commandManager.registerCommand(new StartCommand(this));
         commandManager.registerCommand(new PVP(this));
+        commandManager.registerCommand(new HelpopCommand(this));
 
         scoreboardManager = new ScoreboardManager(this);
         locationManager = new LocationManager(this);

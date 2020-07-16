@@ -116,6 +116,7 @@ public class GlobalListener implements Listener {
                     //TODO: FINAL HEAL
                     Bukkit.getOnlinePlayers().forEach(all ->{
                         all.setHealth(20.0);
+                        Bukkit.broadcastMessage("Final heal!");
                     });
                 }
                 instance.getScoreboardManager().getFastboardMap().entrySet().forEach(entry -> {
