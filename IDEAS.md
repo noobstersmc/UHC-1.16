@@ -9,9 +9,9 @@ difficulty peaceful
 setworldspawn 0 100 0
 worldborder center 0 0
 worldborder set 101
-wb world setcorners -2000 2000 2000 -2000
-wb world_nether setcorners -2000 2000 2000 -2000
-wb world_the_end setcorners -2000 2000 2000 -2000
+wb world setcorners -2020 2020 2020 -2020
+wb world_nether setcorners -2020 2020 2020 -2020
+wb world_the_end setcorners -2020 2020 2020 -2020
 
 LOBBY
 
@@ -36,7 +36,7 @@ Events
 clear inventory
 difficulty hard
 worldborder set 4001
-whitelist add all
+whitelist add @a
 whitelist on
 Scatter Scoreboard
 - scattered players

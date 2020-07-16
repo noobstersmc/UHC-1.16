@@ -3,8 +3,11 @@ package me.infinityz.minigame.listeners;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -12,6 +15,8 @@ import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.events.ScatterLocationsFoundEvent;
 import me.infinityz.minigame.events.TeleportationCompletedEvent;
 import me.infinityz.minigame.scoreboard.IngameScoreboard;
+import me.infinityz.minigame.scoreboard.objects.UpdateObject;
+import net.md_5.bungee.api.ChatColor;
 
 public class GlobalListener implements Listener {
     UHC instance;
@@ -23,7 +28,8 @@ public class GlobalListener implements Listener {
         int minutes = (t % 3600) / 60;
         int seconds = t % 60;
 
-        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+        return hours > 0 ? String.format("%02d:%02d:%02d", hours, minutes, seconds)
+                : String.format("%02d:%02d", minutes, seconds);
     }
 
     public GlobalListener(UHC instance) {
@@ -51,6 +57,25 @@ public class GlobalListener implements Listener {
 
         }
 
+    }
+
+    @EventHandler
+    public void onPVP(EntityDamageByEntityEvent e){
+        //TODO: Clean up the code.
+        if(e.getEntity() instanceof Player){
+            Player p2 = null;
+            if(e.getDamager() instanceof Player){
+                p2 = (Player) e.getDamager();
+            }else if(e.getDamager() instanceof Projectile){
+                Projectile proj  = (Projectile) e.getDamager();
+                if(proj.getShooter() != null && proj.getShooter() instanceof Player){
+                    p2 = (Player) proj.getShooter();
+                }
+            }
+            if(p2 != null){
+                if(!instance.pvp)e.setCancelled(true);
+            }
+        }
     }
 
     @EventHandler
@@ -83,8 +108,18 @@ public class GlobalListener implements Listener {
             instance.getListenerManager().registerListener(instance.getListenerManager().getIngameListeners());
             Bukkit.getScheduler().runTaskTimerAsynchronously(instance, () -> {
                 time++;
+                if(time == 1200){
+                    //TODO: PVP ON
+                    instance.pvp = true;
+                    Bukkit.broadcastMessage("PVP has been enabled");
+                }
                 instance.getScoreboardManager().getFastboardMap().entrySet().forEach(entry -> {
-                    entry.getValue().updateLine(0, "Game Time: " + timeConvert(time));
+                    entry.getValue().addUpdates(
+                            new UpdateObject(ChatColor.GRAY + "Game Time: " + ChatColor.WHITE + timeConvert(time), 0));
+                    entry.getValue().addUpdates(
+                            new UpdateObject(ChatColor.GRAY + "Players: " + ChatColor.WHITE + instance.getPlayerManager().getAlivePlayers(), 3));
+                            //TODO: Improve this method, it shouldn't be necessary to have to update this line every second.
+
                 });
             }, 0, 20);
 

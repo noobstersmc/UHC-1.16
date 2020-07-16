@@ -1,11 +1,17 @@
 package me.infinityz.minigame.listeners;
 
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
+import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -71,12 +77,35 @@ public class LobbyListeners implements Listener {
     }
 
     @EventHandler
+    public void onJoinTeleport(PlayerJoinEvent e) {
+        World world = Bukkit.getWorlds().get(0);
+        Player player = e.getPlayer();
+        
+        player.setGameMode(GameMode.SURVIVAL);
+        player.teleport(new Location(world, 0, world.getHighestBlockYAt(0, 0), 0));
+        player.getInventory().clear();
+        player.getInventory().setArmorContents(null);
+        player.setHealth(20.0);
+        player.setFoodLevel(20);
+        player.setSaturation(20.0F);
+
+    }
+
+    @EventHandler
     public void onQuit(PlayerQuitEvent e) {
         IScoreboard sb = instance.getScoreboardManager().getFastboardMap()
                 .remove(e.getPlayer().getUniqueId().toString());
         if (sb != null) {
             sb.delete();
         }
+    }
+
+    @EventHandler
+    public void onSpawn(EntitySpawnEvent e) {
+        if (e.getEntity() instanceof Player)
+            return;
+        e.setCancelled(true);
+
     }
 
 }

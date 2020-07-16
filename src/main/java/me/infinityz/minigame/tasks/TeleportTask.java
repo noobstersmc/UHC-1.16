@@ -9,14 +9,17 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.events.TeleportationCompletedEvent;
 
 public class TeleportTask extends BukkitRunnable {
     Iterator<Location> locations;
     List<Player> players;
     long time, start_time;
+    UHC instance;
 
-    public TeleportTask(HashSet<Location> locations, List<Player> players) {
+    public TeleportTask(UHC instance, HashSet<Location> locations, List<Player> players) {
+        this.instance = instance;
         this.locations = locations.iterator();
         this.start_time = System.currentTimeMillis();
         this.players = players;
@@ -32,13 +35,17 @@ public class TeleportTask extends BukkitRunnable {
         time = System.currentTimeMillis();
 
         while (players.size() > 0) {
-            if (time + 1000 <= System.currentTimeMillis())
+            if (time + 500 <= System.currentTimeMillis())
                 break;
-            if(locations.hasNext()){
-                players.get(0).teleport(locations.next());
+            Player player = players.get(0);
+            if (player == null || !player.isOnline()) {
+                player = null;
+            } else if (locations.hasNext()) {
+                instance.getPlayerManager().addCreateUHCPlayer(player.getUniqueId());
+                player.teleport(locations.next());
             }
             players.remove(0);
-            
+
         }
 
     }

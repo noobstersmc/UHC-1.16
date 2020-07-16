@@ -13,7 +13,7 @@ import me.infinityz.minigame.UHC;
 @CommandAlias("locations|loc")
 public class LocationsCommand extends BaseCommand {
 
-    private UHC instance;
+    UHC instance;
 
     public LocationsCommand(UHC instance) {
         this.instance = instance;

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Difficulty;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.potion.PotionEffect;
@@ -39,7 +41,19 @@ public class StartCommand extends BaseCommand {
             return;
         }
         sender.sendMessage("Starting the teleport task...");
-        new TeleportTask(locs, new ArrayList<>(Bukkit.getOnlinePlayers())).runTaskTimer(instance, 10L, 10L);
+        //Start Parameters
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "clear @a");
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "effect clear @a");
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "whitelist on");
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "whitelist add @a");
+
+        Bukkit.getWorlds().forEach(it->{
+            it.getWorldBorder().setSize(4001);
+            it.setDifficulty(Difficulty.HARD);
+        });
+        
+
+        new TeleportTask(instance, locs, new ArrayList<>(Bukkit.getOnlinePlayers())).runTaskTimer(instance, 10L, 10L);
         
         instance.getListenerManager().unregisterListener(instance.getListenerManager().getLobby());
         
@@ -50,6 +64,7 @@ public class StartCommand extends BaseCommand {
             players.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 20, 5));
             players.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20 * 20, 5));
             players.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING , 20 * 20, 5));
+            players.setGameMode(GameMode.SURVIVAL);
             ScatterScoreboard sb = new ScatterScoreboard(players);
             sb.update();
             instance.getScoreboardManager().getFastboardMap().put(players.getUniqueId().toString(), sb);

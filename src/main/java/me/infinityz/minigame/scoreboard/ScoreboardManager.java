@@ -9,7 +9,7 @@ import org.bukkit.Bukkit;
 import me.infinityz.minigame.UHC;
 
 public class ScoreboardManager {
-    private UHC instance;
+    UHC instance;
     private Map<String, IScoreboard> fastboardMap;
 
     public ScoreboardManager(UHC instance) {
