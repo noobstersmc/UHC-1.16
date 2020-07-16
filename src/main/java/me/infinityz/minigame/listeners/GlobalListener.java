@@ -112,6 +112,11 @@ public class GlobalListener implements Listener {
                     //TODO: PVP ON
                     instance.pvp = true;
                     Bukkit.broadcastMessage("PVP has been enabled");
+                } else if(time == 600){
+                    //TODO: FINAL HEAL
+                    Bukkit.getOnlinePlayers().forEach(all ->{
+                        all.setHealth(20.0);
+                    });
                 }
                 instance.getScoreboardManager().getFastboardMap().entrySet().forEach(entry -> {
                     entry.getValue().addUpdates(
