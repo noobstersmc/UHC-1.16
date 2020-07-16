@@ -7,6 +7,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.scoreboard.IScoreboard;
+import me.infinityz.minigame.scoreboard.IngameScoreboard;
 import me.infinityz.minigame.scoreboard.LobbyScoreboard;
 
 public class IngameListeners implements Listener{
@@ -22,7 +23,7 @@ public class IngameListeners implements Listener{
         if (instance.getScoreboardManager().findScoreboard(e.getPlayer().getUniqueId()) != null) {
             return;
         }
-        final IScoreboard sb = new LobbyScoreboard(e.getPlayer());
+        final IScoreboard sb = new IngameScoreboard(e.getPlayer());
         sb.update();
         instance.getScoreboardManager().getFastboardMap().put(e.getPlayer().getUniqueId().toString(), sb);
 
