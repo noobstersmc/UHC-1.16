@@ -100,12 +100,4 @@ public class LobbyListeners implements Listener {
         }
     }
 
-    @EventHandler
-    public void onSpawn(EntitySpawnEvent e) {
-        if (e.getEntity() instanceof Player)
-            return;
-        e.setCancelled(true);
-
-    }
-
 }
