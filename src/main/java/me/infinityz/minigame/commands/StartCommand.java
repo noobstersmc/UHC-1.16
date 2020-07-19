@@ -53,7 +53,7 @@ public class StartCommand extends BaseCommand {
         });
         
 
-        new TeleportTask(instance, locs, new ArrayList<>(Bukkit.getOnlinePlayers())).runTaskTimer(instance, 10L, 10L);
+        new TeleportTask(instance, locs, new ArrayList<>(Bukkit.getOnlinePlayers())).runTaskTimer(instance, 10L, 20L);
         
         instance.getListenerManager().unregisterListener(instance.getListenerManager().getLobby());
         

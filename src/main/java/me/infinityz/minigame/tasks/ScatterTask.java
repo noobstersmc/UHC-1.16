@@ -30,7 +30,7 @@ public class ScatterTask extends BukkitRunnable {
     public void run() {
         if (quantity <= 0) {
             Bukkit.getPluginManager()
-                    .callEvent(new ScatterLocationsFoundEvent(locations, this.start_time, this.getTaskId()));
+                    .callEvent(new ScatterLocationsFoundEvent(locations, this.start_time, true));
             this.cancel();
             return;
         }
@@ -43,8 +43,10 @@ public class ScatterTask extends BukkitRunnable {
             while (validate(loc, distanceThreshold) == false) {
                 loc = findScatterLocation(world, radius);
             }
+            loc.getWorld().loadChunk(loc.getChunk());
             locations.add(centerLocation(loc));
             quantity--;
+            System.out.println("Scatter locations reamining to be found " + quantity);
         }
 
     }

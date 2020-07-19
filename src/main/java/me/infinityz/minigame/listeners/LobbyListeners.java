@@ -11,7 +11,6 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
-import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -100,12 +99,5 @@ public class LobbyListeners implements Listener {
         }
     }
 
-    @EventHandler
-    public void onSpawn(EntitySpawnEvent e) {
-        if (e.getEntity() instanceof Player)
-            return;
-        e.setCancelled(true);
-
-    }
 
 }

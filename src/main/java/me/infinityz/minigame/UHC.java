@@ -47,8 +47,11 @@ public class UHC extends JavaPlugin {
         listenerManager = new ListenerManager(this);
         runStartUp();
 
+        Bukkit.getServer().getWhitelistedPlayers().forEach(it->{
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "whitelist remove "+it.getName());
+        });
         // Add a boolean to auto find locs on start.
-        new ScatterTask(Bukkit.getWorlds().get(0), 2000, 100, 100).runTaskTimerAsynchronously(this, 20 * 5, 10);
+        new ScatterTask(Bukkit.getWorlds().get(0), 2000, 100, 100).runTaskTimer(this, 20 * 5, 10);
     }
 
     public ScoreboardManager getScoreboardManager() {

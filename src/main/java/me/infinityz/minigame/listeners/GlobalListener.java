@@ -88,7 +88,7 @@ public class GlobalListener implements Listener {
 
     @EventHandler
     public void onTeleportCompleted(TeleportationCompletedEvent e) {
-        Bukkit.broadcastMessage("Starting in 10 seconds...");
+        Bukkit.broadcastMessage("Starting soon...");
 
         Bukkit.getScheduler().runTaskLater(instance, () -> {
             instance.getScoreboardManager().purgeScoreboards();
