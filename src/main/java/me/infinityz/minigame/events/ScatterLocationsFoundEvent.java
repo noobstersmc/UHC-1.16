@@ -1,6 +1,6 @@
 package me.infinityz.minigame.events;
 
-import java.util.HashSet;
+import java.util.Set;
 
 import org.bukkit.Location;
 import org.bukkit.event.Event;
@@ -9,22 +9,22 @@ import org.bukkit.event.HandlerList;
 public class ScatterLocationsFoundEvent extends Event {
 
     private static final HandlerList handlers = new HandlerList();
-    HashSet<Location> locs;
+    Set<Location> locs;
     long time;
     int taskID;
 
-    public ScatterLocationsFoundEvent(final HashSet<Location> locs, final long time, final int taskID){
+    public ScatterLocationsFoundEvent(final Set<Location> locs, final long time, final int taskID){
         super(true);
         this.locs = locs;
         this.time = time;
         this.taskID = taskID;
     }
-    public ScatterLocationsFoundEvent(final HashSet<Location> locs, final long time, final boolean syncronhus){
+    public ScatterLocationsFoundEvent(final Set<Location> locs, final long time, final boolean syncronhus){
         this.locs = locs;
         this.time = time;
     }
 
-    public HashSet<Location> getLocations() {
+    public Set<Location> getLocations() {
         return locs;
     }
     public long getTime(){

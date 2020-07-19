@@ -1,7 +1,7 @@
 package me.infinityz.minigame.tasks;
 
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -9,12 +9,13 @@ import org.bukkit.World;
 import org.bukkit.block.BlockFace;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import io.netty.util.internal.ConcurrentSet;
 import me.infinityz.minigame.events.ScatterLocationsFoundEvent;
 
 public class ScatterTask extends BukkitRunnable {
     World world;
     int radius, distanceThreshold, quantity;
-    HashSet<Location> locations;
+    ConcurrentSet<Location> locations;
     long time, start_time;
 
     public ScatterTask(World world, int radius, int distanceThreshold, int quantity) {
@@ -22,7 +23,7 @@ public class ScatterTask extends BukkitRunnable {
         this.radius = radius;
         this.distanceThreshold = distanceThreshold;
         this.quantity = quantity;
-        locations = new HashSet<>();
+        locations = new ConcurrentSet<>();
         this.start_time = System.currentTimeMillis();
     }
 
@@ -30,7 +31,7 @@ public class ScatterTask extends BukkitRunnable {
     public void run() {
         if (quantity <= 0) {
             Bukkit.getPluginManager()
-                    .callEvent(new ScatterLocationsFoundEvent(locations, this.start_time, true));
+                    .callEvent(new ScatterLocationsFoundEvent(locations.stream().collect(Collectors.toSet()), this.start_time, true));
             this.cancel();
             return;
         }

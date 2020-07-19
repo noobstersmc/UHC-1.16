@@ -1,20 +1,19 @@
 package me.infinityz.minigame.scoreboard;
 
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
 
 import org.bukkit.entity.Player;
 
 import fr.mrmicky.fastboard.FastBoard;
+import io.netty.util.internal.ConcurrentSet;
 import me.infinityz.minigame.scoreboard.objects.UpdateObject;
 
 public abstract class IScoreboard extends FastBoard {
-    public Set<UpdateObject> updateQueue;
+    public ConcurrentSet<UpdateObject> updateQueue;
 
     public IScoreboard(Player player) {
         super(player);
-        updateQueue = new HashSet<>();
+        updateQueue = new ConcurrentSet<>();
     }
 
     public abstract void update();
