@@ -34,9 +34,10 @@ public class TeleportTask extends BukkitRunnable {
             return;
         }
         time = System.currentTimeMillis();
+        int i =0;
 
         while (players.size() > 0) {
-            if (time + 100 <= System.currentTimeMillis())
+            if (time + 100 <= System.currentTimeMillis() || i>1)
                 break;
             Player player = players.get(0);
             if (player == null || !player.isOnline()) {
@@ -55,6 +56,7 @@ public class TeleportTask extends BukkitRunnable {
             }
             players.remove(0);
             System.out.println("Players left to be scattered " + players.size());
+            i++;
 
         }
 
