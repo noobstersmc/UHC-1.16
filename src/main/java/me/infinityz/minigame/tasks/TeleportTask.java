@@ -46,8 +46,6 @@ public class TeleportTask extends BukkitRunnable {
                 Location tpLocation = locations.next();
                 Chunk chunk = tpLocation.getChunk();
                 System.out.println("Loading chunk (" + chunk.getX() + ", " + chunk.getZ() + ")");
-
-                tpLocation.getWorld().loadChunk(tpLocation.getChunk());
                 instance.getPlayerManager().addCreateUHCPlayer(player.getUniqueId());
                 player.teleport(tpLocation);
                 
