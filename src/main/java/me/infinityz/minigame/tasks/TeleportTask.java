@@ -5,7 +5,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -44,13 +43,10 @@ public class TeleportTask extends BukkitRunnable {
                 player = null;
             } else if (locations.hasNext()) {
                 Location tpLocation = locations.next();
-                Chunk chunk = tpLocation.getChunk();
-                System.out.println("Loading chunk (" + chunk.getX() + ", " + chunk.getZ() + ")");
                 instance.getPlayerManager().addCreateUHCPlayer(player.getUniqueId());
                 player.teleport(tpLocation);
                 
                 tpLocation = null;
-                chunk = null;
             }
             players.remove(0);
             System.out.println("Players left to be scattered " + players.size());

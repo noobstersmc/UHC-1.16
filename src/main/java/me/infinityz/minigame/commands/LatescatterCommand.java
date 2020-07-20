@@ -1,7 +1,10 @@
 package me.infinityz.minigame.commands;
 
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -9,6 +12,7 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
+import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.annotation.Syntax;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.players.UHCPlayer;
@@ -54,6 +58,22 @@ public class LatescatterCommand extends BaseCommand {
 
         target.teleport(ScatterTask.findScatterLocation(Bukkit.getWorlds().get(0), (int)Bukkit.getWorlds().get(0).getWorldBorder().getSize()/2));
         target.setGameMode(GameMode.SURVIVAL);
+    }
+
+    @Subcommand("alive")
+    public void alive(CommandSender sender){
+        instance.getPlayerManager().getUhcPlayerMap().entrySet().forEach(it->{
+            if(it.getValue().isAlive()){
+                OfflinePlayer player = Bukkit.getPlayer(UUID.fromString(it.getKey()));
+                if(player == null ){
+                    return;
+                }
+                if(!player.isOnline()){
+                    sender.sendMessage("- " + player.getName());
+                }
+
+            }
+        });
     }
 
 }
