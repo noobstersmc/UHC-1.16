@@ -33,6 +33,12 @@ public class IngameListeners implements Listener {
         sb.update();
         instance.getScoreboardManager().getFastboardMap().put(e.getPlayer().getUniqueId().toString(), sb);
         UHCPlayer uhcp = instance.getPlayerManager().getPlayer(e.getPlayer().getUniqueId());
+        if(uhcp == null){
+            instance.getPlayerManager().addCreateUHCPlayer(e.getPlayer().getUniqueId());
+            uhcp = instance.getPlayerManager().getPlayer(e.getPlayer().getUniqueId());
+            uhcp.setAlive(false);
+            uhcp.setSpectator(true);
+        }
         sb.addUpdates(new UpdateObject(ChatColor.GRAY + "Kills: " +ChatColor.WHITE + uhcp.getKills(), 2));
 
     }
