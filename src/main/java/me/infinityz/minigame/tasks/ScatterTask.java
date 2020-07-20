@@ -52,7 +52,7 @@ public class ScatterTask extends BukkitRunnable {
 
     }
 
-    Location findScatterLocation(final World world, final int radius) {
+    public static Location findScatterLocation(final World world, final int radius) {
         Location loc = new Location(world, 0, 0, 0);
         // Use Math#Random to obtain a random integer that can be used as a location.
         loc.setX(loc.getX() + Math.random() * radius * 2.0 - radius);
@@ -91,7 +91,7 @@ public class ScatterTask extends BukkitRunnable {
         return true;
     }
 
-    private boolean isSafe(final Location loc) {
+    private static boolean isSafe(final Location loc) {
         if (loc.getBlock().isLiquid() || loc.getBlock().getRelative(BlockFace.DOWN).isLiquid()
                 || loc.getBlock().getRelative(BlockFace.DOWN).getRelative(BlockFace.DOWN).isLiquid())
             return false;

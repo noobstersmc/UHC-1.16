@@ -10,6 +10,7 @@ import org.bukkit.scoreboard.Scoreboard;
 
 import co.aikar.commands.PaperCommandManager;
 import me.infinityz.minigame.commands.HelpopCommand;
+import me.infinityz.minigame.commands.LatescatterCommand;
 import me.infinityz.minigame.commands.LocationsCommand;
 import me.infinityz.minigame.commands.PVP;
 import me.infinityz.minigame.commands.StartCommand;
@@ -38,6 +39,7 @@ public class UHC extends JavaPlugin {
         commandManager.registerCommand(new StartCommand(this));
         commandManager.registerCommand(new PVP(this));
         commandManager.registerCommand(new HelpopCommand(this));
+        commandManager.registerCommand(new LatescatterCommand(this));
 
         scoreboardManager = new ScoreboardManager(this);
         locationManager = new LocationManager(this);
@@ -45,12 +47,9 @@ public class UHC extends JavaPlugin {
 
         listenerManager = new ListenerManager(this);
         runStartUp();
-
-        Bukkit.getServer().getWhitelistedPlayers().forEach(it->{
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "whitelist remove "+it.getName());
-        });
+        Bukkit.getServer().getWhitelistedPlayers().clear();
         // Add a boolean to auto find locs on start.
-        new ScatterTask(Bukkit.getWorlds().get(0), 2000, 100, 150).runTaskTimer(this, 20 * 5, 10);
+        new ScatterTask(Bukkit.getWorlds().get(0), 2000, 100, 60).runTaskTimer(this, 20 * 5, 10);
     }
 
     public ScoreboardManager getScoreboardManager() {
@@ -95,7 +94,7 @@ public class UHC extends JavaPlugin {
             it.setSpawnLocation(0, it.getHighestBlockAt(0, 0).getZ() + 10, 0);
             it.getWorldBorder().setCenter(0, 0);
             it.getWorldBorder().setSize(101);
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "gamerule doMobSpawning false");
+            it.setGameRule(GameRule.DO_MOB_SPAWNING, false);
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "wb " + it.getName() + " set 2020 2020 0 0");
         });
 
