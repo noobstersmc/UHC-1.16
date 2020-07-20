@@ -47,6 +47,7 @@ public class StartCommand extends BaseCommand {
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "whitelist on");
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "whitelist add @a");
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "gamerule doDaylightCycle true");
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "gamerule doMobSpawning true");
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "time set day");
 
         Bukkit.getWorlds().forEach(it->{

@@ -93,10 +93,10 @@ public class UHC extends JavaPlugin {
             it.setGameRule(GameRule.DO_PATROL_SPAWNING, false);
             it.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
             it.setGameRule(GameRule.DO_WEATHER_CYCLE, false);
-            it.setDifficulty(Difficulty.PEACEFUL);
             it.setSpawnLocation(0, it.getHighestBlockAt(0, 0).getZ() + 10, 0);
             it.getWorldBorder().setCenter(0, 0);
             it.getWorldBorder().setSize(101);
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "gamerule doMobSpawning false");
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "wb " + it.getName() + " set 2020 2020 0 0");
         });
 
