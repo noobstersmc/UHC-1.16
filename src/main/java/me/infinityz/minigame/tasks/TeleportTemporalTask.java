@@ -33,22 +33,23 @@ public class TeleportTemporalTask extends BukkitRunnable {
             this.cancel();
             return;
         }
+
+        time = System.currentTimeMillis();
         
         Iterator<Player> iterator = players.iterator();
-        int i = 1;
 
         while (iterator.hasNext()) {
-            if (i > 1)
-                return;
+            if (time + 100 <= System.currentTimeMillis())
+                break;
             Player player = iterator.next();
 
             if(player != null && player.isOnline()){
                 if(locations.hasNext()){
                     Location loc = locations.next();
-                    loc.setY(150);
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 20 * 60, 3));
+                    loc.setY(250);
                     instance.getPlayerManager().addCreateUHCPlayer(player.getUniqueId());
                     player.teleport(loc);
-                    player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 20 * 60, 3));
                     System.out.println("Teleported player at time " + System.currentTimeMillis());
                     locations.remove();
                 }
@@ -57,8 +58,6 @@ public class TeleportTemporalTask extends BukkitRunnable {
 
             iterator.remove();
             System.out.println("Players left to be scattered: " + players.size());
-
-            i++;
         }
 
     }

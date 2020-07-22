@@ -49,7 +49,8 @@ public class UHC extends JavaPlugin {
         runStartUp();
         Bukkit.getServer().getWhitelistedPlayers().clear();
         // Add a boolean to auto find locs on start.
-        new ScatterTask(Bukkit.getWorlds().get(0), 2000, 100, 60).runTaskTimer(this, 20 * 5, 10);
+        //new ScatterTask(Bukkit.getWorlds().get(0), 2000, 100, 50).runTaskTimer(this, 20*5, 20);
+        
     }
 
     public ScoreboardManager getScoreboardManager() {
