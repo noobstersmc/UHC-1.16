@@ -44,7 +44,6 @@ public class ScatterTask extends BukkitRunnable {
             while (validate(loc, distanceThreshold) == false) {
                 loc = findScatterLocation(world, radius);
             }
-            loc.getWorld().loadChunk(loc.getChunk());
             locations.add(centerLocation(loc));
             quantity--;
             System.out.println("Scatter locations reamining to be found " + quantity);

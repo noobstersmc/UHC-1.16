@@ -10,6 +10,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.events.ScatterLocationsFoundEvent;
@@ -103,6 +105,8 @@ public class GlobalListener implements Listener {
                 players.getActivePotionEffects().forEach(all -> {
                     players.removePotionEffect(all.getType());
                 });
+                players.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20*10, 10));
+                players.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20*10, 10));
             });
 
             instance.getListenerManager().registerListener(instance.getListenerManager().getIngameListeners());

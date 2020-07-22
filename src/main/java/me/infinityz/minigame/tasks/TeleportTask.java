@@ -28,15 +28,14 @@ public class TeleportTask extends BukkitRunnable {
     @Override
     public void run() {
         if (players.size() <= 0) {
-            Bukkit.getPluginManager().callEvent(new TeleportationCompletedEvent());
+            Bukkit.getPluginManager().callEvent(new TeleportationCompletedEvent(Bukkit.isPrimaryThread()));
             this.cancel();
             return;
         }
         time = System.currentTimeMillis();
-        int i =0;
 
         while (players.size() > 0) {
-            if (time + 100 <= System.currentTimeMillis() || i>1)
+            if (time + 100 <= System.currentTimeMillis())
                 break;
             Player player = players.get(0);
             if (player == null || !player.isOnline()) {
@@ -50,7 +49,6 @@ public class TeleportTask extends BukkitRunnable {
             }
             players.remove(0);
             System.out.println("Players left to be scattered " + players.size());
-            i++;
 
         }
 
