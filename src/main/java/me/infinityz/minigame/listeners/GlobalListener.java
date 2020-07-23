@@ -3,6 +3,7 @@ package me.infinityz.minigame.listeners;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -10,8 +11,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.events.ScatterLocationsFoundEvent;
@@ -103,25 +102,77 @@ public class GlobalListener implements Listener {
                 instance.getScoreboardManager().getFastboardMap().put(players.getUniqueId().toString(), sb);
 
                 players.getActivePotionEffects().forEach(all -> {
+                    players.playSound(players.getLocation(), Sound.ENTITY_RAVAGER_CELEBRATE, 1, 1);
                     players.removePotionEffect(all.getType());
                 });
-                players.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20*10, 10));
-                players.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20*10, 10));
             });
 
             instance.getListenerManager().registerListener(instance.getListenerManager().getIngameListeners());
             Bukkit.getScheduler().runTaskTimerAsynchronously(instance, () -> {
                 time++;
-                if(time == 1200){
-                    //TODO: PVP ON
-                    instance.pvp = true;
-                    Bukkit.broadcastMessage("PVP has been enabled");
-                } else if(time == 600){
-                    //TODO: FINAL HEAL
+
+                switch(time){
+                    case 300: {
+                        //AVISO DE FINAL HEAL 5min left
+                    Bukkit.getOnlinePlayers().forEach(all ->{
+                        all.playSound(all.getLocation(), Sound.BLOCK_NOTE_BLOCK_BIT, 1, 1);
+                    });
+                        Bukkit.broadcastMessage(ChatColor.of("#376ebf4") + "5 minutes left for Final Heal.");
+                    break;
+                    }
+                    case 600: {
+                        //TODO: FINAL HEAL
                     Bukkit.getOnlinePlayers().forEach(all ->{
                         all.setHealth(20.0);
-                        Bukkit.broadcastMessage("Final heal!");
+                        all.setSaturation(20.0F);
+                        all.playSound(all.getLocation(), Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO, 1, 1);
                     });
+                        Bukkit.broadcastMessage(ChatColor.GREEN + "Final heal!");
+
+                    break;
+                    }
+                    case 900: {
+                        //AVISO DE PVP 5min left
+                    Bukkit.getOnlinePlayers().forEach(all ->{
+                        all.playSound(all.getLocation(), Sound.BLOCK_NOTE_BLOCK_BIT, 1, 1);
+                    });
+                        Bukkit.broadcastMessage(ChatColor.of("#376ebf4") + "PvP will be enabled in 5 minutes.");
+                    break;
+                    }
+                    case 1190: {
+                        //AVISO DE PVP 10 SECONDS LEFT
+                    Bukkit.getOnlinePlayers().forEach(all ->{
+                        all.playSound(all.getLocation(), Sound.BLOCK_NOTE_BLOCK_BIT, 1, 1);
+                    });
+                        Bukkit.broadcastMessage(ChatColor.of("#376ebf4") + "PvP will be enabled in 10 seconds.");
+                    break;
+                    }
+                    case 1198: {
+                        //AVISO DE PVP 3 SECONDS LEFT
+                    Bukkit.getOnlinePlayers().forEach(all ->{
+                        all.playSound(all.getLocation(), Sound.BLOCK_NOTE_BLOCK_BIT, 1, 1);
+                    });
+                        Bukkit.broadcastMessage(ChatColor.of("#376ebf4") + "PvP will be enabled in 3 seconds.");
+                    break;
+                    }
+                    case 1199: {
+                        //AVISO DE PVP 2 SECONDS LEFT
+                    Bukkit.getOnlinePlayers().forEach(all ->{
+                        all.playSound(all.getLocation(), Sound.BLOCK_NOTE_BLOCK_BIT, 1, 1);
+                    });
+                        Bukkit.broadcastMessage(ChatColor.of("#376ebf4") + "PvP will be enabled in 2 seconds.");
+                    break;
+                    }
+                    case 1200: {
+                        //TODO: PVP ON
+                    Bukkit.getOnlinePlayers().forEach(all ->{
+                        all.playSound(all.getLocation(), Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO, 1, 1);
+                    });
+                        instance.pvp = true;
+                        Bukkit.broadcastMessage(ChatColor.GREEN + "PVP has been enabled");
+                    break;
+                    }
+
                 }
                 instance.getScoreboardManager().getFastboardMap().entrySet().forEach(entry -> {
                     entry.getValue().addUpdates(
