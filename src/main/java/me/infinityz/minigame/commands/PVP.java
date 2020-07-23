@@ -20,7 +20,7 @@ public class PVP extends BaseCommand{
     @Default
     public void onCommand(CommandSender sender){
         instance.pvp = !instance.pvp;
-        sender.sendMessage("PVP has been set to " + instance.pvp);
+        sender.sendMessage("PvP has been set to " + instance.pvp);
     }
     
 }

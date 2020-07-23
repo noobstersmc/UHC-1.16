@@ -146,7 +146,7 @@ public class GlobalListener implements Listener {
                         all.playSound(all.getLocation(), Sound.BLOCK_END_PORTAL_SPAWN, 1, 1);
                     });
                         instance.pvp = true;
-                        Bukkit.broadcastMessage(ChatColor.GREEN + "PVP has been enabled");
+                        Bukkit.broadcastMessage(ChatColor.GREEN + "PvP has been enabled");
                     break;
                     }
 

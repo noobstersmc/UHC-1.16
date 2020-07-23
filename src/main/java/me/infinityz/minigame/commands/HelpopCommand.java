@@ -10,7 +10,7 @@ import co.aikar.commands.annotation.Syntax;
 import me.infinityz.minigame.UHC;
 import net.md_5.bungee.api.ChatColor;
 
-@CommandAlias("helpop, hp")
+@CommandAlias("helpop")
 public class HelpopCommand extends BaseCommand {
 
     UHC instance;
@@ -20,7 +20,7 @@ public class HelpopCommand extends BaseCommand {
     }
 
     @Default
-    @Syntax("&c<message> The message you want.")
+    @Syntax("<message> &e- The message you want ")
     public static void onList(Player player, String[] args) {
         if (args.length < 1) {
             player.sendMessage("Not enough arguments...");
