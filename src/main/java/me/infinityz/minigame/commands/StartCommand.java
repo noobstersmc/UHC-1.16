@@ -65,7 +65,6 @@ public class StartCommand extends BaseCommand {
 
         Bukkit.getOnlinePlayers().forEach(players -> {
             //Efectos
-            players.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20 * 20, 5));
             players.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING , 20 * 20, 5));
             players.setGameMode(GameMode.SURVIVAL);
             ScatterScoreboard sb = new ScatterScoreboard(players);
@@ -112,8 +111,6 @@ public class StartCommand extends BaseCommand {
 
         Bukkit.getOnlinePlayers().forEach(players -> {
             //Efectos
-            players.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 20, 5));
-            players.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20 * 20, 5));
             players.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING , 20 * 20, 5));
             players.setGameMode(GameMode.SURVIVAL);
             ScatterScoreboard sb = new ScatterScoreboard(players);

@@ -99,10 +99,8 @@ public class IngameListeners implements Listener {
             }
         }, 20 * 3);
     }
-
     @EventHandler
-    public void onRespawn(PlayerRespawnEvent e) {
+    public void onRespawn(PlayerRespawnEvent e){
         e.getPlayer().setGameMode(GameMode.SPECTATOR);
     }
-
 }

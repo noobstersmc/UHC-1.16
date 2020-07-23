@@ -60,6 +60,7 @@ public class TeleportTemporalTask extends BukkitRunnable {
             System.out.println("Players left to be scattered: " + players.size());
         }
 
+
     }
 
 }

@@ -8,8 +8,9 @@ import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Syntax;
 import me.infinityz.minigame.UHC;
+import net.md_5.bungee.api.ChatColor;
 
-@CommandAlias("helpop")
+@CommandAlias("helpop, hp")
 public class HelpopCommand extends BaseCommand {
 
     UHC instance;
@@ -19,7 +20,7 @@ public class HelpopCommand extends BaseCommand {
     }
 
     @Default
-    @Syntax("<message> &e- The message you want ")
+    @Syntax("&c<message> The message you want.")
     public static void onList(Player player, String[] args) {
         if (args.length < 1) {
             player.sendMessage("Not enough arguments...");
@@ -29,7 +30,7 @@ public class HelpopCommand extends BaseCommand {
         for (String string : args) {
             sb.append(string + " ");
         }
-        Bukkit.broadcast("[Helpop] " + player.getName()+ ": " + sb.toString(), "uhc.admin");
+        Bukkit.broadcast(ChatColor.YELLOW + "[Helpop] " + ChatColor.GRAY + player.getName()+ ": " + sb.toString(), "uhc.admin");
     }
 
 }
