@@ -130,7 +130,7 @@ public class GlobalListener implements Listener {
                         //TODO: FINAL HEAL
                     Bukkit.getOnlinePlayers().forEach(all ->{
                         all.setHealth(20.0);
-                        all.setSaturation(20.0F);
+                        all.setSaturation(20.0);
                         all.playSound(all.getLocation(), Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO, 1, 1);
                     });
                         Bukkit.broadcastMessage(ChatColor.GREEN + "Final heal!");
@@ -151,7 +151,7 @@ public class GlobalListener implements Listener {
                         all.playSound(all.getLocation(), Sound.BLOCK_END_PORTAL_SPAWN, 1, 1);
                     });
                         instance.pvp = true;
-                        Bukkit.broadcastMessage(ChatColor.GREEN + "PvP has been enabled");
+                        Bukkit.broadcastMessage(ChatColor.GREEN + "PvP has been enabled.");
                     break;
                     }
 
