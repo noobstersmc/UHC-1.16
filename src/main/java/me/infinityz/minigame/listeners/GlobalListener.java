@@ -11,6 +11,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.events.ScatterLocationsFoundEvent;
@@ -89,7 +91,7 @@ public class GlobalListener implements Listener {
 
     @EventHandler
     public void onTeleportCompleted(TeleportationCompletedEvent e) {
-        Bukkit.broadcastMessage("Starting soon...");
+        Bukkit.broadcastMessage(ChatColor.GREEN + "Starting soon...");
 
         Bukkit.getScheduler().runTaskLater(instance, () -> {
             instance.getScoreboardManager().purgeScoreboards();
@@ -102,11 +104,14 @@ public class GlobalListener implements Listener {
                 instance.getScoreboardManager().getFastboardMap().put(players.getUniqueId().toString(), sb);
 
                 players.getActivePotionEffects().forEach(all -> {
-                    players.playSound(players.getLocation(), Sound.ENTITY_RAVAGER_CELEBRATE, 1, 1);
                     players.removePotionEffect(all.getType());
 
                 });
+                players.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 10, 20));
+                players.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20 * 10, 20));
+                players.playSound(players.getLocation(), Sound.ENTITY_RAVAGER_CELEBRATE, 1, 1);
             });
+            Bukkit.broadcastMessage(ChatColor.GREEN + "UHC has started!");
 
             instance.getListenerManager().registerListener(instance.getListenerManager().getIngameListeners());
             Bukkit.getScheduler().runTaskTimerAsynchronously(instance, () -> {

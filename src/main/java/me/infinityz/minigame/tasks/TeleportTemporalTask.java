@@ -46,7 +46,8 @@ public class TeleportTemporalTask extends BukkitRunnable {
             if(player != null && player.isOnline()){
                 if(locations.hasNext()){
                     Location loc = locations.next();
-                    player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 20 * 60, 3));
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 20 * 60, 20));
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 20 * 60, 20));
                     loc.setY(250);
                     instance.getPlayerManager().addCreateUHCPlayer(player.getUniqueId());
                     player.teleport(loc);
