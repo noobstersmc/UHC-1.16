@@ -130,7 +130,7 @@ public class GlobalListener implements Listener {
                         //TODO: FINAL HEAL
                     Bukkit.getOnlinePlayers().forEach(all ->{
                         all.setHealth(20.0);
-                        all.setSaturation(20.0);
+                        all.setSaturation(20.0F);
                         all.playSound(all.getLocation(), Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO, 1, 1);
                     });
                         Bukkit.broadcastMessage(ChatColor.GREEN + "Final heal!");
