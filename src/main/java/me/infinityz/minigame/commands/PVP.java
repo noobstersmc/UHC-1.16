@@ -8,7 +8,7 @@ import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
 import me.infinityz.minigame.UHC;
 
-@CommandPermission("uhc.admin")
+@CommandPermission("staff.perm")
 @CommandAlias("pvp")
 public class PVP extends BaseCommand{
     UHC instance;

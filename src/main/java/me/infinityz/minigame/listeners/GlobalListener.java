@@ -13,6 +13,15 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.GameMode;
+import org.bukkit.GameRule;
+import org.bukkit.World;
+import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.events.ScatterLocationsFoundEvent;
@@ -154,6 +163,14 @@ public class GlobalListener implements Listener {
                         Bukkit.broadcastMessage(ChatColor.GREEN + "PvP has been enabled.");
                     break;
                     }
+                    case 3600: {
+                        Bukkit.getWorlds().forEach(it->{
+                            it.setGameRule(GameRule.DO_INSOMNIA, false);
+                            it.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
+                            it.setTime(400);
+                        });
+                    break;
+                    }
 
                 }
                 instance.getScoreboardManager().getFastboardMap().entrySet().forEach(entry -> {
@@ -164,6 +181,7 @@ public class GlobalListener implements Listener {
                             //TODO: Improve this method, it shouldn't be necessary to have to update this line every second.
 
                 });
+        
             }, 0, 20);
 
         }, 20 * 10);

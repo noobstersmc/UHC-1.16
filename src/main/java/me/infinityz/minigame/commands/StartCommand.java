@@ -24,7 +24,7 @@ import me.infinityz.minigame.tasks.TeleportTask;
 import me.infinityz.minigame.tasks.TeleportTemporalTask;
 import net.md_5.bungee.api.ChatColor;
 
-@CommandPermission("start.perm")
+@CommandPermission("staff.perm")
 @CommandAlias("start")
 public class StartCommand extends BaseCommand {
     private UHC instance;

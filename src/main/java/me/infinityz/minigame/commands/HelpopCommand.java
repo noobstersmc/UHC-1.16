@@ -30,7 +30,7 @@ public class HelpopCommand extends BaseCommand {
         for (String string : args) {
             sb.append(string + " ");
         }
-        Bukkit.broadcast(ChatColor.YELLOW + "[Helpop] " + ChatColor.GRAY + player.getName()+ ": " + sb.toString(), "uhc.admin");
+        Bukkit.broadcast(ChatColor.YELLOW + "[Helpop] " + ChatColor.GRAY + player.getName()+ ": " + sb.toString(), "staff.perm");
     }
 
 }

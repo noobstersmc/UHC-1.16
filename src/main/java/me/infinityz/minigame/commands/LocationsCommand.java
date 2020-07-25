@@ -21,7 +21,7 @@ import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.tasks.ScatterTask;
 import net.minecraft.server.v1_16_R1.MinecraftServer;
 
-@CommandPermission("uhc.admin")
+@CommandPermission("staff.perm")
 @CommandAlias("locations|loc")
 public class LocationsCommand extends BaseCommand {
 

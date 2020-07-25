@@ -18,7 +18,7 @@ import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.players.UHCPlayer;
 import me.infinityz.minigame.tasks.ScatterTask;
 
-@CommandPermission("uhc.admin")
+@CommandPermission("staff.perm")
 @CommandAlias("latescatter")
 public class LatescatterCommand extends BaseCommand {
 
