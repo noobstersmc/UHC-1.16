@@ -19,7 +19,6 @@ import me.infinityz.minigame.listeners.ListenerManager;
 import me.infinityz.minigame.locations.LocationManager;
 import me.infinityz.minigame.players.PlayerManager;
 import me.infinityz.minigame.scoreboard.ScoreboardManager;
-import me.infinityz.minigame.tasks.ScatterTask;
 import net.md_5.bungee.api.ChatColor;
 
 public class UHC extends JavaPlugin {
