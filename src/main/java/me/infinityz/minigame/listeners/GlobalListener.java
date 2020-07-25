@@ -186,7 +186,7 @@ public class GlobalListener implements Listener {
                     entry.getValue().addUpdates(new UpdateObject(ChatColor.GRAY + "Players: " + ChatColor.WHITE
                             + instance.getPlayerManager().getAlivePlayers(), 3));
                     entry.getValue().addUpdates(new UpdateObject(ChatColor.GRAY + "Border: " + ChatColor.WHITE
-                            + (Bukkit.getWorlds().get(0).getWorldBorder().getSize() / 2), 5));
+                            + ((int)(Bukkit.getWorlds().get(0).getWorldBorder().getSize() / 2)), 5));
                     // TODO: Improve this method, it shouldn't be necessary to have to update this
                     // line every second.
 
