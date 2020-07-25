@@ -59,14 +59,21 @@ public class ScatterTask extends BukkitRunnable {
         // Use Math#Random to obtain a random integer that can be used as a location.
         loc.setX(loc.getX() + Math.random() * radius * 2.0 - radius);
         loc.setZ(loc.getZ() + Math.random() * radius * 2.0 - radius);
-        loc.setY(200);
+        loc = loc.getWorld().getHighestBlockAt(loc).getLocation();
+
+        if(!isSafe(loc)){
+            return findScatterLocation(world, radius);
+        }
         // A location object is returned once we reach this step, next step is to
         // validate the location from others.
-        return loc;
+        return centerLocation(loc);
     }
 
-    private Location centerLocation(final Location loc) {
-        return new Location(loc.getWorld(), loc.getBlockX() + 0.5, loc.getBlockY() + 0.5, loc.getBlockZ() + 0.5);
+    private static Location centerLocation(final Location loc) {
+        loc.setX(loc.getBlockX() +0.5);
+        loc.setY(loc.getBlockY() +1.5);
+        loc.setZ(loc.getBlockZ() +0.5);
+        return loc;
     }
 
     private boolean validate(final Location loc, final int distance) {

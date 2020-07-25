@@ -21,16 +21,19 @@ public class HelpopCommand extends BaseCommand {
 
     @Default
     @Syntax("<message> &e- The message you want ")
-    public static void onList(Player player, String[] args) {
-        if (args.length < 1) {
-            player.sendMessage("Not enough arguments...");
+    public void onList(Player player, String[] message) {
+        if (message.length < 1) {
+            player.sendMessage("Correct usage: /helpop <message>");
             return;
         }
+        player.sendMessage("Your message has been sent!");
+
         StringBuilder sb = new StringBuilder();
-        for (String string : args) {
+        for (String string : message) {
             sb.append(string + " ");
         }
-        Bukkit.broadcast(ChatColor.YELLOW + "[Helpop] " + ChatColor.GRAY + player.getName()+ ": " + sb.toString(), "staff.perm");
+        Bukkit.broadcast(ChatColor.YELLOW + "[Helpop] " + ChatColor.GRAY + player.getName() + ": " + sb.toString(),
+                "staff.perm");
     }
 
 }

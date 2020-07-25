@@ -10,10 +10,12 @@ import org.bukkit.scoreboard.Scoreboard;
 
 import co.aikar.commands.PaperCommandManager;
 import me.infinityz.minigame.commands.HelpopCommand;
-import me.infinityz.minigame.commands.LatescatterCommand;
+import me.infinityz.minigame.commands.LateScatterCommand;
 import me.infinityz.minigame.commands.LocationsCommand;
 import me.infinityz.minigame.commands.PVP;
 import me.infinityz.minigame.commands.StartCommand;
+import me.infinityz.minigame.commands.UHCCommand;
+import me.infinityz.minigame.crafting.CraftingManager;
 import me.infinityz.minigame.enums.Stage;
 import me.infinityz.minigame.listeners.ListenerManager;
 import me.infinityz.minigame.locations.LocationManager;
@@ -28,27 +30,31 @@ public class UHC extends JavaPlugin {
     PaperCommandManager commandManager;
     PlayerManager playerManager;
     ListenerManager listenerManager;
+    CraftingManager craftingManager;
     public boolean pvp = false;
+
     @Override
     public void onEnable() {
         gameStage = Stage.LOADING;
 
         commandManager = new PaperCommandManager(this);
+
         commandManager.registerCommand(new LocationsCommand(this));
         commandManager.registerCommand(new StartCommand(this));
         commandManager.registerCommand(new PVP(this));
         commandManager.registerCommand(new HelpopCommand(this));
-        commandManager.registerCommand(new LatescatterCommand(this));
+        commandManager.registerCommand(new UHCCommand(this));
+        commandManager.registerCommand(new LateScatterCommand(this));
 
         scoreboardManager = new ScoreboardManager(this);
         locationManager = new LocationManager(this);
         playerManager = new PlayerManager(this);
 
+        craftingManager = new CraftingManager(this);
+
         listenerManager = new ListenerManager(this);
         runStartUp();
         Bukkit.getServer().getWhitelistedPlayers().clear();
-        // Add a boolean to auto find locs on start.
-        //new ScatterTask(Bukkit.getWorlds().get(0), 2000, 100, 50).runTaskTimer(this, 20*5, 20);
         
     }
 
@@ -70,6 +76,10 @@ public class UHC extends JavaPlugin {
 
     public PlayerManager getPlayerManager() {
         return playerManager;
+    }
+
+    public CraftingManager getCraftingManager() {
+        return craftingManager;
     }
 
     void runStartUp() {

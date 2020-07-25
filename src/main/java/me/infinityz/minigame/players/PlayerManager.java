@@ -19,8 +19,12 @@ public class PlayerManager {
         return uhcPlayerMap;
     }
 
-    public void addCreateUHCPlayer(UUID uuid) {
-        uhcPlayerMap.putIfAbsent(uuid.toString(), new UHCPlayer(uuid, 0, true));
+    public UHCPlayer addCreateUHCPlayer(UUID uuid, boolean alive) {
+        UHCPlayer uhcPlayer = new UHCPlayer(uuid, 0, alive);
+
+        uhcPlayerMap.putIfAbsent(uuid.toString(), uhcPlayer);
+
+        return uhcPlayerMap.get(uuid.toString());
     }
 
     public UHCPlayer getPlayer(UUID uuid) {

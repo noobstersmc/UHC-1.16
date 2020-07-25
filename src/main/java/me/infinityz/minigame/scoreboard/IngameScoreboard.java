@@ -15,6 +15,8 @@ public class IngameScoreboard extends IScoreboard {
                 ChatColor.GRAY + "Kills: "+ ChatColor.WHITE + "0",
                 ChatColor.GRAY + "Players: " + ChatColor.WHITE + Bukkit.getOnlinePlayers().size(),
                 "",
+                ChatColor.GRAY + "Border: " + ChatColor.WHITE + (Bukkit.getWorlds().get(0).getWorldBorder().getSize() / 2),
+                "",
                 ChatColor.WHITE + "noobsters.net");
     }
 

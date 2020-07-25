@@ -20,7 +20,8 @@ public class ListenerManager {
 
         Bukkit.getPluginManager().registerEvents(new GlobalListener(instance), instance);
         Bukkit.getPluginManager().registerEvents(lobby, instance);
-    
+        //Listener for GHEAD
+        Bukkit.getPluginManager().registerEvents(instance.getCraftingManager(), instance);
     }
 
     public void unregisterListener(Listener listener){

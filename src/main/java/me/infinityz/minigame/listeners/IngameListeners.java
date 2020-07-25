@@ -1,7 +1,15 @@
 package me.infinityz.minigame.listeners;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.Skull;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -19,9 +27,34 @@ import net.md_5.bungee.api.ChatColor;
 
 public class IngameListeners implements Listener {
     UHC instance;
+    List<Material> possibleFence;
 
     public IngameListeners(UHC instance) {
         this.instance = instance;
+
+        possibleFence = new ArrayList<>();
+        for (Material m : Material.values()) {
+            if (m.name().contains("FENCE") && !m.name().contains("FENCE_GATE")) {
+                possibleFence.add(m);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onJoinLater(PlayerJoinEvent e) {
+        // TODO: Make this more compact and effcient.
+        Player p = e.getPlayer();
+        UHCPlayer uhcP = instance.getPlayerManager().getPlayer(p.getUniqueId());
+
+        if (uhcP == null) {
+            p.setGameMode(GameMode.SPECTATOR);
+            uhcP = instance.getPlayerManager().addCreateUHCPlayer(p.getUniqueId(), false);
+            uhcP.setSpectator(true);
+        } else if (!uhcP.isAlive()) {
+            uhcP.setSpectator(true);
+            p.setGameMode(GameMode.SPECTATOR);
+
+        }
     }
 
     @EventHandler
@@ -33,27 +66,9 @@ public class IngameListeners implements Listener {
         sb.update();
         instance.getScoreboardManager().getFastboardMap().put(e.getPlayer().getUniqueId().toString(), sb);
         UHCPlayer uhcp = instance.getPlayerManager().getPlayer(e.getPlayer().getUniqueId());
-        if(uhcp == null){
-            instance.getPlayerManager().addCreateUHCPlayer(e.getPlayer().getUniqueId());
-            uhcp = instance.getPlayerManager().getPlayer(e.getPlayer().getUniqueId());
-            uhcp.setAlive(false);
-            uhcp.setSpectator(true);
-        }
-        sb.addUpdates(new UpdateObject(ChatColor.GRAY + "Kills: " +ChatColor.WHITE + uhcp.getKills(), 2));
+        sb.addUpdates(new UpdateObject(
+                ChatColor.GRAY + "Kills: " + ChatColor.WHITE + (uhcp == null ? 0 : uhcp.getKills()), 2));
 
-    }
-
-    @EventHandler
-    public void onJoinLater(PlayerJoinEvent e) {
-        // TODO: Make this more compact and effcient.
-        Player p = e.getPlayer();
-        UHCPlayer uhcP = instance.getPlayerManager().getPlayer(p.getUniqueId());
-        if (uhcP == null || !uhcP.isAlive()) {
-            p.setGameMode(GameMode.SPECTATOR);
-            if (uhcP == null)
-                instance.getPlayerManager().addCreateUHCPlayer(p.getUniqueId());
-
-        }
     }
 
     @EventHandler
@@ -65,16 +80,35 @@ public class IngameListeners implements Listener {
         }
     }
 
+    Material getRandomFence() {
+        return possibleFence.get(new Random().nextInt(possibleFence.size()));
+    }
+
+    @EventHandler
+    public void onDeathHead(PlayerDeathEvent e) {
+        final Player p = e.getEntity();
+
+        p.getLocation().getBlock().setType(getRandomFence());
+
+        Block head = p.getLocation().getBlock().getRelative(BlockFace.UP);
+        head.setType(Material.PLAYER_HEAD);
+
+        Skull skull = (Skull) head.getState();
+        skull.setOwningPlayer(Bukkit.getOfflinePlayer(p.getUniqueId()));
+        skull.update();
+    }
+
     @EventHandler
     public void onDeath(PlayerDeathEvent e) {
         // 3-second timeout to get respawned in spectator mode.
         Player p = e.getEntity();
-        //remove player from whitelist.
+        // remove player from whitelist.
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "whitelist remove " + e.getEntity().getName());
         UHCPlayer uhcPlayer = instance.getPlayerManager().getPlayer(p.getUniqueId());
         if (uhcPlayer != null) {
             if (uhcPlayer.isAlive()) {
                 uhcPlayer.setAlive(false);
+                uhcPlayer.hasDied = true;
             } // TODO: Send update to players left.
 
         }
@@ -83,9 +117,10 @@ public class IngameListeners implements Listener {
             UHCPlayer uhcKiller = instance.getPlayerManager().getPlayer(killer.getUniqueId());
             uhcKiller.setKills(uhcKiller.getKills() + 1);
             IScoreboard sb = instance.getScoreboardManager().findScoreboard(killer.getUniqueId());
-            if(sb != null && sb instanceof IngameScoreboard){
+            if (sb != null && sb instanceof IngameScoreboard) {
                 IngameScoreboard sbi = (IngameScoreboard) sb;
-                sbi.addUpdates(new UpdateObject(ChatColor.GRAY + "Kills: " +ChatColor.WHITE + uhcKiller.getKills(), 2));
+                sbi.addUpdates(
+                        new UpdateObject(ChatColor.GRAY + "Kills: " + ChatColor.WHITE + uhcKiller.getKills(), 2));
             }
         }
         Bukkit.getScheduler().runTaskLater(instance, () -> {
@@ -99,8 +134,9 @@ public class IngameListeners implements Listener {
             }
         }, 20 * 3);
     }
+
     @EventHandler
-    public void onRespawn(PlayerRespawnEvent e){
+    public void onRespawn(PlayerRespawnEvent e) {
         e.getPlayer().setGameMode(GameMode.SPECTATOR);
     }
 }
