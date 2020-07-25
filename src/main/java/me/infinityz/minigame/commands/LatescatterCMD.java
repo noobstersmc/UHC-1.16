@@ -19,11 +19,11 @@ import net.md_5.bungee.api.ChatColor;
 
 @CommandPermission("vip.perm")
 @CommandAlias("latescatter|ls|play")
-public class LateScatterCommand extends BaseCommand {
+public class LatescatterCMD extends BaseCommand {
 
     UHC instance;
 
-    public LateScatterCommand(UHC instance) {
+    public LatescatterCMD(UHC instance) {
         this.instance = instance;
         instance.getCommandManager().getCommandConditions().addCondition(Player.class, "alive",
                 (context, executionContext, player) -> {
