@@ -88,7 +88,8 @@ public class UHC extends JavaPlugin {
             Scoreboard mainScoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
             Objective obj = mainScoreboard.registerNewObjective("health_name", "health", ChatColor.DARK_RED + "❤");
             obj.setDisplaySlot(DisplaySlot.BELOW_NAME);
-
+            Objective obj2 = mainScoreboard.registerNewObjective("health_list", "health", "", RenderType.INTEGER);
+            obj2.setDisplaySlot(DisplaySlot.PLAYER_LIST);
         } catch (Exception e) {
             // TODO: handle exception
         }

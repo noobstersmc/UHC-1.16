@@ -40,7 +40,7 @@ public class StartCommand extends BaseCommand {
         }
         sender.sendMessage(ChatColor.of("#2be49c") + "Starting the teleportation task...");
         //Start Parameters
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "scoreboard objetives setdisplay list health_name");
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "scoreboard objectives setdisplay list health_name");
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "whitelist add @a");
 
         Bukkit.getWorlds().forEach(it->{
