@@ -38,15 +38,14 @@ public class StartCommand extends BaseCommand {
             sender.sendMessage("Not enough locations have been found. (" + locs.size()+ "/"+ Bukkit.getOnlinePlayers().size() + ")");
             return;
         }
-        sender.sendMessage(ChatColor.GREEN + "Starting the teleportation task...");
+        sender.sendMessage(ChatColor.of("#2be49c") + "Starting the teleportation task...");
         //Start Parameters
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "whitelist on");
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "scoreboard objetives setdisplay list health_name");
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "whitelist add @a");
 
         Bukkit.getWorlds().forEach(it->{
             it.getWorldBorder().setSize(4001);
             it.setDifficulty(Difficulty.HARD);
-            it.setGameRule(GameRule.DO_MOB_SPAWNING, true);
             it.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, true);
             it.setTime(400);
         });

@@ -124,19 +124,15 @@ public class IngameListeners implements Listener {
             }
         }
         Bukkit.getScheduler().runTaskLater(instance, () -> {
+            p.setGameMode(GameMode.SPECTATOR);
             if (p != null && p.isOnline()) {
                 if (p.isDead()) {
                     p.spigot().respawn();
                     Bukkit.getScheduler().runTaskLater(instance, () -> {
-                        p.setGameMode(GameMode.SPECTATOR);
                     }, 5);
                 }
             }
         }, 20 * 3);
     }
 
-    @EventHandler
-    public void onRespawn(PlayerRespawnEvent e) {
-        e.getPlayer().setGameMode(GameMode.SPECTATOR);
-    }
 }

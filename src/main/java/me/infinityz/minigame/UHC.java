@@ -86,11 +86,9 @@ public class UHC extends JavaPlugin {
         try {
 
             Scoreboard mainScoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
-            Objective obj = mainScoreboard.registerNewObjective("health_name", "health", ChatColor.RED + "❤");
+            Objective obj = mainScoreboard.registerNewObjective("health_name", "health", ChatColor.DARK_RED + "❤");
             obj.setDisplaySlot(DisplaySlot.BELOW_NAME);
 
-            Objective obj2 = mainScoreboard.registerNewObjective("health_list", "health", "", RenderType.INTEGER);
-            obj2.setDisplaySlot(DisplaySlot.PLAYER_LIST);
         } catch (Exception e) {
             // TODO: handle exception
         }
@@ -104,7 +102,7 @@ public class UHC extends JavaPlugin {
             it.setSpawnLocation(0, it.getHighestBlockAt(0, 0).getZ() + 10, 0);
             it.getWorldBorder().setCenter(0, 0);
             it.getWorldBorder().setSize(101);
-            it.setGameRule(GameRule.DO_MOB_SPAWNING, false);
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "whitelist on");
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "wb " + it.getName() + " set 2020 2020 0 0");
         });
 

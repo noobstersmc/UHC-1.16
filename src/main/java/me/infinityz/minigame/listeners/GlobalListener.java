@@ -103,7 +103,7 @@ public class GlobalListener implements Listener {
 
     @EventHandler
     public void onTeleportCompleted(TeleportationCompletedEvent e) {
-        Bukkit.broadcastMessage(ChatColor.GREEN + "Starting soon...");
+        Bukkit.broadcastMessage(ChatColor.of("#2be49c") + "Starting soon...");
 
         Bukkit.getScheduler().runTaskLater(instance, () -> {
             instance.getScoreboardManager().purgeScoreboards();
@@ -123,7 +123,7 @@ public class GlobalListener implements Listener {
                 players.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20 * 10, 20));
                 players.playSound(players.getLocation(), Sound.ENTITY_RAVAGER_CELEBRATE, 1, 1);
             });
-            Bukkit.broadcastMessage(ChatColor.GREEN + "UHC has started!");
+            Bukkit.broadcastMessage(ChatColor.of("#2be49c") + "UHC has started!");
             instance.gameStage = Stage.INGAME;
 
             instance.getListenerManager().registerListener(instance.getListenerManager().getIngameListeners());
@@ -150,17 +150,17 @@ public class GlobalListener implements Listener {
                         Bukkit.getOnlinePlayers().forEach(all -> {
                             all.playSound(all.getLocation(), Sound.BLOCK_NOTE_BLOCK_BIT, 1, 1);
                         });
-                        Bukkit.broadcastMessage(ChatColor.YELLOW + "5 minutes left for Final Heal.");
+                        Bukkit.broadcastMessage(ChatColor.of("#4788d9") + "5 minutes left for Final Heal.");
                         break;
                     }
                     case 600: {
                         // TODO: FINAL HEAL
                         Bukkit.getOnlinePlayers().forEach(all -> {
                             all.setHealth(20.0);
-                            all.setSaturation(20.0F);
+                            all.setFoodLevel(20);
                             all.playSound(all.getLocation(), Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO, 1, 1);
                         });
-                        Bukkit.broadcastMessage(ChatColor.GREEN + "Final heal!");
+                        Bukkit.broadcastMessage(ChatColor.of("#2be49c") + "Final heal!");
 
                         break;
                     }
@@ -169,7 +169,7 @@ public class GlobalListener implements Listener {
                         Bukkit.getOnlinePlayers().forEach(all -> {
                             all.playSound(all.getLocation(), Sound.BLOCK_NOTE_BLOCK_BIT, 1, 1);
                         });
-                        Bukkit.broadcastMessage(ChatColor.YELLOW + "PvP will be enabled in 5 minutes.");
+                        Bukkit.broadcastMessage(ChatColor.of("#4788d9") + "PvP will be enabled in 5 minutes.");
                         break;
                     }
                     case 1200: {
@@ -178,12 +178,15 @@ public class GlobalListener implements Listener {
                             all.playSound(all.getLocation(), Sound.BLOCK_END_PORTAL_SPAWN, 1, 1);
                         });
                         instance.pvp = true;
-                        Bukkit.broadcastMessage(ChatColor.GREEN + "PvP has been enabled.");
+                        Bukkit.broadcastMessage(ChatColor.of("#2be49c") + "PvP has been enabled.");
                         break;
                     }
                     case 3600: {
-                        Bukkit.broadcastMessage(ChatColor.of("#4788d9") + "The world will shrink to 100x100 in the next 25 minutes at a speed of 1 block per second!");
-                        Bukkit.broadcastMessage(ChatColor.of("#2be49c") + "Players in the nether will be randomly teleported to the overworld once the map reaches 500x500.");
+                        Bukkit.broadcastMessage(ChatColor.of("#4788d9") + "The world will shrink to 100 blocks in the next 25 minutes at a speed of 1 block per second!");
+                        Bukkit.broadcastMessage(ChatColor.of("#2be49c") + "Players in the nether will be randomly teleported to the overworld once the border reaches 500 blocks.");
+                        Bukkit.getOnlinePlayers().forEach(all -> {
+                            all.playSound(all.getLocation(), Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO, 1, 1);
+                        });
                         Bukkit.getScheduler().runTask(instance, ()->{
                             World world = Bukkit.getWorlds().get(0);
                             world.setGameRule(GameRule.DO_INSOMNIA, false);
