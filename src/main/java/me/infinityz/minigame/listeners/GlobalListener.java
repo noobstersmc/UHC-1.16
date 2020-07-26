@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.World;
@@ -13,9 +14,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -61,14 +63,15 @@ public class GlobalListener implements Listener {
         }
 
     }
-
     @EventHandler
-    public void onQuit(PlayerQuitEvent e) {
-        if (instance.getScoreboardManager().getFastboardMap().containsKey(e.getPlayer().getUniqueId().toString())) {
-
+    public void onLeaf(LeavesDecayEvent e){
+        if(Math.random() <= 0.0075){
+            e.getBlock().setType(Material.AIR);
+            e.getBlock().getLocation().getWorld().dropItemNaturally(e.getBlock().getLocation(), new ItemStack(Material.APPLE));
         }
 
-    }
+    } 
+
 
     @EventHandler
     public void onPVP(EntityDamageByEntityEvent e) {
@@ -92,7 +95,7 @@ public class GlobalListener implements Listener {
 
     @EventHandler
     public void onScatter(ScatterLocationsFoundEvent e) {
-        System.out.println("Scatter task completed in " + (System.currentTimeMillis() - e.getTime()));
+        Bukkit.broadcastMessage("Locations found in " + (System.currentTimeMillis() - e.getTime()));
         // Quickly ensure not null
         instance.getLocationManager().getLocationsSet()
                 .addAll(e.getLocations().stream().filter(loc -> loc != null).collect(Collectors.toList()));
@@ -179,11 +182,15 @@ public class GlobalListener implements Listener {
                         break;
                     }
                     case 3600: {
-                        World world = Bukkit.getWorlds().get(0);
-                        world.setGameRule(GameRule.DO_INSOMNIA, false);
-                        world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
-                        world.setTime(400);
-                        world.getWorldBorder().setSize(200, 1500);
+                        Bukkit.broadcastMessage(ChatColor.of("#4788d9") + "The world will shrink to 100x100 in the next 25 minutes at a speed of 1 block per second!");
+                        Bukkit.broadcastMessage(ChatColor.of("#2be49c") + "Players in the nether will be randomly teleported to the overworld once the map reaches 500x500.");
+                        Bukkit.getScheduler().runTask(instance, ()->{
+                            World world = Bukkit.getWorlds().get(0);
+                            world.setGameRule(GameRule.DO_INSOMNIA, false);
+                            world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
+                            world.setTime(400);
+                            world.getWorldBorder().setSize(200, 1500);
+                        });
                         break;
                     }
 
@@ -205,6 +212,7 @@ public class GlobalListener implements Listener {
                         OfflinePlayer of = Bukkit.getOfflinePlayer(UUID.fromString(entry.getKey()));
                         if(!of.isOnline()){
                             if(System.currentTimeMillis() - of.getLastPlayed() > 600000){
+                                Bukkit.broadcastMessage(ChatColor.YELLOW + of.getName() + " has been disqualified for abandoning the game.");
                             entry.getValue().hasDied = true;
                             entry.getValue().setAlive(false);
                             entry.getValue().setSpectator(true);
