@@ -32,6 +32,7 @@ public class GlobalListener implements Listener {
     UHC instance;
 
     public static int time = 0;
+    boolean net = false;
 
     String timeConvert(int t) {
         int hours = t / 3600;
@@ -125,13 +126,20 @@ public class GlobalListener implements Listener {
             instance.getListenerManager().registerListener(instance.getListenerManager().getIngameListeners());
             Bukkit.getScheduler().runTaskTimerAsynchronously(instance, () -> {
                 time++;
-                World mWorld = Bukkit.getWorlds().get(0);
-                if (mWorld.getWorldBorder().getSize() == 1000) {
-                    Bukkit.getOnlinePlayers().stream().forEach(player -> {
-                        if (player.getWorld().getEnvironment() == Environment.NETHER) {
-                            player.teleport(ScatterTask.findScatterLocation(mWorld, 499));
-                        }
-                    });
+                if(!net){
+                    World mWorld = Bukkit.getWorlds().get(0);
+                    if (mWorld.getWorldBorder().getSize() <= 1000) {
+                        net = true;
+                        Bukkit.getScheduler().runTask(instance, ()->{
+                            Bukkit.getOnlinePlayers().stream().forEach(player -> {
+                                if (player.getWorld().getEnvironment() == Environment.NETHER) {
+                                    player.teleport(ScatterTask.findScatterLocation(mWorld, 499));
+                                }
+                            });
+
+                        });
+                    }
+
                 }
                 switch (time) {
                     case 300: {
