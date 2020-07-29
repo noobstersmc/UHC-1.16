@@ -34,46 +34,44 @@ public class LocationsCommand extends BaseCommand {
     @Subcommand("load")
     @Syntax("[i] &e- Location to be loaded")
     public void start(CommandSender sender, int i) {
-        //TODO: Make it so that you can find more locations by executing command.
-        if(iter == null){
+        // TODO: Make it so that you can find more locations by executing command.
+        if (iter == null) {
             Bukkit.broadcastMessage("Iter is null.");
             this.iter = instance.getLocationManager().getLocationsSet().iterator();
         }
-        Bukkit.getScheduler().runTaskTimer(instance, ()->{
+        Bukkit.getScheduler().runTaskTimer(instance, () -> {
         }, 20, 20);
-        if(iter.hasNext()){
-            Bukkit.getScheduler().runTask(instance, ()->{
+        if (iter.hasNext()) {
+            Bukkit.getScheduler().runTask(instance, () -> {
                 Location loc = iter.next();
-                getNeighbouringChunks(
-                loc.getChunk(), 
-                loc.getWorld());
+                getNeighbouringChunks(loc.getChunk(), loc.getWorld());
                 Bukkit.broadcastMessage("Location loaded");
             });
-        }else{
+        } else {
             sender.sendMessage("Iter is empty.");
         }
     }
 
-
     @SuppressWarnings("all")
     @Subcommand("load new")
-    public void altMode(CommandSender sender){
-        if(locs == null){
-            if(instance.getLocationManager().getLocationsSet() == null || instance.getLocationManager().getLocationsSet().isEmpty()){
+    public void altMode(CommandSender sender) {
+        if (locs == null) {
+            if (instance.getLocationManager().getLocationsSet() == null
+                    || instance.getLocationManager().getLocationsSet().isEmpty()) {
                 sender.sendMessage("Try /loc find first");
                 return;
             }
             locs = new LinkedList<>(instance.getLocationManager().getLocationsSet());
         }
-        new BukkitRunnable(){
+        new BukkitRunnable() {
 
             @Override
             public void run() {
-                if(locs.isEmpty()){
+                if (locs.isEmpty()) {
                     this.cancel();
                     return;
                 }
-                if(MinecraftServer.getServer().recentTps[0] < 16){
+                if (MinecraftServer.getServer().recentTps[0] < 16) {
                     Bukkit.broadcastMessage("Waiting for tps.");
                     return;
                 }
@@ -82,12 +80,13 @@ public class LocationsCommand extends BaseCommand {
                 locs.removeFirst();
                 Bukkit.broadcastMessage(locs.size() + "left to be loaded");
             }
-            
+
         }.runTaskTimer(instance, 20, 40);
     }
+
     @Subcommand("find")
     @Syntax("[i] &e- Location to be found")
-    public void find(CommandSender sender, int i){
+    public void find(CommandSender sender, int i) {
         sender.sendMessage("Starting locations task");
         new ScatterTask(Bukkit.getWorlds().get(0), 2000, 100, i).runTaskTimer(instance, 20, 20);
     }

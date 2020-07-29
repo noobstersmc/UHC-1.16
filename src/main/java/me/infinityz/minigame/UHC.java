@@ -37,8 +37,10 @@ public class UHC extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        gameStage = Stage.LOADING;
+        gameStage = Stage.LOADING;//TODO: Move this code out of here.
 
+
+        //TODO: Move the command Manager to a command manager.
         commandManager = new PaperCommandManager(this);
 
         commandManager.registerCommand(new LocationsCommand(this));
@@ -93,6 +95,8 @@ public class UHC extends JavaPlugin {
             obj.setDisplaySlot(DisplaySlot.BELOW_NAME);
             Objective obj2 = mainScoreboard.registerNewObjective("health_list", "health", "", RenderType.INTEGER);
             obj2.setDisplaySlot(DisplaySlot.PLAYER_LIST);
+
+            
         } catch (Exception e) {
             // TODO: handle exception
         }
