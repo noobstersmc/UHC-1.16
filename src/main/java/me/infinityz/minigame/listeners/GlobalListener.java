@@ -20,6 +20,8 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.event.player.PlayerQuitEvent;
+import me.infinityz.minigame.commands.GlobalMute;
 
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.enums.Stage;
@@ -29,6 +31,9 @@ import me.infinityz.minigame.scoreboard.IngameScoreboard;
 import me.infinityz.minigame.scoreboard.objects.UpdateObject;
 import me.infinityz.minigame.tasks.ScatterTask;
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 public class GlobalListener implements Listener {
     UHC instance;
@@ -51,6 +56,9 @@ public class GlobalListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
+        e.setJoinMessage("");
+        e.getPlayer().sendMessage(ChatColor.BLUE + "Discord! discord.gg/4AdHqV9");
+        e.getPlayer().sendMessage(ChatColor.AQUA + "Twitter! twitter.com/NoobstersUHC");
         switch (instance.gameStage) {
             case INGAME:
             case LOBBY:
@@ -63,6 +71,11 @@ public class GlobalListener implements Listener {
         }
 
     }
+    @EventHandler
+    public void onQuit(PlayerQuitEvent e){
+        e.setQuitMessage("");
+    }
+
     @EventHandler
     public void onLeaf(LeavesDecayEvent e){
         if(Math.random() <= 0.0075){
@@ -90,6 +103,13 @@ public class GlobalListener implements Listener {
                 if (!instance.pvp)
                     e.setCancelled(true);
             }
+        }
+    }
+    @EventHandler
+    public void onChat(AsyncPlayerChatEvent e){
+        if(instance.globalmute && !e.getPlayer().hasPermission("staff.perm")){
+            e.setCancelled(true);
+            e.getPlayer().sendMessage(ChatColor.RED + "Globalmute is Enabled.");
         }
     }
 
