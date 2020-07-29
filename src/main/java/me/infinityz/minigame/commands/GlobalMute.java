@@ -26,7 +26,7 @@ public class GlobalMute extends BaseCommand{
     @Default
     public void onCommand(CommandSender sender){
         instance.globalmute = !instance.globalmute;
-        Bukkit.broadcastMessage(ChatColor.of("#2be49c") + (instance.globalmute ? "Globalmute Enabled" : "Globalmute Disabled"));
+        Bukkit.broadcastMessage(ChatColor.of("#2be49c") + (instance.globalmute ? "Globalmute Enabled." : "Globalmute Disabled."));
     }
     
 }
