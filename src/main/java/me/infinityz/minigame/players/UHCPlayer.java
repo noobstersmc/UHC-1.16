@@ -5,7 +5,6 @@ import java.util.UUID;
 public class UHCPlayer {
     int kills;
     boolean alive;
-    boolean spectator;
     public boolean hasDied;
     UUID uuid;
 
@@ -30,14 +29,6 @@ public class UHCPlayer {
 
     public void setAlive(boolean bol) {
         this.alive = bol;
-    }
-
-    public boolean isSpectator() {
-        return spectator;
-    }
-
-    public void setSpectator(boolean bol) {
-        this.spectator = bol;
     }
 
 

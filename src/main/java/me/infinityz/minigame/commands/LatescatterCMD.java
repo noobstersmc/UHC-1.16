@@ -38,7 +38,7 @@ public class LatescatterCMD extends BaseCommand {
                     UHCPlayer up = instance.getPlayerManager().getPlayer(player.getUniqueId());
                     if (up == null)
                         throw new ConditionFailedException("You must be an spectator to do this");
-                    if (!up.isSpectator())
+                    if (!up.isAlive())
                         throw new ConditionFailedException("You must be spectator to do this");
                 });
 
@@ -77,12 +77,12 @@ public class LatescatterCMD extends BaseCommand {
     @Default
     @Conditions("ingame|time:max=1200")
     public void lateScatter(@Conditions("hasdied|spec") Player player) {
-        UHCPlayer uhcp =  instance.getPlayerManager().getPlayer(player.getUniqueId());
+        var uhcp =  instance.getPlayerManager().getPlayer(player.getUniqueId());
 
         if(uhcp == null){
             //Create the player instance if not existant
             uhcp = instance.getPlayerManager().addCreateUHCPlayer(player.getUniqueId(), true);
-            uhcp.setSpectator(false);
+            uhcp.setAlive(false);
             
         }else{
             if(uhcp.isAlive()){
@@ -90,7 +90,6 @@ public class LatescatterCMD extends BaseCommand {
                 return;
             }
             uhcp.setAlive(true);
-            uhcp.setSpectator(false);
         }
 
         player.sendMessage((ChatColor.YELLOW + "The player has been scattered into the world."));

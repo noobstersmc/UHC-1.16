@@ -42,17 +42,26 @@ public class IngameListeners implements Listener {
     @EventHandler
     public void onJoinLater(PlayerJoinEvent e) {
         // TODO: Make this more compact and effcient.
-        Player p = e.getPlayer();
-        UHCPlayer uhcP = instance.getPlayerManager().getPlayer(p.getUniqueId());
+        var p = e.getPlayer();
+        var uhcP = instance.getPlayerManager().getPlayer(p.getUniqueId());
 
         if (uhcP == null) {
             p.setGameMode(GameMode.SPECTATOR);
             uhcP = instance.getPlayerManager().addCreateUHCPlayer(p.getUniqueId(), false);
-            uhcP.setSpectator(true);
-        } else if (!uhcP.isAlive()) {
-            uhcP.setSpectator(true);
+            uhcP.setAlive(false);
+            if (GlobalListener.time < 1800) {
+                p.sendMessage(ChatColor.of("#2be49c") + "The UHC has already started, to play use /play");
+            }
+        } else if (!uhcP.hasDied && GlobalListener.time < 1800) {
+            p.sendMessage(ChatColor.of("#2be49c") + "The UHC has already started, to play use /play");
+            uhcP.setAlive(false);
             p.setGameMode(GameMode.SPECTATOR);
-
+        } else if (uhcP.hasDied) {
+            p.teleport(Bukkit.getWorlds().get(0).getSpawnLocation().add(0.0, 10, 0.0));
+            p.setGameMode(GameMode.SPECTATOR);
+            uhcP.setAlive(false);
+            p.getInventory().clear();
+            p.getInventory().setArmorContents(null);
         }
     }
 
