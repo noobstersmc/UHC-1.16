@@ -16,12 +16,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.event.player.PlayerQuitEvent;
-import me.infinityz.minigame.commands.GlobalMute;
 
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.enums.Stage;
@@ -31,9 +31,6 @@ import me.infinityz.minigame.scoreboard.IngameScoreboard;
 import me.infinityz.minigame.scoreboard.objects.UpdateObject;
 import me.infinityz.minigame.tasks.ScatterTask;
 import net.md_5.bungee.api.ChatColor;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 public class GlobalListener implements Listener {
     UHC instance;
