@@ -40,6 +40,7 @@ public class GlobalListener implements Listener {
 
     String timeConvert(int t) {
         int hours = t / 3600;
+        
         int minutes = (t % 3600) / 60;
         int seconds = t % 60;
 
