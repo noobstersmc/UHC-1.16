@@ -13,6 +13,7 @@ import me.infinityz.minigame.commands.HelpopCommand;
 import me.infinityz.minigame.commands.LatescatterCMD;
 import me.infinityz.minigame.commands.LocationsCommand;
 import me.infinityz.minigame.commands.PVP;
+import me.infinityz.minigame.commands.GlobalMute;
 import me.infinityz.minigame.commands.StartCommand;
 import me.infinityz.minigame.commands.UHCCommand;
 import me.infinityz.minigame.crafting.CraftingManager;
@@ -32,6 +33,7 @@ public class UHC extends JavaPlugin {
     ListenerManager listenerManager;
     CraftingManager craftingManager;
     public boolean pvp = false;
+    public boolean globalmute = false;
 
     @Override
     public void onEnable() {
@@ -45,6 +47,7 @@ public class UHC extends JavaPlugin {
         commandManager.registerCommand(new HelpopCommand(this));
         commandManager.registerCommand(new UHCCommand(this));
         commandManager.registerCommand(new LatescatterCMD(this));
+        commandManager.registerCommand(new GlobalMute(this));
 
         scoreboardManager = new ScoreboardManager(this);
         locationManager = new LocationManager(this);
@@ -104,7 +107,8 @@ public class UHC extends JavaPlugin {
             it.getWorldBorder().setCenter(0, 0);
             it.getWorldBorder().setSize(101);
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "whitelist on");
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "wb " + it.getName() + " set 2020 2020 0 0");
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "chunky center 0 0");
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "chunky radius 2000");
         });
 
     }
