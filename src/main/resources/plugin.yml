@@ -2,5 +2,4 @@ main: me.infinityz.minigame.UHC
 name: UHC-1.16
 version: 1.0-SNAPSHOT
 api-version: 1.16
-author: InfinityZ25
-depend: [WorldBorder]
+author: InfinityZ25 & AleIV

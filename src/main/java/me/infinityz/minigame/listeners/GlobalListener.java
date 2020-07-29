@@ -59,7 +59,6 @@ public class GlobalListener implements Listener {
         e.setJoinMessage("");
         e.getPlayer().sendMessage(ChatColor.BLUE + "Discord! discord.gg/4AdHqV9");
         e.getPlayer().sendMessage(ChatColor.AQUA + "Twitter! twitter.com/NoobstersUHC");
-        e.getPlayer().sendMessage(ChatColor.WHITE + "IP! noobsters.net");
         switch (instance.gameStage) {
             case INGAME:
             case LOBBY:
