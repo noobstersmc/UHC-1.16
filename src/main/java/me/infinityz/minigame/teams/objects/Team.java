@@ -5,23 +5,30 @@ import java.util.UUID;
 import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Bukkit;
 
+import lombok.Getter;
+import lombok.Setter;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 
 public class Team {
-    private UUID teamLeader, teamID;
-    private UUID[] members;
-    private String teamDisplayName;
-    private int teamKills;
+
+    private @Getter @Setter UUID teamLeader;
+    private @Getter UUID teamID;
+    private @Getter @Setter UUID[] members;
+    private @Getter @Setter String teamDisplayName;
+    private @Getter @Setter int teamKills;
 
     public Team(UUID teamLeader) {
         this.teamID = UUID.randomUUID();
-        addMember(teamLeader);
         this.teamLeader = teamLeader;
         this.teamKills = 0;
+        this.teamDisplayName = teamID.toString().substring(0, 6);
+        addMember(teamLeader);
     }
 
     public boolean isMember(UUID uuid) {
+        if (members == null || members.length < 1)
+            return false;
         for (var m : members)
             if (m.compareTo(uuid) == 0)
                 return true;
@@ -29,32 +36,8 @@ public class Team {
         return false;
     }
 
-    public void sendTeamMessage(BaseComponent component) {
-        for (var uuid : members) {
-            var player = Bukkit.getOfflinePlayer(uuid);
-            if (player.isOnline())
-                player.getPlayer().spigot().sendMessage(component);
-        }
-    }
-
-    public void sendTeamMessage(String str){
-        sendTeamMessage(new TextComponent(str));
-    }
-
-    public UUID getTeamLeader() {
-        return teamLeader;
-    }
-
-    public void setTeamLeader(UUID teamLeader) {
-        this.teamLeader = teamLeader;
-    }
-
     public boolean isTeamLeader(UUID member) {
         return member.compareTo(this.teamLeader) == 0;
-    }
-
-    public UUID[] getMembers() {
-        return members;
     }
 
     public boolean addMember(UUID uuid) {
@@ -71,32 +54,20 @@ public class Team {
         return true;
     }
 
-    public void setMembers(UUID[] members) {
-        this.members = members;
+    public void sendTeamMessage(BaseComponent component) {
+        for (var uuid : members) {
+            var player = Bukkit.getOfflinePlayer(uuid);
+            if (player.isOnline())
+                player.getPlayer().spigot().sendMessage(component);
+        }
     }
 
-    public String getTeamDisplayName() {
-        return teamDisplayName;
-    }
-
-    public void setTeamDisplayName(String teamDisplayName) {
-        this.teamDisplayName = teamDisplayName;
-    }
-
-    public int getTeamKills() {
-        return teamKills;
-    }
-
-    public void setTeamKills(int teamKills) {
-        this.teamKills = teamKills;
+    public void sendTeamMessage(String str) {
+        sendTeamMessage(new TextComponent(str));
     }
 
     public void addKills(int kill) {
         this.teamKills = this.teamKills + kill;
-    }
-
-    public UUID getTeamID() {
-        return teamID;
     }
 
 }
