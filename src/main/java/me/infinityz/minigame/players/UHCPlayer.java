@@ -31,6 +31,10 @@ public class UHCPlayer {
         this.alive = bol;
     }
 
+    public UUID getUUID() {
+        return uuid;
+    }
+
 
 
 }
