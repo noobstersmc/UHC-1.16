@@ -22,7 +22,6 @@ import me.infinityz.minigame.players.UHCPlayer;
 import me.infinityz.minigame.tasks.ScatterTask;
 import net.md_5.bungee.api.ChatColor;
 
-@CommandPermission("staff.perm")
 @CommandAlias("uhc|game")
 public class UHCCommand extends BaseCommand {
 
@@ -32,6 +31,8 @@ public class UHCCommand extends BaseCommand {
         this.instance = instance;
     }
 
+
+    @CommandPermission("staff.perm")
     @Conditions("ingame")
     @Subcommand("respawn|revive|reinstantiate")
     @CommandCompletion("@players")
@@ -57,6 +58,7 @@ public class UHCCommand extends BaseCommand {
         player.setGameMode(GameMode.SURVIVAL);
     }
 
+    @CommandPermission("staff.perm")
     @Conditions("ingame")
     @Subcommand("alive")
     @CommandAlias("alive")
@@ -97,6 +99,7 @@ public class UHCCommand extends BaseCommand {
 
     }
 
+    @CommandPermission("staff.perm")
     @Subcommand("givekills")
     @Syntax("<target> - UHCPlayer to recieve the kills")
     @CommandCompletion("@players")
