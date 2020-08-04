@@ -55,7 +55,7 @@ public class LatescatterCMD extends BaseCommand {
                     UHCPlayer up = instance.getPlayerManager().getPlayer(player.getUniqueId());
                     if (up == null)
                         throw new ConditionFailedException((ChatColor.RED + "You must be a player to do this"));
-                    if (up.hasDied)
+                    if (up.isDead())
                         throw new ConditionFailedException((ChatColor.RED + "You must not have died to do this."));
                 });
 
@@ -77,15 +77,15 @@ public class LatescatterCMD extends BaseCommand {
     @Default
     @Conditions("ingame|time:max=1200")
     public void lateScatter(@Conditions("hasdied|spec") Player player) {
-        var uhcp =  instance.getPlayerManager().getPlayer(player.getUniqueId());
+        var uhcp = instance.getPlayerManager().getPlayer(player.getUniqueId());
 
-        if(uhcp == null){
-            //Create the player instance if not existant
+        if (uhcp == null) {
+            // Create the player instance if not existant
             uhcp = instance.getPlayerManager().addCreateUHCPlayer(player.getUniqueId(), true);
             uhcp.setAlive(false);
-            
-        }else{
-            if(uhcp.isAlive()){
+
+        } else {
+            if (uhcp.isAlive()) {
                 player.sendMessage("Player is still alive.");
                 return;
             }
@@ -94,7 +94,8 @@ public class LatescatterCMD extends BaseCommand {
 
         player.sendMessage((ChatColor.YELLOW + "The player has been scattered into the world."));
 
-        player.teleport(ScatterTask.findScatterLocation(Bukkit.getWorlds().get(0), (int)Bukkit.getWorlds().get(0).getWorldBorder().getSize()/2));
+        player.teleport(ScatterTask.findScatterLocation(Bukkit.getWorlds().get(0),
+                (int) Bukkit.getWorlds().get(0).getWorldBorder().getSize() / 2));
         player.setGameMode(GameMode.SURVIVAL);
     }
 

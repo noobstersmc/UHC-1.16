@@ -23,6 +23,7 @@ import me.infinityz.minigame.locations.LocationManager;
 import me.infinityz.minigame.players.PlayerManager;
 import me.infinityz.minigame.scoreboard.ScoreboardManager;
 import me.infinityz.minigame.teams.TeamManager;
+import me.infinityz.minigame.teams.commands.TeamCMD;
 import net.md_5.bungee.api.ChatColor;
 
 public class UHC extends JavaPlugin {
@@ -51,6 +52,7 @@ public class UHC extends JavaPlugin {
         commandManager.registerCommand(new UHCCommand(this));
         commandManager.registerCommand(new LatescatterCMD(this));
         commandManager.registerCommand(new GlobalMute(this));
+        commandManager.registerCommand(new TeamCMD(this));
 
         teamManger = new TeamManager(this);
 
@@ -116,10 +118,10 @@ public class UHC extends JavaPlugin {
             it.setSpawnLocation(0, it.getHighestBlockAt(0, 0).getZ() + 10, 0);
             it.getWorldBorder().setCenter(0, 0);
             it.getWorldBorder().setSize(101);
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "whitelist on");
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "chunky center 0 0");
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "chunky radius 2000");
         });
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "whitelist on");
 
     }
 

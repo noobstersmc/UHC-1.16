@@ -27,12 +27,15 @@ public class Team {
     }
 
     public boolean isMember(UUID uuid) {
-        if (members == null || members.length < 1)
+        if (members == null || members.length < 1)// Null safety
             return false;
-        for (var m : members)
-            if (m.compareTo(uuid) == 0)
+        for (var m : members) {
+            if (m == null)// Ensure not looping through nulls
+                continue;
+            // Double check, perhaps unnecesary.
+            if (m.compareTo(uuid) == 0 || m.getMostSignificantBits() == uuid.getMostSignificantBits())
                 return true;
-
+        }
         return false;
     }
 

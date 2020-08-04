@@ -2,39 +2,27 @@ package me.infinityz.minigame.players;
 
 import java.util.UUID;
 
+import com.google.gson.GsonBuilder;
+
+import lombok.Getter;
+import lombok.Setter;
+
 public class UHCPlayer {
-    int kills;
-    boolean alive;
-    public boolean hasDied;
-    UUID uuid;
+    private @Getter @Setter int kills;
+    private @Getter @Setter boolean alive;
+    private @Getter @Setter boolean dead;
+    private @Getter UUID UUID;
 
     public UHCPlayer(UUID uuid, int kills, boolean alive) {
-        this.uuid = uuid;
+        this.UUID = uuid;
         this.kills = kills;
         this.alive = alive;
-        this.hasDied = false;
+        this.dead = false;
     }
 
-    public int getKills() {
-        return kills;
+    @Override
+    public String toString() {
+        return new GsonBuilder().setPrettyPrinting().create().toJson(this);
     }
-
-    public void setKills(int kills) {
-        this.kills = kills;
-    }
-
-    public boolean isAlive() {
-        return alive;
-    }
-
-    public void setAlive(boolean bol) {
-        this.alive = bol;
-    }
-
-    public UUID getUUID() {
-        return uuid;
-    }
-
-
 
 }

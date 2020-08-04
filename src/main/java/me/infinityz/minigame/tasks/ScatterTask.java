@@ -1,6 +1,8 @@
 package me.infinityz.minigame.tasks;
 
 import java.util.Iterator;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
@@ -9,13 +11,12 @@ import org.bukkit.World;
 import org.bukkit.block.BlockFace;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import io.netty.util.internal.ConcurrentSet;
 import me.infinityz.minigame.events.ScatterLocationsFoundEvent;
 
 public class ScatterTask extends BukkitRunnable {
     World world;
     int radius, distanceThreshold, quantity;
-    ConcurrentSet<Location> locations;
+    Set<Location> locations;
     long time, start_time;
 
     public ScatterTask(World world, int radius, int distanceThreshold, int quantity) {
@@ -23,7 +24,7 @@ public class ScatterTask extends BukkitRunnable {
         this.radius = radius;
         this.distanceThreshold = distanceThreshold;
         this.quantity = quantity;
-        locations = new ConcurrentSet<>();
+        locations = ConcurrentHashMap.newKeySet();
         this.start_time = System.currentTimeMillis();
     }
 
@@ -53,7 +54,6 @@ public class ScatterTask extends BukkitRunnable {
 
     }
 
-
     public static Location findScatterLocation(final World world, final int radius) {
         Location loc = new Location(world, 0, 0, 0);
         // Use Math#Random to obtain a random integer that can be used as a location.
@@ -61,7 +61,7 @@ public class ScatterTask extends BukkitRunnable {
         loc.setZ(loc.getZ() + Math.random() * radius * 2.0 - radius);
         loc = loc.getWorld().getHighestBlockAt(loc).getLocation();
 
-        if(!isSafe(loc)){
+        if (!isSafe(loc)) {
             return findScatterLocation(world, radius);
         }
         // A location object is returned once we reach this step, next step is to
@@ -70,9 +70,9 @@ public class ScatterTask extends BukkitRunnable {
     }
 
     private static Location centerLocation(final Location loc) {
-        loc.setX(loc.getBlockX() +0.5);
-        loc.setY(loc.getBlockY() +1.5);
-        loc.setZ(loc.getBlockZ() +0.5);
+        loc.setX(loc.getBlockX() + 0.5);
+        loc.setY(loc.getBlockY() + 1.5);
+        loc.setZ(loc.getBlockZ() + 0.5);
         return loc;
     }
 

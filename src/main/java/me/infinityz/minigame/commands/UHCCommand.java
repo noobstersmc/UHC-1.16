@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
@@ -14,6 +15,7 @@ import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Conditions;
 import co.aikar.commands.annotation.Default;
+import co.aikar.commands.annotation.Flags;
 import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.annotation.Syntax;
 import co.aikar.commands.bukkit.contexts.OnlinePlayer;
@@ -31,17 +33,16 @@ public class UHCCommand extends BaseCommand {
         this.instance = instance;
     }
 
-
     @CommandPermission("staff.perm")
     @Conditions("ingame")
+    @CommandAlias("respawn")
     @Subcommand("respawn|revive|reinstantiate")
     @CommandCompletion("@players")
     @Syntax("<target> &e- Player that has to be scattered")
-    public void onCommand(CommandSender sender, OnlinePlayer target) {
+    public void onCommand(CommandSender sender, @Flags("other") Player target) {
         if (target == null)
             return;
-        var player = target.getPlayer();
-        var uhcPlayer = instance.getPlayerManager().getPlayer(player.getUniqueId());
+        var uhcPlayer = instance.getPlayerManager().getPlayer(target.getUniqueId());
 
         if (uhcPlayer.isAlive()) {
             sender.sendMessage("Player is still alive.");
@@ -54,8 +55,8 @@ public class UHCCommand extends BaseCommand {
         var world = Bukkit.getWorlds().get(0);
         var scatterLocation = ScatterTask.findScatterLocation(world, (int) world.getWorldBorder().getSize() / 2);
 
-        player.teleport(scatterLocation);
-        player.setGameMode(GameMode.SURVIVAL);
+        target.teleport(scatterLocation);
+        target.setGameMode(GameMode.SURVIVAL);
     }
 
     @CommandPermission("staff.perm")
@@ -118,6 +119,17 @@ public class UHCCommand extends BaseCommand {
         uhcPlayer.setKills(uhcPlayer.getKills() + amount);
         sender.sendMessage("Gave " + amount + " kills to " + player.getName());
 
+    }
+
+    @Subcommand("check")
+    @CommandPermission("uhc.admin")
+    public void checkPlayerObjectStatus(CommandSender sender, @Flags("other") Player target) {
+        var uhcPlayer = instance.getPlayerManager().getPlayer(target.getUniqueId());
+        if (uhcPlayer != null) {
+            sender.sendMessage(target.getName() + "'s object status: \n" + uhcPlayer.toString());
+        } else {
+            sender.sendMessage("That player is null");
+        }
     }
 
 }
