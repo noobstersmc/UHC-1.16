@@ -9,11 +9,12 @@ import org.bukkit.scoreboard.RenderType;
 import org.bukkit.scoreboard.Scoreboard;
 
 import co.aikar.commands.PaperCommandManager;
+import me.infinityz.minigame.commands.ContextConditions;
+import me.infinityz.minigame.commands.GlobalMute;
 import me.infinityz.minigame.commands.HelpopCommand;
 import me.infinityz.minigame.commands.LatescatterCMD;
 import me.infinityz.minigame.commands.LocationsCommand;
 import me.infinityz.minigame.commands.PVP;
-import me.infinityz.minigame.commands.GlobalMute;
 import me.infinityz.minigame.commands.StartCommand;
 import me.infinityz.minigame.commands.UHCCommand;
 import me.infinityz.minigame.crafting.CraftingManager;
@@ -22,6 +23,8 @@ import me.infinityz.minigame.listeners.ListenerManager;
 import me.infinityz.minigame.locations.LocationManager;
 import me.infinityz.minigame.players.PlayerManager;
 import me.infinityz.minigame.scoreboard.ScoreboardManager;
+import me.infinityz.minigame.teams.TeamManager;
+import me.infinityz.minigame.teams.commands.TeamCMD;
 import net.md_5.bungee.api.ChatColor;
 
 public class UHC extends JavaPlugin {
@@ -32,16 +35,19 @@ public class UHC extends JavaPlugin {
     PlayerManager playerManager;
     ListenerManager listenerManager;
     CraftingManager craftingManager;
+    TeamManager teamManger;
     public boolean pvp = false;
     public boolean globalmute = false;
 
     @Override
     public void onEnable() {
-        gameStage = Stage.LOADING;//TODO: Move this code out of here.
+        gameStage = Stage.LOADING;// TODO: Move this code out of here.
 
-
-        //TODO: Move the command Manager to a command manager.
+        // TODO: Move the command Manager to a command manager.
         commandManager = new PaperCommandManager(this);
+
+        // Register all command conditions, completion, annotations, and context
+        new ContextConditions(this);
 
         commandManager.registerCommand(new LocationsCommand(this));
         commandManager.registerCommand(new StartCommand(this));
@@ -50,6 +56,9 @@ public class UHC extends JavaPlugin {
         commandManager.registerCommand(new UHCCommand(this));
         commandManager.registerCommand(new LatescatterCMD(this));
         commandManager.registerCommand(new GlobalMute(this));
+        commandManager.registerCommand(new TeamCMD(this));
+
+        teamManger = new TeamManager(this);
 
         scoreboardManager = new ScoreboardManager(this);
         locationManager = new LocationManager(this);
@@ -59,8 +68,10 @@ public class UHC extends JavaPlugin {
 
         listenerManager = new ListenerManager(this);
         runStartUp();
-        Bukkit.getServer().getWhitelistedPlayers().clear();
-        
+    }
+
+    public TeamManager getTeamManger() {
+        return teamManger;
     }
 
     public ScoreboardManager getScoreboardManager() {
@@ -95,8 +106,8 @@ public class UHC extends JavaPlugin {
             obj.setDisplaySlot(DisplaySlot.BELOW_NAME);
             Objective obj2 = mainScoreboard.registerNewObjective("health_list", "health", "", RenderType.INTEGER);
             obj2.setDisplaySlot(DisplaySlot.PLAYER_LIST);
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "whitelist on");
 
-            
         } catch (Exception e) {
             // TODO: handle exception
         }
@@ -110,11 +121,7 @@ public class UHC extends JavaPlugin {
             it.setSpawnLocation(0, it.getHighestBlockAt(0, 0).getZ() + 10, 0);
             it.getWorldBorder().setCenter(0, 0);
             it.getWorldBorder().setSize(101);
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "whitelist on");
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "chunky center 0 0");
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "chunky radius 2000");
         });
-
     }
 
 }

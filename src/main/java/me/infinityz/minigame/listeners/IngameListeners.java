@@ -1,8 +1,9 @@
 package me.infinityz.minigame.listeners;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -31,28 +32,35 @@ public class IngameListeners implements Listener {
     public IngameListeners(UHC instance) {
         this.instance = instance;
 
-        possibleFence = new ArrayList<>();
-        for (Material m : Material.values()) {
-            if (m.name().contains("FENCE") && !m.name().contains("FENCE_GATE")) {
-                possibleFence.add(m);
-            }
-        }
+        possibleFence = Arrays.asList(Material.values()).stream()
+                .filter(material -> material.name().contains("FENCE") && !material.name().contains("FENCE_GATE"))
+                .collect(Collectors.toList());
+
     }
 
     @EventHandler
     public void onJoinLater(PlayerJoinEvent e) {
         // TODO: Make this more compact and effcient.
-        Player p = e.getPlayer();
-        UHCPlayer uhcP = instance.getPlayerManager().getPlayer(p.getUniqueId());
+        var p = e.getPlayer();
+        var uhcP = instance.getPlayerManager().getPlayer(p.getUniqueId());
 
         if (uhcP == null) {
             p.setGameMode(GameMode.SPECTATOR);
             uhcP = instance.getPlayerManager().addCreateUHCPlayer(p.getUniqueId(), false);
-            uhcP.setSpectator(true);
-        } else if (!uhcP.isAlive()) {
-            uhcP.setSpectator(true);
+            uhcP.setAlive(false);
+            if (GlobalListener.time < 1800) {
+                p.sendMessage(ChatColor.of("#2be49c") + "The UHC has already started, to play use /play");
+            }
+        } else if (!uhcP.isDead() && !uhcP.isAlive() && GlobalListener.time < 1800) {
+            p.sendMessage(ChatColor.of("#2be49c") + "The UHC has already started, to play use /play");
+            uhcP.setAlive(false);
             p.setGameMode(GameMode.SPECTATOR);
-
+        } else if (uhcP.isDead()) {
+            p.teleport(Bukkit.getWorlds().get(0).getSpawnLocation().add(0.0, 10, 0.0));
+            p.setGameMode(GameMode.SPECTATOR);
+            uhcP.setAlive(false);
+            p.getInventory().clear();
+            p.getInventory().setArmorContents(null);
         }
     }
 
@@ -107,9 +115,8 @@ public class IngameListeners implements Listener {
         if (uhcPlayer != null) {
             if (uhcPlayer.isAlive()) {
                 uhcPlayer.setAlive(false);
-                uhcPlayer.hasDied = true;
+                uhcPlayer.setDead(true);
             } // TODO: Send update to players left.
-
         }
         if (p.getKiller() != null) {
             Player killer = p.getKiller();

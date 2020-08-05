@@ -26,13 +26,13 @@ public class HelpopCommand extends BaseCommand {
             player.sendMessage("Correct usage: /helpop <message>");
             return;
         }
-        player.sendMessage("Your message has been sent!");
+        player.sendMessage(ChatColor.of("#DABC12") + "Your message has been sent!");
 
         StringBuilder sb = new StringBuilder();
         for (String string : message) {
             sb.append(string + " ");
         }
-        Bukkit.broadcast(ChatColor.YELLOW + "[Helpop] " + ChatColor.GRAY + player.getName() + ": " + sb.toString(),
+        Bukkit.broadcast(ChatColor.of("#DABC12") + "[Helpop] " + ChatColor.GRAY + player.getName() + ": " + sb.toString(),
                 "staff.perm");
     }
 

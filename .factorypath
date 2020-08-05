@@ -1,0 +1,10 @@
+<factorypath>
+    <factorypathentry kind="VARJAR" id="M2_REPO/jars/me/infinityz/Paper/1.16.1/Paper-1.16.1.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/fr/mrmicky/FastBoard/1.1.0/FastBoard-1.1.0.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/co/aikar/acf-paper/0.5.0-SNAPSHOT/acf-paper-0.5.0-SNAPSHOT.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/org/projectlombok/lombok/1.18.12/lombok-1.18.12.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/net/sf/trove4j/core/3.1.0/core-3.1.0.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/com/github/ben-manes/caffeine/caffeine/2.8.5/caffeine-2.8.5.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/org/checkerframework/checker-qual/3.4.1/checker-qual-3.4.1.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/com/google/errorprone/error_prone_annotations/2.4.0/error_prone_annotations-2.4.0.jar" enabled="true" runInBatchMode="false"/>
+</factorypath>

@@ -1,19 +1,20 @@
 package me.infinityz.minigame.scoreboard;
 
 import java.util.Iterator;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.entity.Player;
 
 import fr.mrmicky.fastboard.FastBoard;
-import io.netty.util.internal.ConcurrentSet;
 import me.infinityz.minigame.scoreboard.objects.UpdateObject;
 
 public abstract class IScoreboard extends FastBoard {
-    public ConcurrentSet<UpdateObject> updateQueue;
+    public Set<UpdateObject> updateQueue;
 
     public IScoreboard(Player player) {
         super(player);
-        updateQueue = new ConcurrentSet<>();
+        updateQueue = ConcurrentHashMap.newKeySet();
     }
 
     public abstract void update();
@@ -29,7 +30,7 @@ public abstract class IScoreboard extends FastBoard {
         iterator = null;
     }
 
-    public void addUpdates(UpdateObject updateObject){
+    public void addUpdates(UpdateObject updateObject) {
         updateQueue.add(updateObject);
     }
 

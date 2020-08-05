@@ -1,10 +1,11 @@
 package me.infinityz.minigame.commands;
 
+import java.util.Comparator;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 
 import co.aikar.commands.BaseCommand;
@@ -12,14 +13,14 @@ import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Conditions;
+import co.aikar.commands.annotation.Flags;
 import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.annotation.Syntax;
-import co.aikar.commands.bukkit.contexts.OnlinePlayer;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.players.UHCPlayer;
 import me.infinityz.minigame.tasks.ScatterTask;
+import net.md_5.bungee.api.ChatColor;
 
-@CommandPermission("staff.perm")
 @CommandAlias("uhc|game")
 public class UHCCommand extends BaseCommand {
 
@@ -28,47 +29,82 @@ public class UHCCommand extends BaseCommand {
     public UHCCommand(UHC instance) {
         this.instance = instance;
     }
- 
+
+    @CommandPermission("staff.perm")
     @Conditions("ingame")
+    @CommandAlias("respawn")
     @Subcommand("respawn|revive|reinstantiate")
     @CommandCompletion("@players")
-    @Syntax("<target> &e- Player that has to be scattered")
-    public void onCommand(CommandSender sender, OnlinePlayer target) {
-        if(target == null)return;
-        UHCPlayer uhcp =  instance.getPlayerManager().getPlayer(target.player.getUniqueId());
+    @Syntax("<uhcPlayer> &e- Player that has to be scattered")
+    public void onCommand(CommandSender sender, @Conditions("dead") @Flags("other") UHCPlayer uhcPlayer) {
+        uhcPlayer.setAlive(true);
+        sender.sendMessage(ChatColor.of("#7ab83c") + "The player has been scattered into the world");
 
-        if(uhcp == null){
-            //Create the player instance if not existant
-            uhcp = instance.getPlayerManager().addCreateUHCPlayer(target.player.getUniqueId(), true);
-            uhcp.setSpectator(false);
-            
-        }else{
-            if(uhcp.isAlive()){
-                sender.sendMessage("Player is still alive.");
-                return;
-            }
-            uhcp.setAlive(true);
-            uhcp.setSpectator(false);
-        }
+        var world = Bukkit.getWorlds().get(0);
+        var scatterLocation = ScatterTask.findScatterLocation(world, (int) world.getWorldBorder().getSize() / 2);
+        var target = Bukkit.getPlayer(uhcPlayer.getUUID());
 
-        sender.sendMessage("The player has been scattered into the world");
-
-        target.player.teleport(ScatterTask.findScatterLocation(Bukkit.getWorlds().get(0), (int)Bukkit.getWorlds().get(0).getWorldBorder().getSize()/2));
-        target.player.setGameMode(GameMode.SURVIVAL);
+        target.teleport(scatterLocation);
+        target.setGameMode(GameMode.SURVIVAL);
     }
 
+    @CommandPermission("staff.perm")
     @Conditions("ingame")
     @Subcommand("alive")
-    public void alive(CommandSender sender){
+    @CommandAlias("alive")
+    public void alive(CommandSender sender) {
         sender.sendMessage("Alive offline players: ");
-        instance.getPlayerManager().getUhcPlayerMap().entrySet().forEach(entry->{
-            if(entry.getValue().isAlive()){
-                OfflinePlayer of = Bukkit.getOfflinePlayer(UUID.fromString(entry.getKey()));
-                if(!of.isOnline()){
+        instance.getPlayerManager().getUhcPlayerMap().entrySet().forEach(entry -> {
+            if (entry.getValue().isAlive()) {
+                var of = Bukkit.getOfflinePlayer(UUID.fromString(entry.getKey()));
+                if (!of.isOnline()) {
                     sender.sendMessage(" - " + of.getName());
                 }
             }
         });
+    }
+
+    @Conditions("ingame")
+    @CommandAlias("kt|killtop")
+    @Subcommand("killtop|kt")
+    public void killTop(CommandSender sender) {
+        var players = instance.getPlayerManager().getUhcPlayerMap().values().parallelStream();
+        // Use sorted with a comparator on player kills to sort ascending.
+        var playersSorted = players.filter(player -> player.getKills() > 0)
+                .sorted(Comparator.comparingInt(UHCPlayer::getKills).reversed()).limit(10).collect(Collectors.toList());
+
+        if (playersSorted.isEmpty()) {
+            sender.sendMessage(ChatColor.RED + "There isn't a kill leaderboard yet.");
+            return;
+        }
+        sender.sendMessage(ChatColor.of("#83436d") + "Kill top: ");
+        var count = 1;
+
+        for (var player : playersSorted) {
+            sender.sendMessage(ChatColor.of("#cec7c8") + "" + count + ". "
+                    + Bukkit.getOfflinePlayer(player.getUUID()).getName() + ": " + player.getKills());
+            count++;
+
+        }
+
+    }
+
+    @CommandPermission("staff.perm")
+    @Subcommand("givekills")
+    @Syntax("<target> - UHCPlayer to recieve the kills")
+    @CommandCompletion("@players")
+    public void onGiveKills(CommandSender sender, @Flags("other") UHCPlayer target) {
+        target.setKills(target.getKills() + 1);
+        sender.sendMessage("Gave " + 1 + " kills to " + Bukkit.getOfflinePlayer(target.getUUID()).getName());
+
+    }
+
+    @Subcommand("status|check")
+    @CommandCompletion("@players ")
+    @CommandPermission("uhc.admin")
+    @Syntax("<target> - UHCPlayer to recieve the kills")
+    public void checkPlayerObjectStatus(CommandSender sender, @Flags("other") UHCPlayer target) {
+        sender.sendMessage(target.toString());
     }
 
 }
