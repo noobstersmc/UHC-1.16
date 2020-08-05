@@ -7,18 +7,15 @@ import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Conditions;
-import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Flags;
 import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.annotation.Syntax;
-import co.aikar.commands.bukkit.contexts.OnlinePlayer;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.players.UHCPlayer;
 import me.infinityz.minigame.tasks.ScatterTask;
@@ -38,22 +35,14 @@ public class UHCCommand extends BaseCommand {
     @CommandAlias("respawn")
     @Subcommand("respawn|revive|reinstantiate")
     @CommandCompletion("@players")
-    @Syntax("<target> &e- Player that has to be scattered")
-    public void onCommand(CommandSender sender, @Flags("other") Player target) {
-        if (target == null)
-            return;
-        var uhcPlayer = instance.getPlayerManager().getPlayer(target.getUniqueId());
-
-        if (uhcPlayer.isAlive()) {
-            sender.sendMessage("Player is still alive.");
-            return;
-        }
+    @Syntax("<uhcPlayer> &e- Player that has to be scattered")
+    public void onCommand(CommandSender sender, @Conditions("dead") @Flags("other") UHCPlayer uhcPlayer) {
         uhcPlayer.setAlive(true);
-
-        sender.sendMessage("The player has been scattered into the world");
+        sender.sendMessage(ChatColor.of("#7ab83c") + "The player has been scattered into the world");
 
         var world = Bukkit.getWorlds().get(0);
         var scatterLocation = ScatterTask.findScatterLocation(world, (int) world.getWorldBorder().getSize() / 2);
+        var target = Bukkit.getPlayer(uhcPlayer.getUUID());
 
         target.teleport(scatterLocation);
         target.setGameMode(GameMode.SURVIVAL);
@@ -88,12 +77,12 @@ public class UHCCommand extends BaseCommand {
             sender.sendMessage(ChatColor.RED + "There isn't a kill leaderboard yet.");
             return;
         }
-        sender.sendMessage("Kill top: ");
+        sender.sendMessage(ChatColor.of("#83436d") + "Kill top: ");
         var count = 1;
 
         for (var player : playersSorted) {
-            sender.sendMessage(
-                    count + ". " + Bukkit.getOfflinePlayer(player.getUUID()).getName() + ": " + player.getKills());
+            sender.sendMessage(ChatColor.of("#cec7c8") + "" + count + ". "
+                    + Bukkit.getOfflinePlayer(player.getUUID()).getName() + ": " + player.getKills());
             count++;
 
         }
@@ -104,32 +93,18 @@ public class UHCCommand extends BaseCommand {
     @Subcommand("givekills")
     @Syntax("<target> - UHCPlayer to recieve the kills")
     @CommandCompletion("@players")
-    public void onGiveKills(CommandSender sender, OnlinePlayer target, @Default("1") Integer amount) {
-        if (target == null)
-            return;
-
-        var player = target.getPlayer();
-        var uhcPlayer = instance.getPlayerManager().getPlayer(player.getUniqueId());
-
-        if (uhcPlayer == null) {
-            sender.sendMessage("Player is somehow null");
-            return;
-        }
-
-        uhcPlayer.setKills(uhcPlayer.getKills() + amount);
-        sender.sendMessage("Gave " + amount + " kills to " + player.getName());
+    public void onGiveKills(CommandSender sender, @Flags("other") UHCPlayer target) {
+        target.setKills(target.getKills() + 1);
+        sender.sendMessage("Gave " + 1 + " kills to " + Bukkit.getOfflinePlayer(target.getUUID()).getName());
 
     }
 
-    @Subcommand("check")
+    @Subcommand("status|check")
+    @CommandCompletion("@players ")
     @CommandPermission("uhc.admin")
-    public void checkPlayerObjectStatus(CommandSender sender, @Flags("other") Player target) {
-        var uhcPlayer = instance.getPlayerManager().getPlayer(target.getUniqueId());
-        if (uhcPlayer != null) {
-            sender.sendMessage(target.getName() + "'s object status: \n" + uhcPlayer.toString());
-        } else {
-            sender.sendMessage("That player is null");
-        }
+    @Syntax("<target> - UHCPlayer to recieve the kills")
+    public void checkPlayerObjectStatus(CommandSender sender, @Flags("other") UHCPlayer target) {
+        sender.sendMessage(target.toString());
     }
 
 }

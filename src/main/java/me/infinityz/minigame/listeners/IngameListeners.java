@@ -51,7 +51,7 @@ public class IngameListeners implements Listener {
             if (GlobalListener.time < 1800) {
                 p.sendMessage(ChatColor.of("#2be49c") + "The UHC has already started, to play use /play");
             }
-        } else if (!uhcP.isDead() && GlobalListener.time < 1800) {
+        } else if (!uhcP.isDead() && !uhcP.isAlive() && GlobalListener.time < 1800) {
             p.sendMessage(ChatColor.of("#2be49c") + "The UHC has already started, to play use /play");
             uhcP.setAlive(false);
             p.setGameMode(GameMode.SPECTATOR);

@@ -9,6 +9,7 @@ import org.bukkit.scoreboard.RenderType;
 import org.bukkit.scoreboard.Scoreboard;
 
 import co.aikar.commands.PaperCommandManager;
+import me.infinityz.minigame.commands.ContextConditions;
 import me.infinityz.minigame.commands.GlobalMute;
 import me.infinityz.minigame.commands.HelpopCommand;
 import me.infinityz.minigame.commands.LatescatterCMD;
@@ -45,6 +46,9 @@ public class UHC extends JavaPlugin {
         // TODO: Move the command Manager to a command manager.
         commandManager = new PaperCommandManager(this);
 
+        // Register all command conditions, completion, annotations, and context
+        new ContextConditions(this);
+
         commandManager.registerCommand(new LocationsCommand(this));
         commandManager.registerCommand(new StartCommand(this));
         commandManager.registerCommand(new PVP(this));
@@ -64,8 +68,6 @@ public class UHC extends JavaPlugin {
 
         listenerManager = new ListenerManager(this);
         runStartUp();
-        Bukkit.getServer().getWhitelistedPlayers().clear();
-
     }
 
     public TeamManager getTeamManger() {
@@ -104,6 +106,7 @@ public class UHC extends JavaPlugin {
             obj.setDisplaySlot(DisplaySlot.BELOW_NAME);
             Objective obj2 = mainScoreboard.registerNewObjective("health_list", "health", "", RenderType.INTEGER);
             obj2.setDisplaySlot(DisplaySlot.PLAYER_LIST);
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "whitelist on");
 
         } catch (Exception e) {
             // TODO: handle exception
@@ -118,11 +121,7 @@ public class UHC extends JavaPlugin {
             it.setSpawnLocation(0, it.getHighestBlockAt(0, 0).getZ() + 10, 0);
             it.getWorldBorder().setCenter(0, 0);
             it.getWorldBorder().setSize(101);
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "chunky center 0 0");
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "chunky radius 2000");
         });
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "whitelist on");
-
     }
 
 }

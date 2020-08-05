@@ -27,37 +27,40 @@ public class StartCommand extends BaseCommand {
     public StartCommand(UHC instance) {
         this.instance = instance;
     }
+
     @Default
-    public void newScatter(CommandSender sender){
+    public void newScatter(CommandSender sender) {
         HashSet<Location> locs = instance.getLocationManager().getLocationsSet();
-        if(locs == null || locs.isEmpty()){
+        if (locs == null || locs.isEmpty()) {
             sender.sendMessage("No locations have been found yet.");
             return;
         }
-        if(locs.size() < Bukkit.getOnlinePlayers().size()){
-            sender.sendMessage("Not enough locations have been found. (" + locs.size()+ "/"+ Bukkit.getOnlinePlayers().size() + ")");
+        if (locs.size() < Bukkit.getOnlinePlayers().size()) {
+            sender.sendMessage("Not enough locations have been found. (" + locs.size() + "/"
+                    + Bukkit.getOnlinePlayers().size() + ")");
             return;
         }
-        sender.sendMessage(ChatColor.of("#2be49c") + "Starting the teleportation task...");
-        //Start Parameters
+        Bukkit.broadcastMessage(ChatColor.of("#2be49c") + "Starting the teleportation task...");
+        // Start Parameters
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "scoreboard objectives setdisplay list health_name");
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "whitelist add @a");
 
-        Bukkit.getWorlds().forEach(it->{
+        Bukkit.getWorlds().forEach(it -> {
             it.getWorldBorder().setSize(4001);
             it.setDifficulty(Difficulty.HARD);
             it.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, true);
-            it.setTime(400);
+            it.setTime(0);
         });
 
-        new TeleportTemporalTask(instance, locs, new ArrayList<>(Bukkit.getOnlinePlayers())).runTaskTimer(instance, 20L, 20L);
-        
+        new TeleportTemporalTask(instance, locs, new ArrayList<>(Bukkit.getOnlinePlayers())).runTaskTimer(instance, 20L,
+                20L);
+
         instance.getListenerManager().unregisterListener(instance.getListenerManager().getLobby());
-        
+
         instance.getScoreboardManager().purgeScoreboards();
 
         Bukkit.getOnlinePlayers().forEach(players -> {
-            //cosas del inicio
+            // cosas del inicio
             players.getInventory().clear();
             players.setGameMode(GameMode.SURVIVAL);
             ScatterScoreboard sb = new ScatterScoreboard(players);

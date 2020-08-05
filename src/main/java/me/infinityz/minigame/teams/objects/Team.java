@@ -8,7 +8,6 @@ import org.bukkit.Bukkit;
 import lombok.Getter;
 import lombok.Setter;
 import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.TextComponent;
 
 public class Team {
 
@@ -61,12 +60,16 @@ public class Team {
         for (var uuid : members) {
             var player = Bukkit.getOfflinePlayer(uuid);
             if (player.isOnline())
-                player.getPlayer().spigot().sendMessage(component);
+                player.getPlayer().sendMessage(component);
         }
     }
 
     public void sendTeamMessage(String str) {
-        sendTeamMessage(new TextComponent(str));
+        for (var uuid : members) {
+            var player = Bukkit.getOfflinePlayer(uuid);
+            if (player.isOnline())
+                player.getPlayer().sendMessage(str);
+        }
     }
 
     public void addKills(int kill) {

@@ -7,20 +7,21 @@ import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
 import me.infinityz.minigame.UHC;
+import net.md_5.bungee.api.ChatColor;
 
 @CommandPermission("staff.perm")
 @CommandAlias("pvp")
-public class PVP extends BaseCommand{
+public class PVP extends BaseCommand {
     UHC instance;
 
-    public PVP(UHC instance){
+    public PVP(UHC instance) {
         this.instance = instance;
     }
 
     @Default
-    public void onCommand(CommandSender sender){
+    public void onCommand(CommandSender sender) {
         instance.pvp = !instance.pvp;
-        sender.sendMessage("PvP has been set to " + instance.pvp);
+        sender.sendMessage(ChatColor.of("#DABC12") + "PvP has been set to " + instance.pvp);
     }
-    
+
 }

@@ -12,17 +12,18 @@ import net.md_5.bungee.api.ChatColor;
 
 @CommandPermission("staff.perm")
 @CommandAlias("globalmute")
-public class GlobalMute extends BaseCommand{
+public class GlobalMute extends BaseCommand {
     UHC instance;
 
-    public GlobalMute(UHC instance){
+    public GlobalMute(UHC instance) {
         this.instance = instance;
     }
 
     @Default
-    public void onCommand(CommandSender sender){
+    public void onCommand(CommandSender sender) {
         instance.globalmute = !instance.globalmute;
-        Bukkit.broadcastMessage(ChatColor.of("#2be49c") + (instance.globalmute ? "Globalmute Enabled." : "Globalmute Disabled."));
+        Bukkit.broadcastMessage(
+                ChatColor.of("#2be49c") + (instance.globalmute ? "Globalmute Enabled." : "Globalmute Disabled."));
     }
-    
+
 }

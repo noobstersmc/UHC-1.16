@@ -1,20 +1,20 @@
 package me.infinityz.minigame.teams.events;
 
-import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import lombok.Getter;
 import me.infinityz.minigame.teams.objects.Team;
+import me.infinityz.minigame.teams.objects.TeamInvite;
 
-public class TeamCreatedEvent extends Event {
+public class TeamInviteSentEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
     private @Getter Team team;
-    private @Getter Player player;
+    private @Getter TeamInvite invite;
 
-    public TeamCreatedEvent(Team team, Player player) {
+    public TeamInviteSentEvent(Team team, TeamInvite invite) {
         this.team = team;
-        this.player = player;
+        this.invite = invite;
     }
 
     public HandlerList getHandlers() {

@@ -39,7 +39,7 @@ public class GlobalListener implements Listener {
     public void joinMessage(PlayerJoinEvent e) {
         e.setJoinMessage("");
         e.getPlayer().sendMessage(ChatColor.BLUE + "Discord! discord.gg/4AdHqV9\n" + ChatColor.AQUA
-                + "Twitter! twitter.com/NoobstersUHC");
+                + "Twitter! twitter.com/NoobstersUHC\n" + ChatColor.GOLD + "Donations! noobsters.buycraft.net");
 
     }
 

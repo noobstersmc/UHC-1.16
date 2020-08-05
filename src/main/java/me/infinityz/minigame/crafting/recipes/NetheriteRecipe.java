@@ -15,13 +15,13 @@ public class NetheriteRecipe extends CustomRecipe {
         super(namespacedKey, recipe);
     }
 
-    public NetheriteRecipe(NamespacedKey namespacedKey){
+    public NetheriteRecipe(NamespacedKey namespacedKey) {
         super(namespacedKey, null);
 
-        final ShapelessRecipe recipe = new ShapelessRecipe(namespacedKey, new ItemStack(Material.NETHERITE_INGOT, 4));
+        final ShapelessRecipe recipe = new ShapelessRecipe(namespacedKey, new ItemStack(Material.NETHERITE_INGOT, 2));
         recipe.addIngredient(4, Material.NETHERITE_SCRAP);
         recipe.addIngredient(4, Material.GOLD_INGOT);
-        
+
         setRecipe(recipe);
 
         logic();
@@ -31,5 +31,5 @@ public class NetheriteRecipe extends CustomRecipe {
     public void logic() {
         Bukkit.getServer().addRecipe(getRecipe());
     }
-    
+
 }

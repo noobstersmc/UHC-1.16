@@ -111,8 +111,8 @@ public class GameLoop extends BukkitRunnable {
                 var of = Bukkit.getOfflinePlayer(UUID.fromString(entry.getKey()));
                 if (!of.isOnline()) {
                     if (System.currentTimeMillis() - of.getLastSeen() > 600000) {
-                        Bukkit.broadcastMessage(
-                                ChatColor.YELLOW + of.getName() + " has been disqualified for abandoning the game.");
+                        Bukkit.broadcastMessage(ChatColor.of("#DABC12") + of.getName()
+                                + " has been disqualified for abandoning the game.");
                         entry.getValue().setDead(true);
                         entry.getValue().setAlive(false);
                     }
