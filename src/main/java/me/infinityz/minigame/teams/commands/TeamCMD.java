@@ -205,14 +205,15 @@ public class TeamCMD extends BaseCommand {
                 Arrays.asList(team.getMembers()).stream().map(id -> Bukkit.getOfflinePlayer(id)).forEach(ofp -> {
                     if (ofp.isOnline()) {
                         var on = ofp.getPlayer();
-                        sender.sendMessage(ChatColor.GREEN + " - " + on.getName() + " " + ((int) on.getHealth()) + "❤");
+                        sender.sendMessage(ChatColor.GREEN + " - " + on.getName() + ChatColor.WHITE + " "
+                                + ((int) on.getHealth()) + ChatColor.DARK_RED + "❤");
                     } else {
                         sender.sendMessage(ChatColor.GRAY + " - " + ofp.getName());
                     }
                 });
 
             } else {
-                sender.sendMessage(target.getName() + " doesn't have a team.");
+                sender.sendMessage(ChatColor.of("#7ab83c") + target.getName() + " doesn't have a team.");
             }
 
         } else {
@@ -224,15 +225,15 @@ public class TeamCMD extends BaseCommand {
                     Arrays.asList(team.getMembers()).stream().map(id -> Bukkit.getOfflinePlayer(id)).forEach(ofp -> {
                         if (ofp.isOnline()) {
                             var on = ofp.getPlayer();
-                            player.sendMessage(
-                                    ChatColor.GREEN + " - " + on.getName() + " " + ((int) on.getHealth()) + "❤");
+                            player.sendMessage(ChatColor.GREEN + " - " + on.getName() + " " + ((int) on.getHealth())
+                                    + ChatColor.DARK_RED + "❤");
                         } else {
                             player.sendMessage(ChatColor.GRAY + " - " + ofp.getName());
                         }
                     });
 
                 } else {
-                    sender.sendMessage("You dont't have a team...");
+                    sender.sendMessage(ChatColor.of("#7ab83c") + "You dont't have a team...");
                 }
             } else {
                 sender.sendMessage("Consoles dont have teams");
