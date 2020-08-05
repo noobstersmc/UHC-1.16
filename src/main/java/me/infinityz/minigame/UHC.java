@@ -9,6 +9,7 @@ import org.bukkit.scoreboard.RenderType;
 import org.bukkit.scoreboard.Scoreboard;
 
 import co.aikar.commands.PaperCommandManager;
+import lombok.Getter;
 import me.infinityz.minigame.commands.ContextConditions;
 import me.infinityz.minigame.commands.GlobalMute;
 import me.infinityz.minigame.commands.HelpopCommand;
@@ -29,13 +30,13 @@ import net.md_5.bungee.api.ChatColor;
 
 public class UHC extends JavaPlugin {
     public Stage gameStage;
-    ScoreboardManager scoreboardManager;
-    LocationManager locationManager;
-    PaperCommandManager commandManager;
-    PlayerManager playerManager;
-    ListenerManager listenerManager;
-    CraftingManager craftingManager;
-    TeamManager teamManger;
+    private @Getter ScoreboardManager scoreboardManager;
+    private @Getter LocationManager locationManager;
+    private @Getter PaperCommandManager commandManager;
+    private @Getter PlayerManager playerManager;
+    private @Getter ListenerManager listenerManager;
+    private @Getter CraftingManager craftingManager;
+    private @Getter TeamManager teamManger;
     public boolean pvp = false;
     public boolean globalmute = false;
 
@@ -68,34 +69,6 @@ public class UHC extends JavaPlugin {
 
         listenerManager = new ListenerManager(this);
         runStartUp();
-    }
-
-    public TeamManager getTeamManger() {
-        return teamManger;
-    }
-
-    public ScoreboardManager getScoreboardManager() {
-        return scoreboardManager;
-    }
-
-    public LocationManager getLocationManager() {
-        return locationManager;
-    }
-
-    public PaperCommandManager getCommandManager() {
-        return commandManager;
-    }
-
-    public ListenerManager getListenerManager() {
-        return listenerManager;
-    }
-
-    public PlayerManager getPlayerManager() {
-        return playerManager;
-    }
-
-    public CraftingManager getCraftingManager() {
-        return craftingManager;
     }
 
     void runStartUp() {
