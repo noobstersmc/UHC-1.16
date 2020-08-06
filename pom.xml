@@ -61,6 +61,12 @@
       <version>2.8.5</version>
       <scope>compile</scope>
     </dependency>
+    <dependency>
+      <groupId>fr.mrmicky</groupId>
+      <artifactId>FastInv</artifactId>
+      <version>3.0.2</version>
+      <scope>compile</scope>
+    </dependency>
   </dependencies>
 
   <properties>
@@ -113,15 +119,19 @@
           <relocations>
             <relocation>
               <pattern>co.aikar.commands</pattern>
-              <shadedPattern>shadded.uhc.acf</shadedPattern> <!-- Replace this -->
+              <shadedPattern>shadded.uhc.acf</shadedPattern>
             </relocation>
             <relocation>
               <pattern>co.aikar.locales</pattern>
-              <shadedPattern>shadded.uhc.locales</shadedPattern> <!-- Replace this -->
+              <shadedPattern>shadded.uhc.locales</shadedPattern>
             </relocation>
             <relocation>
               <pattern>fr.mrmicky.fastboard</pattern>
               <shadedPattern>me.infinityz.minigame.scoreboard.base</shadedPattern>
+            </relocation>
+            <relocation>
+              <pattern>fr.mrmicky.fastinv</pattern>
+              <shadedPattern>me.infinityz.minigame.fastinv</shadedPattern>
             </relocation>
             <relocation>
               <pattern>com.github.benmanes.caffeine</pattern>

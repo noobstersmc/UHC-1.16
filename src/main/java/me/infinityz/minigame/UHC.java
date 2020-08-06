@@ -9,6 +9,7 @@ import org.bukkit.scoreboard.RenderType;
 import org.bukkit.scoreboard.Scoreboard;
 
 import co.aikar.commands.PaperCommandManager;
+import fr.mrmicky.fastinv.FastInvManager;
 import lombok.Getter;
 import me.infinityz.minigame.commands.ContextConditions;
 import me.infinityz.minigame.commands.GlobalMute;
@@ -42,6 +43,7 @@ public class UHC extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        FastInvManager.register(this);
         gameStage = Stage.LOADING;// TODO: Move this code out of here.
 
         // TODO: Move the command Manager to a command manager.

@@ -31,17 +31,15 @@ public class CraftingManager implements Listener {
         this.instance = instance;
         this.recipes = new ArrayList<>();
 
-
-
         Iterator<Recipe> iter = Bukkit.recipeIterator();
 
-        while(iter.hasNext()){
-            if(iter.next().getResult().getType() == Material.NETHERITE_INGOT){
+        while (iter.hasNext()) {
+            if (iter.next().getResult().getType() == Material.NETHERITE_INGOT) {
                 iter.remove();
                 break;
             }
         }
-        
+
         this.recipes.add(new GoldenHead(new NamespacedKey(instance, "ghead")));
         this.recipes.add(new SimpleNetherite(new NamespacedKey(instance, "netherite_simple")));
         this.recipes.add(new NetheriteRecipe(new NamespacedKey(instance, "netherite_multiple")));
@@ -58,7 +56,7 @@ public class CraftingManager implements Listener {
         if (!e.getItem().hasItemMeta())
             return;
         ItemMeta itemMeta = e.getItem().getItemMeta();
-        if (itemMeta.getDisplayName().equalsIgnoreCase(ChatColor.DARK_RED + "Golden Head")) {
+        if (itemMeta.getDisplayName().equalsIgnoreCase(ChatColor.GOLD + "Golden Head")) {
             e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20 * 10, 1));
         }
     }

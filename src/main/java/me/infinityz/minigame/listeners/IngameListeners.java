@@ -11,13 +11,17 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Skull;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemStack;
 
+import fr.mrmicky.fastinv.FastInv;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.players.UHCPlayer;
 import me.infinityz.minigame.scoreboard.IScoreboard;
@@ -55,13 +59,56 @@ public class IngameListeners implements Listener {
             p.sendMessage(ChatColor.of("#2be49c") + "The UHC has already started, to play use /play");
             uhcP.setAlive(false);
             p.setGameMode(GameMode.SPECTATOR);
-        } else if (uhcP.isDead()) {
+        } else if (uhcP.isDead() && !uhcP.isAlive()) {
             p.teleport(Bukkit.getWorlds().get(0).getSpawnLocation().add(0.0, 10, 0.0));
             p.setGameMode(GameMode.SPECTATOR);
             uhcP.setAlive(false);
             p.getInventory().clear();
             p.getInventory().setArmorContents(null);
         }
+    }
+
+    @EventHandler
+    public void onEntityRightClick(PlayerInteractAtEntityEvent e) {
+        if (e.getRightClicked() == null || e.getRightClicked().getType() != EntityType.PLAYER)
+            return;
+        if (!e.getPlayer().hasPermission("staff.perm") || e.getPlayer().getGameMode() != GameMode.SPECTATOR)
+            return;
+        var player = e.getPlayer();
+        var clicked = (Player) e.getRightClicked();
+
+        var fastInv = new FastInv(5 * 9, clicked.getName() + "'s inventory'");
+        updateInventory(fastInv, player, clicked);
+        fastInv.addClickHandler(event -> {
+            event.setCancelled(true);
+            updateInventory(fastInv, player, clicked);
+        });
+        fastInv.open(player);
+    }
+
+    private void updateInventory(FastInv fastInv, Player player, Player target) {
+        var count = 0;
+        for (var itemStack : target.getInventory()) {
+            if (itemStack == null || itemStack.getType() == Material.AIR) {
+                fastInv.setItem(count, new ItemStack(Material.AIR));
+            } else {
+                fastInv.setItem(count, itemStack);
+            }
+            count++;
+        }
+        var armorCount = 0;
+        for (var armor : target.getInventory().getArmorContents()) {
+            if (armorCount > 3)
+                break;
+            if (armor == null || armor.getType() == Material.AIR) {
+                fastInv.setItem(count, new ItemStack(Material.AIR));
+            } else {
+                fastInv.setItem(count, armor);
+            }
+            armorCount++;
+        }
+        fastInv.setItem(5, new ItemStack(Material.AIR));
+
     }
 
     @EventHandler

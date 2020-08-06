@@ -75,6 +75,16 @@ public class GameLoop extends BukkitRunnable {
                 Bukkit.broadcastMessage(ChatColor.of("#2be49c") + "PvP has been enabled.");
                 break;
             }
+            case 1800: {
+                Bukkit.broadcastMessage(ChatColor.BLUE + "Discord! discord.gg/4AdHqV9\n" + ChatColor.AQUA
+                        + "Twitter! twitter.com/NoobstersUHC\n" + ChatColor.GOLD + "Donations! noobsters.buycraft.net");
+                break;
+            }
+            case 3000: {
+                Bukkit.broadcastMessage(ChatColor.BLUE + "Discord! discord.gg/4AdHqV9\n" + ChatColor.AQUA
+                        + "Twitter! twitter.com/NoobstersUHC\n" + ChatColor.GOLD + "Donations! noobsters.buycraft.net");
+                break;
+            }
             case 3600: {
                 Bukkit.broadcastMessage(ChatColor.of("#4788d9")
                         + "The world will shrink to 100 blocks in the next 25 minutes at a speed of 1 block per second!");

@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -191,6 +192,10 @@ public class TeamCMD extends BaseCommand {
     @CommandAlias("sendcoord|sendcoords|sc")
     @Subcommand("sendcoord|sendcoords|sc")
     public void teamSendCoords(@Conditions("hasTeam") Player sender) {
+        if (sender.getGameMode() == GameMode.SPECTATOR) {
+            sender.sendMessage(ChatColor.RED + "Error: Spectators can't send coords.");
+            return;
+        }
         teamChat(sender, "I'm at " + getLocation(sender.getLocation()));
     }
 

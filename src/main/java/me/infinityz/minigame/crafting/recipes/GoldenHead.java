@@ -17,19 +17,19 @@ public class GoldenHead extends CustomRecipe {
         super(namespacedKey, recipe);
     }
 
-    public GoldenHead(NamespacedKey namespacedKey){
+    public GoldenHead(NamespacedKey namespacedKey) {
         super(namespacedKey, null);
 
         final ItemStack goldenHead = new ItemStack(Material.GOLDEN_APPLE);
         final ItemMeta im = goldenHead.getItemMeta();
-        im.setDisplayName(ChatColor.DARK_RED + "Golden Head");
+        im.setDisplayName(ChatColor.GOLD + "Golden Head");
         goldenHead.setItemMeta(im);
 
         final ShapedRecipe recipe = new ShapedRecipe(namespacedKey, goldenHead);
         recipe.shape("AAA", "ABA", "AAA");
         recipe.setIngredient('A', Material.GOLD_INGOT);
         recipe.setIngredient('B', Material.PLAYER_HEAD);
-        
+
         setRecipe(recipe);
 
         logic();
@@ -39,5 +39,5 @@ public class GoldenHead extends CustomRecipe {
     public void logic() {
         Bukkit.getServer().addRecipe(getRecipe());
     }
-    
+
 }
