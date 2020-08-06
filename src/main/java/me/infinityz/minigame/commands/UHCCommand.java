@@ -6,7 +6,9 @@ import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
@@ -19,6 +21,7 @@ import co.aikar.commands.annotation.Syntax;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.players.UHCPlayer;
 import me.infinityz.minigame.tasks.ScatterTask;
+import me.infinityz.minigame.tasks.ScatterTeleportTask;
 import net.md_5.bungee.api.ChatColor;
 
 @CommandAlias("uhc|game")
@@ -105,6 +108,18 @@ public class UHCCommand extends BaseCommand {
     @Syntax("<target> - UHCPlayer to recieve the kills")
     public void checkPlayerObjectStatus(CommandSender sender, @Flags("other") UHCPlayer target) {
         sender.sendMessage(target.toString());
+    }
+
+    @Subcommand("alpha")
+    @CommandCompletion("@worlds")
+    @Syntax("<world> <radius> - world to scatter and radius")
+    @CommandPermission("uhc.admin")
+    public void alpha(CommandSender sender, World world, int radius) {
+
+        Bukkit.getOnlinePlayers().stream().map(Player::getPlayer).collect(Collectors.toList());
+        instance.getServer().getScheduler().runTaskAsynchronously(instance, new ScatterTeleportTask(world, radius,
+                Bukkit.getOnlinePlayers().stream().map(Player::getPlayer).collect(Collectors.toList())));
+
     }
 
 }

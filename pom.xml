@@ -67,6 +67,12 @@
       <version>3.0.2</version>
       <scope>compile</scope>
     </dependency>
+    <dependency>
+      <groupId>io.papermc</groupId>
+      <artifactId>paperlib</artifactId>
+      <version>1.0.4</version>
+      <scope>compile</scope>
+    </dependency>
   </dependencies>
 
   <properties>
@@ -148,6 +154,10 @@
             <relocation>
               <pattern>org.checkerframework</pattern>
               <shadedPattern>shadded.uhc.org.checkerframework</shadedPattern>
+            </relocation>
+            <relocation>
+              <pattern>io.papermc</pattern>
+              <shadedPattern>shadded.uhc.paperlib</shadedPattern>
             </relocation>
           </relocations>
         </configuration>
