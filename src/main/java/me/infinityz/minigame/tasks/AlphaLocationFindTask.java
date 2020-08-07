@@ -1,5 +1,6 @@
 package me.infinityz.minigame.tasks;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
@@ -9,19 +10,25 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import io.papermc.lib.PaperLib;
+import me.infinityz.minigame.UHC;
+import me.infinityz.minigame.events.AlphaLocationsFoundEvent;
+import net.md_5.bungee.api.ChatColor;
 
-public class ScatterTeleportTask implements Runnable {
+public class AlphaLocationFindTask implements Runnable {
     private World world;
     private int radius;
     private List<Player> players;
-    public int count = 0;
-    public int other = 0;
-    public long startTime = System.currentTimeMillis();
+    private int other = 0;
+    private int unsafeCount = 0;
+    private long startTime = System.currentTimeMillis();
+    public List<Location> locations = new ArrayList<>();
+    private UHC instance;
 
-    public ScatterTeleportTask(World world, int radius, List<Player> players) {
+    public AlphaLocationFindTask(World world, int radius, List<Player> players, UHC instance) {
         this.world = world;
         this.radius = radius;
         this.players = players;
+        this.instance = instance;
         Bukkit.broadcastMessage(players.size() + " locations have to be found.");
     }
 
@@ -31,8 +38,9 @@ public class ScatterTeleportTask implements Runnable {
         final var semaphore = new Semaphore(50);
         var iterator = players.iterator();
 
+        startTime = System.currentTimeMillis();
+
         while (iterator.hasNext()) {
-            var player = iterator.next();
             try {
                 semaphore.acquire();
             } catch (InterruptedException e) {
@@ -44,22 +52,33 @@ public class ScatterTeleportTask implements Runnable {
             // Use #get() to wait in the thread.
             PaperLib.getChunkAtAsync(loc).thenAccept(chunk -> {
                 semaphore.release();
-                other++;
-                chunk.setForceLoaded(true);
-                System.out.println("Location found at time " + System.currentTimeMillis() + "\n"
-                        + (players.size() - other) + "left");
-                PaperLib.teleportAsync(player, loc.getWorld().getHighestBlockAt(loc).getLocation().add(0.0, 2.5, 0.0))
-                        .thenAccept(bol -> {
-                            count++;
-                            var c = (players.size() - count);
-                            System.out.println("Teleported at time " + System.currentTimeMillis() + "\n" + c + "left");
-                            if (c == 0) {
-                                Bukkit.broadcastMessage("Scatter completed. Took "
-                                        + ((System.currentTimeMillis() - startTime) / 1000) + " seconds");
-                            }
-                        });
+                var highestLoc = loc.getWorld().getHighestBlockAt(loc);
+                if (highestLoc.isLiquid()) {
+                    unsafeCount++;
+                    System.err.println("Unsafe location was found. " + unsafeCount + " so far. "
+                            + locInfo(highestLoc.getLocation()));
+                } else {
+                    iterator.next();
+                    locations.add(highestLoc.getLocation().add(0.0, 1.5, 0.0));
+                    other++;
+                    Bukkit.broadcastMessage("Location found, " + (players.size() - other) + " left.");
+                    Bukkit.broadcastMessage("Loc: " + locInfo(highestLoc.getLocation()));
+                    if ((players.size() - other) == 0) {
+                        Bukkit.broadcastMessage("Took " + ((System.currentTimeMillis() - startTime) / 1000)
+                                + " seconds to find the locations...");
+
+                    }
+
+                }
             });
         }
+        Bukkit.getPluginManager().callEvent(new AlphaLocationsFoundEvent(locations, true));
+
+        Bukkit.broadcastMessage(ChatColor.RED + "Finished finding locations");
+    }
+
+    String locInfo(Location loc) {
+        return String.format("(%.2f, %.2f, %.2f, %s)", loc.getX(), loc.getY(), loc.getZ(), loc.getBlock().getType());
     }
 
     Location findScatterLocation(final Semaphore semaphore) {

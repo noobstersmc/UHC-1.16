@@ -20,8 +20,8 @@ import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.annotation.Syntax;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.players.UHCPlayer;
+import me.infinityz.minigame.tasks.AlphaLocationFindTask;
 import me.infinityz.minigame.tasks.ScatterTask;
-import me.infinityz.minigame.tasks.ScatterTeleportTask;
 import net.md_5.bungee.api.ChatColor;
 
 @CommandAlias("uhc|game")
@@ -115,10 +115,8 @@ public class UHCCommand extends BaseCommand {
     @Syntax("<world> <radius> - world to scatter and radius")
     @CommandPermission("uhc.admin")
     public void alpha(CommandSender sender, World world, int radius) {
-
-        Bukkit.getOnlinePlayers().stream().map(Player::getPlayer).collect(Collectors.toList());
-        instance.getServer().getScheduler().runTaskAsynchronously(instance, new ScatterTeleportTask(world, radius,
-                Bukkit.getOnlinePlayers().stream().map(Player::getPlayer).collect(Collectors.toList())));
+        instance.getServer().getScheduler().runTaskAsynchronously(instance, new AlphaLocationFindTask(world, radius,
+                Bukkit.getOnlinePlayers().stream().map(Player::getPlayer).collect(Collectors.toList()), instance));
 
     }
 

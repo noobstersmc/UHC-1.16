@@ -20,9 +20,12 @@ import org.bukkit.potion.PotionEffectType;
 
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.enums.Stage;
+import me.infinityz.minigame.events.AlphaLocationsFoundEvent;
+import me.infinityz.minigame.events.AlphaScatterDoneEvent;
 import me.infinityz.minigame.events.ScatterLocationsFoundEvent;
 import me.infinityz.minigame.events.TeleportationCompletedEvent;
 import me.infinityz.minigame.scoreboard.IngameScoreboard;
+import me.infinityz.minigame.tasks.AlphaScatterTask;
 import me.infinityz.minigame.tasks.GameLoop;
 import net.md_5.bungee.api.ChatColor;
 
@@ -33,6 +36,28 @@ public class GlobalListener implements Listener {
 
     public GlobalListener(UHC instance) {
         this.instance = instance;
+    }
+
+    // TODO: Temporal, move elsewhere.
+    @EventHandler
+    public void onLocs(AlphaLocationsFoundEvent e) {
+        Bukkit.broadcastMessage("Test");
+
+        var task = new AlphaScatterTask(e.getLocs(),
+                Bukkit.getOnlinePlayers().stream().map(Player::getPlayer).collect(Collectors.toList()));
+        if (task.isGo()) {
+            Bukkit.broadcastMessage("Starting the scatter task.");
+            Bukkit.getScheduler().runTask(instance, task);
+        } else {
+            Bukkit.broadcastMessage("Couldn't start the task.");
+        }
+    }
+
+    @EventHandler
+    public void onDone(AlphaScatterDoneEvent e) {
+        Bukkit.broadcastMessage("Scatter done now");
+
+        System.out.println("should have finished.");
     }
 
     @EventHandler
