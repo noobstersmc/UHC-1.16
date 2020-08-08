@@ -1,10 +1,12 @@
 package me.infinityz.minigame.tasks;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -58,7 +60,9 @@ public class AlphaLocationFindTask implements Runnable {
                     System.err.println("Unsafe location was found. " + unsafeCount + " so far. "
                             + locInfo(highestLoc.getLocation()));
                 } else {
+                    getNeighbouringChunks(chunk, 1, highestLoc.isLiquid());
                     iterator.next();
+                    chunk.setForceLoaded(true);
                     locations.add(highestLoc.getLocation().add(0.0, 1.5, 0.0));
                     other++;
                     Bukkit.broadcastMessage("Location found, " + (players.size() - other) + " left.");
@@ -75,6 +79,43 @@ public class AlphaLocationFindTask implements Runnable {
         Bukkit.getPluginManager().callEvent(new AlphaLocationsFoundEvent(locations, true));
 
         Bukkit.broadcastMessage(ChatColor.RED + "Finished finding locations");
+    }
+
+    public static void getNeighbouringChunks(final Chunk c, final int size, final boolean bol) {
+        if (bol) {
+            System.out.println("Not loading chunk...");
+            return;
+        }
+        System.out.println("Initial x= " + c.getX() + " z= " + (c.getZ()));
+
+        final int distance = (size * 2) + 1;
+        final int x = c.getX() - size;
+        final int z = c.getZ() + size;
+
+        for (int xx = 0; xx < distance; xx++) {
+            for (int zz = 0; zz < distance; zz++) {
+                int fX = x + xx;
+                int fZ = z - zz;
+                System.out.println("Position x=" + fX + " z=" + fZ);
+                PaperLib.getChunkAtAsyncUrgently(c.getWorld(), fX, fZ, false).thenAccept(chunk -> {
+                    System.out.println("Loaded (" + fX + ", " + fZ + ")");
+                });
+            }
+        }
+    }
+
+    public static Collection<ChunkObject> getNeighbouringChunks(final int x, final int z, final int distance) {
+        var chunksCollection = new ArrayList<ChunkObject>();
+
+        var size = (distance * 2) + 1;
+        var offsetX = x - distance;
+        var offsetZ = z + distance;
+
+        for (var xx = 0; xx < size; xx++)
+            for (var zz = 0; zz < size; zz++)
+                chunksCollection.add(ChunkObject.of(offsetX + xx, offsetZ - zz));
+
+        return chunksCollection;
     }
 
     String locInfo(Location loc) {

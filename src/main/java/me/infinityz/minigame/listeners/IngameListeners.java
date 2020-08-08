@@ -20,9 +20,11 @@ import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.mrmicky.fastinv.FastInv;
 import me.infinityz.minigame.UHC;
+import me.infinityz.minigame.game.UpdatableInventory;
 import me.infinityz.minigame.players.UHCPlayer;
 import me.infinityz.minigame.scoreboard.IScoreboard;
 import me.infinityz.minigame.scoreboard.IngameScoreboard;
@@ -76,17 +78,24 @@ public class IngameListeners implements Listener {
             return;
         var player = e.getPlayer();
         var clicked = (Player) e.getRightClicked();
+        // TODO: Add a specInv manager to share inventories and not open one viewer.
 
-        var fastInv = new FastInv(5 * 9, clicked.getName() + "'s inventory'");
-        updateInventory(fastInv, player, clicked);
-        fastInv.addClickHandler(event -> {
-            event.setCancelled(true);
-            updateInventory(fastInv, player, clicked);
-        });
+        var fastInv = new UpdatableInventory(5 * 9, clicked.getName() + "'s inventory'");
+        fastInv.addUpdateTask(new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (isCancelled()) {
+                    cancel();
+                    return;
+                }
+                updateInventory(fastInv, clicked);
+            }
+
+        }, instance, 0, 20, true);
         fastInv.open(player);
     }
 
-    private void updateInventory(FastInv fastInv, Player player, Player target) {
+    private void updateInventory(FastInv fastInv, Player target) {
         var count = 0;
         for (var itemStack : target.getInventory()) {
             if (itemStack == null || itemStack.getType() == Material.AIR) {
@@ -96,18 +105,37 @@ public class IngameListeners implements Listener {
             }
             count++;
         }
-        var armorCount = 0;
-        for (var armor : target.getInventory().getArmorContents()) {
-            if (armorCount > 3)
-                break;
-            if (armor == null || armor.getType() == Material.AIR) {
-                fastInv.setItem(count, new ItemStack(Material.AIR));
-            } else {
-                fastInv.setItem(count, armor);
-            }
-            armorCount++;
-        }
-        fastInv.setItem(5, new ItemStack(Material.AIR));
+        // Obtain a list of all the active potion effects as strings
+        var effects = target
+                .getActivePotionEffects().stream().map(it -> ChatColor.GRAY + it.getType().getName() + " "
+                        + (1 + it.getAmplifier()) + ": " + ChatColor.WHITE + (it.getDuration() / 20) + "s")
+                .collect(Collectors.toList());
+        // Create a new Item Stack
+        var potionEffectsItem = new ItemStack(Material.GLASS_BOTTLE);
+        // Obtain the meta
+        var potionEffectsItemMeta = potionEffectsItem.getItemMeta();
+        // Change the meta
+        potionEffectsItemMeta.setDisplayName(ChatColor.GOLD + "Active Potion Effects:");
+        potionEffectsItemMeta.setLore(effects);
+        potionEffectsItem.setItemMeta(potionEffectsItemMeta);
+        // Add the item to the inventory 41 is the one next to the offhand item.
+        fastInv.setItem(41, potionEffectsItem);
+        // Repeat for Health
+        var healthItem = new ItemStack(Material.RED_BANNER);
+        var healthItemMeta = healthItem.getItemMeta();
+        healthItemMeta.setDisplayName(ChatColor.GOLD + "Health:");
+        healthItemMeta.setLore(List.of(ChatColor.WHITE + "Hearts: " + target.getHealth(),
+                ChatColor.WHITE + "Absorption: " + target.getAbsorptionAmount()));
+        healthItem.setItemMeta(healthItemMeta);
+        fastInv.setItem(42, healthItem);
+        // Repeat for EXP values
+        var experienceItem = new ItemStack(Material.EXPERIENCE_BOTTLE);
+        var experienceItemMeta = experienceItem.getItemMeta();
+        experienceItemMeta.setDisplayName(ChatColor.GOLD + "Experience:");
+        experienceItemMeta.setLore(List.of(ChatColor.WHITE + "Levels: " + target.getLevel(),
+                ChatColor.WHITE + "Percent to next level: " + String.format("%.2f", target.getExp() * 100)));
+        experienceItem.setItemMeta(experienceItemMeta);
+        fastInv.setItem(43, experienceItem);
 
     }
 

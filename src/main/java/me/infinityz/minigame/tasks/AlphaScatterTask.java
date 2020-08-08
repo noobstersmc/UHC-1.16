@@ -6,7 +6,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import io.papermc.lib.PaperLib;
 import lombok.Getter;
 import me.infinityz.minigame.events.AlphaScatterDoneEvent;
 import net.md_5.bungee.api.ChatColor;
@@ -33,9 +32,10 @@ public class AlphaScatterTask implements Runnable {
         var locIterator = locs.iterator();
 
         while (iterator.hasNext()) {
-            var player = iterator.next();
             var loc = locIterator.next();
-            PaperLib.teleportAsync(player, loc).thenAccept(result -> {
+            var player = iterator.next();
+            player.teleportAsync(loc.add(0.0, 50, 0.0)).thenAccept(result -> {
+                loc.getChunk().setForceLoaded(false);
                 if (result) {
                     count++;
                     var c = locs.size() - count;
@@ -48,8 +48,8 @@ public class AlphaScatterTask implements Runnable {
                 } else {
                     System.err.println("Couldn't teleport player");
                 }
-            });
 
+            });
         }
 
         Bukkit.broadcastMessage("exit loop");

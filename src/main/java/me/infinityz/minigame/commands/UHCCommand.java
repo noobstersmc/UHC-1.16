@@ -120,4 +120,11 @@ public class UHCCommand extends BaseCommand {
 
     }
 
+    @Subcommand("delta")
+    @CommandPermission("uhc.admin")
+    public void onDelta(Player sender, int size) {
+        AlphaLocationFindTask.getNeighbouringChunks(sender.getChunk(), size, false);
+
+    }
+
 }
