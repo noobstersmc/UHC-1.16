@@ -11,6 +11,7 @@ import org.bukkit.scoreboard.Scoreboard;
 import co.aikar.commands.PaperCommandManager;
 import fr.mrmicky.fastinv.FastInvManager;
 import lombok.Getter;
+import me.infinityz.minigame.chunks.ChunksManager;
 import me.infinityz.minigame.commands.ContextConditions;
 import me.infinityz.minigame.commands.GlobalMute;
 import me.infinityz.minigame.commands.HelpopCommand;
@@ -38,6 +39,7 @@ public class UHC extends JavaPlugin {
     private @Getter ListenerManager listenerManager;
     private @Getter CraftingManager craftingManager;
     private @Getter TeamManager teamManger;
+    private @Getter ChunksManager chunkManager;
     public boolean pvp = false;
     public boolean globalmute = false;
 
@@ -70,21 +72,22 @@ public class UHC extends JavaPlugin {
         craftingManager = new CraftingManager(this);
 
         listenerManager = new ListenerManager(this);
+        chunkManager = new ChunksManager(this);
         runStartUp();
     }
 
     void runStartUp() {
         try {
-
             Scoreboard mainScoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
+            mainScoreboard.getObjectives().forEach(obj -> obj.unregister());
             Objective obj = mainScoreboard.registerNewObjective("health_name", "health", ChatColor.DARK_RED + "❤");
             obj.setDisplaySlot(DisplaySlot.BELOW_NAME);
-            Objective obj2 = mainScoreboard.registerNewObjective("health_list", "health", "", RenderType.INTEGER);
+            Objective obj2 = mainScoreboard.registerNewObjective("health_list", "health", " ", RenderType.INTEGER);
             obj2.setDisplaySlot(DisplaySlot.PLAYER_LIST);
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "whitelist on");
 
         } catch (Exception e) {
-            // TODO: handle exception
+            e.printStackTrace();
         }
 
         Bukkit.getWorlds().forEach(it -> {

@@ -11,6 +11,7 @@ import org.bukkit.World;
 
 import io.papermc.lib.PaperLib;
 import me.infinityz.minigame.UHC;
+import me.infinityz.minigame.chunks.ChunkObject;
 
 public class AlphaLoadNeighbouringChunksTask implements Runnable {
     UHC instance;

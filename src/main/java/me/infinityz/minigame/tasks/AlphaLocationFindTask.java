@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 
 import io.papermc.lib.PaperLib;
 import me.infinityz.minigame.UHC;
+import me.infinityz.minigame.chunks.ChunkObject;
 import me.infinityz.minigame.events.AlphaLocationsFoundEvent;
 import net.md_5.bungee.api.ChatColor;
 

@@ -19,6 +19,7 @@ import co.aikar.commands.annotation.Flags;
 import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.annotation.Syntax;
 import me.infinityz.minigame.UHC;
+import me.infinityz.minigame.chunks.ChunkLoadTask;
 import me.infinityz.minigame.players.UHCPlayer;
 import me.infinityz.minigame.tasks.AlphaLocationFindTask;
 import me.infinityz.minigame.tasks.ScatterTask;
@@ -123,7 +124,8 @@ public class UHCCommand extends BaseCommand {
     @Subcommand("delta")
     @CommandPermission("uhc.admin")
     public void onDelta(Player sender, int size) {
-        AlphaLocationFindTask.getNeighbouringChunks(sender.getChunk(), size, false);
+        var task = new ChunkLoadTask(sender.getWorld(), instance.getChunkManager());
+        Bukkit.getScheduler().runTaskAsynchronously(instance, task);
 
     }
 
