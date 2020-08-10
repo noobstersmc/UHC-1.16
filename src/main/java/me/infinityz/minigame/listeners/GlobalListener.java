@@ -25,7 +25,7 @@ import me.infinityz.minigame.events.AlphaScatterDoneEvent;
 import me.infinityz.minigame.events.ScatterLocationsFoundEvent;
 import me.infinityz.minigame.events.TeleportationCompletedEvent;
 import me.infinityz.minigame.scoreboard.IngameScoreboard;
-import me.infinityz.minigame.tasks.AlphaScatterTask;
+import me.infinityz.minigame.tasks.AlphaLoadNeighbouringChunksTask;
 import me.infinityz.minigame.tasks.GameLoop;
 import net.md_5.bungee.api.ChatColor;
 
@@ -43,6 +43,9 @@ public class GlobalListener implements Listener {
     public void onLocs(AlphaLocationsFoundEvent e) {
         Bukkit.broadcastMessage("Test");
 
+        var nTask = new AlphaLoadNeighbouringChunksTask(instance, e.getLocs());
+        Bukkit.getScheduler().runTaskAsynchronously(instance, nTask);
+        /*
         var task = new AlphaScatterTask(e.getLocs(),
                 Bukkit.getOnlinePlayers().stream().map(Player::getPlayer).collect(Collectors.toList()));
         if (task.isGo()) {
@@ -50,7 +53,7 @@ public class GlobalListener implements Listener {
             Bukkit.getScheduler().runTask(instance, task);
         } else {
             Bukkit.broadcastMessage("Couldn't start the task.");
-        }
+        }*/
     }
 
     @EventHandler
