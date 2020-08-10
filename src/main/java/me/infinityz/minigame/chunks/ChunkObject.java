@@ -1,4 +1,4 @@
-package me.infinityz.minigame.tasks;
+package me.infinityz.minigame.chunks;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
