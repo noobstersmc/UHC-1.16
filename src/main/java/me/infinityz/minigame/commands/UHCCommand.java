@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
-import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -21,9 +20,13 @@ import co.aikar.commands.annotation.Syntax;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.chunks.ChunkLoadTask;
 import me.infinityz.minigame.players.UHCPlayer;
-import me.infinityz.minigame.tasks.AlphaLocationFindTask;
 import me.infinityz.minigame.tasks.ScatterTask;
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ClickEvent.Action;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.hover.content.Text;
 
 @CommandAlias("uhc|game")
 public class UHCCommand extends BaseCommand {
@@ -112,20 +115,54 @@ public class UHCCommand extends BaseCommand {
     }
 
     @Subcommand("alpha")
-    @CommandCompletion("@worlds")
-    @Syntax("<world> <radius> - world to scatter and radius")
     @CommandPermission("uhc.admin")
-    public void alpha(CommandSender sender, World world, int radius) {
-        instance.getServer().getScheduler().runTaskAsynchronously(instance, new AlphaLocationFindTask(world, radius,
-                Bukkit.getOnlinePlayers().stream().map(Player::getPlayer).collect(Collectors.toList()), instance));
+    public void alpha(CommandSender sender) {
+        sender.sendMessage("Current scatter locations (" + instance.getChunkManager().getLocations().size() + "):");
+        if (sender instanceof Player) {
+            var player = (Player) sender;
+            instance.getChunkManager().getLocations().stream().forEach(locs -> {
+                player.sendMessage(new ComponentBuilder(
+                        " - " + locs.getBlockX() + ", " + locs.getBlockY() + ", " + locs.getBlockZ())
+                                .event(new ClickEvent(Action.RUN_COMMAND,
+                                        String.format("/tp %d %d %d", locs.getBlockX(), locs.getBlockY(),
+                                                locs.getBlockZ())))
+                                .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Click to teleport")))
+                                .create());
+            });
+        } else {
 
+            instance.getChunkManager().getLocations().stream().forEach(all -> {
+                sender.sendMessage("- " + all.toString());
+            });
+        }
     }
 
     @Subcommand("delta")
     @CommandPermission("uhc.admin")
     public void onDelta(Player sender, int size) {
-        var task = new ChunkLoadTask(sender.getWorld(), instance.getChunkManager());
-        Bukkit.getScheduler().runTaskAsynchronously(instance, task);
+        for (int i = 0; i < size; i++) {
+            var task = new ChunkLoadTask(sender.getWorld(), instance.getChunkManager());
+            instance.getChunkManager().getPendingChunkLoadTasks().add(task);
+        }
+        sender.sendActionBar("Queued up " + size + " task(s)...");
+
+    }
+
+    @Subcommand("pending")
+    @CommandPermission("uhc.admin")
+    public void onPending(Player sender) {
+        sender.sendMessage("Pending chunk load tasks, -1 means not started:");
+        instance.getChunkManager().getPendingChunkLoadTasks().forEach(all -> {
+            sender.sendMessage(
+                    all.getLocationID().toString().substring(0, 8) + " running: " + all.getChunksLeft() + " left");
+        });
+
+    }
+
+    @Subcommand("beta")
+    @CommandPermission("uhc.admin")
+    public void onBeta(Player sender) {
+        sender.getWorld().getForceLoadedChunks().stream().forEach(chunk -> chunk.setForceLoaded(false));
 
     }
 

@@ -2,23 +2,54 @@ package me.infinityz.minigame.chunks;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
 
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import me.infinityz.minigame.UHC;
+import net.md_5.bungee.api.ChatColor;
 
-public @RequiredArgsConstructor class ChunksManager {
+public class ChunksManager {
     private @NonNull @Getter UHC instance;
 
     private @Getter @Setter int distanceThresHold = 100;
 
     private final @Getter ArrayList<Location> locations = new ArrayList<>();
-    private final @Getter ArrayList<ChunkLoadTask> pendingChunkLoadTasks = new ArrayList<>();
+    private final @Getter LinkedList<ChunkLoadTask> pendingChunkLoadTasks = new LinkedList<>();
+
+    public ChunksManager(UHC instance) {
+        this.instance = instance;
+
+        Bukkit.getScheduler().runTaskTimerAsynchronously(instance, () -> {
+            if (!pendingChunkLoadTasks.isEmpty()) {
+                var iter = pendingChunkLoadTasks.iterator();
+                while (iter.hasNext()) {
+                    var task = iter.next();
+                    if (task.isDone()) {
+                        iter.remove();
+                        Bukkit.getOnlinePlayers().stream().filter(p -> p.hasPermission("uhc.chunk.broadcast"))
+                                .forEach(staff -> {
+                                    staff.sendActionBar(
+                                            ChatColor.AQUA + "" + pendingChunkLoadTasks.size() + " load tasks left.");
+                                });
+                    } else {
+                        if (task.isRunning()) {
+                            break;
+                        } else if (!task.isRunning()) {
+                            System.out.println("Starting a new task...");
+                            Bukkit.getScheduler().runTaskAsynchronously(instance, task);
+                            break;
+                        }
+                    }
+                }
+            }
+        }, 20 * 5, 20);
+    }
 
     public static Collection<ChunkObject> getNeighbouringChunks(final ChunkObject chunkObject, final int distance) {
         return getNeighbouringChunks(chunkObject.getX(), chunkObject.getZ(), distance);

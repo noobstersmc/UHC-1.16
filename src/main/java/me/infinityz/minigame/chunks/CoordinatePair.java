@@ -29,7 +29,7 @@ public @Data @AllArgsConstructor(staticName = "of") class CoordinatePair {
     }
 
     public Location toLocation(World world, boolean highestBlock) {
-        return toLocation(this, world, highestBlock);
+        return CoordinatePair.toLocation(this, world, highestBlock);
     }
 
     public static Location toLocation(CoordinatePair pair, World world) {
