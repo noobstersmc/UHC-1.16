@@ -37,7 +37,11 @@ public @Data @AllArgsConstructor(staticName = "of") class CoordinatePair {
     }
 
     public static Location toLocation(CoordinatePair pair, World world, boolean highestBlock) {
-        return highestBlock ? world.getHighestBlockAt(pair.getX(), pair.getZ()).getLocation() : toLocation(pair, world);
+        if (highestBlock) {
+            return world.getHighestBlockAt(pair.getX(), pair.getZ()).getLocation();
+        } else {
+            return toLocation(pair, world);
+        }
     }
 
     public static CoordinatePair fromLocation(Location loc) {
