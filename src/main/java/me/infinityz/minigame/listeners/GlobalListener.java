@@ -112,7 +112,8 @@ public class GlobalListener implements Listener {
             e.getRecipients().stream()
                     .filter(it -> it.getGameMode() == GameMode.SPECTATOR || it.hasPermission("staff.perm"))
                     .forEach(specs -> {
-                        specs.sendMessage(ChatColor.GRAY + "[SPEC] " + e.getFormat());
+                        specs.sendMessage(ChatColor.GRAY + "[SPEC] " + e.getFormat()
+                                .replace("%1$s", e.getPlayer().getName()).replace("%2$s", e.getMessage()));
                     });
         }
 
