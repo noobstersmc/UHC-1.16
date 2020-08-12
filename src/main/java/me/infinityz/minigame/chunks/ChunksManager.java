@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
+import org.bukkit.scheduler.BukkitTask;
 
 import lombok.Getter;
 import lombok.NonNull;
@@ -21,11 +22,12 @@ public class ChunksManager {
 
     private final @Getter ArrayList<Location> locations = new ArrayList<>();
     private final @Getter LinkedList<ChunkLoadTask> pendingChunkLoadTasks = new LinkedList<>();
+    private @Getter BukkitTask autoChunkScheduler;
 
     public ChunksManager(UHC instance) {
         this.instance = instance;
 
-        Bukkit.getScheduler().runTaskTimerAsynchronously(instance, () -> {
+        autoChunkScheduler = Bukkit.getScheduler().runTaskTimerAsynchronously(instance, () -> {
             if (!pendingChunkLoadTasks.isEmpty()) {
                 var iter = pendingChunkLoadTasks.iterator();
                 while (iter.hasNext()) {

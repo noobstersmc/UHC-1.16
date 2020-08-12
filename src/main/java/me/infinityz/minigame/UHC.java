@@ -20,6 +20,7 @@ import me.infinityz.minigame.commands.LocationsCommand;
 import me.infinityz.minigame.commands.PVP;
 import me.infinityz.minigame.commands.StartCommand;
 import me.infinityz.minigame.commands.UHCCommand;
+import me.infinityz.minigame.commands.Utilities;
 import me.infinityz.minigame.crafting.CraftingManager;
 import me.infinityz.minigame.enums.Stage;
 import me.infinityz.minigame.listeners.ListenerManager;
@@ -62,6 +63,7 @@ public class UHC extends JavaPlugin {
         commandManager.registerCommand(new LatescatterCMD(this));
         commandManager.registerCommand(new GlobalMute(this));
         commandManager.registerCommand(new TeamCMD(this));
+        commandManager.registerCommand(new Utilities(this));
 
         teamManger = new TeamManager(this);
 

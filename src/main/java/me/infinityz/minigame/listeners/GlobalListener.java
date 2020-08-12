@@ -3,11 +3,14 @@ package me.infinityz.minigame.listeners;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -20,12 +23,9 @@ import org.bukkit.potion.PotionEffectType;
 
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.enums.Stage;
-import me.infinityz.minigame.events.AlphaLocationsFoundEvent;
-import me.infinityz.minigame.events.AlphaScatterDoneEvent;
 import me.infinityz.minigame.events.ScatterLocationsFoundEvent;
 import me.infinityz.minigame.events.TeleportationCompletedEvent;
 import me.infinityz.minigame.scoreboard.IngameScoreboard;
-import me.infinityz.minigame.tasks.AlphaLoadNeighbouringChunksTask;
 import me.infinityz.minigame.tasks.GameLoop;
 import net.md_5.bungee.api.ChatColor;
 
@@ -36,31 +36,6 @@ public class GlobalListener implements Listener {
 
     public GlobalListener(UHC instance) {
         this.instance = instance;
-    }
-
-    // TODO: Temporal, move elsewhere.
-    @EventHandler
-    public void onLocs(AlphaLocationsFoundEvent e) {
-        Bukkit.broadcastMessage("Test");
-
-        var nTask = new AlphaLoadNeighbouringChunksTask(instance, e.getLocs());
-        Bukkit.getScheduler().runTaskAsynchronously(instance, nTask);
-        /*
-        var task = new AlphaScatterTask(e.getLocs(),
-                Bukkit.getOnlinePlayers().stream().map(Player::getPlayer).collect(Collectors.toList()));
-        if (task.isGo()) {
-            Bukkit.broadcastMessage("Starting the scatter task.");
-            Bukkit.getScheduler().runTask(instance, task);
-        } else {
-            Bukkit.broadcastMessage("Couldn't start the task.");
-        }*/
-    }
-
-    @EventHandler
-    public void onDone(AlphaScatterDoneEvent e) {
-        Bukkit.broadcastMessage("Scatter done now");
-
-        System.out.println("should have finished.");
     }
 
     @EventHandler
@@ -107,11 +82,40 @@ public class GlobalListener implements Listener {
     }
 
     @EventHandler
+    public void strengthFix(EntityDamageByEntityEvent e) {
+        if (e.getDamager().getType() != EntityType.PLAYER)
+            return;
+        var damager = (Player) e.getDamager();
+        if (damager.hasPotionEffect(PotionEffectType.INCREASE_DAMAGE)) {
+            var strengthAmplifier = damager.getActivePotionEffects().stream()
+                    .filter(type -> type.getType().equals(PotionEffectType.INCREASE_DAMAGE)).findAny().get()
+                    .getAmplifier() + 1;
+            var differential = strengthAmplifier * 1.5;
+            e.setDamage(e.getDamage() - differential);
+        }
+
+    }
+
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onChat(AsyncPlayerChatEvent e) {
         if (instance.globalmute && !e.getPlayer().hasPermission("staff.perm")) {
             e.setCancelled(true);
             e.getPlayer().sendMessage(ChatColor.RED + "Globalmute is Enabled.");
         }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onSpecChat(AsyncPlayerChatEvent e) {
+        if (e.getPlayer().getGameMode() == GameMode.SPECTATOR && !e.getPlayer().hasPermission("staff.perm")) {
+            e.setCancelled(true);
+
+            e.getRecipients().stream()
+                    .filter(it -> it.getGameMode() == GameMode.SPECTATOR || it.hasPermission("staff.perm"))
+                    .forEach(specs -> {
+                        specs.sendMessage(ChatColor.GRAY + "[SPEC] " + e.getFormat());
+                    });
+        }
+
     }
 
     @EventHandler
