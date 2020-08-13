@@ -42,6 +42,7 @@ public class Team {
         return false;
     }
 
+
     public boolean isTeamLeader(UUID member) {
         return member.compareTo(this.teamLeader) == 0;
     }

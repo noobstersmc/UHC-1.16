@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -22,6 +23,8 @@ import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.annotation.Syntax;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.chunks.ChunkLoadTask;
+import me.infinityz.minigame.events.PlayerWinEvent;
+import me.infinityz.minigame.events.TeamWinEvent;
 import me.infinityz.minigame.players.PositionObject;
 import me.infinityz.minigame.players.UHCPlayer;
 import me.infinityz.minigame.tasks.ScatterTask;
@@ -188,7 +191,25 @@ public class UHCCommand extends BaseCommand {
     @CommandCompletion("@uhcPlayers")
     @CommandPermission("uhc.admin")
     public void dq(CommandSender sender, @Flags("other") UHCPlayer target) {
-        //TODO:  Implement the Dequalify command.
+        // TODO: Implement the Dequalify command.
+
+    }
+
+    @Conditions("ingame")
+    @Subcommand("test solo")
+    @CommandPermission("uhc.admin")
+    public void testSoloWin(CommandSender sender) {
+        Bukkit.getPluginManager().callEvent(new PlayerWinEvent(
+                instance.getPlayerManager().getUhcPlayerMap().values().stream().findFirst().get().getUUID()));
+
+    }
+
+    @Conditions("ingame")
+    @Subcommand("test team")
+    @CommandPermission("uhc.admin")
+    public void testTeamWin(CommandSender sender) {
+        Bukkit.getPluginManager().callEvent(
+                new TeamWinEvent(instance.getTeamManger().getAliveTeams().stream().findFirst().get().getTeamID()));
 
     }
 
@@ -200,6 +221,15 @@ public class UHCCommand extends BaseCommand {
             instance.getChunkManager().getPendingChunkLoadTasks().add(task);
         }
         sender.sendActionBar("Queued up " + size + " task(s)...");
+
+    }
+
+    @CommandPermission("uhc.admin")
+    @Subcommand("deleteworld")
+    @CommandCompletion("@worlds")
+    public void deleteWorldOnRestart(CommandSender sender, World world) {
+        instance.getDeleteWorldQueue()[0] = world;
+        Bukkit.dispatchCommand(sender, "stop");
 
     }
 

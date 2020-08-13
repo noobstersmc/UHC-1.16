@@ -24,6 +24,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.mrmicky.fastinv.FastInv;
 import me.infinityz.minigame.UHC;
+import me.infinityz.minigame.events.PlayerWinEvent;
+import me.infinityz.minigame.events.TeamWinEvent;
 import me.infinityz.minigame.game.UpdatableInventory;
 import me.infinityz.minigame.players.PositionObject;
 import me.infinityz.minigame.players.UHCPlayer;
@@ -205,6 +207,39 @@ public class IngameListeners implements Listener {
                 uhcPlayer.setLastKnownPositionFromLoc(p.getLocation());
                 uhcPlayer.setLastKnownInventory(inv);
             } // TODO: Send update to players left.
+
+            /**
+             * Team and Player win event takes places here.
+             */
+            Bukkit.getScheduler().runTaskAsynchronously(instance, () -> {
+                if (instance.getTeamManger().getTeamSize() > 1) {
+                    // ToX games
+                    var teamsAlive = instance.getTeamManger().getAliveTeams();
+                    if (teamsAlive.size() <= 1) {
+                        var optionalTeam = teamsAlive.stream().findFirst();
+                        if (optionalTeam.isPresent()) {
+                            Bukkit.getPluginManager().callEvent(new TeamWinEvent(optionalTeam.get().getTeamID(), true));
+                        } else {
+                            Bukkit.broadcastMessage("Hm... this is awkward... there is no winner.");
+                        }
+
+                    }
+
+                } else {
+                    // FFA Games
+                    if (instance.getPlayerManager().getAlivePlayers() <= 1) {
+                        var lastAlivePlayer = instance.getPlayerManager().getUhcPlayerMap().values().stream()
+                                .filter(UHCPlayer::isAlive).findFirst();
+                        if (lastAlivePlayer.isPresent()) {
+                            Bukkit.getPluginManager()
+                                    .callEvent(new PlayerWinEvent(lastAlivePlayer.get().getUUID(), true));
+                        } else {
+                            Bukkit.broadcastMessage("Hm... this is awkward... there is no winner.");
+                        }
+                    }
+                }
+            });
+
         }
         if (p.getKiller() != null) {
             Player killer = p.getKiller();
@@ -227,6 +262,21 @@ public class IngameListeners implements Listener {
                 }
             }
         }, 20 * 3);
+    }
+
+    @EventHandler
+    public void onPlayerWin(PlayerWinEvent e) {
+        var uhcPlayer = instance.getPlayerManager().getPlayer(e.getWinnerUUID());
+        var player = Bukkit.getPlayer(e.getWinnerUUID());
+        Bukkit.broadcastMessage(player.getName() + " has won the UHC");
+
+    }
+
+    @EventHandler
+    public void onTeamWinEvent(TeamWinEvent e) {
+        var team = instance.getTeamManger().getTeamMap().get(e.getTeamUUID());
+        Bukkit.broadcastMessage("Team " + team.getTeamDisplayName() + " has won the UHC");
+
     }
 
 }

@@ -1,7 +1,9 @@
 package me.infinityz.minigame.teams;
 
+import java.util.Collection;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
@@ -13,6 +15,7 @@ import gnu.trove.map.hash.THashMap;
 import lombok.Getter;
 import lombok.Setter;
 import me.infinityz.minigame.UHC;
+import me.infinityz.minigame.players.UHCPlayer;
 import me.infinityz.minigame.teams.objects.Team;
 import me.infinityz.minigame.teams.objects.TeamInvite;
 import net.md_5.bungee.api.ChatColor;
@@ -112,6 +115,14 @@ public class TeamManager {
         teamMap.put(team.getTeamID(), team);
         // Return true to signify succesfull insertion
         return true;
+    }
+
+    public Collection<Team> getAliveTeams() {
+        return teamMap.values().stream()
+                .filter(all -> all.getOfflinePlayersStream()
+                        .map(uuid -> instance.getPlayerManager().getPlayer(uuid.getUniqueId()))
+                        .filter(UHCPlayer::isAlive).findFirst().isPresent())
+                .collect(Collectors.toList());
     }
 
     public void clearCache() {

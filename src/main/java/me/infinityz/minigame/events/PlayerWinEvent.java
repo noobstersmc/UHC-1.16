@@ -5,24 +5,27 @@ import java.util.UUID;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class PlayerWinEvent extends Event{
-    
-    private static final HandlerList handlers = new HandlerList();
-    UUID uuid;
+import lombok.Getter;
+import lombok.NonNull;
 
-    public PlayerWinEvent(UUID uuid){
-        this.uuid = uuid;
+public class PlayerWinEvent extends Event {
+    /*
+     * Methods Required by BukkitAPI
+     */
+    private @Getter static final HandlerList HandlerList = new HandlerList();
+    private @Getter final HandlerList Handlers = HandlerList;
+    /*
+     * Custom data
+     */
+    private @NonNull @Getter UUID winnerUUID;
+
+    public PlayerWinEvent(UUID uuid, boolean async) {
+        super(async);
+        this.winnerUUID = uuid;
     }
 
-    public UUID getWinnerUUID() {
-        return uuid;
-    }
-
-    public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
+    public PlayerWinEvent(UUID uuid) {
+        super(false);
+        this.winnerUUID = uuid;
     }
 }

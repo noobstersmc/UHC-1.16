@@ -19,6 +19,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
+@SuppressWarnings("all")
 @RequiredArgsConstructor
 public class UHCPlayer {
     private final @Getter UUID UUID;

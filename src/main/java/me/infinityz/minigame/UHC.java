@@ -1,7 +1,11 @@
 package me.infinityz.minigame;
 
+import java.io.File;
+import java.util.Arrays;
+
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
+import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -41,6 +45,7 @@ public class UHC extends JavaPlugin {
     private @Getter CraftingManager craftingManager;
     private @Getter TeamManager teamManger;
     private @Getter ChunksManager chunkManager;
+    private @Getter World[] deleteWorldQueue = new World[10];
     public boolean pvp = false;
     public boolean globalmute = false;
 
@@ -101,6 +106,29 @@ public class UHC extends JavaPlugin {
             it.setSpawnLocation(0, it.getHighestBlockAt(0, 0).getZ() + 10, 0);
             it.getWorldBorder().setCenter(0, 0);
             it.getWorldBorder().setSize(101);
+        });
+    }
+
+    boolean deleteDirectory(File directoryToBeDeleted) {
+        File[] allContents = directoryToBeDeleted.listFiles();
+        if (allContents != null) {
+            for (File file : allContents) {
+                deleteDirectory(file);
+            }
+        }
+        return directoryToBeDeleted.delete();
+    }
+
+    @Override
+    public void onDisable() {
+        Bukkit.getOnlinePlayers().forEach(all -> {
+            all.kickPlayer("Stopping the server");
+        });
+        Bukkit.getWorlds().forEach(worlds -> {
+            if (Arrays.asList(deleteWorldQueue).contains(worlds)) {
+                Bukkit.unloadWorld(worlds, false);
+                deleteDirectory(worlds.getWorldFolder());
+            }
         });
     }
 
