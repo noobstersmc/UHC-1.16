@@ -29,12 +29,15 @@ public class ChunksManager {
 
         autoChunkScheduler = Bukkit.getScheduler().runTaskTimerAsynchronously(instance, () -> {
             if (!pendingChunkLoadTasks.isEmpty()) {
+                Bukkit.getOnlinePlayers().stream().filter(p -> p.hasPermission("locations.perm"))
+                        .forEach(staff -> staff.sendActionBar(ChatColor.RED + "Not ready to start, currently loading "
+                                + pendingChunkLoadTasks.size() + " locations..."));
                 var iter = pendingChunkLoadTasks.iterator();
                 while (iter.hasNext()) {
                     var task = iter.next();
                     if (task.isDone()) {
                         iter.remove();
-                        Bukkit.getOnlinePlayers().stream().filter(p -> p.hasPermission("uhc.chunk.broadcast"))
+                        Bukkit.getOnlinePlayers().stream().filter(p -> p.hasPermission("locations.perm"))
                                 .forEach(staff -> {
                                     staff.sendActionBar(
                                             ChatColor.AQUA + "" + pendingChunkLoadTasks.size() + " load tasks left.");
@@ -49,6 +52,14 @@ public class ChunksManager {
                         }
                     }
                 }
+            } else {
+                var online = Bukkit.getOnlinePlayers().size();
+                var message = online > locations.size() ? ChatColor.RED + "Not ready to start. "
+                        + (online - locations.size()) + " location needed to start."
+                        : ChatColor.GREEN + "Ready to start.";
+                Bukkit.getOnlinePlayers().stream().filter(p -> p.hasPermission("locations.perm"))
+                        .forEach(staff -> staff.sendActionBar(message));
+
             }
         }, 20 * 5, 20);
     }

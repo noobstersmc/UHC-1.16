@@ -9,10 +9,10 @@ import org.bukkit.Sound;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
+import org.bukkit.event.Event.Result;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.Event.Result;
 import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -46,6 +46,9 @@ public class GlobalListener implements Listener {
         e.setJoinMessage("");
         e.getPlayer().sendMessage(ChatColor.BLUE + "Discord! discord.gg/4AdHqV9\n" + ChatColor.AQUA
                 + "Twitter! twitter.com/NoobstersUHC\n" + ChatColor.GOLD + "Donations! noobsters.buycraft.net");
+        if (e.getPlayer().getGameMode() == GameMode.SPECTATOR) {
+            Bukkit.getOnlinePlayers().forEach(all -> all.hidePlayer(instance, e.getPlayer()));
+        }
     }
 
     @EventHandler

@@ -23,12 +23,11 @@ public @RequiredArgsConstructor class Utilities extends BaseCommand {
 
     private @NonNull UHC instance;
 
-    
     @CommandPermission("admin.perm")
     @Subcommand("vip")
     @CommandAlias("vip")
     @Syntax("<target> - player to change")
-    @CommandCompletion("@players")
+    @CommandCompletion("@onlineplayers")
     public void onVipCommand(CommandSender sender, @Flags("other") OfflinePlayer target) {
         Bukkit.dispatchCommand(sender, "lp user " + target.getName() + " parent addtemp vip 30d");
     }
@@ -37,7 +36,7 @@ public @RequiredArgsConstructor class Utilities extends BaseCommand {
     @Subcommand("vip+")
     @CommandAlias("vip+")
     @Syntax("<target> - player to change")
-    @CommandCompletion("@players")
+    @CommandCompletion("@onlineplayers")
     public void onVipPlusCommand(CommandSender sender, @Flags("other") OfflinePlayer target) {
         Bukkit.dispatchCommand(sender, "lp user " + target.getName() + " parent addtemp vip+ 30d");
     }
@@ -49,6 +48,6 @@ public @RequiredArgsConstructor class Utilities extends BaseCommand {
         Bukkit.dispatchCommand(sender, "chunky radius 2000");
         Bukkit.dispatchCommand(sender, "chunky start");
         Bukkit.dispatchCommand(sender, "chunky world world_nether");
-        Bukkit.dispatchCommand(sender, "chunky start"); 
+        Bukkit.dispatchCommand(sender, "chunky start");
     }
 }

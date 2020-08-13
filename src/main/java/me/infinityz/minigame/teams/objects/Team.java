@@ -81,6 +81,10 @@ public class Team {
                 .filter(member -> member != null && member.isOnline()).map(OfflinePlayer::getPlayer);
     }
 
+    public Stream<OfflinePlayer> getOfflinePlayersStream() {
+        return Arrays.stream(members).map(member -> Bukkit.getOfflinePlayer(member)).filter(member -> member != null);
+    }
+
     public void addKills(int kill) {
         this.teamKills = this.teamKills + kill;
     }

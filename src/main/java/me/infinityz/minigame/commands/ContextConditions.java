@@ -17,6 +17,7 @@ import me.infinityz.minigame.players.UHCPlayer;
 
 public class ContextConditions {
 
+    @SuppressWarnings("all")
     public ContextConditions(UHC instance) {
 
         instance.getCommandManager().getCommandContexts().registerIssuerAwareContext(UHCPlayer.class, context -> {
@@ -29,7 +30,7 @@ public class ContextConditions {
             } else {
                 var firstArg = context.popFirstArg();
                 if (firstArg != null && !firstArg.isEmpty()) {
-                    var target = Bukkit.getPlayer(firstArg);
+                    var target = Bukkit.getOfflinePlayer(firstArg);
                     if (target != null) {
                         var uhcp = instance.getPlayerManager().getPlayer(target.getUniqueId());
                         if (uhcp != null) {
@@ -135,12 +136,21 @@ public class ContextConditions {
         instance.getCommandManager().getCommandCompletions().registerAsyncCompletion("bool", c -> {
             return ImmutableList.of("true", "false");
         });
+        instance.getCommandManager().getCommandCompletions().registerAsyncCompletion("respawnArgs", c -> {
+            return ImmutableList.of("--i", "-inventory", "--l", "-location");
+        });
         instance.getCommandManager().getCommandCompletions().registerAsyncCompletion("otherplayers", c -> {
             if (c.getSender() instanceof Player) {
                 return Bukkit.getOnlinePlayers().stream().filter(player -> player.getName() != c.getSender().getName())
                         .map(Player::getName).collect(Collectors.toList());
             }
             return null;
+        });
+        instance.getCommandManager().getCommandCompletions().registerAsyncCompletion("onlineplayers", c -> {
+            return Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
+        });
+        instance.getCommandManager().getCommandCompletions().registerAsyncCompletion("uhcPlayers", c -> {
+            return instance.getPlayerManager().getUhcPlayerMap().values().stream().map(uhcp -> Bukkit.getOfflinePlayer(uhcp.getUUID()).getName()).collect(Collectors.toList());
         });
         instance.getCommandManager().getCommandCompletions().registerAsyncCompletion("teamMembers", c -> {
             if (c.getSender() instanceof Player) {

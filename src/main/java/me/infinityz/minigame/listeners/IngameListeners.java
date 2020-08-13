@@ -25,6 +25,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import fr.mrmicky.fastinv.FastInv;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.game.UpdatableInventory;
+import me.infinityz.minigame.players.PositionObject;
 import me.infinityz.minigame.players.UHCPlayer;
 import me.infinityz.minigame.scoreboard.IScoreboard;
 import me.infinityz.minigame.scoreboard.IngameScoreboard;
@@ -160,6 +161,14 @@ public class IngameListeners implements Listener {
         if (sb != null) {
             sb.delete();
         }
+
+        var uhcp = instance.getPlayerManager().getPlayer(e.getPlayer().getUniqueId());
+        if (uhcp.isAlive()) {
+            uhcp.setLastKnownPosition(PositionObject.getPositionFromWorld(e.getPlayer().getLocation()));
+            uhcp.setLastKnownInventory(e.getPlayer().getInventory().getContents());
+            uhcp.setLastKnownHealth(e.getPlayer().getHealth() + e.getPlayer().getAbsorptionAmount());
+        }
+
     }
 
     Material getRandomFence() {
@@ -186,11 +195,15 @@ public class IngameListeners implements Listener {
         Player p = e.getEntity();
         // remove player from whitelist.
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "whitelist remove " + e.getEntity().getName());
+        var inv = p.getInventory().getContents();
         UHCPlayer uhcPlayer = instance.getPlayerManager().getPlayer(p.getUniqueId());
         if (uhcPlayer != null) {
             if (uhcPlayer.isAlive()) {
                 uhcPlayer.setAlive(false);
                 uhcPlayer.setDead(true);
+                uhcPlayer.setLastKnownHealth(0.0);
+                uhcPlayer.setLastKnownPositionFromLoc(p.getLocation());
+                uhcPlayer.setLastKnownInventory(inv);
             } // TODO: Send update to players left.
         }
         if (p.getKiller() != null) {

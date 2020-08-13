@@ -3,6 +3,7 @@ package me.infinityz.minigame.listeners;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Statistic;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -70,6 +71,7 @@ public class LobbyListeners implements Listener {
         if (instance.getScoreboardManager().findScoreboard(e.getPlayer().getUniqueId()) != null) {
             return;
         }
+        e.getPlayer().setStatistic(Statistic.TIME_SINCE_REST, 0); // Take care of insomnia
         final IScoreboard sb = new LobbyScoreboard(e.getPlayer());
         instance.getScoreboardManager().getFastboardMap().put(e.getPlayer().getUniqueId().toString(), sb);
 
@@ -79,9 +81,9 @@ public class LobbyListeners implements Listener {
     public void onJoinTeleport(PlayerJoinEvent e) {
         World world = Bukkit.getWorlds().get(0);
         Player player = e.getPlayer();
-        
+
         player.setGameMode(GameMode.SURVIVAL);
-        player.teleport(new Location(world, 0.5, world.getHighestBlockYAt(0, 0)+10.5, 0.5));
+        player.teleport(new Location(world, 0.5, world.getHighestBlockYAt(0, 0) + 10.5, 0.5));
         player.getInventory().clear();
         player.getInventory().setArmorContents(null);
         player.setHealth(20.0);

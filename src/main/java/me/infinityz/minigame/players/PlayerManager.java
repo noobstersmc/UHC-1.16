@@ -19,7 +19,6 @@ public class PlayerManager {
         return uhcPlayerMap;
     }
 
-
     public UHCPlayer addCreateUHCPlayer(UUID uuid, boolean alive) {
         UHCPlayer uhcPlayer = new UHCPlayer(uuid, 0, alive);
 

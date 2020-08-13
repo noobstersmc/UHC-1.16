@@ -1,11 +1,11 @@
 package me.infinityz.minigame.teams.commands;
 
-import java.util.Arrays;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -188,7 +188,7 @@ public class TeamCMD extends BaseCommand {
         var team = instance.getTeamManger().getPlayerTeam(sender.getUniqueId());
 
         team.getPlayerStream().filter(player -> player != sender).forEach(members -> {
-            members.playSound(members.getLocation(), Sound.BLOCK_NOTE_BLOCK_BIT, 1, 1);
+            members.playSound(members.getLocation(), Sound.BLOCK_NOTE_BLOCK_BIT, 0.25f, 1);
         });
         team.sendTeamMessage(ChatColor.of("#DABC12") + "[Team " + team.getTeamDisplayName() + "] " + sender.getName()
                 + ": " + ChatColor.GRAY + message);
@@ -207,56 +207,72 @@ public class TeamCMD extends BaseCommand {
     @CommandCompletion("@otherplayers")
     @CommandAlias("tl|kc")
     @Subcommand("list")
-    public void teamList(CommandSender sender, @Optional @Flags("other") Player target) {
+    public void teamList(CommandSender sender, @Optional @Flags("other") OfflinePlayer target) {
+        // Verify is target is not null
         if (target != null) {
             var team = instance.getTeamManger().getPlayerTeam(target.getUniqueId());
             if (team != null) {
                 sender.sendMessage(team.getTeamDisplayName() + "'s members: ");
-                Arrays.stream(team.getMembers()).map(uuid -> Bukkit.getOfflinePlayer(uuid)).forEach(all -> {
-                    if (all != null && all.isOnline()) {
-                        var player = all.getPlayer();
 
-                        var uhcp = instance.getPlayerManager().getPlayer(player.getUniqueId());
-                        var p_kills = uhcp != null
-                                ? instance.getPlayerManager().getPlayer(player.getUniqueId()).getKills()
-                                : 0;
-                        sender.sendMessage(ChatColor.GREEN + player.getName() + ChatColor.WHITE + " "
-                                + (int) player.getHealth() + ChatColor.DARK_RED + " ❤ " + ChatColor.GRAY + " kills: "
-                                + ChatColor.WHITE + p_kills);
+                team.getOfflinePlayersStream().forEach(members -> {
+                    var uhcMember = instance.getPlayerManager().getPlayer(members.getUniqueId());
+                    var kills = uhcMember != null ? uhcMember.getKills() : 0;
+                    var message = ChatColor.GREEN + "%s" + ChatColor.WHITE + " %s" + ChatColor.DARK_RED + " ❤ "
+                            + ChatColor.GRAY + "kills: " + ChatColor.WHITE + "%d";
+
+                    if (members.isOnline()) {
+                        Player onlineMember = members.getPlayer();
+                        // Player online and not in game yet or is still alive
+                        if ((uhcMember != null && uhcMember.isAlive()) || uhcMember == null) {
+                            message = String.format(message, onlineMember.getName(),
+                                    "" + (int) (onlineMember.getHealth() + onlineMember.getAbsorptionAmount()), kills);
+                        } else { // Player can only be dead at this point
+                            message = String.format(message,
+                                    ChatColor.RED + "" + ChatColor.STRIKETHROUGH + onlineMember.getName(), "0", kills);
+                        }
+
+                    } else if (uhcMember != null) {
+                        // Player offline but still a member. If alive show normally, when dead show
+                        // STRIKETHROUGH
+                        message = String.format(message,
+                                (!uhcMember.isAlive() ? ChatColor.RED + "" + ChatColor.STRIKETHROUGH : "")
+                                        + members.getName(),
+                                (int) uhcMember.getLastKnownHealth(), kills);
+                    } else {
+                        // If offline and no player data is known, display unknown.
+                        message = String.format(message, members.getName(), "Unknown", kills);
                     }
+
+                    sender.sendMessage(message);
                 });
 
             } else {
-                var uhcp = instance.getPlayerManager().getPlayer(target.getPlayer().getUniqueId());
+                var uhcp = instance.getPlayerManager().getPlayer(target.getUniqueId());
+                var player = target.isOnline() ? target.getPlayer() : null;
+                var health = player != null ? player.getHealth() : (uhcp != null ? uhcp.getLastKnownHealth() : 0);
                 var p_kills = uhcp != null ? uhcp.getKills() : 0;
-                sender.sendMessage(
-                        ChatColor.of("#7ab83c") + target.getName() + ChatColor.WHITE + " " + (int) target.getHealth()
-                                + ChatColor.DARK_RED + " ❤ " + ChatColor.GRAY + " kills: " + ChatColor.WHITE + p_kills);
-            }
-
-        } else {
-            if (sender instanceof Player) {
-                var player = (Player) sender;
-                var team = instance.getTeamManger().getPlayerTeam(player.getUniqueId());
-                if (team != null) {
-                    player.sendMessage(team.getTeamDisplayName() + "'s members: ");
-                    Arrays.asList(team.getMembers()).stream().map(id -> Bukkit.getOfflinePlayer(id)).forEach(ofp -> {
-                        if (ofp.isOnline()) {
-                            var on = ofp.getPlayer();
-                            player.sendMessage(ChatColor.GREEN + " - " + on.getName() + " " + ((int) on.getHealth())
-                                    + ChatColor.DARK_RED + "❤");
-                        } else {
-                            player.sendMessage(ChatColor.GRAY + " - " + ofp.getName());
-                        }
-                    });
+                if (uhcp != null) {
+                    if (uhcp.isDead()) {
+                        sender.sendMessage((ChatColor.RED + "" + ChatColor.STRIKETHROUGH) + "" + target.getName()
+                                + ChatColor.WHITE + " " + (int) health + ChatColor.DARK_RED + " ❤ " + ChatColor.GRAY
+                                + "kills: " + ChatColor.WHITE + p_kills);
+                    } else {
+                        sender.sendMessage(ChatColor.GREEN + "" + target.getName() + ChatColor.WHITE + " " + health
+                                + ChatColor.DARK_RED + " ❤ " + ChatColor.GRAY + "kills: " + ChatColor.WHITE + p_kills);
+                    }
 
                 } else {
-                    var uhcp = instance.getPlayerManager().getPlayer(player.getUniqueId());
-                    var p_kills = uhcp != null ? uhcp.getKills() : 0;
-                    sender.sendMessage(
-                            ChatColor.of("#7ab83c") + target.getName() + ChatColor.WHITE + " " + (int) target.getHealth()
-                                    + ChatColor.DARK_RED + " ❤ " + ChatColor.GRAY + " kills: " + ChatColor.WHITE + p_kills);
+                    sender.sendMessage((health > 0 ? ChatColor.GREEN : ChatColor.RED + "" + ChatColor.STRIKETHROUGH)
+                            + "" + target.getName() + ChatColor.WHITE + " " + health + ChatColor.DARK_RED + " ❤ "
+                            + ChatColor.GRAY + "kills: " + ChatColor.WHITE + p_kills);
+
                 }
+            }
+
+        } else { // When target null, assume targeting self.
+            if (sender instanceof Player) {
+                // Recursive method to save code
+                teamList(sender, (Player) sender);
             } else {
                 sender.sendMessage("Consoles dont have teams");
             }

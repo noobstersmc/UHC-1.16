@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Difficulty;
 import org.bukkit.GameMode;
 import org.bukkit.GameRule;
+import org.bukkit.Statistic;
 import org.bukkit.command.CommandSender;
 
 import co.aikar.commands.BaseCommand;
@@ -74,6 +75,7 @@ public class StartCommand extends BaseCommand {
 
         Bukkit.getOnlinePlayers().forEach(players -> {
             // cosas del inicio
+            players.setStatistic(Statistic.TIME_SINCE_REST, 0);
             players.getInventory().clear();
             players.setGameMode(GameMode.SURVIVAL);
             ScatterScoreboard sb = new ScatterScoreboard(players);
