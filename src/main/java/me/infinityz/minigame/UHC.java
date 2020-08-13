@@ -13,6 +13,9 @@ import org.bukkit.scoreboard.RenderType;
 import org.bukkit.scoreboard.Scoreboard;
 
 import co.aikar.commands.PaperCommandManager;
+import co.aikar.taskchain.BukkitTaskChainFactory;
+import co.aikar.taskchain.TaskChain;
+import co.aikar.taskchain.TaskChainFactory;
 import fr.mrmicky.fastinv.FastInvManager;
 import lombok.Getter;
 import me.infinityz.minigame.chunks.ChunksManager;
@@ -36,6 +39,17 @@ import me.infinityz.minigame.teams.commands.TeamCMD;
 import net.md_5.bungee.api.ChatColor;
 
 public class UHC extends JavaPlugin {
+
+    private static TaskChainFactory taskChainFactory;
+
+    public static <T> TaskChain<T> newChain() {
+        return taskChainFactory.newChain();
+    }
+
+    public static <T> TaskChain<T> newSharedChain(String name) {
+        return taskChainFactory.newSharedChain(name);
+    }
+
     public Stage gameStage;
     private @Getter ScoreboardManager scoreboardManager;
     private @Getter LocationManager locationManager;
@@ -51,6 +65,7 @@ public class UHC extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        taskChainFactory = BukkitTaskChainFactory.create(this);
         FastInvManager.register(this);
         gameStage = Stage.LOADING;// TODO: Move this code out of here.
 

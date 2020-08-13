@@ -5,7 +5,10 @@ import java.util.Comparator;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.destroystokyo.paper.Title;
+
 import org.bukkit.Bukkit;
+import org.bukkit.EntityEffect;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -21,6 +24,7 @@ import co.aikar.commands.annotation.Flags;
 import co.aikar.commands.annotation.Optional;
 import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.annotation.Syntax;
+import co.aikar.taskchain.TaskChain;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.chunks.ChunkLoadTask;
 import me.infinityz.minigame.events.PlayerWinEvent;
@@ -249,6 +253,56 @@ public class UHCCommand extends BaseCommand {
     public void onBeta(Player sender) {
         sender.getWorld().getForceLoadedChunks().stream().forEach(chunk -> chunk.setForceLoaded(false));
 
+    }
+
+    @Subcommand("win")
+    @CommandPermission("uhc.admin")
+    public void onWin(Player sender) {
+        Bukkit.getOnlinePlayers().stream().filter(player -> player != sender)
+                .forEach(all -> all.sendTitle(Title.builder()
+                        .title(new ComponentBuilder("Victory!").bold(true).color(ChatColor.GOLD).create())
+                        .subtitle(ChatColor.GREEN + sender.getName() + " has won!").stay(6 * 20).fadeIn(10)
+                        .fadeOut(3 * 20).build()));
+        sender.playEffect(EntityEffect.TOTEM_RESURRECT);
+        sender.sendTitle(
+                Title.builder().title(new ComponentBuilder("Victory!").bold(true).color(ChatColor.GOLD).create())
+                        .subtitle(ChatColor.GREEN + "Congratulations " + sender.getName()).stay(6 * 20).fadeIn(10)
+                        .fadeOut(3 * 20).build());
+
+        var command1 = "summon firework_rocket %d %d %d {LifeTime:30,FireworksItem:{id:firework_rocket,Count:1,tag:{Fireworks:{Flight:1,Explosions:[{Type:2,Flicker:0,Trail:1,Colors:[I;3887386,8073150,2651799,4312372],FadeColors:[I;3887386,11250603,4312372,15790320]}]}}}}";
+        var command2 = "summon firework_rocket %d %d %d {LifeTime:30,FireworksItem:{id:firework_rocket,Count:1,tag:{Fireworks:{Flight:2,Explosions:[{Type:3,Flicker:1,Trail:1,Colors:[I;5320730,2437522,8073150,11250603,6719955],FadeColors:[I;2437522,2651799,11250603,6719955,15790320]}]}}}}";
+        var command3 = "summon firework_rocket %d %d %d {LifeTime:30,FireworksItem:{id:firework_rocket,Count:1,tag:{Fireworks:{Flight:3,Explosions:[{Type:1,Flicker:1,Trail:1,Colors:[I;11743532,14602026,12801229,15435844],FadeColors:[I;11743532,14188952,15435844]}]}}}}";
+        UHC.newChain().delay(1).sync(() -> {
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), String.format(command2, sender.getLocation().getBlockX(),
+                    sender.getLocation().getBlockY() + 1, sender.getLocation().getBlockZ()));
+        }).delay(20).sync(() -> {
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), String.format(command1, sender.getLocation().getBlockX(),
+                    sender.getLocation().getBlockY() + 1, sender.getLocation().getBlockZ()));
+
+        }).delay(20).sync(() -> {
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), String.format(command3, sender.getLocation().getBlockX(),
+                    sender.getLocation().getBlockY() + 1, sender.getLocation().getBlockZ()));
+        }).delay(20).sync(() -> {
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), String.format(command2, sender.getLocation().getBlockX(),
+                    sender.getLocation().getBlockY() + 1, sender.getLocation().getBlockZ()));
+        }).delay(20).sync(() -> {
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), String.format(command1, sender.getLocation().getBlockX(),
+                    sender.getLocation().getBlockY() + 1, sender.getLocation().getBlockZ()));
+
+        }).delay(20).sync(() -> {
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), String.format(command3, sender.getLocation().getBlockX(),
+                    sender.getLocation().getBlockY() + 1, sender.getLocation().getBlockZ()));
+        }).delay(20).sync(() -> {
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), String.format(command2, sender.getLocation().getBlockX(),
+                    sender.getLocation().getBlockY() + 1, sender.getLocation().getBlockZ()));
+        }).delay(20).sync(() -> {
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), String.format(command1, sender.getLocation().getBlockX(),
+                    sender.getLocation().getBlockY() + 1, sender.getLocation().getBlockZ()));
+
+        }).delay(20).sync(() -> {
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), String.format(command3, sender.getLocation().getBlockX(),
+                    sender.getLocation().getBlockY() + 1, sender.getLocation().getBlockZ()));
+        }).sync(TaskChain::abort).execute();
     }
 
 }
