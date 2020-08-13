@@ -1,9 +1,13 @@
 package me.infinityz.minigame.teams.objects;
 
+import java.util.Arrays;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -70,6 +74,11 @@ public class Team {
             if (player.isOnline())
                 player.getPlayer().sendMessage(str);
         }
+    }
+
+    public Stream<Player> getPlayerStream() {
+        return Arrays.stream(members).map(member -> Bukkit.getOfflinePlayer(member))
+                .filter(member -> member != null && member.isOnline()).map(OfflinePlayer::getPlayer);
     }
 
     public void addKills(int kill) {

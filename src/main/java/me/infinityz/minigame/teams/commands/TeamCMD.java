@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -185,8 +186,12 @@ public class TeamCMD extends BaseCommand {
     @CommandAlias("tc|teamchat")
     public void teamChat(@Conditions("hasTeam") Player sender, String message) {
         var team = instance.getTeamManger().getPlayerTeam(sender.getUniqueId());
-        team.sendTeamMessage(
-                ChatColor.of("#DABC12") + "[TeamChat] " + sender.getName() + ": " + ChatColor.GRAY + message);
+
+        team.getPlayerStream().filter(player -> player != sender).forEach(members -> {
+            members.playSound(members.getLocation(), Sound.BLOCK_NOTE_BLOCK_BIT, 1, 1);
+        });
+        team.sendTeamMessage(ChatColor.of("#DABC12") + "[Team " + team.getTeamDisplayName() + "] " + sender.getName()
+                + ": " + ChatColor.GRAY + message);
     }
 
     @CommandAlias("sendcoord|sendcoords|sc")
@@ -200,7 +205,7 @@ public class TeamCMD extends BaseCommand {
     }
 
     @CommandCompletion("@otherplayers")
-    @CommandAlias("tl")
+    @CommandAlias("tl|kc")
     @Subcommand("list")
     public void teamList(CommandSender sender, @Optional @Flags("other") Player target) {
         if (target != null) {

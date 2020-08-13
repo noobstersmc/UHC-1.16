@@ -12,9 +12,12 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.Event.Result;
 import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerGameModeChangeEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
@@ -43,7 +46,6 @@ public class GlobalListener implements Listener {
         e.setJoinMessage("");
         e.getPlayer().sendMessage(ChatColor.BLUE + "Discord! discord.gg/4AdHqV9\n" + ChatColor.AQUA
                 + "Twitter! twitter.com/NoobstersUHC\n" + ChatColor.GOLD + "Donations! noobsters.buycraft.net");
-
     }
 
     @EventHandler
@@ -104,21 +106,6 @@ public class GlobalListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onSpecChat(AsyncPlayerChatEvent e) {
-        if (e.getPlayer().getGameMode() == GameMode.SPECTATOR && !e.getPlayer().hasPermission("staff.perm")) {
-            e.setCancelled(true);
-
-            e.getRecipients().stream()
-                    .filter(it -> it.getGameMode() == GameMode.SPECTATOR || it.hasPermission("staff.perm"))
-                    .forEach(specs -> {
-                        specs.sendMessage(ChatColor.GRAY + "[SPEC] " + e.getFormat()
-                                .replace("%1$s", e.getPlayer().getName()).replace("%2$s", e.getMessage()));
-                    });
-        }
-
-    }
-
     @EventHandler
     public void onScatter(ScatterLocationsFoundEvent e) {
         Bukkit.broadcastMessage("Locations found in " + (System.currentTimeMillis() - e.getTime()));
@@ -157,6 +144,44 @@ public class GlobalListener implements Listener {
 
         }, 20 * 10);
 
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onSpecChat(AsyncPlayerChatEvent e) {
+        if (e.getPlayer().getGameMode() == GameMode.SPECTATOR && !e.getPlayer().hasPermission("staff.perm")) {
+            e.setCancelled(true);
+
+            e.getRecipients().stream()
+                    .filter(it -> it.getGameMode() == GameMode.SPECTATOR || it.hasPermission("staff.perm"))
+                    .forEach(specs -> {
+                        specs.sendMessage(ChatColor.GRAY + "[SPEC] " + e.getFormat()
+                                .replace("%1$s", e.getPlayer().getName()).replace("%2$s", e.getMessage()));
+                    });
+        }
+
+    }
+
+    @EventHandler
+    public void onGamemodeChange(PlayerGameModeChangeEvent e) {
+        if (e.getNewGameMode() == GameMode.SPECTATOR) {
+            Bukkit.getOnlinePlayers().stream().filter(players -> players.getGameMode() == GameMode.SURVIVAL)
+                    .forEach(all -> all.hidePlayer(instance, e.getPlayer()));
+        } else {
+            Bukkit.getOnlinePlayers().stream().filter(player -> !player.canSee(e.getPlayer()))
+                    .forEach(all -> all.showPlayer(instance, e.getPlayer()));
+
+        }
+
+    }
+
+    @EventHandler
+    public void onInteractBorder(PlayerInteractEvent e) {
+        var world = e.getPlayer().getWorld().getWorldBorder();
+        if (!world.isInside(e.getPlayer().getLocation())) {
+            e.setCancelled(false);
+            e.setUseInteractedBlock(Result.ALLOW);
+            e.setUseItemInHand(Result.ALLOW);
+        }
     }
 
 }
