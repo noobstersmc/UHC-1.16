@@ -47,7 +47,8 @@ public class GlobalListener implements Listener {
         e.getPlayer().sendMessage(ChatColor.BLUE + "Discord! discord.gg/4AdHqV9\n" + ChatColor.AQUA
                 + "Twitter! twitter.com/NoobstersUHC\n" + ChatColor.GOLD + "Donations! noobsters.buycraft.net");
         if (e.getPlayer().getGameMode() == GameMode.SPECTATOR) {
-            Bukkit.getOnlinePlayers().forEach(all -> all.hidePlayer(instance, e.getPlayer()));
+            Bukkit.getOnlinePlayers().stream().filter(all -> all.getGameMode() != GameMode.SPECTATOR)
+                    .forEach(all -> all.hidePlayer(instance, e.getPlayer()));
         }
     }
 
