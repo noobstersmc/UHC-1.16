@@ -1,7 +1,7 @@
 main: me.infinityz.minigame.UHC
 name: UHC-1.16
 version: 0.5D
-api-version: 1.16.1
-api: 1.16.1
+api-version: "1.16"
+api: "1.16"
 authors: [infinityz, aleiv]
 softdepend: [Chunky]
