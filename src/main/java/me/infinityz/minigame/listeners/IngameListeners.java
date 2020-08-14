@@ -11,46 +11,39 @@ import org.bukkit.Bukkit;
 import org.bukkit.EntityEffect;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Skull;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import co.aikar.taskchain.TaskChain;
-import fr.mrmicky.fastinv.FastInv;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.events.PlayerWinEvent;
 import me.infinityz.minigame.events.TeamWinEvent;
-import me.infinityz.minigame.game.UpdatableInventory;
 import me.infinityz.minigame.players.PositionObject;
 import me.infinityz.minigame.players.UHCPlayer;
 import me.infinityz.minigame.scoreboard.IScoreboard;
 import me.infinityz.minigame.scoreboard.IngameScoreboard;
 import me.infinityz.minigame.scoreboard.objects.UpdateObject;
+import me.infinityz.minigame.teams.objects.Team;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 
+@RequiredArgsConstructor
 public class IngameListeners implements Listener {
-    UHC instance;
-    List<Material> possibleFence;
-
-    public IngameListeners(UHC instance) {
-        this.instance = instance;
-
-        possibleFence = Arrays.asList(Material.values()).stream()
-                .filter(material -> material.name().contains("FENCE") && !material.name().contains("FENCE_GATE"))
-                .collect(Collectors.toList());
-
-    }
+    private @NonNull UHC instance;
+    private @Getter List<Material> possibleFence = Arrays.stream(Material.values())
+            .filter(material -> material.name().contains("FENCE") && !material.name().contains("FENCE_GATE"))
+            .collect(Collectors.toList());;
 
     @EventHandler
     public void onJoinLater(PlayerJoinEvent e) {
@@ -76,75 +69,6 @@ public class IngameListeners implements Listener {
             p.getInventory().clear();
             p.getInventory().setArmorContents(null);
         }
-    }
-
-    @EventHandler
-    public void onEntityRightClick(PlayerInteractAtEntityEvent e) {
-        if (e.getRightClicked() == null || e.getRightClicked().getType() != EntityType.PLAYER)
-            return;
-        if (!e.getPlayer().hasPermission("staff.perm") || e.getPlayer().getGameMode() != GameMode.SPECTATOR)
-            return;
-        var player = e.getPlayer();
-        var clicked = (Player) e.getRightClicked();
-        // TODO: Add a specInv manager to share inventories and not open one viewer.
-
-        var fastInv = new UpdatableInventory(5 * 9, clicked.getName() + "'s inventory'");
-        fastInv.addUpdateTask(new BukkitRunnable() {
-            @Override
-            public void run() {
-                if (isCancelled()) {
-                    cancel();
-                    return;
-                }
-                updateInventory(fastInv, clicked);
-            }
-
-        }, instance, 0, 20, true);
-        fastInv.open(player);
-    }
-
-    private void updateInventory(FastInv fastInv, Player target) {
-        var count = 0;
-        for (var itemStack : target.getInventory()) {
-            if (itemStack == null || itemStack.getType() == Material.AIR) {
-                fastInv.setItem(count, new ItemStack(Material.AIR));
-            } else {
-                fastInv.setItem(count, itemStack);
-            }
-            count++;
-        }
-        // Obtain a list of all the active potion effects as strings
-        var effects = target
-                .getActivePotionEffects().stream().map(it -> ChatColor.GRAY + it.getType().getName() + " "
-                        + (1 + it.getAmplifier()) + ": " + ChatColor.WHITE + (it.getDuration() / 20) + "s")
-                .collect(Collectors.toList());
-        // Create a new Item Stack
-        var potionEffectsItem = new ItemStack(Material.GLASS_BOTTLE);
-        // Obtain the meta
-        var potionEffectsItemMeta = potionEffectsItem.getItemMeta();
-        // Change the meta
-        potionEffectsItemMeta.setDisplayName(ChatColor.GOLD + "Active Potion Effects:");
-        potionEffectsItemMeta.setLore(effects);
-        potionEffectsItem.setItemMeta(potionEffectsItemMeta);
-        // Add the item to the inventory 41 is the one next to the offhand item.
-        fastInv.setItem(41, potionEffectsItem);
-        // Repeat for Health
-        var healthItem = new ItemStack(Material.RED_BANNER);
-        var healthItemMeta = healthItem.getItemMeta();
-        healthItemMeta.setDisplayName(ChatColor.GOLD + "Health:");
-        healthItemMeta.setLore(List.of(ChatColor.WHITE + "Hearts: " + target.getHealth(),
-                ChatColor.WHITE + "Absorption: " + target.getAbsorptionAmount()));
-        healthItem.setItemMeta(healthItemMeta);
-        fastInv.setItem(42, healthItem);
-        // Repeat for EXP values
-        var experienceItem = new ItemStack(Material.EXPERIENCE_BOTTLE);
-        var experienceItemMeta = experienceItem.getItemMeta();
-        experienceItemMeta.setDisplayName(ChatColor.GOLD + "Experience:");
-        experienceItemMeta.setLore(List.of(ChatColor.WHITE + "Levels: " + target.getLevel(),
-                ChatColor.WHITE + "Percent to next level: " + String.format("%.2f", target.getExp() * 100)));
-        experienceItem.setItemMeta(experienceItemMeta);
-        fastInv.setItem(43, experienceItem);
-
     }
 
     @EventHandler
@@ -176,10 +100,6 @@ public class IngameListeners implements Listener {
             uhcp.setLastKnownHealth(e.getPlayer().getHealth() + e.getPlayer().getAbsorptionAmount());
         }
 
-    }
-
-    Material getRandomFence() {
-        return possibleFence.get(new Random().nextInt(possibleFence.size()));
     }
 
     @EventHandler
@@ -271,20 +191,61 @@ public class IngameListeners implements Listener {
 
     @EventHandler
     public void onPlayerWin(PlayerWinEvent e) {
-        var uhcPlayer = instance.getPlayerManager().getPlayer(e.getWinnerUUID());
-        var player = Bukkit.getPlayer(e.getWinnerUUID());
+        var player = e.getPlayer();
+        playWinEffect(player);
 
-        Bukkit.getOnlinePlayers().stream().filter(all -> all != player)
-                .forEach(all -> all.sendTitle(Title.builder()
-                        .title(new ComponentBuilder("Victory!").bold(true).color(ChatColor.GOLD).create())
-                        .subtitle(ChatColor.GREEN + player.getName() + " has won!").stay(6 * 20).fadeIn(10)
-                        .fadeOut(3 * 20).build()));
-        player.playEffect(EntityEffect.TOTEM_RESURRECT);
+    }
+
+    @EventHandler
+    public void onTeamWinEvent(TeamWinEvent e) {
+        var team = instance.getTeamManger().getTeamMap().get(e.getTeamUUID());
+        playTeamWinEffect(team);
+    }
+
+    /*
+     * Recursive methods:
+     */
+    private Material getRandomFence() {
+        return possibleFence.get(new Random().nextInt(possibleFence.size()));
+    }
+
+    private void playTeamWinEffect(Team team) {
+        var winnersName = team.getOfflinePlayersStream().map(OfflinePlayer::getName).collect(Collectors.toList());
+        var winnersTitle = Title.builder()
+                .title(new ComponentBuilder("Victory!").bold(true).color(ChatColor.GOLD).create())
+                .subtitle(ChatColor.GREEN + "Congratulations " + winnersName.toString()).stay(6 * 20).fadeIn(10)
+                .fadeOut(3 * 20).build();
+        var titleToOthers = Title.builder()
+                .title(new ComponentBuilder("Victory!").bold(true).color(ChatColor.GOLD).create())
+                .subtitle(ChatColor.GREEN + winnersName.toString() + " have won!").stay(6 * 20).fadeIn(10)
+                .fadeOut(3 * 20).build();
+
+        team.getPlayerStream().forEach(member -> {
+            member.playEffect(EntityEffect.TOTEM_RESURRECT);
+            member.sendTitle(winnersTitle);
+            fireWorksEffect(member);
+        });
+
+        Bukkit.getOnlinePlayers().stream().filter(all -> !winnersName.contains(all.getName()))
+                .forEach(all -> all.sendTitle(titleToOthers));
+    }
+
+    private void playWinEffect(Player player) {
         player.sendTitle(
                 Title.builder().title(new ComponentBuilder("Victory!").bold(true).color(ChatColor.GOLD).create())
                         .subtitle(ChatColor.GREEN + "Congratulations " + player.getName()).stay(6 * 20).fadeIn(10)
                         .fadeOut(3 * 20).build());
+        fireWorksEffect(player);
 
+        var titleToOthers = Title.builder()
+                .title(new ComponentBuilder("Victory!").bold(true).color(ChatColor.GOLD).create())
+                .subtitle(ChatColor.GREEN + player.getName() + " has won!").stay(6 * 20).fadeIn(10).fadeOut(3 * 20)
+                .build();
+        Bukkit.getOnlinePlayers().stream().filter(all -> all != player).forEach(all -> all.sendTitle(titleToOthers));
+
+    }
+
+    private void fireWorksEffect(Player player) {
         var command1 = "summon firework_rocket %d %d %d {LifeTime:30,FireworksItem:{id:firework_rocket,Count:1,tag:{Fireworks:{Flight:1,Explosions:[{Type:2,Flicker:0,Trail:1,Colors:[I;3887386,8073150,2651799,4312372],FadeColors:[I;3887386,11250603,4312372,15790320]}]}}}}";
         var command2 = "summon firework_rocket %d %d %d {LifeTime:30,FireworksItem:{id:firework_rocket,Count:1,tag:{Fireworks:{Flight:2,Explosions:[{Type:3,Flicker:1,Trail:1,Colors:[I;5320730,2437522,8073150,11250603,6719955],FadeColors:[I;2437522,2651799,11250603,6719955,15790320]}]}}}}";
         var command3 = "summon firework_rocket %d %d %d {LifeTime:30,FireworksItem:{id:firework_rocket,Count:1,tag:{Fireworks:{Flight:3,Explosions:[{Type:1,Flicker:1,Trail:1,Colors:[I;11743532,14602026,12801229,15435844],FadeColors:[I;11743532,14188952,15435844]}]}}}}";
@@ -328,14 +289,6 @@ public class IngameListeners implements Listener {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
                     String.format(command3, loc.getBlockX(), loc.getBlockY() + 1, loc.getBlockZ()));
         }).sync(TaskChain::abort).execute();
-
-    }
-
-    @EventHandler
-    public void onTeamWinEvent(TeamWinEvent e) {
-        var team = instance.getTeamManger().getTeamMap().get(e.getTeamUUID());
-        Bukkit.broadcastMessage("Team " + team.getTeamDisplayName() + " has won the UHC");
-
     }
 
 }

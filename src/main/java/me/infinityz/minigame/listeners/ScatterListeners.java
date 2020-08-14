@@ -10,24 +10,18 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.scheduler.BukkitTask;
 
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.scoreboard.IScoreboard;
 import me.infinityz.minigame.scoreboard.ScatterScoreboard;
 
+@RequiredArgsConstructor
 public class ScatterListeners implements Listener {
-    UHC instance;
-    BukkitTask scatterScoreboardTask;
+    private @NonNull UHC instance;
 
-    public ScatterListeners(UHC instance) {
-        this.instance = instance;
-
-    }
-
-    public BukkitTask getLobbyScoreboardTask() {
-        return scatterScoreboardTask;
-    }
+    // TODO: Prohibit login during scatter to avoid errors.
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent e) {

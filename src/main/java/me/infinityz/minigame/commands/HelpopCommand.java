@@ -7,17 +7,16 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Syntax;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import me.infinityz.minigame.UHC;
 import net.md_5.bungee.api.ChatColor;
 
+@RequiredArgsConstructor
 @CommandAlias("helpop")
 public class HelpopCommand extends BaseCommand {
 
-    UHC instance;
-
-    public HelpopCommand(UHC instance) {
-        this.instance = instance;
-    }
+    private @NonNull UHC instance;
 
     @Default
     @Syntax("<message> &e- The message you want ")
@@ -32,7 +31,8 @@ public class HelpopCommand extends BaseCommand {
         for (String string : message) {
             sb.append(string + " ");
         }
-        Bukkit.broadcast(ChatColor.of("#DABC12") + "[Helpop] " + ChatColor.GRAY + player.getName() + ": " + sb.toString(),
+        Bukkit.broadcast(
+                ChatColor.of("#DABC12") + "[Helpop] " + ChatColor.GRAY + player.getName() + ": " + sb.toString(),
                 "staff.perm");
     }
 

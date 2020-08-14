@@ -36,7 +36,6 @@ public class TeamCMD extends BaseCommand {
     public TeamCMD(UHC instance) {
         this.instance = instance;
     }
-    // TODO: Register TeamMember.java as an issuerAwareContext
 
     @Conditions("teamManagement")
     @Subcommand("create")

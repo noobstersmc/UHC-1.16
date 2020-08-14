@@ -1,4 +1,4 @@
-package me.infinityz.minigame.players;
+package me.infinityz.minigame.players.serializers;
 
 import java.lang.reflect.Type;
 
@@ -12,6 +12,10 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 
+/**
+ * ItemStackAdapter serializer. It allows for ItemStack.class to be serialized
+ * to JSON format.
+ */
 public class ItemStackAdapter implements JsonSerializer<ItemStack> {
 
     @Override
@@ -41,10 +45,9 @@ public class ItemStackAdapter implements JsonSerializer<ItemStack> {
                     for (var enchantMetaEntry : src.getItemMeta().getEnchants().entrySet())
                         enchantMetaJson.addProperty(enchantMetaEntry.getKey().getKey().getKey(),
                                 enchantMetaEntry.getValue());
+
                     metaJson.add("enchantments", enchantMetaJson);
-
                 }
-
                 itemStackJson.add("meta", metaJson);
             } else {
                 var metaJson = new JsonObject();

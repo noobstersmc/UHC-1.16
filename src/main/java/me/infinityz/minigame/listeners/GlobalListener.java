@@ -1,23 +1,17 @@
 package me.infinityz.minigame.listeners;
 
-import java.util.stream.Collectors;
-
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
-import org.bukkit.event.Event.Result;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerGameModeChangeEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
@@ -26,7 +20,6 @@ import org.bukkit.potion.PotionEffectType;
 
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.enums.Stage;
-import me.infinityz.minigame.events.ScatterLocationsFoundEvent;
 import me.infinityz.minigame.events.TeleportationCompletedEvent;
 import me.infinityz.minigame.scoreboard.IngameScoreboard;
 import me.infinityz.minigame.tasks.GameLoop;
@@ -43,13 +36,9 @@ public class GlobalListener implements Listener {
 
     @EventHandler
     public void joinMessage(PlayerJoinEvent e) {
-        e.setJoinMessage("");
         e.getPlayer().sendMessage(ChatColor.BLUE + "Discord! discord.gg/4AdHqV9\n" + ChatColor.AQUA
                 + "Twitter! twitter.com/NoobstersUHC\n" + ChatColor.GOLD + "Donations! noobsters.buycraft.net");
-        if (e.getPlayer().getGameMode() == GameMode.SPECTATOR) {
-            Bukkit.getOnlinePlayers().stream().filter(all -> all.getGameMode() != GameMode.SPECTATOR)
-                    .forEach(all -> all.hidePlayer(instance, e.getPlayer()));
-        }
+        e.setJoinMessage("");
     }
 
     @EventHandler
@@ -57,6 +46,9 @@ public class GlobalListener implements Listener {
         e.setQuitMessage("");
     }
 
+    /**
+     * Apple Rate code
+     */
     @EventHandler
     public void onLeaf(LeavesDecayEvent e) {
         if (Math.random() <= 0.0080) {
@@ -67,9 +59,11 @@ public class GlobalListener implements Listener {
 
     }
 
+    /**
+     * PVP boolean code
+     */
     @EventHandler
     public void onPVP(EntityDamageByEntityEvent e) {
-        // TODO: Clean up the code.
         if (e.getEntity() instanceof Player) {
             Player p2 = null;
             if (e.getDamager() instanceof Player) {
@@ -87,6 +81,9 @@ public class GlobalListener implements Listener {
         }
     }
 
+    /**
+     * Strength nerf
+     */
     @EventHandler
     public void strengthFix(EntityDamageByEntityEvent e) {
         if (e.getDamager().getType() != EntityType.PLAYER)
@@ -102,20 +99,15 @@ public class GlobalListener implements Listener {
 
     }
 
+    /**
+     * Global Mute
+     */
     @EventHandler(priority = EventPriority.NORMAL)
     public void onChat(AsyncPlayerChatEvent e) {
         if (instance.globalmute && !e.getPlayer().hasPermission("staff.perm")) {
             e.setCancelled(true);
             e.getPlayer().sendMessage(ChatColor.RED + "Globalmute is Enabled.");
         }
-    }
-
-    @EventHandler
-    public void onScatter(ScatterLocationsFoundEvent e) {
-        Bukkit.broadcastMessage("Locations found in " + (System.currentTimeMillis() - e.getTime()));
-        // Quickly ensure not null
-        instance.getLocationManager().getLocationsSet()
-                .addAll(e.getLocations().stream().filter(loc -> loc != null).collect(Collectors.toList()));
     }
 
     @EventHandler
@@ -144,48 +136,11 @@ public class GlobalListener implements Listener {
             instance.gameStage = Stage.INGAME;
 
             instance.getListenerManager().registerListener(instance.getListenerManager().getIngameListeners());
+            instance.getListenerManager().registerListener(instance.getListenerManager().getSpectatorListener());
             new GameLoop(instance).runTaskTimerAsynchronously(instance, 0L, 20L);
 
         }, 20 * 10);
 
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onSpecChat(AsyncPlayerChatEvent e) {
-        if (e.getPlayer().getGameMode() == GameMode.SPECTATOR && !e.getPlayer().hasPermission("staff.perm")) {
-            e.setCancelled(true);
-
-            e.getRecipients().stream()
-                    .filter(it -> it.getGameMode() == GameMode.SPECTATOR || it.hasPermission("staff.perm"))
-                    .forEach(specs -> {
-                        specs.sendMessage(ChatColor.GRAY + "[SPEC] " + e.getFormat()
-                                .replace("%1$s", e.getPlayer().getName()).replace("%2$s", e.getMessage()));
-                    });
-        }
-
-    }
-
-    @EventHandler
-    public void onGamemodeChange(PlayerGameModeChangeEvent e) {
-        if (e.getNewGameMode() == GameMode.SPECTATOR) {
-            Bukkit.getOnlinePlayers().stream().filter(players -> players.getGameMode() == GameMode.SURVIVAL)
-                    .forEach(all -> all.hidePlayer(instance, e.getPlayer()));
-        } else {
-            Bukkit.getOnlinePlayers().stream().filter(player -> !player.canSee(e.getPlayer()))
-                    .forEach(all -> all.showPlayer(instance, e.getPlayer()));
-
-        }
-
-    }
-
-    @EventHandler
-    public void onInteractBorder(PlayerInteractEvent e) {
-        var world = e.getPlayer().getWorld().getWorldBorder();
-        if (!world.isInside(e.getPlayer().getLocation())) {
-            e.setCancelled(false);
-            e.setUseInteractedBlock(Result.ALLOW);
-            e.setUseItemInHand(Result.ALLOW);
-        }
     }
 
 }

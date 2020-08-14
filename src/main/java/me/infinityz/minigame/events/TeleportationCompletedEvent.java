@@ -3,24 +3,21 @@ package me.infinityz.minigame.events;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
+import lombok.Getter;
+
 public class TeleportationCompletedEvent extends Event {
+    /*
+     * Methods Required by BukkitAPI
+     */
+    private @Getter static final HandlerList HandlerList = new HandlerList();
+    private @Getter final HandlerList Handlers = HandlerList;
 
-    private static final HandlerList handlers = new HandlerList();
-
-    public TeleportationCompletedEvent(boolean isASync){
+    public TeleportationCompletedEvent(boolean isASync) {
         super(isASync);
     }
 
-    public TeleportationCompletedEvent(){
+    public TeleportationCompletedEvent() {
         super();
     }
 
-    public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-    
 }

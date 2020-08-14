@@ -6,6 +6,7 @@ import java.util.LinkedList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.block.BlockFace;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -82,6 +83,22 @@ public class ChunksManager {
         return chunksCollection;
     }
 
+
+    public static Location findScatterLocation(final World world, final int radius) {
+        Location loc = new Location(world, 0, 0, 0);
+        // Use Math#Random to obtain a random integer that can be used as a location.
+        loc.setX(loc.getX() + Math.random() * radius * 2.0 - radius);
+        loc.setZ(loc.getZ() + Math.random() * radius * 2.0 - radius);
+        loc = loc.getWorld().getHighestBlockAt(loc).getLocation();
+
+        if (!isSafe(loc)) {
+            return findScatterLocation(world, radius);
+        }
+        // A location object is returned once we reach this step, next step is to
+        // validate the location from others.
+        return centerLocation(loc);
+    }
+    
     public static Location centerLocation(final Location loc) {
         loc.setX(loc.getBlockX() + 0.5);
         loc.setY(loc.getBlockY() + 1.5);

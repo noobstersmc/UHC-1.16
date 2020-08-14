@@ -45,7 +45,7 @@ public class TeamManager {
             sender.sendActionBar(ChatColor.RED + "Cancelling your previous team invite to "
                     + Bukkit.getOfflinePlayer(invite.getTarget()));
         }
-        var newInvite = new TeamInvite(team.getTeamID(), sender, target);
+        var newInvite = new TeamInvite(team.getTeamID(), sender.getUniqueId(), target.getUniqueId());
         teamInvite.put(sender.getUniqueId().getMostSignificantBits(), newInvite);
         sender.sendMessage(ChatColor.GREEN + "Invite has been sent!");
         target.sendMessage(new ComponentBuilder(

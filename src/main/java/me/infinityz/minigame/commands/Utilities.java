@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 import me.infinityz.minigame.UHC;
 
 /**
- * Utilities
+ * Utilities. command shortcuts
  */
 @CommandAlias("u|utilities")
 public @RequiredArgsConstructor class Utilities extends BaseCommand {

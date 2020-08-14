@@ -15,16 +15,16 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import me.infinityz.minigame.players.serializers.ItemStackAdapter;
+import me.infinityz.minigame.players.serializers.ItemStackArrayAdapter;
 
-@SuppressWarnings("all")
 @RequiredArgsConstructor
 public class UHCPlayer {
     private final @Getter UUID UUID;
-    private @NonNull @Getter @Setter int kills;
-    private @NonNull @Getter @Setter boolean alive;
+    private @Getter @Setter int kills = 0;
+    private @Getter @Setter boolean alive = false;
     private @Getter @Setter boolean dead = false;
     private @Getter @Setter double lastKnownHealth = 20.0;
     private @Getter @Setter PositionObject lastKnownPosition;

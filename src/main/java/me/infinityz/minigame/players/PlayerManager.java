@@ -1,34 +1,29 @@
 package me.infinityz.minigame.players;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
+import gnu.trove.map.hash.THashMap;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import me.infinityz.minigame.UHC;
 
+@RequiredArgsConstructor
 public class PlayerManager {
-    UHC instance;
-    Map<String, UHCPlayer> uhcPlayerMap;
-
-    public PlayerManager(UHC instance) {
-        this.instance = instance;
-        this.uhcPlayerMap = new HashMap<>();
-    }
-
-    public Map<String, UHCPlayer> getUhcPlayerMap() {
-        return uhcPlayerMap;
-    }
+    private @NonNull UHC instance;
+    private @Getter THashMap<Long, UHCPlayer> uhcPlayerMap = new THashMap<>();
 
     public UHCPlayer addCreateUHCPlayer(UUID uuid, boolean alive) {
-        UHCPlayer uhcPlayer = new UHCPlayer(uuid, 0, alive);
+        var uhcPlayer = new UHCPlayer(uuid);
+        uhcPlayer.setAlive(alive);
 
-        uhcPlayerMap.putIfAbsent(uuid.toString(), uhcPlayer);
+        uhcPlayerMap.putIfAbsent(uuid.getMostSignificantBits(), uhcPlayer);
 
-        return uhcPlayerMap.get(uuid.toString());
+        return uhcPlayerMap.get(uuid.getMostSignificantBits());
     }
 
     public UHCPlayer getPlayer(UUID uuid) {
-        return uhcPlayerMap.get(uuid.toString());
+        return uhcPlayerMap.get(uuid.getMostSignificantBits());
     }
 
     public int getAlivePlayers() {

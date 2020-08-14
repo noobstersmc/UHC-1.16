@@ -2,6 +2,8 @@ package me.infinityz.minigame.events;
 
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
@@ -28,4 +30,9 @@ public class PlayerWinEvent extends Event {
         super(false);
         this.winnerUUID = uuid;
     }
+
+    public Player getPlayer() {
+        return Bukkit.getPlayer(winnerUUID);
+    }
+
 }

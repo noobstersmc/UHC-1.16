@@ -139,6 +139,9 @@ public class ContextConditions {
         instance.getCommandManager().getCommandCompletions().registerAsyncCompletion("respawnArgs", c -> {
             return ImmutableList.of("--i", "-inventory", "--l", "-location");
         });
+        instance.getCommandManager().getCommandCompletions().registerAsyncCompletion("statusArgs", c -> {
+            return ImmutableList.of("--i", "-inventory", "-inv");
+        });
         instance.getCommandManager().getCommandCompletions().registerAsyncCompletion("otherplayers", c -> {
             if (c.getSender() instanceof Player) {
                 return Bukkit.getOnlinePlayers().stream().filter(player -> player.getName() != c.getSender().getName())
@@ -150,7 +153,8 @@ public class ContextConditions {
             return Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
         });
         instance.getCommandManager().getCommandCompletions().registerAsyncCompletion("uhcPlayers", c -> {
-            return instance.getPlayerManager().getUhcPlayerMap().values().stream().map(uhcp -> Bukkit.getOfflinePlayer(uhcp.getUUID()).getName()).collect(Collectors.toList());
+            return instance.getPlayerManager().getUhcPlayerMap().values().stream()
+                    .map(uhcp -> Bukkit.getOfflinePlayer(uhcp.getUUID()).getName()).collect(Collectors.toList());
         });
         instance.getCommandManager().getCommandCompletions().registerAsyncCompletion("teamMembers", c -> {
             if (c.getSender() instanceof Player) {

@@ -1,4 +1,4 @@
-package me.infinityz.minigame.players;
+package me.infinityz.minigame.players.serializers;
 
 import java.lang.reflect.Type;
 
@@ -10,6 +10,10 @@ import com.google.gson.JsonSerializer;
 
 import org.bukkit.inventory.ItemStack;
 
+/**
+ * ItemStackArrayAdapter serializer. It allows for ItemStack[].class to be
+ * serialized to JSON format.
+ */
 public class ItemStackArrayAdapter implements JsonSerializer<ItemStack[]> {
 
     @Override

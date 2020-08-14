@@ -1,11 +1,9 @@
 package me.infinityz.minigame;
 
 import java.io.File;
-import java.util.Arrays;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
-import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -23,7 +21,6 @@ import me.infinityz.minigame.commands.ContextConditions;
 import me.infinityz.minigame.commands.GlobalMute;
 import me.infinityz.minigame.commands.HelpopCommand;
 import me.infinityz.minigame.commands.LatescatterCMD;
-import me.infinityz.minigame.commands.LocationsCommand;
 import me.infinityz.minigame.commands.PVP;
 import me.infinityz.minigame.commands.StartCommand;
 import me.infinityz.minigame.commands.UHCCommand;
@@ -31,7 +28,6 @@ import me.infinityz.minigame.commands.Utilities;
 import me.infinityz.minigame.crafting.CraftingManager;
 import me.infinityz.minigame.enums.Stage;
 import me.infinityz.minigame.listeners.ListenerManager;
-import me.infinityz.minigame.locations.LocationManager;
 import me.infinityz.minigame.players.PlayerManager;
 import me.infinityz.minigame.scoreboard.ScoreboardManager;
 import me.infinityz.minigame.teams.TeamManager;
@@ -40,42 +36,33 @@ import net.md_5.bungee.api.ChatColor;
 
 public class UHC extends JavaPlugin {
 
-    private static TaskChainFactory taskChainFactory;
-
-    public static <T> TaskChain<T> newChain() {
-        return taskChainFactory.newChain();
-    }
-
-    public static <T> TaskChain<T> newSharedChain(String name) {
-        return taskChainFactory.newSharedChain(name);
-    }
-
     public Stage gameStage;
     private @Getter ScoreboardManager scoreboardManager;
-    private @Getter LocationManager locationManager;
     private @Getter PaperCommandManager commandManager;
     private @Getter PlayerManager playerManager;
     private @Getter ListenerManager listenerManager;
     private @Getter CraftingManager craftingManager;
     private @Getter TeamManager teamManger;
     private @Getter ChunksManager chunkManager;
-    private @Getter World[] deleteWorldQueue = new World[10];
+    private static TaskChainFactory taskChainFactory;
+    // TODO: Move pvp and globalmute
     public boolean pvp = false;
     public boolean globalmute = false;
 
     @Override
     public void onEnable() {
+        /**
+         * Initialize taskChain, fastInv, and set the game stage to loading
+         */
         taskChainFactory = BukkitTaskChainFactory.create(this);
         FastInvManager.register(this);
-        gameStage = Stage.LOADING;// TODO: Move this code out of here.
+        gameStage = Stage.LOADING;
 
-        // TODO: Move the command Manager to a command manager.
+        /*
+         * Register commands and contexts for AFC
+         */
         commandManager = new PaperCommandManager(this);
-
-        // Register all command conditions, completion, annotations, and context
         new ContextConditions(this);
-
-        commandManager.registerCommand(new LocationsCommand(this));
         commandManager.registerCommand(new StartCommand(this));
         commandManager.registerCommand(new PVP(this));
         commandManager.registerCommand(new HelpopCommand(this));
@@ -85,16 +72,17 @@ public class UHC extends JavaPlugin {
         commandManager.registerCommand(new TeamCMD(this));
         commandManager.registerCommand(new Utilities(this));
 
+        /*
+         * Initilialize all the managers
+         */
         teamManger = new TeamManager(this);
-
         scoreboardManager = new ScoreboardManager(this);
-        locationManager = new LocationManager(this);
         playerManager = new PlayerManager(this);
-
         craftingManager = new CraftingManager(this);
-
         listenerManager = new ListenerManager(this);
         chunkManager = new ChunksManager(this);
+
+        /* Run some startup code */
         runStartUp();
     }
 
@@ -134,17 +122,13 @@ public class UHC extends JavaPlugin {
         return directoryToBeDeleted.delete();
     }
 
-    @Override
-    public void onDisable() {
-        Bukkit.getOnlinePlayers().forEach(all -> {
-            all.kickPlayer("Stopping the server");
-        });
-        Bukkit.getWorlds().forEach(worlds -> {
-            if (Arrays.asList(deleteWorldQueue).contains(worlds)) {
-                Bukkit.unloadWorld(worlds, false);
-                deleteDirectory(worlds.getWorldFolder());
-            }
-        });
+    /* Task Chain factories */
+    public static <T> TaskChain<T> newChain() {
+        return taskChainFactory.newChain();
+    }
+
+    public static <T> TaskChain<T> newSharedChain(String name) {
+        return taskChainFactory.newSharedChain(name);
     }
 
 }

@@ -2,17 +2,18 @@ package me.infinityz.minigame.teams.objects;
 
 import java.util.UUID;
 
-import org.bukkit.entity.Player;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.NonNull;
+import lombok.Setter;
 
-import lombok.Getter;
-
+/*
+ * Data object with team invite info
+ */
+@Data
 public class TeamInvite {
-    private @Getter UUID teamToJoin, sender, target;
-
-    public TeamInvite(UUID teamToJoin, Player sender, Player target) {
-        this.teamToJoin = teamToJoin;
-        this.sender = sender.getUniqueId();
-        this.target = target.getUniqueId();
-    }
+    private @NonNull @Setter(value = AccessLevel.PRIVATE) UUID teamToJoin;
+    private @NonNull @Setter(value = AccessLevel.PRIVATE) UUID sender;
+    private @NonNull @Setter(value = AccessLevel.PRIVATE) UUID target;
 
 }

@@ -13,20 +13,19 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.chunks.ChunkLoadTask;
 import me.infinityz.minigame.scoreboard.ScatterScoreboard;
 import me.infinityz.minigame.tasks.TeleportTemporalTask;
 import net.md_5.bungee.api.ChatColor;
 
+@RequiredArgsConstructor
 @CommandPermission("staff.perm")
 @CommandAlias("start")
 public class StartCommand extends BaseCommand {
-    private UHC instance;
-
-    public StartCommand(UHC instance) {
-        this.instance = instance;
-    }
+    private @NonNull UHC instance;
 
     @Default
     public void newScatter(CommandSender sender) {

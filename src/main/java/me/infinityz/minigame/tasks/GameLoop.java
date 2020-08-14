@@ -1,7 +1,5 @@
 package me.infinityz.minigame.tasks;
 
-import java.util.UUID;
-
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
 import org.bukkit.Sound;
@@ -10,6 +8,7 @@ import org.bukkit.World.Environment;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.infinityz.minigame.UHC;
+import me.infinityz.minigame.chunks.ChunksManager;
 import me.infinityz.minigame.listeners.GlobalListener;
 import me.infinityz.minigame.scoreboard.objects.UpdateObject;
 import net.md_5.bungee.api.ChatColor;
@@ -32,7 +31,7 @@ public class GameLoop extends BukkitRunnable {
             Bukkit.getScheduler().runTask(instance, () -> {
                 Bukkit.getOnlinePlayers().forEach(player -> {
                     if (player.getWorld().getEnvironment() == Environment.NETHER) {
-                        player.teleport(ScatterTask.findScatterLocation(mainWorld, 499));
+                        player.teleport(ChunksManager.findScatterLocation(mainWorld, 499));
                     }
                 });
             });
@@ -118,7 +117,7 @@ public class GameLoop extends BukkitRunnable {
 
         instance.getPlayerManager().getUhcPlayerMap().entrySet().parallelStream().forEach(entry -> {
             if (entry.getValue().isAlive()) {
-                var of = Bukkit.getOfflinePlayer(UUID.fromString(entry.getKey()));
+                var of = Bukkit.getOfflinePlayer(entry.getValue().getUUID());
                 if (!of.isOnline()) {
                     if (System.currentTimeMillis() - of.getLastSeen() > 600000) {
                         Bukkit.broadcastMessage(ChatColor.of("#DABC12") + of.getName()
