@@ -1,6 +1,5 @@
 <factorypath>
     <factorypathentry kind="VARJAR" id="M2_REPO/jars/me/infinityz/Paper/1.16.1/Paper-1.16.1.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/fr/mrmicky/FastBoard/1.1.0/FastBoard-1.1.0.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/co/aikar/acf-paper/0.5.0-SNAPSHOT/acf-paper-0.5.0-SNAPSHOT.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/co/aikar/taskchain-bukkit/3.7.2/taskchain-bukkit-3.7.2.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/co/aikar/taskchain-core/3.7.2/taskchain-core-3.7.2.jar" enabled="true" runInBatchMode="false"/>

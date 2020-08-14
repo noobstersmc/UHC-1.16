@@ -1,12 +1,14 @@
 package me.infinityz.minigame.commands;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -27,6 +29,7 @@ import me.infinityz.minigame.chunks.ChunkLoadTask;
 import me.infinityz.minigame.chunks.ChunksManager;
 import me.infinityz.minigame.players.PositionObject;
 import me.infinityz.minigame.players.UHCPlayer;
+import me.infinityz.minigame.scoreboard.objects.FastBoard;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ClickEvent.Action;
@@ -68,8 +71,7 @@ public class UHCCommand extends BaseCommand {
                     teleportLocation = ChunksManager.findScatterLocation(world,
                             (int) world.getWorldBorder().getSize() / 2);
             } else {
-                teleportLocation = ChunksManager.findScatterLocation(world,
-                        (int) world.getWorldBorder().getSize() / 2);
+                teleportLocation = ChunksManager.findScatterLocation(world, (int) world.getWorldBorder().getSize() / 2);
 
             }
 
@@ -96,6 +98,21 @@ public class UHCCommand extends BaseCommand {
                 }
             }
         });
+    }
+
+    @Subcommand("color")
+    @CommandPermission("uhc.admin")
+    public void onTeamColor(Player sender) {
+        var team = instance.getTeamManger().getPlayerTeam(sender.getUniqueId());
+        var nameList = team != null
+                ? team.getOfflinePlayersStream().map(OfflinePlayer::getName).collect(Collectors.toList())
+                : Collections.singleton(sender.getName());
+        try {
+            FastBoard.removeTeam(sender);
+            FastBoard.createTeam(nameList, sender);
+        } catch (ReflectiveOperationException e) {
+            e.printStackTrace();
+        }
     }
 
     @Conditions("ingame")

@@ -6,7 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.entity.Player;
 
-import fr.mrmicky.fastboard.FastBoard;
+import me.infinityz.minigame.scoreboard.objects.FastBoard;
 import me.infinityz.minigame.scoreboard.objects.UpdateObject;
 
 public abstract class IScoreboard extends FastBoard {

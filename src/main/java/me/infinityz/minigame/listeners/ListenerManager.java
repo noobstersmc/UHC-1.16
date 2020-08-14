@@ -9,6 +9,7 @@ import org.bukkit.event.Listener;
 
 import lombok.Getter;
 import me.infinityz.minigame.UHC;
+import me.infinityz.minigame.teams.listeners.TeamListeners;
 
 public class ListenerManager {
     private UHC instance;
@@ -26,6 +27,8 @@ public class ListenerManager {
 
         Bukkit.getPluginManager().registerEvents(new GlobalListener(instance), instance);
         Bukkit.getPluginManager().registerEvents(lobby, instance);
+        // Team listener
+        Bukkit.getPluginManager().registerEvents(new TeamListeners(instance), instance);
         // Listener for GHEAD
         Bukkit.getPluginManager().registerEvents(instance.getCraftingManager(), instance);
     }

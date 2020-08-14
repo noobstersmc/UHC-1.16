@@ -79,7 +79,8 @@ public class LobbyListeners implements Listener {
         player.setLevel(0);
         player.setExp(0f);
         player.setTotalExperience(0);
-        player.getInventory().setContents(null);
+        player.getInventory().clear();
+        player.getInventory().setArmorContents(null);
         player.setHealth(20.0);
         player.setFoodLevel(20);
         player.setSaturation(20.0F);
