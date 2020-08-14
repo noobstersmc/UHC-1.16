@@ -2,6 +2,7 @@ package me.infinityz.minigame.teams.listeners;
 
 import java.util.stream.Collectors;
 
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -16,6 +17,7 @@ import me.infinityz.minigame.teams.events.PlayerLeftTeamEvent;
 import me.infinityz.minigame.teams.events.TeamCreatedEvent;
 import me.infinityz.minigame.teams.events.TeamDisbandedEvent;
 import me.infinityz.minigame.teams.events.TeamRemovedEvent;
+import net.md_5.bungee.api.ChatColor;
 
 @RequiredArgsConstructor
 public class TeamListeners implements Listener {
@@ -24,6 +26,7 @@ public class TeamListeners implements Listener {
     @EventHandler
     public void onCreate(TeamCreatedEvent e) {
         var team = e.getTeam();
+        e.getPlayer().sendMessage(ChatColor.of("#7ab83c") + "Team " + team.getTeamDisplayName() + " has been created!");
         var nameList = team.getOfflinePlayersStream().map(OfflinePlayer::getName).collect(Collectors.toList());
         team.getPlayerStream().forEach(all -> {
             try {
@@ -38,6 +41,7 @@ public class TeamListeners implements Listener {
     @EventHandler
     public void onRemove(TeamRemovedEvent e) {
         var team = e.getTeam();
+        team.sendTeamMessage("Your team has been removed!");
         team.getPlayerStream().forEach(all -> {
             try {
                 FastBoard.removeTeam(all);
@@ -51,6 +55,8 @@ public class TeamListeners implements Listener {
     @EventHandler
     public void onRemove(TeamDisbandedEvent e) {
         var team = e.getTeam();
+        team.sendTeamMessage(ChatColor.RED + "Team has been disbanded by "
+                + Bukkit.getOfflinePlayer(e.getTeam().getTeamLeader()).getName());
         team.getPlayerStream().forEach(all -> {
             try {
                 FastBoard.removeTeam(all);
@@ -64,6 +70,9 @@ public class TeamListeners implements Listener {
     @EventHandler
     public void onJoinTeam(PlayerJoinedTeamEvent e) {
         var team = e.getTeam();
+        // Notify the team that the player has joined
+        team.sendTeamMessage(ChatColor.of("#7ab83c") + e.getPlayer().getName() + " has joined the team!");
+
         var nameList = team.getOfflinePlayersStream().map(OfflinePlayer::getName).collect(Collectors.toList());
         team.getPlayerStream().forEach(all -> {
             try {
@@ -79,6 +88,8 @@ public class TeamListeners implements Listener {
     @EventHandler
     public void onLeftTeam(PlayerLeftTeamEvent e) {
         var team = e.getTeam();
+        e.getPlayer().sendMessage(ChatColor.of("#DABC12") + "You've abandoned Team " + team.getTeamDisplayName());
+        team.sendTeamMessage(ChatColor.of("#7ab83c") + e.getPlayer().getName() + " has abandoned the team!");
         var nameList = team.getOfflinePlayersStream().map(OfflinePlayer::getName).collect(Collectors.toList());
         team.getPlayerStream().forEach(all -> {
             try {

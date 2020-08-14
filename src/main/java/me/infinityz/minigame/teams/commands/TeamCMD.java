@@ -1,6 +1,8 @@
 package me.infinityz.minigame.teams.commands;
 
+import java.util.Collections;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -57,7 +59,6 @@ public class TeamCMD extends BaseCommand {
         if (instance.getTeamManger().addTeam(team)) {
             // Call the event to make everyone aware.
             Bukkit.getPluginManager().callEvent(new TeamCreatedEvent(team, player));
-            player.sendMessage(ChatColor.of("#7ab83c") + "Team " + team.getTeamDisplayName() + " has been created!");
             // Return the team
             return team;
         }
@@ -129,7 +130,6 @@ public class TeamCMD extends BaseCommand {
         var team = getPlayerTeam(player.getUniqueId());
 
         if (team.removeMember(player.getUniqueId())) {
-            player.sendMessage(ChatColor.of("#DABC12") + "You've abandoned Team " + team.getTeamDisplayName());
             // Clear cache and team set
             instance.getTeamManger().getCache().invalidate(player.getUniqueId().getMostSignificantBits());
             // Call the event
@@ -153,7 +153,6 @@ public class TeamCMD extends BaseCommand {
     public void teamDisband(@Conditions("isTeamLeader") Player player) {
         var team = getPlayerTeam(player.getUniqueId());
         if (instance.getTeamManger().getTeamMap().remove(team.getTeamID(), team)) {
-            team.sendTeamMessage(ChatColor.RED + "Team has been disbanded by " + player.getName());
             // Clear the cache
             for (var uuid : team.getMembers())
                 instance.getTeamManger().getCache().invalidate(uuid.getMostSignificantBits());
@@ -170,7 +169,6 @@ public class TeamCMD extends BaseCommand {
     public void teamReset(CommandSender sender) {
         instance.getTeamManger().getTeamMap().values().stream().forEach(team -> {
             Bukkit.getPluginManager().callEvent(new TeamRemovedEvent(team));
-            team.sendTeamMessage("Your team has been removed!");
         });
         instance.getTeamManger().clearTeams();
         instance.getTeamManger().clearCache();
@@ -303,8 +301,6 @@ public class TeamCMD extends BaseCommand {
             return;
         }
         if (team.addMember(sender.getUniqueId())) {
-            // Notify the team that the player has joined
-            team.sendTeamMessage(ChatColor.of("#7ab83c") + sender.getName() + " has joined the team!");
             // Call the event
             Bukkit.getPluginManager().callEvent(new PlayerJoinedTeamEvent(team, sender));
             // Delete the invite from cache
@@ -352,14 +348,54 @@ public class TeamCMD extends BaseCommand {
                 + instance.getTeamManger().isTeamManagement());
     }
 
+    @CommandPermission("uhc.team.random")
+    @Subcommand("random")
+    public void randomizeTeams(CommandSender sender, @Optional String args) {
+        // By default, it should respect current teams, and team size limit
+        var teamSize = instance.getTeamManger().getTeamSize();
+        if (teamSize > 1) {
+            if (args != null && args.length() > 0) {
+                // Arguments provided
+            } else {
+                // Default behavior
+                var playersWithoutTeam = Bukkit.getOnlinePlayers().stream()
+                        .filter(player -> getPlayerTeam(player.getUniqueId()) == null).map(Player::getPlayer)
+                        .collect(Collectors.toList());
+                Collections.shuffle(playersWithoutTeam);
+                final var playersWithoutTeamAmount = playersWithoutTeam.size();
+                var teamsNeed = (int) Math.ceil(playersWithoutTeamAmount / teamSize) + 1;
+                sender.sendMessage(ChatColor.GREEN + "Creating " + teamsNeed + " random teams of " + teamSize + " for "
+                        + playersWithoutTeamAmount + " players!");
+                // Have it inside a try to that it finishes when error is encountered.
+                try {
+                    for (int i = 0; i < teamsNeed; i++) {
+                        var leader = playersWithoutTeam.remove(0);
+                        var team = createTeam(leader, "R" + (i + 1));
+
+                        for (int j = 0; j < teamSize - 1; j++) {
+                            var member = playersWithoutTeam.remove(0);
+                            team.addMember(member.getUniqueId());
+                            Bukkit.getPluginManager().callEvent(new PlayerJoinedTeamEvent(team, member));
+                        }
+
+                    }
+                } catch (Exception ignore) { // Expected behavior
+                }
+                sender.sendMessage(ChatColor.GREEN + "" + teamsNeed + " teams have been created!");
+
+            }
+        }
+
+    }
+
     @CommandPermission("uhc.team.management")
     @CommandCompletion("@range:1-9")
-    @Syntax("<teamSize> - Team size to be set")
+    @Syntax("<number> - Team size to be set")
     @Subcommand("size")
-    public void teamSize(CommandSender sender, @Conditions("limits:min=1") Integer teamSize) {
+    public void teamSize(CommandSender sender, @Conditions("limits:min=1,max=100") Integer number) {
         sender.sendMessage(ChatColor.of("#DABC12") + "Team size has been set from "
-                + instance.getTeamManger().getTeamSize() + " to " + teamSize);
-        instance.getTeamManger().setTeamSize(teamSize);
+                + instance.getTeamManger().getTeamSize() + " to " + number);
+        instance.getTeamManger().setTeamSize(number);
     }
 
     private String getLocation(Location loc) {
