@@ -10,7 +10,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -434,15 +436,15 @@ public class FastBoard {
         sendPacket(packet);
     }
 
-    public static void createTeam(Collection<String> players, Player target) throws ReflectiveOperationException {
+    public static void UpCorner(Collection<String> players, Player target, String prefix)
+            throws ReflectiveOperationException {
         var mode = TeamMode.CREATE;
 
         Object packet = PACKET_SB_TEAM.newInstance();
 
-        setField(packet, String.class, "allies"); // Team name
+        setField(packet, String.class, "enemies"); // Team name
         setField(packet, int.class, mode.ordinal(), VERSION_TYPE == VersionType.V1_8 ? 1 : 0); // Update mode
 
-        String prefix = ChatColor.GREEN + "[Team] ";
         String suffix = "";
 
         if (VERSION_TYPE != VersionType.V1_13) {
@@ -458,6 +460,39 @@ public class FastBoard {
         setField(packet, String.class, "always", 4); // Visibility for 1.8+
         setField(packet, String.class, "never", 5); // Collisions for 1.9+
         setField(packet, Collection.class, players); // Add players to team
+
+        sendPacket(packet, target);
+    }
+
+    public static void createTeam(Collection<String> players, Player target, String prefix)
+            throws ReflectiveOperationException {
+        var mode = TeamMode.CREATE;
+
+        Object packet = PACKET_SB_TEAM.newInstance();
+
+        setField(packet, String.class, "allies"); // Team name
+        setField(packet, int.class, mode.ordinal(), VERSION_TYPE == VersionType.V1_8 ? 1 : 0); // Update mode
+
+        String suffix = "";
+
+        if (VERSION_TYPE != VersionType.V1_13) {
+            if (prefix.length() > 16 || (suffix != null && suffix.length() > 16)) {
+                // Something went wrong, just cut to prevent client crash/kick
+                prefix = prefix.substring(0, 16);
+                suffix = (suffix != null) ? suffix.substring(0, 16) : null;
+            }
+        }
+
+        setComponentField(packet, prefix, 2); // Prefix
+        setComponentField(packet, suffix, 3); // Suffix
+        setField(packet, String.class, "always", 4); // Visibility for 1.8+
+        setField(packet, String.class, "never", 5); // Collisions for 1.9+
+        setField(packet, Collection.class, players); // Add players to team
+
+        var list = Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
+        list.removeAll(players);
+
+        UpCorner(list, target, "");
 
         sendPacket(packet, target);
     }

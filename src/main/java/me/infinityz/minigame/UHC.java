@@ -27,6 +27,7 @@ import me.infinityz.minigame.commands.UHCCommand;
 import me.infinityz.minigame.commands.Utilities;
 import me.infinityz.minigame.crafting.CraftingManager;
 import me.infinityz.minigame.enums.Stage;
+import me.infinityz.minigame.game.Game;
 import me.infinityz.minigame.listeners.ListenerManager;
 import me.infinityz.minigame.players.PlayerManager;
 import me.infinityz.minigame.scoreboard.ScoreboardManager;
@@ -44,10 +45,8 @@ public class UHC extends JavaPlugin {
     private @Getter CraftingManager craftingManager;
     private @Getter TeamManager teamManger;
     private @Getter ChunksManager chunkManager;
+    private @Getter Game game;
     private static TaskChainFactory taskChainFactory;
-    // TODO: Move pvp and globalmute
-    public boolean pvp = false;
-    public boolean globalmute = false;
 
     @Override
     public void onEnable() {
@@ -81,9 +80,12 @@ public class UHC extends JavaPlugin {
         craftingManager = new CraftingManager(this);
         listenerManager = new ListenerManager(this);
         chunkManager = new ChunksManager(this);
+        game = new Game();
 
         /* Run some startup code */
         runStartUp();
+
+        gameStage = Stage.LOBBY;
     }
 
     void runStartUp() {

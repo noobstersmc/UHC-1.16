@@ -31,7 +31,7 @@ public class TeamListeners implements Listener {
         team.getPlayerStream().forEach(all -> {
             try {
                 FastBoard.removeTeam(all);
-                FastBoard.createTeam(nameList, all);
+                FastBoard.createTeam(nameList, all, ChatColor.GREEN + "[Team] ");
             } catch (ReflectiveOperationException ex) {
                 ex.printStackTrace();
             }
@@ -77,7 +77,7 @@ public class TeamListeners implements Listener {
         team.getPlayerStream().forEach(all -> {
             try {
                 FastBoard.removeTeam(all);
-                FastBoard.createTeam(nameList, all);
+                FastBoard.createTeam(nameList, all, ChatColor.GREEN + "[Team] ");
             } catch (ReflectiveOperationException ex) {
                 ex.printStackTrace();
             }
@@ -94,7 +94,7 @@ public class TeamListeners implements Listener {
         team.getPlayerStream().forEach(all -> {
             try {
                 FastBoard.removeTeam(all);
-                FastBoard.createTeam(nameList, all);
+                FastBoard.createTeam(nameList, all, ChatColor.GREEN + "[Team] ");
             } catch (ReflectiveOperationException ex) {
                 ex.printStackTrace();
             }
@@ -117,7 +117,7 @@ public class TeamListeners implements Listener {
             var nameList = team.getOfflinePlayersStream().map(OfflinePlayer::getName).collect(Collectors.toList());
             try {
                 FastBoard.removeTeam(player);
-                FastBoard.createTeam(nameList, player);
+                FastBoard.createTeam(nameList, player, ChatColor.GREEN + "[Team] ");
             } catch (ReflectiveOperationException ex) {
                 ex.printStackTrace();
             }

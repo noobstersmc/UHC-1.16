@@ -1,11 +1,16 @@
 package me.infinityz.minigame.game;
 
+import java.util.UUID;
+
+import lombok.Data;
+
+@Data
 public class Game {
+    private int gameTime = 0;
+    private boolean pvp = false;
+    private boolean globalMute = false;
+    private boolean nether = true;
+    private boolean end = true;
+    private UUID gameID = UUID.randomUUID();
 
-    public int gameTime = 0;
-
-    public Game(){
-
-    }
-    
 }

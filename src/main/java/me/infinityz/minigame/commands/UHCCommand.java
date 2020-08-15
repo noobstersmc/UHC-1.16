@@ -27,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.chunks.ChunkLoadTask;
 import me.infinityz.minigame.chunks.ChunksManager;
+import me.infinityz.minigame.events.NetherDisabledEvent;
 import me.infinityz.minigame.players.PositionObject;
 import me.infinityz.minigame.players.UHCPlayer;
 import me.infinityz.minigame.scoreboard.objects.FastBoard;
@@ -102,14 +103,14 @@ public class UHCCommand extends BaseCommand {
 
     @Subcommand("color")
     @CommandPermission("uhc.admin")
-    public void onTeamColor(Player sender) {
+    public void onTeamColor(Player sender, @Optional Player target, String str) {
         var team = instance.getTeamManger().getPlayerTeam(sender.getUniqueId());
         var nameList = team != null
                 ? team.getOfflinePlayersStream().map(OfflinePlayer::getName).collect(Collectors.toList())
                 : Collections.singleton(sender.getName());
         try {
             FastBoard.removeTeam(sender);
-            FastBoard.createTeam(nameList, sender);
+            FastBoard.createTeam(nameList, sender, ChatColor.translateAlternateColorCodes('&', str));
         } catch (ReflectiveOperationException e) {
             e.printStackTrace();
         }
@@ -137,7 +138,6 @@ public class UHCCommand extends BaseCommand {
             count++;
 
         }
-
     }
 
     @CommandPermission("staff.perm")
@@ -147,6 +147,38 @@ public class UHCCommand extends BaseCommand {
     public void onGiveKills(CommandSender sender, @Flags("other") UHCPlayer target) {
         target.setKills(target.getKills() + 1);
         sender.sendMessage("Gave " + 1 + " kills to " + Bukkit.getOfflinePlayer(target.getUUID()).getName());
+
+    }
+
+    @CommandPermission("staff.perm")
+    @Subcommand("nether")
+    @Syntax("<bol> - Set nether to enabled or disabled")
+    @CommandCompletion("@bool")
+    public void onNetherOff(CommandSender sender, @Optional Boolean bool) {
+        if (bool != null) {
+            instance.getGame().setNether(bool);
+        } else {
+            instance.getGame().setNether(!instance.getGame().isNether());
+        }
+        sender.sendMessage("Nether has been set to " + instance.getGame().isNether());
+        if (!instance.getGame().isNether()) {
+            // Call Event
+            Bukkit.getPluginManager().callEvent(new NetherDisabledEvent());
+        }
+
+    }
+
+    @CommandPermission("staff.perm")
+    @Subcommand("end")
+    @Syntax("<bol> - Set end to enabled or disabled")
+    @CommandCompletion("@bool")
+    public void onEnd(CommandSender sender, @Optional Boolean bool) {
+        if (bool != null) {
+            instance.getGame().setEnd(bool);
+        } else {
+            instance.getGame().setEnd(!instance.getGame().isEnd());
+        }
+        sender.sendMessage("End has been set to " + instance.getGame().isEnd());
 
     }
 
@@ -203,6 +235,16 @@ public class UHCCommand extends BaseCommand {
             instance.getChunkManager().getPendingChunkLoadTasks().add(task);
         }
         sender.sendActionBar("Queued up " + size + " task(s)...");
+
+    }
+
+    @Subcommand("unload")
+    @CommandPermission("uhc.admin")
+    public void unloadForceLoaded(CommandSender sender) {
+        sender.sendMessage("Unloaded all chunks");
+        Bukkit.getWorlds().get(0).getForceLoadedChunks().forEach(all -> {
+            all.setForceLoaded(false);
+        });
 
     }
 

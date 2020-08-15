@@ -12,16 +12,19 @@ import org.bukkit.command.CommandSender;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
+import co.aikar.commands.annotation.Conditions;
 import co.aikar.commands.annotation.Default;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.chunks.ChunkLoadTask;
+import me.infinityz.minigame.enums.Stage;
 import me.infinityz.minigame.scoreboard.ScatterScoreboard;
 import me.infinityz.minigame.tasks.TeleportTemporalTask;
 import net.md_5.bungee.api.ChatColor;
 
 @RequiredArgsConstructor
+@Conditions("lobby")
 @CommandPermission("staff.perm")
 @CommandAlias("start")
 public class StartCommand extends BaseCommand {
@@ -52,6 +55,14 @@ public class StartCommand extends BaseCommand {
             }
             sender.sendMessage("Queued up " + tasks + " task(s)...");
             return;
+        }
+        instance.gameStage = Stage.SCATTER;
+        if (instance.getTeamManger().isTeamManagement()) {
+            Bukkit.dispatchCommand(sender, "team man false");
+        }
+
+        if (instance.getTeamManger().getTeamSize() > 1) {
+            Bukkit.dispatchCommand(sender, "team random");
         }
         Bukkit.broadcastMessage(ChatColor.of("#2be49c") + "Starting the teleportation task...");
         // Start Parameters

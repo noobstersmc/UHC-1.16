@@ -68,23 +68,34 @@ public class GameLoop extends BukkitRunnable {
             case 1200: {
                 // TODO: PVP ON
                 Bukkit.getOnlinePlayers().forEach(all -> {
-                    all.playSound(all.getLocation(), Sound.BLOCK_END_PORTAL_SPAWN, 1, 1);
+                    all.playSound(all.getLocation(), Sound.BLOCK_END_PORTAL_SPAWN, 1, 1.9F);
                 });
-                instance.pvp = true;
+                instance.getGame().setPvp(true);
                 Bukkit.broadcastMessage(ChatColor.of("#2be49c") + "PvP has been enabled.");
                 break;
             }
             case 1800: {
-                Bukkit.broadcastMessage(ChatColor.BLUE + "Discord! discord.gg/4AdHqV9\n" + ChatColor.AQUA
-                        + "Twitter! twitter.com/NoobstersUHC\n" + ChatColor.GOLD + "Donations! noobsters.buycraft.net");
+                Bukkit.broadcastMessage(ChatColor.BLUE + "Discord! discord.noobsters.net\n" + ChatColor.AQUA
+                        + "Twitter! twitter.com/NoobstersUHC");
+
                 break;
             }
             case 3000: {
-                Bukkit.broadcastMessage(ChatColor.BLUE + "Discord! discord.gg/4AdHqV9\n" + ChatColor.AQUA
-                        + "Twitter! twitter.com/NoobstersUHC\n" + ChatColor.GOLD + "Donations! noobsters.buycraft.net");
+                Bukkit.broadcastMessage(ChatColor.BLUE + "Discord! discord.noobsters.net\n" + ChatColor.AQUA
+                        + "Twitter! twitter.com/NoobstersUHC");
                 break;
             }
-            case 3600: {
+            case 4200: {
+                Bukkit.broadcastMessage(ChatColor.BLUE + "Discord! discord.noobsters.net\n" + ChatColor.AQUA
+                        + "Twitter! twitter.com/NoobstersUHC");
+                break;
+            }
+            case 4800: {
+                Bukkit.broadcastMessage(ChatColor.BLUE + "Discord! discord.noobsters.net\n" + ChatColor.AQUA
+                        + "Twitter! twitter.com/NoobstersUHC");
+                break;
+            }
+            case 7200: {
                 Bukkit.broadcastMessage(ChatColor.of("#4788d9")
                         + "The world will shrink to 100 blocks in the next 25 minutes at a speed of 1 block per second!");
                 Bukkit.broadcastMessage(ChatColor.of("#2be49c")

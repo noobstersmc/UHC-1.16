@@ -3,23 +3,31 @@ package me.infinityz.minigame.listeners;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.World.Environment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.world.PortalCreateEvent;
+import org.bukkit.event.world.PortalCreateEvent.CreateReason;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import me.infinityz.minigame.UHC;
+import me.infinityz.minigame.chunks.ChunksManager;
 import me.infinityz.minigame.enums.Stage;
+import me.infinityz.minigame.events.NetherDisabledEvent;
 import me.infinityz.minigame.events.TeleportationCompletedEvent;
 import me.infinityz.minigame.scoreboard.IngameScoreboard;
 import me.infinityz.minigame.tasks.GameLoop;
@@ -34,16 +42,110 @@ public class GlobalListener implements Listener {
         this.instance = instance;
     }
 
+    /*
+     * SPECINFO MOVE TO SPEC LISTERNERS LATER
+     */
+    /*
+     * private ArrayList<Location> coordinates = new ArrayList<>(); private
+     * THashMap<Long, Integer> diamondCount = new THashMap<>();
+     * 
+     * @EventHandler public void onBreak(BlockBreakEvent e) { var player =
+     * e.getPlayer(); if (player == null || e.getBlock().getType() !=
+     * Material.DIAMOND_ORE) return; var significantBits =
+     * player.getUniqueId().getMostSignificantBits();
+     * diamondCount.put(significantBits, diamondCount.getOrDefault(significantBits,
+     * 0)); if (coordinates.contains(e.getBlock().getLocation())) return; var count
+     * = 0; for (var face : BlockFace.values()) { var relativeBlock =
+     * e.getBlock().getRelative(face); if
+     * (coordinates.contains(relativeBlock.getLocation())) continue; if
+     * (relativeBlock.getType() == Material.DIAMOND_ORE) { count++;
+     * coordinates.add(relativeBlock.getLocation()); } }
+     * Bukkit.broadcastMessage(player.getName() + " has found " + count +
+     * " diamonds."); }
+     */
+
     @EventHandler
     public void joinMessage(PlayerJoinEvent e) {
-        e.getPlayer().sendMessage(ChatColor.BLUE + "Discord! discord.gg/4AdHqV9\n" + ChatColor.AQUA
+        e.getPlayer().sendMessage(ChatColor.BLUE + "Discord! discord.noobsters.net\n" + ChatColor.AQUA
                 + "Twitter! twitter.com/NoobstersUHC\n" + ChatColor.GOLD + "Donations! noobsters.buycraft.net");
         e.setJoinMessage("");
+        // \n\"The Home of Minecraft UHC 1.16 \"
+        var header = ChatColor.DARK_RED + "Noobsters UHC";
+        var footer = ChatColor.of("#4788d9") + "Join Our UHC Community!\n" + ChatColor.of("#2be49c")
+                + "discord.noobsters.net";
+        e.getPlayer().setPlayerListHeaderFooter(header, footer);
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
         e.setQuitMessage("");
+    }
+
+    /*
+     * Nether disabled
+     */
+    @EventHandler
+    public void onNetherDisabled(NetherDisabledEvent e) {
+        var worldToTeleport = Bukkit.getWorlds().get(0);
+        var radius = (int) worldToTeleport.getWorldBorder().getSize() / 2;
+        // Teleport all players currently in the nether to the overworld.
+        Bukkit.getOnlinePlayers().stream().filter(player -> player.getWorld().getEnvironment() == Environment.NETHER)
+                .forEach(netherPlayer -> {
+                    // Enviar mensaje a los players?
+                    netherPlayer.teleportAsync(
+                            ChunksManager.centerLocation(ChunksManager.findScatterLocation(worldToTeleport, radius)));
+                });
+        // Mensaje para todos. Algo mas?
+        Bukkit.broadcastMessage(ChatColor.of("#2be49c") + "The Nether has been disabled.");
+
+    }
+
+    @EventHandler
+    public void onPortal(PlayerPortalEvent e) {
+        if (!instance.getGame().isNether()) {
+            if (e.getTo().getWorld().getEnvironment() == Environment.NETHER) {
+                e.getPlayer().sendMessage(ChatColor.RED + "Nether is currently disabled!");
+                e.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPortalCreate(PortalCreateEvent e) {
+        if (!instance.getGame().isNether()) {
+            if (e.getReason() == CreateReason.FIRE) {
+                e.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onJoinInNether(PlayerJoinEvent e) {
+        if (!instance.getGame().isNether()) {// If nether is disabled
+            var player = e.getPlayer();
+            // If player's world is nether, scatter them in the overworld.
+            if (player.getWorld().getEnvironment() == Environment.NETHER) {
+                var worldToTeleport = Bukkit.getWorlds().get(0);
+                var radius = (int) worldToTeleport.getWorldBorder().getSize() / 2;
+                // Teleport Async to save resources.
+                player.teleportAsync(
+                        ChunksManager.centerLocation(ChunksManager.findScatterLocation(worldToTeleport, radius)));
+            }
+        }
+    }
+
+    /*
+     * End portal cancel creation
+     */
+
+    @EventHandler
+    public void onInteractWithPortal(PlayerInteractEvent e) {
+        if (!instance.getGame().isEnd() && e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            if (e.getItem().getType() == Material.ENDER_EYE) {
+                e.setCancelled(true);
+            }
+        }
+
     }
 
     /**
@@ -75,7 +177,7 @@ public class GlobalListener implements Listener {
                 }
             }
             if (p2 != null) {
-                if (!instance.pvp)
+                if (!instance.getGame().isPvp())
                     e.setCancelled(true);
             }
         }
@@ -104,7 +206,7 @@ public class GlobalListener implements Listener {
      */
     @EventHandler(priority = EventPriority.NORMAL)
     public void onChat(AsyncPlayerChatEvent e) {
-        if (instance.globalmute && !e.getPlayer().hasPermission("staff.perm")) {
+        if (instance.getGame().isGlobalMute() && !e.getPlayer().hasPermission("staff.perm")) {
             e.setCancelled(true);
             e.getPlayer().sendMessage(ChatColor.RED + "Globalmute is Enabled.");
         }
@@ -128,8 +230,8 @@ public class GlobalListener implements Listener {
                     players.removePotionEffect(all.getType());
 
                 });
-                players.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 10, 20));
-                players.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20 * 10, 20));
+                players.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 30, 20));
+                players.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20 * 30, 20));
                 players.playSound(players.getLocation(), Sound.ENTITY_RAVAGER_CELEBRATE, 1, 1);
             });
             Bukkit.broadcastMessage(ChatColor.of("#2be49c") + "UHC has started!");

@@ -14,6 +14,7 @@ import co.aikar.commands.annotation.Syntax;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import me.infinityz.minigame.UHC;
+import net.md_5.bungee.api.ChatColor;
 
 /**
  * Utilities. command shortcuts
@@ -49,5 +50,31 @@ public @RequiredArgsConstructor class Utilities extends BaseCommand {
         Bukkit.dispatchCommand(sender, "chunky start");
         Bukkit.dispatchCommand(sender, "chunky world world_nether");
         Bukkit.dispatchCommand(sender, "chunky start");
+    }
+
+    @CommandPermission("admin.perm")
+    @Subcommand("portalplace")
+    @CommandAlias("portalplace")
+    public void portalSet(CommandSender sender) {
+        Bukkit.dispatchCommand(sender, "fill 2 70 -1 -2 70 1 minecraft:end_portal_frame");
+        Bukkit.dispatchCommand(sender, "fill -1 70 2 1 70 -2 minecraft:end_portal_frame");
+        Bukkit.dispatchCommand(sender, "fill -1 70 1 1 70 -1 air");
+    }
+    
+    @CommandPermission("admin.perm")
+    @Subcommand("promo")
+    @CommandAlias("promo")
+    public void promotion(CommandSender sender){
+        Bukkit.broadcastMessage(ChatColor.BLUE + "Discord! discord.noobsters.net\n" + ChatColor.AQUA
+        + "Twitter! twitter.com/NoobstersUHC\n" + ChatColor.GOLD + "Donations! noobsters.buycraft.net");
+    }
+
+    @CommandPermission("admin.perm")
+    @Subcommand("portalopen")
+    @CommandAlias("portalopen")
+    public void portalOpen(CommandSender sender){
+        Bukkit.broadcastMessage("");
+        Bukkit.dispatchCommand(sender, "fill -1 70 1 1 70 -1 minecraft:end_portal");
+        Bukkit.dispatchCommand(sender, "playsound minecraft:block.end_portal.spawn ambient @a 0 0 0 11111111");
     }
 }

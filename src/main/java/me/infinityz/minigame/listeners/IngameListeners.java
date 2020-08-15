@@ -236,6 +236,7 @@ public class IngameListeners implements Listener {
                         .subtitle(ChatColor.GREEN + "Congratulations " + player.getName()).stay(6 * 20).fadeIn(10)
                         .fadeOut(3 * 20).build());
         fireWorksEffect(player);
+        player.playEffect(EntityEffect.TOTEM_RESURRECT);
 
         var titleToOthers = Title.builder()
                 .title(new ComponentBuilder("Victory!").bold(true).color(ChatColor.GOLD).create())
