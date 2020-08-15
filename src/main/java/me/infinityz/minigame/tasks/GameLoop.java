@@ -85,17 +85,7 @@ public class GameLoop extends BukkitRunnable {
                         + "Twitter! twitter.com/NoobstersUHC");
                 break;
             }
-            case 4200: {
-                Bukkit.broadcastMessage(ChatColor.BLUE + "Discord! discord.noobsters.net\n" + ChatColor.AQUA
-                        + "Twitter! twitter.com/NoobstersUHC");
-                break;
-            }
-            case 4800: {
-                Bukkit.broadcastMessage(ChatColor.BLUE + "Discord! discord.noobsters.net\n" + ChatColor.AQUA
-                        + "Twitter! twitter.com/NoobstersUHC");
-                break;
-            }
-            case 7200: {
+            case 3600: {
                 Bukkit.broadcastMessage(ChatColor.of("#4788d9")
                         + "The world will shrink to 100 blocks in the next 25 minutes at a speed of 1 block per second!");
                 Bukkit.broadcastMessage(ChatColor.of("#2be49c")
@@ -110,6 +100,16 @@ public class GameLoop extends BukkitRunnable {
                     world.setTime(400);
                     world.getWorldBorder().setSize(200, 1500);
                 });
+                break;
+            }
+            case 4200: {
+                Bukkit.broadcastMessage(ChatColor.BLUE + "Discord! discord.noobsters.net\n" + ChatColor.AQUA
+                        + "Twitter! twitter.com/NoobstersUHC");
+                break;
+            }
+            case 4800: {
+                Bukkit.broadcastMessage(ChatColor.BLUE + "Discord! discord.noobsters.net\n" + ChatColor.AQUA
+                        + "Twitter! twitter.com/NoobstersUHC");
                 break;
             }
 
