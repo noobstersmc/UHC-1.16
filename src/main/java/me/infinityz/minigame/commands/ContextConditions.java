@@ -12,7 +12,6 @@ import co.aikar.commands.ConditionFailedException;
 import co.aikar.commands.InvalidCommandArgument;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.enums.Stage;
-import me.infinityz.minigame.listeners.GlobalListener;
 import me.infinityz.minigame.players.UHCPlayer;
 
 public class ContextConditions {
@@ -72,10 +71,11 @@ public class ContextConditions {
         });
 
         instance.getCommandManager().getCommandConditions().addCondition("time", (c) -> {
-            if (c.hasConfig("min") && c.getConfigValue("min", 0) > GlobalListener.time) {
+            var time = instance.getGame().getGameTime();
+            if (c.hasConfig("min") && c.getConfigValue("min", 0) > time) {
                 throw new ConditionFailedException(("Min value must be " + c.getConfigValue("min", 0)));
             }
-            if (c.hasConfig("max") && c.getConfigValue("max", 3) < GlobalListener.time) {
+            if (c.hasConfig("max") && c.getConfigValue("max", 3) < time) {
                 throw new ConditionFailedException(("Max value must be " + c.getConfigValue("max", 3)));
             }
         });

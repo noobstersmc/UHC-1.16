@@ -36,33 +36,10 @@ import net.md_5.bungee.api.ChatColor;
 public class GlobalListener implements Listener {
 
     private UHC instance;
-    public static int time = 0;
 
     public GlobalListener(UHC instance) {
         this.instance = instance;
     }
-
-    /*
-     * SPECINFO MOVE TO SPEC LISTERNERS LATER
-     */
-    /*
-     * private ArrayList<Location> coordinates = new ArrayList<>(); private
-     * THashMap<Long, Integer> diamondCount = new THashMap<>();
-     * 
-     * @EventHandler public void onBreak(BlockBreakEvent e) { var player =
-     * e.getPlayer(); if (player == null || e.getBlock().getType() !=
-     * Material.DIAMOND_ORE) return; var significantBits =
-     * player.getUniqueId().getMostSignificantBits();
-     * diamondCount.put(significantBits, diamondCount.getOrDefault(significantBits,
-     * 0)); if (coordinates.contains(e.getBlock().getLocation())) return; var count
-     * = 0; for (var face : BlockFace.values()) { var relativeBlock =
-     * e.getBlock().getRelative(face); if
-     * (coordinates.contains(relativeBlock.getLocation())) continue; if
-     * (relativeBlock.getType() == Material.DIAMOND_ORE) { count++;
-     * coordinates.add(relativeBlock.getLocation()); } }
-     * Bukkit.broadcastMessage(player.getName() + " has found " + count +
-     * " diamonds."); }
-     */
 
     @EventHandler
     public void joinMessage(PlayerJoinEvent e) {
@@ -218,6 +195,8 @@ public class GlobalListener implements Listener {
 
         Bukkit.getScheduler().runTaskLater(instance, () -> {
             instance.getScoreboardManager().purgeScoreboards();
+            instance.getGame().setGameTime(0);
+            instance.getGame().setStartTime(System.currentTimeMillis());
             instance.getListenerManager().unregisterListener(instance.getListenerManager().getScatter());
             // Remove all potion effects
             Bukkit.getOnlinePlayers().forEach(players -> {

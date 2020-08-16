@@ -50,15 +50,16 @@ public class IngameListeners implements Listener {
         // TODO: Make this more compact and effcient.
         var p = e.getPlayer();
         var uhcP = instance.getPlayerManager().getPlayer(p.getUniqueId());
+        var time = instance.getGame().getGameTime();
 
         if (uhcP == null) {
             p.setGameMode(GameMode.SPECTATOR);
             uhcP = instance.getPlayerManager().addCreateUHCPlayer(p.getUniqueId(), false);
             uhcP.setAlive(false);
-            if (GlobalListener.time < 1800) {
+            if (time < 1800) {
                 p.sendMessage(ChatColor.of("#2be49c") + "The UHC has already started, to play use /play");
             }
-        } else if (!uhcP.isDead() && !uhcP.isAlive() && GlobalListener.time < 1800) {
+        } else if (!uhcP.isDead() && !uhcP.isAlive() && time < 1800) {
             p.sendMessage(ChatColor.of("#2be49c") + "The UHC has already started, to play use /play");
             uhcP.setAlive(false);
             p.setGameMode(GameMode.SPECTATOR);

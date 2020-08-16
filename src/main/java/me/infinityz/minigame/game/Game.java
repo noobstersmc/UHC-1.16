@@ -6,6 +6,7 @@ import lombok.Data;
 
 @Data
 public class Game {
+    private long startTime;
     private int gameTime = 0;
     private boolean pvp = false;
     private boolean globalMute = false;

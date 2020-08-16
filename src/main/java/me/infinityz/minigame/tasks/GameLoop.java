@@ -9,7 +9,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.chunks.ChunksManager;
-import me.infinityz.minigame.listeners.GlobalListener;
 import me.infinityz.minigame.scoreboard.objects.UpdateObject;
 import net.md_5.bungee.api.ChatColor;
 
@@ -25,7 +24,8 @@ public class GameLoop extends BukkitRunnable {
     // Move from
     @Override
     public void run() {
-        GlobalListener.time++;
+        var time = (int) (Math.floor((System.currentTimeMillis() - instance.getGame().getStartTime()) / 1000));
+        instance.getGame().setGameTime(time);
         if (!borderShrink && mainWorld.getWorldBorder().getSize() <= 1000) {
             borderShrink = true;
             Bukkit.getScheduler().runTask(instance, () -> {
@@ -37,7 +37,7 @@ public class GameLoop extends BukkitRunnable {
             });
         }
 
-        switch (GlobalListener.time) {
+        switch (time) {
             case 300: {
                 // AVISO DE FINAL HEAL 5min left
                 Bukkit.getOnlinePlayers().forEach(all -> {
@@ -116,7 +116,7 @@ public class GameLoop extends BukkitRunnable {
         }
         instance.getScoreboardManager().getFastboardMap().entrySet().forEach(entry -> {
             entry.getValue().addUpdates(new UpdateObject(
-                    ChatColor.GRAY + "Game Time: " + ChatColor.WHITE + timeConvert(GlobalListener.time), 0));
+                    ChatColor.GRAY + "Game Time: " + ChatColor.WHITE + timeConvert(instance.getGame().getGameTime()), 0));
             entry.getValue().addUpdates(new UpdateObject(
                     ChatColor.GRAY + "Players: " + ChatColor.WHITE + instance.getPlayerManager().getAlivePlayers(), 3));
             entry.getValue().addUpdates(new UpdateObject(ChatColor.GRAY + "Border: " + ChatColor.WHITE
