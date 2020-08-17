@@ -51,6 +51,13 @@ public class IngameListeners implements Listener {
         var p = e.getPlayer();
         var uhcP = instance.getPlayerManager().getPlayer(p.getUniqueId());
         var time = instance.getGame().getGameTime();
+        /*
+         * Bossbar code
+         */
+        var bossbar = instance.getGame().getBossbar();
+        if (bossbar != null) {
+            bossbar.addPlayer(p);
+        }
 
         if (uhcP == null) {
             p.setGameMode(GameMode.SPECTATOR);

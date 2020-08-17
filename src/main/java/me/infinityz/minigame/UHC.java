@@ -4,6 +4,9 @@ import java.io.File;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
+import org.bukkit.NamespacedKey;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -81,6 +84,7 @@ public class UHC extends JavaPlugin {
         listenerManager = new ListenerManager(this);
         chunkManager = new ChunksManager(this);
         game = new Game();
+        game.setBossbar(Bukkit.createBossBar(new NamespacedKey(this, "henix"), "Time", BarColor.RED, BarStyle.SOLID));
 
         /* Run some startup code */
         runStartUp();

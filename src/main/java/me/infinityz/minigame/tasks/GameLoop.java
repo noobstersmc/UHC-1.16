@@ -116,7 +116,8 @@ public class GameLoop extends BukkitRunnable {
         }
         instance.getScoreboardManager().getFastboardMap().entrySet().forEach(entry -> {
             entry.getValue().addUpdates(new UpdateObject(
-                    ChatColor.GRAY + "Game Time: " + ChatColor.WHITE + timeConvert(instance.getGame().getGameTime()), 0));
+                    ChatColor.GRAY + "Game Time: " + ChatColor.WHITE + timeConvert(instance.getGame().getGameTime()),
+                    0));
             entry.getValue().addUpdates(new UpdateObject(
                     ChatColor.GRAY + "Players: " + ChatColor.WHITE + instance.getPlayerManager().getAlivePlayers(), 3));
             entry.getValue().addUpdates(new UpdateObject(ChatColor.GRAY + "Border: " + ChatColor.WHITE
@@ -141,6 +142,22 @@ public class GameLoop extends BukkitRunnable {
 
         });
 
+        var bossBar = instance.getGame().getBossbar();
+        if (time < 600) {
+            var differential = 600 - time;
+            bossBar.setTitle("Final heal in: " + timeFormat(differential));
+            double percent = differential / 600;
+            bossBar.setProgress(percent);
+
+        } else if (time < 1200) {
+            var differential = 1200 - time;
+            bossBar.setTitle("PvP in: " + timeFormat(differential));
+            double percent = differential / 1200;
+            bossBar.setProgress(percent);
+        } else {
+            bossBar.removeAll();
+        }
+
     }
 
     String timeConvert(int t) {
@@ -151,6 +168,16 @@ public class GameLoop extends BukkitRunnable {
 
         return hours > 0 ? String.format("%02d:%02d:%02d", hours, minutes, seconds)
                 : String.format("%02d:%02d", minutes, seconds);
+    }
+
+    String timeFormat(int t) {
+        int hours = t / 3600;
+
+        int minutes = (t % 3600) / 60;
+        int seconds = t % 60;
+
+        return (hours > 0 ? String.format("%2dh %2dm %2d", hours, minutes, seconds)
+                : String.format("%2dm %2d", minutes, seconds)) + "s";
     }
 
 }

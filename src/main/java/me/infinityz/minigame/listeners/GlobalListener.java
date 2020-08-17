@@ -199,19 +199,20 @@ public class GlobalListener implements Listener {
             instance.getGame().setStartTime(System.currentTimeMillis());
             instance.getListenerManager().unregisterListener(instance.getListenerManager().getScatter());
             // Remove all potion effects
+            var bar = instance.getGame().getBossbar();
             Bukkit.getOnlinePlayers().forEach(players -> {
                 // Send the new scoreboard;
                 var sb = new IngameScoreboard(players);
                 sb.update();
                 instance.getScoreboardManager().getFastboardMap().put(players.getUniqueId().toString(), sb);
 
-                players.getActivePotionEffects().forEach(all -> {
-                    players.removePotionEffect(all.getType());
+                players.getActivePotionEffects().forEach(all -> players.removePotionEffect(all.getType()));
 
-                });
                 players.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 30, 20));
                 players.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20 * 30, 20));
                 players.playSound(players.getLocation(), Sound.ENTITY_RAVAGER_CELEBRATE, 1, 1);
+
+                bar.addPlayer(players);
             });
             Bukkit.broadcastMessage(ChatColor.of("#2be49c") + "UHC has started!");
             instance.gameStage = Stage.INGAME;
