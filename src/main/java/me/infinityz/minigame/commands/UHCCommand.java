@@ -28,6 +28,7 @@ import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.chunks.ChunkLoadTask;
 import me.infinityz.minigame.chunks.ChunksManager;
 import me.infinityz.minigame.events.NetherDisabledEvent;
+import me.infinityz.minigame.game.border.FortniteBorder;
 import me.infinityz.minigame.players.PositionObject;
 import me.infinityz.minigame.players.UHCPlayer;
 import me.infinityz.minigame.scoreboard.objects.FastBoard;
@@ -256,6 +257,35 @@ public class UHCCommand extends BaseCommand {
             sender.sendMessage(
                     all.getLocationID().toString().substring(0, 8) + " running: " + all.getChunksLeft() + " left");
         });
+
+    }
+
+    @Subcommand("bar|progress|bossbar|bb")
+    @CommandPermission("uhc.admin")
+    public void onChangeBossbarPercent(CommandSender sender, Double percent) {
+        sender.sendMessage("Changing bossbar progress to: " + percent);
+        instance.getGame().getBossbar().setProgress(percent);
+
+    }
+
+    @Subcommand("addtime")
+    @CommandPermission("uhc.admin")
+    public void onAddTime(CommandSender sender, Integer seconds) {
+        sender.sendMessage("Adding " + seconds + " to the game...");
+        instance.getGame().setStartTime(instance.getGame().getStartTime() - (seconds * 1000));
+
+    }
+
+    @Subcommand("fortnite")
+    @CommandCompletion("@worlds @range:0-200 @range:0-200 @range:100-25 @range:30-120")
+    @CommandPermission("uhc.admin")
+    public void onFortniteBorder(CommandSender sender, World world, Integer newX, Integer newZ, Integer newRadius,
+            Integer seconds) {
+        var border = new FortniteBorder(world, instance);
+
+        sender.sendMessage(String.format("[ForniteBorder] Moving %s border to (%d, %d) radius %d in %d second(s).",
+                world.getName(), newX, newZ, newRadius, seconds));
+        border.moveWorldBorder(newX, newZ, newRadius, seconds);
 
     }
 

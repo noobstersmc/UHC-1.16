@@ -100,7 +100,6 @@ public class UHC extends JavaPlugin {
             obj.setDisplaySlot(DisplaySlot.BELOW_NAME);
             Objective obj2 = mainScoreboard.registerNewObjective("health_list", "health", " ", RenderType.INTEGER);
             obj2.setDisplaySlot(DisplaySlot.PLAYER_LIST);
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "whitelist on");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -112,6 +111,7 @@ public class UHC extends JavaPlugin {
             it.setGameRule(GameRule.DO_PATROL_SPAWNING, false);
             it.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
             it.setGameRule(GameRule.DO_WEATHER_CYCLE, false);
+            it.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
             it.setSpawnLocation(0, it.getHighestBlockAt(0, 0).getZ() + 10, 0);
             it.getWorldBorder().setCenter(0, 0);
             it.getWorldBorder().setSize(101);

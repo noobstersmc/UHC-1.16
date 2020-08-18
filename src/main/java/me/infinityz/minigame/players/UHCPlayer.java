@@ -24,6 +24,7 @@ import me.infinityz.minigame.players.serializers.ItemStackArrayAdapter;
 public class UHCPlayer {
     private final @Getter UUID UUID;
     private @Getter @Setter int kills = 0;
+    private @Getter @Setter int mined_diamonds = 0;
     private @Getter @Setter boolean alive = false;
     private @Getter @Setter boolean dead = false;
     private @Getter @Setter double lastKnownHealth = 20.0;

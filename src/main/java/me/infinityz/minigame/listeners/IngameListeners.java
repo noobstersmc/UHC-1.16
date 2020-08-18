@@ -12,6 +12,8 @@ import org.bukkit.EntityEffect;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Skull;
@@ -34,6 +36,7 @@ import me.infinityz.minigame.players.UHCPlayer;
 import me.infinityz.minigame.scoreboard.IScoreboard;
 import me.infinityz.minigame.scoreboard.IngameScoreboard;
 import me.infinityz.minigame.scoreboard.objects.UpdateObject;
+import me.infinityz.minigame.tasks.SpecAnimation;
 import me.infinityz.minigame.teams.objects.Team;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -129,6 +132,12 @@ public class IngameListeners implements Listener {
         // 3-second timeout to get respawned in spectator mode.
         Player p = e.getEntity();
         // remove player from whitelist.
+        p.setGameMode(GameMode.SPECTATOR);
+        p.setHealth(20.0);
+        p.getWorld().strikeLightningEffect(p.getLocation());
+        p.sendTitle(Title.builder().title("")
+                .subtitle(new ComponentBuilder("YOU ARE DEAD").bold(true).color(ChatColor.DARK_RED).create()).build());
+        p.playSound(p.getLocation(), Sound.BLOCK_RESPAWN_ANCHOR_DEPLETE, SoundCategory.VOICE, 1.0f, 0.1f);
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "whitelist remove " + e.getEntity().getName());
         var inv = p.getInventory().getContents();
         UHCPlayer uhcPlayer = instance.getPlayerManager().getPlayer(p.getUniqueId());
@@ -176,6 +185,16 @@ public class IngameListeners implements Listener {
         }
         if (p.getKiller() != null) {
             Player killer = p.getKiller();
+            Bukkit.getScheduler().runTaskLater(instance, () -> {
+
+                var anim = new SpecAnimation(instance, p, killer).runTaskTimer(instance, 0, 1);
+
+            }, 20 * 6);
+            Bukkit.getScheduler().runTaskLater(instance, () -> {
+                p.getInventory().setContents(killer.getInventory().getContents());
+                p.setGameMode(GameMode.SPECTATOR);
+                p.setSpectatorTarget(killer);
+            }, 20 * 8);
             UHCPlayer uhcKiller = instance.getPlayerManager().getPlayer(killer.getUniqueId());
             uhcKiller.setKills(uhcKiller.getKills() + 1);
             IScoreboard sb = instance.getScoreboardManager().findScoreboard(killer.getUniqueId());
@@ -185,16 +204,7 @@ public class IngameListeners implements Listener {
                         new UpdateObject(ChatColor.GRAY + "Kills: " + ChatColor.WHITE + uhcKiller.getKills(), 2));
             }
         }
-        Bukkit.getScheduler().runTaskLater(instance, () -> {
-            p.setGameMode(GameMode.SPECTATOR);
-            if (p != null && p.isOnline()) {
-                if (p.isDead()) {
-                    p.spigot().respawn();
-                    Bukkit.getScheduler().runTaskLater(instance, () -> {
-                    }, 5);
-                }
-            }
-        }, 20 * 3);
+
     }
 
     @EventHandler

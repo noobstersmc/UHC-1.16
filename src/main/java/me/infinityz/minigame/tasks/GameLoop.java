@@ -5,6 +5,7 @@ import org.bukkit.GameRule;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
+import org.bukkit.boss.BarColor;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.infinityz.minigame.UHC;
@@ -114,16 +115,54 @@ public class GameLoop extends BukkitRunnable {
             }
 
         }
+
+        var worldBorder = Bukkit.getWorlds().get(0).getWorldBorder();
+        var border = ((int) (worldBorder.getSize() / 2));
         instance.getScoreboardManager().getFastboardMap().entrySet().forEach(entry -> {
             entry.getValue().addUpdates(new UpdateObject(
                     ChatColor.GRAY + "Game Time: " + ChatColor.WHITE + timeConvert(instance.getGame().getGameTime()),
                     0));
             entry.getValue().addUpdates(new UpdateObject(
                     ChatColor.GRAY + "Players: " + ChatColor.WHITE + instance.getPlayerManager().getAlivePlayers(), 3));
-            entry.getValue().addUpdates(new UpdateObject(ChatColor.GRAY + "Border: " + ChatColor.WHITE
-                    + ((int) (Bukkit.getWorlds().get(0).getWorldBorder().getSize() / 2)), 5));
+
+            entry.getValue().addUpdates(new UpdateObject(ChatColor.GRAY + "Border: " + ChatColor.WHITE + border, 5));
             // TODO: Improve this method, it shouldn't be necessary to have to update this
-            // line every second.
+
+            if (border != 2000) {
+                String distanceText = "";
+                var player = entry.getValue().getPlayer();
+                var playerLOC = player.getLocation().clone();
+                double borderSize = worldBorder.getSize() / 2;
+
+                double absoluteX = Math.abs(playerLOC.getX());
+                double absoluteZ = Math.abs(playerLOC.getZ());
+                double distanceX = borderSize - absoluteX;
+                double distanceZ = borderSize - absoluteZ;
+
+                double distanceFromBorder = Math.min(Math.abs(distanceX), Math.abs(distanceZ));
+                if (distanceFromBorder <= 20.9) {
+
+                    var isNegative = distanceX < 0 || distanceZ < 0;
+                    if (isNegative) {
+                        distanceText = "" + ChatColor.RED;
+                    } else if (distanceFromBorder < 10) {
+                        distanceText = "" + ChatColor.YELLOW;
+                    } else {
+                        distanceText = "" + ChatColor.GREEN;
+                    }
+
+                    var distanceColoredAmount = String.format(distanceText + (isNegative ? "-" : "") + "%.1f",
+                            distanceFromBorder);
+
+                    distanceText = ChatColor.WHITE + "You are " + distanceColoredAmount + ChatColor.WHITE
+                            + " blocks away from the border";
+                    player.sendActionBar(distanceText);
+
+                } else {
+                    player.sendActionBar("");
+                }
+
+            }
 
         });
 
@@ -143,19 +182,31 @@ public class GameLoop extends BukkitRunnable {
         });
 
         var bossBar = instance.getGame().getBossbar();
+        double percent = 0;
         if (time < 600) {
+            bossBar.setColor(BarColor.GREEN);
             var differential = 600 - time;
             bossBar.setTitle("Final heal in: " + timeFormat(differential));
-            double percent = differential / 600;
-            bossBar.setProgress(percent);
-
+            percent = time / 600.0;
         } else if (time < 1200) {
+            bossBar.setColor(BarColor.YELLOW);
             var differential = 1200 - time;
             bossBar.setTitle("PvP in: " + timeFormat(differential));
-            double percent = differential / 1200;
-            bossBar.setProgress(percent);
+            percent = time / 1200.0;
+        } else if (time >= 3000 && time <= 3600) {
+            if (!bossBar.isVisible()) {
+                bossBar.setVisible(true);
+            }
+            bossBar.setColor(BarColor.BLUE);
+            var differential = 3600 - time;
+            bossBar.setTitle("Border Shrink in: " + timeFormat(differential));
+            percent = time / 3600.0;
+
         } else {
-            bossBar.removeAll();
+            bossBar.setVisible(false);
+        }
+        if (bossBar.isVisible() && percent >= 0.0 && percent <= 1.0) {
+            bossBar.setProgress(percent);
         }
 
     }
@@ -171,13 +222,10 @@ public class GameLoop extends BukkitRunnable {
     }
 
     String timeFormat(int t) {
-        int hours = t / 3600;
-
         int minutes = (t % 3600) / 60;
         int seconds = t % 60;
 
-        return (hours > 0 ? String.format("%2dh %2dm %2d", hours, minutes, seconds)
-                : String.format("%2dm %2d", minutes, seconds)) + "s";
+        return (minutes > 0 ? String.format("%dm %d", minutes, seconds) : String.format("%d", seconds)) + "s";
     }
 
 }
