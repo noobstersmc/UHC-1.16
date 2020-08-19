@@ -14,15 +14,24 @@ import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
+import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Skull;
+import org.bukkit.entity.Drowned;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockExplodeEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import co.aikar.taskchain.TaskChain;
 import lombok.Getter;
@@ -47,6 +56,66 @@ public class IngameListeners implements Listener {
     private @Getter List<Material> possibleFence = Arrays.stream(Material.values())
             .filter(material -> material.name().contains("FENCE") && !material.name().contains("FENCE_GATE"))
             .collect(Collectors.toList());;
+
+    /** STRIDER DAMAGE PATCH STARTS */
+    @EventHandler
+    public void onDamageByStriderLava(EntityDamageEvent e) {
+        if (e.getEntity().getType() != EntityType.PLAYER)
+            return;
+        if (e.getCause() == DamageCause.FIRE
+                || e.getCause() == DamageCause.FIRE_TICK | e.getCause() == DamageCause.LAVA) {
+            var player = (Player) e.getEntity();
+            if (player.getVehicle() != null && player.getVehicle().getType() == EntityType.STRIDER) {
+                e.setCancelled(true);
+                player.setFireTicks(0);
+            }
+        }
+    }
+
+    /** STRIDER DAMAGE PATCH ENDS */
+
+    /** INCREASED TRIDENT DROP START */
+
+    @EventHandler
+    public void onDrownedDeath(EntityDeathEvent e) {
+        if (e.getEntity().getType() != EntityType.DROWNED)
+            return;
+        System.out.println("Drowned");
+        var drowned = (Drowned) e.getEntity();
+        var equipment = drowned.getEquipment();
+        var mainHand = drowned.getEquipment().getItemInMainHand().clone();
+        var offHand = drowned.getEquipment().getItemInOffHand().clone();
+        equipment.clear();
+
+        if (mainHand != null && mainHand.getType() != Material.AIR) {
+            if (mainHand.getType() == Material.TRIDENT) {
+                Damageable dmg = (Damageable) mainHand.getItemMeta();
+                int random_int = (int) (Math.random() * (125 - 0 + 1) + 0);
+                dmg.setDamage(random_int);
+                mainHand.setItemMeta((ItemMeta) dmg);
+            }
+            drowned.getLocation().getWorld().dropItemNaturally(drowned.getLocation(), mainHand);
+
+        }
+        if (offHand != null && offHand.getType() != Material.AIR) {
+            if (offHand.getType() == Material.TRIDENT) {
+                Damageable dmg = (Damageable) offHand.getItemMeta();
+                int random_int = (int) (Math.random() * (125 - 0 + 1) + 0);
+                dmg.setDamage(random_int);
+                offHand.setItemMeta((ItemMeta) dmg);
+            }
+            drowned.getLocation().getWorld().dropItemNaturally(drowned.getLocation(), offHand);
+        }
+    }
+
+    @EventHandler
+    public void onExplode(BlockExplodeEvent e) {
+        if (e.getBlock().getWorld().getEnvironment() != Environment.NORMAL) {
+            e.setYield(0.005f);
+        }
+    }
+
+    /** INCREASED TRIDENT END */
 
     @EventHandler
     public void onJoinLater(PlayerJoinEvent e) {
@@ -186,8 +255,8 @@ public class IngameListeners implements Listener {
         if (p.getKiller() != null) {
             Player killer = p.getKiller();
             Bukkit.getScheduler().runTaskLater(instance, () -> {
-
-                var anim = new SpecAnimation(instance, p, killer).runTaskTimer(instance, 0, 1);
+                // TODO: Improve death animation
+                new SpecAnimation(instance, p, killer).runTaskTimer(instance, 0, 1);
 
             }, 20 * 6);
             Bukkit.getScheduler().runTaskLater(instance, () -> {

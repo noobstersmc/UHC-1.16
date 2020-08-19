@@ -28,6 +28,7 @@ import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.chunks.ChunkLoadTask;
 import me.infinityz.minigame.chunks.ChunksManager;
 import me.infinityz.minigame.events.NetherDisabledEvent;
+import me.infinityz.minigame.game.Game;
 import me.infinityz.minigame.game.border.FortniteBorder;
 import me.infinityz.minigame.players.PositionObject;
 import me.infinityz.minigame.players.UHCPlayer;
@@ -166,7 +167,32 @@ public class UHCCommand extends BaseCommand {
             // Call Event
             Bukkit.getPluginManager().callEvent(new NetherDisabledEvent());
         }
+    }
 
+    @CommandPermission("uhc.scoreboard.change")
+    @Subcommand("title")
+    @CommandCompletion("@chatcolors @players")
+    @Syntax("<title> - New title string")
+    public void changeScoreboardTitle(CommandSender sender, final String newTitle) {
+        var coloredTitle = ChatColor.translateAlternateColorCodes('&', newTitle);
+
+        sender.sendMessage("Changing scoreboard title to: " + coloredTitle);
+        Game.setScoreboardTitle(coloredTitle);
+
+        instance.getScoreboardManager().getFastboardMap().values().forEach(all -> all.updateTitle(coloredTitle));
+    }
+
+    @CommandPermission("uhc.tab.change")
+    @Subcommand("header")
+    @CommandCompletion("@chatcolors @players")
+    @Syntax("<header> - New header string")
+    public void changeTablistHeader(CommandSender sender, final String newHeader) {
+        var coloredHeader = ChatColor.translateAlternateColorCodes('&', newHeader).replace("\\n", "\n");
+
+        sender.sendMessage("Changing tablist header to: " + coloredHeader);
+        Game.setTablistHeader(coloredHeader);
+
+        Bukkit.getOnlinePlayers().forEach(all -> all.setPlayerListHeader(coloredHeader));
     }
 
     @CommandPermission("staff.perm")
@@ -260,14 +286,6 @@ public class UHCCommand extends BaseCommand {
 
     }
 
-    @Subcommand("bar|progress|bossbar|bb")
-    @CommandPermission("uhc.admin")
-    public void onChangeBossbarPercent(CommandSender sender, Double percent) {
-        sender.sendMessage("Changing bossbar progress to: " + percent);
-        instance.getGame().getBossbar().setProgress(percent);
-
-    }
-
     @Subcommand("addtime")
     @CommandPermission("uhc.admin")
     public void onAddTime(CommandSender sender, Integer seconds) {
@@ -294,13 +312,6 @@ public class UHCCommand extends BaseCommand {
     @CommandPermission("uhc.admin")
     public void dq(CommandSender sender, @Flags("other") UHCPlayer target) {
         // TODO: Implement the Dequalify command.
-
-    }
-
-    @CommandPermission("uhc.admin")
-    @Subcommand("deleteworld")
-    @CommandCompletion("@worlds")
-    public void deleteWorldOnRestart(CommandSender sender, World world) {
 
     }
 

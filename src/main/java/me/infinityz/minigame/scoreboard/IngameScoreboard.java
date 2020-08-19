@@ -3,13 +3,14 @@ package me.infinityz.minigame.scoreboard;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import me.infinityz.minigame.game.Game;
 import net.md_5.bungee.api.ChatColor;
 
 public class IngameScoreboard extends IScoreboard {
 
     public IngameScoreboard(Player player) {
         super(player);
-        this.updateTitle(ChatColor.BOLD + "UHC");
+        this.updateTitle(Game.getScoreboardTitle());
         
         this.updateLines(ChatColor.GRAY + "Game Time: " + ChatColor.WHITE + "00:00", "", 
                 ChatColor.GRAY + "Kills: "+ ChatColor.WHITE + "0",

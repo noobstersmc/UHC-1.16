@@ -4,12 +4,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
 import org.bukkit.Sound;
 import org.bukkit.World;
-import org.bukkit.World.Environment;
 import org.bukkit.boss.BarColor;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.infinityz.minigame.UHC;
-import me.infinityz.minigame.chunks.ChunksManager;
+import me.infinityz.minigame.events.NetherDisabledEvent;
 import me.infinityz.minigame.scoreboard.objects.UpdateObject;
 import net.md_5.bungee.api.ChatColor;
 
@@ -27,14 +26,14 @@ public class GameLoop extends BukkitRunnable {
     public void run() {
         var time = (int) (Math.floor((System.currentTimeMillis() - instance.getGame().getStartTime()) / 1000));
         instance.getGame().setGameTime(time);
-        if (!borderShrink && mainWorld.getWorldBorder().getSize() <= 1000) {
+
+        var worldBorder = mainWorld.getWorldBorder();
+
+        if (!borderShrink && worldBorder.getSize() <= 1000) {
             borderShrink = true;
             Bukkit.getScheduler().runTask(instance, () -> {
-                Bukkit.getOnlinePlayers().forEach(player -> {
-                    if (player.getWorld().getEnvironment() == Environment.NETHER) {
-                        player.teleport(ChunksManager.findScatterLocation(mainWorld, 499));
-                    }
-                });
+                Bukkit.getPluginManager().callEvent(new NetherDisabledEvent());
+                instance.getGame().setNether(false);
             });
         }
 
@@ -78,7 +77,6 @@ public class GameLoop extends BukkitRunnable {
             case 1800: {
                 Bukkit.broadcastMessage(ChatColor.BLUE + "Discord! discord.noobsters.net\n" + ChatColor.AQUA
                         + "Twitter! twitter.com/NoobstersUHC");
-
                 break;
             }
             case 3000: {
@@ -95,11 +93,13 @@ public class GameLoop extends BukkitRunnable {
                     all.playSound(all.getLocation(), Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO, 1, 1);
                 });
                 Bukkit.getScheduler().runTask(instance, () -> {
-                    var world = Bukkit.getWorlds().get(0);
-                    world.setGameRule(GameRule.DO_INSOMNIA, false);
-                    world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
-                    world.setTime(400);
-                    world.getWorldBorder().setSize(200, 1500);
+                    Bukkit.getWorlds().forEach(worlds -> {
+                        worlds.setGameRule(GameRule.DO_INSOMNIA, false);
+                        worlds.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
+                        worlds.setTime(400);
+                        worlds.getWorldBorder().setSize(200, 1500);
+
+                    });
                 });
                 break;
             }
@@ -116,7 +116,6 @@ public class GameLoop extends BukkitRunnable {
 
         }
 
-        var worldBorder = Bukkit.getWorlds().get(0).getWorldBorder();
         var border = ((int) (worldBorder.getSize() / 2));
         instance.getScoreboardManager().getFastboardMap().entrySet().forEach(entry -> {
             entry.getValue().addUpdates(new UpdateObject(
@@ -128,7 +127,7 @@ public class GameLoop extends BukkitRunnable {
             entry.getValue().addUpdates(new UpdateObject(ChatColor.GRAY + "Border: " + ChatColor.WHITE + border, 5));
             // TODO: Improve this method, it shouldn't be necessary to have to update this
 
-            if (border != 2000) {
+            if (border != 2000 && border != 100) {
                 String distanceText = "";
                 var player = entry.getValue().getPlayer();
                 var playerLOC = player.getLocation().clone();
@@ -146,24 +145,21 @@ public class GameLoop extends BukkitRunnable {
                     if (isNegative) {
                         distanceText = "" + ChatColor.RED;
                     } else if (distanceFromBorder < 10) {
-                        distanceText = "" + ChatColor.YELLOW;
+                        distanceText = "" + ChatColor.RED;
                     } else {
-                        distanceText = "" + ChatColor.GREEN;
+                        distanceText = "" + ChatColor.YELLOW;
                     }
 
                     var distanceColoredAmount = String.format(distanceText + (isNegative ? "-" : "") + "%.1f",
                             distanceFromBorder);
 
-                    distanceText = ChatColor.WHITE + "You are " + distanceColoredAmount + ChatColor.WHITE
-                            + " blocks away from the border";
+                    distanceText = distanceText + "You are " + distanceColoredAmount + " blocks away from the border";
                     player.sendActionBar(distanceText);
 
                 } else {
                     player.sendActionBar("");
                 }
-
             }
-
         });
 
         instance.getPlayerManager().getUhcPlayerMap().entrySet().parallelStream().forEach(entry -> {

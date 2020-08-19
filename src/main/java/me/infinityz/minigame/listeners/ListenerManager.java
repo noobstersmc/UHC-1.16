@@ -31,6 +31,8 @@ public class ListenerManager {
         Bukkit.getPluginManager().registerEvents(new TeamListeners(instance), instance);
         // Listener for GHEAD
         Bukkit.getPluginManager().registerEvents(instance.getCraftingManager(), instance);
+        // TODO: HERE FOR TESTING PURPOSES. MOVE SOON
+        registerListener(spectatorListener);
     }
 
     public void unregisterListener(Listener listener) {

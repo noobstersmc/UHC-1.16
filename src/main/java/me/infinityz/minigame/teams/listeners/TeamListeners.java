@@ -2,6 +2,8 @@ package me.infinityz.minigame.teams.listeners;
 
 import java.util.stream.Collectors;
 
+import com.github.benmanes.caffeine.cache.RemovalCause;
+
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.event.EventHandler;
@@ -16,12 +18,36 @@ import me.infinityz.minigame.teams.events.PlayerJoinedTeamEvent;
 import me.infinityz.minigame.teams.events.PlayerLeftTeamEvent;
 import me.infinityz.minigame.teams.events.TeamCreatedEvent;
 import me.infinityz.minigame.teams.events.TeamDisbandedEvent;
+import me.infinityz.minigame.teams.events.TeamInviteExpireEvent;
 import me.infinityz.minigame.teams.events.TeamRemovedEvent;
 import net.md_5.bungee.api.ChatColor;
 
 @RequiredArgsConstructor
 public class TeamListeners implements Listener {
     private @NonNull UHC instance;
+
+    @EventHandler
+    public void onInviteExpireEvent(TeamInviteExpireEvent e) {
+        var invite = e.getInvite();
+        var target = Bukkit.getOfflinePlayer(invite.getTarget());
+        var sender = Bukkit.getOfflinePlayer(invite.getSender());
+
+        if (e.getRemovalCause() != RemovalCause.EXPLICIT) {
+            if (sender != null && sender.isOnline())
+                sender.getPlayer().sendMessage(ChatColor.RED + "Your invite to " + target.getName() + " has expired.");
+
+        }
+        if (target != null && target.isOnline()) {
+            var team = instance.getTeamManger().getPlayerTeam(target.getUniqueId());
+            if (team != null
+                    && team.getTeamID().getMostSignificantBits() == invite.getTeamToJoin().getMostSignificantBits()) {
+                return;
+            }
+
+            target.getPlayer().sendMessage(ChatColor.RED + sender.getName() + "'s team invite expired.");
+
+        }
+    }
 
     @EventHandler
     public void onCreate(TeamCreatedEvent e) {

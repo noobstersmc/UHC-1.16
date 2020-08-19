@@ -30,7 +30,6 @@ public class TeleportTemporalTask extends BukkitRunnable {
 
     @Override
     public void run() {
-        instance.getChunkManager().getAutoChunkScheduler().cancel();
         if (players.size() <= 0) {
             Bukkit.getPluginManager().callEvent(new TeleportationCompletedEvent(!Bukkit.isPrimaryThread()));
             this.cancel();

@@ -30,19 +30,21 @@ public class CraftingManager implements Listener {
     public CraftingManager(UHC instance) {
         this.instance = instance;
         this.recipes = new ArrayList<>();
+        try {
+            Iterator<Recipe> iter = Bukkit.recipeIterator();
 
-        Iterator<Recipe> iter = Bukkit.recipeIterator();
-
-        while (iter.hasNext()) {
-            if (iter.next().getResult().getType() == Material.NETHERITE_INGOT) {
-                iter.remove();
-                break;
+            while (iter.hasNext()) {
+                if (iter.next().getResult().getType() == Material.NETHERITE_INGOT) {
+                    iter.remove();
+                    break;
+                }
             }
-        }
 
-        this.recipes.add(new GoldenHead(new NamespacedKey(instance, "ghead")));
-        this.recipes.add(new SimpleNetherite(new NamespacedKey(instance, "netherite_simple")));
-        this.recipes.add(new NetheriteRecipe(new NamespacedKey(instance, "netherite_multiple")));
+            this.recipes.add(new GoldenHead(new NamespacedKey(instance, "ghead")));
+            this.recipes.add(new SimpleNetherite(new NamespacedKey(instance, "netherite_simple")));
+            this.recipes.add(new NetheriteRecipe(new NamespacedKey(instance, "netherite_multiple")));
+        } catch (Exception ex) {
+        }
     }
 
     @EventHandler

@@ -14,22 +14,26 @@ import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Conditions;
 import co.aikar.commands.annotation.Default;
+import co.aikar.commands.annotation.Optional;
+import co.aikar.commands.annotation.Subcommand;
+import co.aikar.commands.annotation.Syntax;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.chunks.ChunkLoadTask;
 import me.infinityz.minigame.enums.Stage;
+import me.infinityz.minigame.events.TeleportationCompletedEvent;
 import me.infinityz.minigame.scoreboard.ScatterScoreboard;
 import me.infinityz.minigame.tasks.TeleportTemporalTask;
 import net.md_5.bungee.api.ChatColor;
 
 @RequiredArgsConstructor
 @Conditions("lobby")
-@CommandPermission("staff.perm")
 @CommandAlias("start")
 public class StartCommand extends BaseCommand {
     private @NonNull UHC instance;
 
+    @CommandPermission("staff.perm")
     @Default
     public void newScatter(CommandSender sender) {
         var locs = instance.getChunkManager().getLocations();
@@ -64,6 +68,7 @@ public class StartCommand extends BaseCommand {
         if (instance.getTeamManger().getTeamSize() > 1) {
             Bukkit.dispatchCommand(sender, "team random");
         }
+        instance.getChunkManager().getAutoChunkScheduler().cancel();
         Bukkit.broadcastMessage(ChatColor.of("#2be49c") + "Starting the teleportation task...");
         // Start Parameters
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "scoreboard objectives setdisplay list health_name");
@@ -94,6 +99,39 @@ public class StartCommand extends BaseCommand {
         });
 
         instance.getListenerManager().registerListener(instance.getListenerManager().getScatter());
+    }
+
+    @CommandPermission("uhc.admin")
+    @Subcommand("no-scatter")
+    @CommandAlias("start-no-scatter")
+    @Syntax("<ticks> - Ticks to delay the start once completed teleport.")
+    public void onStartNoScatter(CommandSender sender, @Optional Integer delayTicks) {
+
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "scoreboard objectives setdisplay list health_name");
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "whitelist add @a");
+
+        instance.getChunkManager().getAutoChunkScheduler().cancel();
+
+        Bukkit.getWorlds().forEach(it -> {
+            it.getWorldBorder().setSize(4001);
+            it.setDifficulty(Difficulty.HARD);
+            it.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, true);
+            it.setTime(0);
+        });
+
+        instance.getScoreboardManager().purgeScoreboards();
+
+        instance.getListenerManager().unregisterListener(instance.getListenerManager().getLobby());
+
+        Bukkit.getOnlinePlayers().stream().filter(it -> it.getGameMode() != GameMode.SPECTATOR)
+                .forEach(players -> instance.getPlayerManager().addCreateUHCPlayer(players.getUniqueId(), true));
+
+        var teleportEvent = new TeleportationCompletedEvent();
+        if (delayTicks != null && delayTicks > 0) {
+            teleportEvent.setStartDelayTicks(delayTicks);
+        }
+        Bukkit.getPluginManager().callEvent(teleportEvent);
+
     }
 
 }

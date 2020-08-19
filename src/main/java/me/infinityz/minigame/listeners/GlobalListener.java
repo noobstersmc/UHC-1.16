@@ -29,6 +29,7 @@ import me.infinityz.minigame.chunks.ChunksManager;
 import me.infinityz.minigame.enums.Stage;
 import me.infinityz.minigame.events.NetherDisabledEvent;
 import me.infinityz.minigame.events.TeleportationCompletedEvent;
+import me.infinityz.minigame.game.Game;
 import me.infinityz.minigame.scoreboard.IngameScoreboard;
 import me.infinityz.minigame.tasks.GameLoop;
 import net.md_5.bungee.api.ChatColor;
@@ -46,11 +47,9 @@ public class GlobalListener implements Listener {
         e.getPlayer().sendMessage(ChatColor.BLUE + "Discord! discord.noobsters.net\n" + ChatColor.AQUA
                 + "Twitter! twitter.com/NoobstersUHC\n" + ChatColor.GOLD + "Donations! noobsters.buycraft.net");
         e.setJoinMessage("");
-        // \n\"The Home of Minecraft UHC 1.16 \"
-        var header = ChatColor.DARK_RED + "Noobsters UHC";
         var footer = ChatColor.of("#4788d9") + "Join Our UHC Community!\n" + ChatColor.of("#2be49c")
                 + "discord.noobsters.net";
-        e.getPlayer().setPlayerListHeaderFooter(header, footer);
+        e.getPlayer().setPlayerListHeaderFooter(Game.getTablistHeader(), footer);
     }
 
     @EventHandler
@@ -221,7 +220,7 @@ public class GlobalListener implements Listener {
             instance.getListenerManager().registerListener(instance.getListenerManager().getSpectatorListener());
             new GameLoop(instance).runTaskTimerAsynchronously(instance, 0L, 20L);
 
-        }, 20 * 10);
+        }, e.getStartDelayTicks());
 
     }
 

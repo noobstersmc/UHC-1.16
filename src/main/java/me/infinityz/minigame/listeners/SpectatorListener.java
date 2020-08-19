@@ -22,10 +22,12 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -49,25 +51,17 @@ public class SpectatorListener implements Listener {
      */
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onSpecChat(AsyncPlayerChatEvent e) {
-        if (e.getPlayer().getGameMode() == GameMode.SPECTATOR && !e.getPlayer().hasPermission("staff.perm")) {
-            e.setCancelled(true);
+        var player = e.getPlayer();
+        if (player.getGameMode() == GameMode.SPECTATOR && !player.hasPermission("staff.perm")) {
+            e.getRecipients().removeIf(recipient -> !(recipient.getGameMode() == GameMode.SPECTATOR
+                    || recipient.hasPermission("staff.perm")));
+            e.setFormat(ChatColor.GRAY + "" + ChatColor.ITALIC + "[SPEC] " + e.getFormat());
+        } else if (player.hasPermission("uhc.spec.chat") && e.getMessage().startsWith("@")) {
+            e.getRecipients().removeIf(recipient -> !(recipient.getGameMode() == GameMode.SPECTATOR
+                    || recipient.hasPermission("staff.perm")));
+            e.setMessage(e.getMessage().replaceFirst("@", ""));
+            e.setFormat(ChatColor.GRAY + "" + ChatColor.ITALIC + "[SPEC] " + e.getFormat());
 
-            e.getRecipients().stream()
-                    .filter(it -> it.getGameMode() == GameMode.SPECTATOR || it.hasPermission("staff.perm"))
-                    .forEach(specs -> {
-                        specs.sendMessage(ChatColor.GRAY + "[SPEC] " + e.getFormat()
-                                .replace("%1$s", e.getPlayer().getName()).replace("%2$s", e.getMessage()));
-                    });
-        }
-    }
-
-    @EventHandler
-    public void onMoveSpecNoClip(PlayerMoveEvent e) {
-        if (e.getPlayer().getGameMode() != GameMode.SPECTATOR)
-            return;
-        if (e.getTo().getBlock().getType() != Material.AIR) {
-            e.setCancelled(true);
-            e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 15, 1000));
         }
     }
 
@@ -94,7 +88,7 @@ public class SpectatorListener implements Listener {
         // If gamemode to change is spectator
         if (e.getNewGameMode() == GameMode.SPECTATOR) {
             // If player has no perms hide f3
-            if (!player.hasPermission("spec.see.coords"))
+            if (!player.hasPermission("uhc.spec.coords"))
                 disableF3(player);
 
             Bukkit.getOnlinePlayers().stream().forEach(all -> {
@@ -119,7 +113,6 @@ public class SpectatorListener implements Listener {
                 }
             });
         }
-
     }
 
     /*
@@ -184,19 +177,88 @@ public class SpectatorListener implements Listener {
             e.setCancelled(true);
     }
 
+    /**
+     * Custom spectator sytem code:
+     */
+
     @EventHandler
-    public void onStopSpectating(PlayerStopSpectatingEntityEvent e) {
-        // TODO: Right now this causes the client to glitch up.
-        if (!e.getPlayer().hasPermission("uhc.spectator.unmount")) {
+    public void onMoveSpecNoClip(PlayerMoveEvent e) {
+        var player = e.getPlayer();
+        if (player.getGameMode() != GameMode.SPECTATOR)
+            return;
+        if (player.hasPermission("uhc.spec.noclip"))
+            return;
+        if (e.getTo().getBlock().getType() != Material.AIR) {
             e.setCancelled(true);
+            player.addPotionEffect(PotionEffectType.BLINDNESS.createEffect(5, 10));
         }
     }
 
     @EventHandler
-    public void onStopSpectating(PlayerStartSpectatingEntityEvent e) {
-        // TODO: Right now this causes the client to glitch up.
-        if (!e.getPlayer().hasPermission("uhc.spectator.mount")) {
+    public void onRightClickAir(PlayerInteractEvent e) {
+        var player = e.getPlayer();
+        // Open the Spectator GUI for staff members.
+        if (player.getGameMode() == GameMode.SPECTATOR && player.hasPermission("uhc.spec.gui")) {
+            var inv = new FastInv(9 * 6, ChatColor.GOLD + "Spectator GUI");
+            inv.open(player);
+        }
+    }
+
+    @EventHandler
+    public void onStartSpec(PlayerStartSpectatingEntityEvent e) {
+        if (e.getNewSpectatorTarget().getType() != EntityType.PLAYER) {
             e.setCancelled(true);
+            return;
+        }
+        var player = e.getPlayer();
+        var targetPlayer = (Player) e.getNewSpectatorTarget();
+        if (e.getNewSpectatorTarget().isDead()) {
+            e.setCancelled(true);
+            return;
+        }
+        if (targetPlayer.getGameMode() == GameMode.SPECTATOR) {
+            e.setCancelled(true);
+            return;
+        }
+        // Close open inventories to avoid glitches.
+        Bukkit.getScheduler().runTaskLater(instance, () -> {
+            if (player.getOpenInventory() != null) {
+                player.closeInventory();
+            }
+        }, 1l);
+        // Change the name to display who they are spectating
+        if (player.hasPermission("uhc.spec.name")) {
+            player.setPlayerListName(player.getName() + ChatColor.RESET + "" + ChatColor.DARK_GRAY + " ("
+                    + e.getNewSpectatorTarget().getName() + ")");
+        }
+    }
+
+    @EventHandler
+    public void onStopSpectating(PlayerStopSpectatingEntityEvent e) {
+        var player = e.getPlayer();
+        // Change the name back
+        player.setPlayerListName(e.getPlayer().getName());
+    }
+
+    @EventHandler
+    public void onTeleport(PlayerTeleportEvent e) {
+        var player = e.getPlayer();
+        // When tp with Spec GUI spec to body
+        if (player.getGameMode() == GameMode.SPECTATOR) {
+            if (e.getCause() == TeleportCause.SPECTATE) {
+                e.getTo().getNearbyPlayers(1.0).stream().findFirst().ifPresent(target -> {
+                    e.setCancelled(true);
+                    player.teleport(target);
+                    player.setSpectatorTarget(target);
+                });
+            } else if (e.getCause() == TeleportCause.COMMAND) {
+                // When teleported with command, find player in radius and mount.
+                e.getTo().getNearbyPlayers(10.0).stream().findFirst().ifPresent(target -> {
+                    e.setCancelled(true);
+                    player.teleport(target);
+                    player.setSpectatorTarget(target);
+                });
+            }
         }
     }
 
@@ -211,7 +273,7 @@ public class SpectatorListener implements Listener {
             return;
         var player = e.getPlayer();
         var clicked = (Player) e.getRightClicked();
-        // TODO: Add a specInv manager to share inventories and not open one viewer.
+        // TODO: Add a specInv manager to share inventories and not open one per viewer.
 
         var fastInv = new UpdatableInventory(5 * 9, clicked.getName() + "'s inventory'");
         fastInv.addUpdateTask(new BukkitRunnable() {

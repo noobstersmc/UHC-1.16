@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.LoadingCache;
+import com.github.benmanes.caffeine.cache.Scheduler;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -16,6 +18,7 @@ import lombok.Getter;
 import lombok.Setter;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.players.UHCPlayer;
+import me.infinityz.minigame.teams.events.TeamInviteExpireEvent;
 import me.infinityz.minigame.teams.objects.Team;
 import me.infinityz.minigame.teams.objects.TeamInvite;
 import net.md_5.bungee.api.ChatColor;
@@ -29,8 +32,11 @@ public class TeamManager {
     UHC instance;
     private @Getter THashMap<UUID, Team> teamMap = new THashMap<>();
     private @Getter Cache<Long, UUID> cache = Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.MINUTES).build();
-    private @Getter Cache<Long, TeamInvite> teamInvite = Caffeine.newBuilder().expireAfterWrite(30, TimeUnit.SECONDS)
-            .build();
+    private @Getter LoadingCache<Long, TeamInvite> teamInvite = Caffeine.newBuilder()
+            .scheduler(Scheduler.systemScheduler())
+            .removalListener((key, value, cause) -> Bukkit.getPluginManager()
+                    .callEvent(new TeamInviteExpireEvent((TeamInvite) value, cause, true)))
+            .expireAfterWrite(10, TimeUnit.SECONDS).build(entry -> new TeamInvite(null, null, null));
     private @Getter @Setter int teamSize = 1;
     private @Getter @Setter boolean teamManagement = false;
 

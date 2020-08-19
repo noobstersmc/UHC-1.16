@@ -1,8 +1,6 @@
 package me.infinityz.minigame.listeners;
 
-import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
-import org.bukkit.Location;
 import org.bukkit.Statistic;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -24,7 +22,11 @@ import me.infinityz.minigame.scoreboard.LobbyScoreboard;
 @RequiredArgsConstructor
 public class LobbyListeners implements Listener {
     private @NonNull UHC instance;
-    private Location spawnLocation = Bukkit.getWorlds().get(0).getHighestBlockAt(0, 0).getLocation().add(0.0, 15.0, 0);
+    /*
+     * private Location spawnLocation =
+     * Bukkit.getWorlds().get(0).getHighestBlockAt(0, 0).getLocation().add(0.0,
+     * 15.0, 0);
+     */
 
     /*
      * Events cancelled during lobby starts.
@@ -72,20 +74,16 @@ public class LobbyListeners implements Listener {
          * Teleport to spawn and set to survival mode
          */
         player.setGameMode(GameMode.SURVIVAL);
-        player.teleport(spawnLocation);
+        // Commented out code to clean up player and tp to spawn
         /*
-         * Clean the player's inventory, XP, Potions, and heal them
+         * player.teleport(spawnLocation); player.setLevel(0); player.setExp(0f);
+         * player.setTotalExperience(0); player.getInventory().clear();
+         * player.getInventory().setArmorContents(null); player.setHealth(20.0);
+         * player.setFoodLevel(20); player.setSaturation(20.0F);
+         * player.getActivePotionEffects().forEach(effect ->
+         * player.removePotionEffect(effect.getType()));
          */
-        player.setLevel(0);
-        player.setExp(0f);
-        player.setTotalExperience(0);
-        player.getInventory().clear();
-        player.getInventory().setArmorContents(null);
-        player.setHealth(20.0);
-        player.setFoodLevel(20);
-        player.setSaturation(20.0F);
         player.setStatistic(Statistic.TIME_SINCE_REST, 0);
-        player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
 
     }
 
