@@ -38,8 +38,10 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import me.infinityz.minigame.UHC;
+import me.infinityz.minigame.enums.DQReason;
 import me.infinityz.minigame.events.PlayerWinEvent;
 import me.infinityz.minigame.events.TeamWinEvent;
+import me.infinityz.minigame.events.UHCPlayerDequalificationEvent;
 import me.infinityz.minigame.players.PositionObject;
 import me.infinityz.minigame.players.UHCPlayer;
 import me.infinityz.minigame.scoreboard.IScoreboard;
@@ -55,15 +57,15 @@ public class IngameListeners implements Listener {
     private @NonNull UHC instance;
     private @Getter List<Material> possibleFence = Arrays.stream(Material.values())
             .filter(material -> material.name().contains("FENCE") && !material.name().contains("FENCE_GATE"))
-            .collect(Collectors.toList());;
+            .collect(Collectors.toList());
 
     /** STRIDER DAMAGE PATCH STARTS */
     @EventHandler
     public void onDamageByStriderLava(EntityDamageEvent e) {
         if (e.getEntity().getType() != EntityType.PLAYER)
             return;
-        if (e.getCause() == DamageCause.FIRE
-                || e.getCause() == DamageCause.FIRE_TICK | e.getCause() == DamageCause.LAVA) {
+        if (e.getCause() == DamageCause.FIRE || e.getCause() == DamageCause.FIRE_TICK
+                || e.getCause() == DamageCause.LAVA) {
             var player = (Player) e.getEntity();
             if (player.getVehicle() != null && player.getVehicle().getType() == EntityType.STRIDER) {
                 e.setCancelled(true);
@@ -80,31 +82,48 @@ public class IngameListeners implements Listener {
     public void onDrownedDeath(EntityDeathEvent e) {
         if (e.getEntity().getType() != EntityType.DROWNED)
             return;
-        System.out.println("Drowned");
         var drowned = (Drowned) e.getEntity();
         var equipment = drowned.getEquipment();
         var mainHand = drowned.getEquipment().getItemInMainHand().clone();
         var offHand = drowned.getEquipment().getItemInOffHand().clone();
         equipment.clear();
 
-        if (mainHand != null && mainHand.getType() != Material.AIR) {
+        if (mainHand.getType() != Material.AIR) {
             if (mainHand.getType() == Material.TRIDENT) {
                 Damageable dmg = (Damageable) mainHand.getItemMeta();
-                int random_int = (int) (Math.random() * (125 - 0 + 1) + 0);
-                dmg.setDamage(random_int);
+                dmg.setDamage(new Random().nextInt(125));
                 mainHand.setItemMeta((ItemMeta) dmg);
             }
             drowned.getLocation().getWorld().dropItemNaturally(drowned.getLocation(), mainHand);
 
         }
-        if (offHand != null && offHand.getType() != Material.AIR) {
+        if (offHand.getType() != Material.AIR) {
             if (offHand.getType() == Material.TRIDENT) {
                 Damageable dmg = (Damageable) offHand.getItemMeta();
-                int random_int = (int) (Math.random() * (125 - 0 + 1) + 0);
-                dmg.setDamage(random_int);
+                dmg.setDamage(new Random().nextInt(125));
                 offHand.setItemMeta((ItemMeta) dmg);
             }
             drowned.getLocation().getWorld().dropItemNaturally(drowned.getLocation(), offHand);
+        }
+    }
+
+    @EventHandler
+    public void onDeathFromBorder(PlayerDeathEvent e) {
+        if (e.getEntity().getLastDamageCause().getCause() == DamageCause.CUSTOM) {
+            e.setDeathMessage("");
+            var deathMessageEnglish = e.getEntity().getName() + " was devoured by the border";
+            var deathMessageSpanish = e.getEntity().getName() + " fue devorado por el borde";
+            var deathMessageFrench = e.getEntity().getName() + " a été dévoré par la frontière";
+            Bukkit.getOnlinePlayers().stream().forEach(all -> {
+                if (all.getLocale().startsWith("es_")) {
+                    all.sendMessage(deathMessageSpanish);
+                } else if (all.getLocale().startsWith("fr_")) {
+                    all.sendMessage(deathMessageFrench);
+                } else {
+                    all.sendMessage(deathMessageEnglish);
+                }
+            });
+            instance.getLogger().info(deathMessageEnglish);
         }
     }
 
@@ -197,6 +216,19 @@ public class IngameListeners implements Listener {
     }
 
     @EventHandler
+    public void onPlayerDQ(UHCPlayerDequalificationEvent e){
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "whitelist remove " + e.getOfflinePlayer().getName());
+        switch (e.getReason()) {
+            case OFFLINE_DQ:
+            Bukkit.broadcastMessage(e.getOfflinePlayer().getName() + " has abandoned the game");
+
+            break;
+            default:
+                break;
+        }
+    }
+
+    @EventHandler
     public void onDeath(PlayerDeathEvent e) {
         // 3-second timeout to get respawned in spectator mode.
         Player p = e.getEntity();
@@ -207,7 +239,7 @@ public class IngameListeners implements Listener {
         p.sendTitle(Title.builder().title("")
                 .subtitle(new ComponentBuilder("YOU ARE DEAD").bold(true).color(ChatColor.DARK_RED).create()).build());
         p.playSound(p.getLocation(), Sound.BLOCK_RESPAWN_ANCHOR_DEPLETE, SoundCategory.VOICE, 1.0f, 0.1f);
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "whitelist remove " + e.getEntity().getName());
+        
         var inv = p.getInventory().getContents();
         UHCPlayer uhcPlayer = instance.getPlayerManager().getPlayer(p.getUniqueId());
         if (uhcPlayer != null) {
@@ -217,6 +249,7 @@ public class IngameListeners implements Listener {
                 uhcPlayer.setLastKnownHealth(0.0);
                 uhcPlayer.setLastKnownPositionFromLoc(p.getLocation());
                 uhcPlayer.setLastKnownInventory(inv);
+                Bukkit.getPluginManager().callEvent(new UHCPlayerDequalificationEvent(uhcPlayer, DQReason.DEATH, false));
             } // TODO: Send update to players left.
 
             /**
@@ -254,20 +287,17 @@ public class IngameListeners implements Listener {
         }
         if (p.getKiller() != null) {
             Player killer = p.getKiller();
-            Bukkit.getScheduler().runTaskLater(instance, () -> {
-                // TODO: Improve death animation
-                new SpecAnimation(instance, p, killer).runTaskTimer(instance, 0, 1);
-
-            }, 20 * 6);
+            Bukkit.getScheduler().runTaskLater(instance,
+                    () -> new SpecAnimation(instance, p, killer).runTaskTimer(instance, 0, 1), 20L * 6);
             Bukkit.getScheduler().runTaskLater(instance, () -> {
                 p.getInventory().setContents(killer.getInventory().getContents());
                 p.setGameMode(GameMode.SPECTATOR);
                 p.setSpectatorTarget(killer);
-            }, 20 * 8);
+            }, 20L * 8);
             UHCPlayer uhcKiller = instance.getPlayerManager().getPlayer(killer.getUniqueId());
             uhcKiller.setKills(uhcKiller.getKills() + 1);
             IScoreboard sb = instance.getScoreboardManager().findScoreboard(killer.getUniqueId());
-            if (sb != null && sb instanceof IngameScoreboard) {
+            if (sb instanceof IngameScoreboard) {
                 IngameScoreboard sbi = (IngameScoreboard) sb;
                 sbi.addUpdates(
                         new UpdateObject(ChatColor.GRAY + "Kills: " + ChatColor.WHITE + uhcKiller.getKills(), 2));

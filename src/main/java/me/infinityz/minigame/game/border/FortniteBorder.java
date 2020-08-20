@@ -58,8 +58,6 @@ public class FortniteBorder {
             gapZ = this.centerZ - newZ;
         else
             gapZ = newZ - this.centerZ;
-        // gapX = gapX;
-        // gapZ = gapZ;
         double stepsX = (gapX / st);
         double stepsZ = (gapZ / st);
         this.worldBorder.setSize(newRadius, timeInSeconds);

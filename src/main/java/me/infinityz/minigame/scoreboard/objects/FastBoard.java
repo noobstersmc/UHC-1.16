@@ -25,6 +25,7 @@ import org.bukkit.entity.Player;
  *
  * @author MrMicky
  */
+@SuppressWarnings("all")
 public class FastBoard {
 
     private static final VersionType VERSION_TYPE;

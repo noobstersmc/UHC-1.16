@@ -2,6 +2,7 @@ package me.infinityz.minigame.chunks;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 import org.bukkit.Bukkit;
@@ -30,39 +31,40 @@ public class ChunksManager {
 
         autoChunkScheduler = Bukkit.getScheduler().runTaskTimerAsynchronously(instance, () -> {
             if (!pendingChunkLoadTasks.isEmpty()) {
-                Bukkit.getOnlinePlayers().stream().filter(p -> p.hasPermission("locations.perm"))
-                        .forEach(staff -> staff.sendActionBar(ChatColor.RED + "Not ready to start, currently loading "
-                                + pendingChunkLoadTasks.size() + " locations..."));
-                var iter = pendingChunkLoadTasks.iterator();
-                while (iter.hasNext()) {
-                    var task = iter.next();
-                    if (task.isDone()) {
-                        iter.remove();
-                        Bukkit.getOnlinePlayers().stream().filter(p -> p.hasPermission("locations.perm"))
-                                .forEach(staff -> {
-                                    staff.sendActionBar(
-                                            ChatColor.AQUA + "" + pendingChunkLoadTasks.size() + " load tasks left.");
-                                });
-                    } else {
-                        if (task.isRunning()) {
-                            break;
-                        } else if (!task.isRunning()) {
-                            System.out.println("Starting a new task...");
-                            Bukkit.getScheduler().runTaskAsynchronously(instance, task);
-                            break;
-                        }
-                    }
-                }
+                iterate(pendingChunkLoadTasks.iterator());
+                notifyOnActionbar(ChatColor.RED + "Not ready to start, currently loading "
+                        + pendingChunkLoadTasks.size() + " locations...", "staff.perm");
             } else {
                 var online = Bukkit.getOnlinePlayers().size();
                 var message = online > locations.size() ? ChatColor.RED + "Not ready to start. "
                         + (online - locations.size()) + " location needed to start."
                         : ChatColor.GREEN + "Ready to start.";
-                Bukkit.getOnlinePlayers().stream().filter(p -> p.hasPermission("locations.perm"))
-                        .forEach(staff -> staff.sendActionBar(message));
+                notifyOnActionbar(message, "staff.pern");
 
             }
-        }, 20 * 5, 20);
+        }, 5L, 20L);
+    }
+
+    private void iterate(Iterator<ChunkLoadTask> iter){
+        while (iter.hasNext()) {
+            var task = iter.next();
+            if (task.isDone()) {
+                iter.remove();
+                notifyOnActionbar(ChatColor.AQUA + "" + pendingChunkLoadTasks.size() + " load tasks left.",
+                        "staff.perm");
+            } else {
+                if (!task.isRunning()) {
+                    System.out.println("Starting a new task...");
+                    Bukkit.getScheduler().runTaskAsynchronously(instance, task);
+                }
+                break;
+            }
+        }
+    }
+
+    private void notifyOnActionbar(final String message, final String perm) {
+        Bukkit.getOnlinePlayers().stream().filter(p -> p.hasPermission(perm))
+                .forEach(staff -> staff.sendActionBar(message));
     }
 
     public static Collection<ChunkObject> getNeighbouringChunks(final ChunkObject chunkObject, final int distance) {
@@ -83,7 +85,6 @@ public class ChunksManager {
         return chunksCollection;
     }
 
-
     public static Location findScatterLocation(final World world, final int radius) {
         Location loc = new Location(world, 0, 0, 0);
         // Use Math#Random to obtain a random integer that can be used as a location.
@@ -98,7 +99,7 @@ public class ChunksManager {
         // validate the location from others.
         return centerLocation(loc);
     }
-    
+
     public static Location centerLocation(final Location loc) {
         loc.setX(loc.getBlockX() + 0.5);
         loc.setY(loc.getBlockY() + 1.5);
@@ -107,10 +108,8 @@ public class ChunksManager {
     }
 
     public static boolean isSafe(final Location loc) {
-        if (loc.getBlock().isLiquid() || loc.getBlock().getRelative(BlockFace.DOWN).isLiquid()
-                || loc.getBlock().getRelative(BlockFace.DOWN).getRelative(BlockFace.DOWN).isLiquid())
-            return false;
-        return true;
+        return loc.getBlock().isLiquid() || loc.getBlock().getRelative(BlockFace.DOWN).isLiquid()
+        || loc.getBlock().getRelative(BlockFace.DOWN).getRelative(BlockFace.DOWN).isLiquid();
     }
 
 }

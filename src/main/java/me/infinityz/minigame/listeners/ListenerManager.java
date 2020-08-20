@@ -49,9 +49,7 @@ public class ListenerManager {
                     .filter(all -> all.getGameMode() != GameMode.SPECTATOR).collect(Collectors.toList());
 
             Bukkit.getOnlinePlayers().stream().filter(player -> player.getGameMode() == GameMode.SPECTATOR)
-                    .forEach(spectator -> {
-                        notSpecs.forEach(all -> all.hidePlayer(instance, spectator));
-                    });
+                    .forEach(spectator -> notSpecs.forEach(all -> all.hidePlayer(instance, spectator)));
 
         }
     }

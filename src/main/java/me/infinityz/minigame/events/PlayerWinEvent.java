@@ -14,8 +14,9 @@ public class PlayerWinEvent extends Event {
     /*
      * Methods Required by BukkitAPI
      */
-    private @Getter static final HandlerList HandlerList = new HandlerList();
-    private @Getter final HandlerList Handlers = HandlerList;
+    private static final @Getter HandlerList HandlerList = new HandlerList();
+    @SuppressWarnings({"java:S116", "java:S1170"})
+    private final @Getter HandlerList Handlers = HandlerList;
     /*
      * Custom data
      */

@@ -62,12 +62,12 @@ public class UHCCommand extends BaseCommand {
         var target = Bukkit.getPlayer(uhcPlayer.getUUID());
 
         if (args != null && args.length > 0) {
-            if (Arrays.stream(args).filter(it -> it.equalsIgnoreCase("--i") || it.equalsIgnoreCase("-inventory"))
-                    .findAny().isPresent()) {
+            if (Arrays.stream(args)
+                    .anyMatch(all -> all.equalsIgnoreCase("--i") || all.toLowerCase().contains("-inv"))) {
                 target.getInventory().setContents(uhcPlayer.getLastKnownInventory());
             }
-            if (Arrays.stream(args).filter(it -> it.equalsIgnoreCase("--l") || it.toLowerCase().contains("-loc"))
-                    .findAny().isPresent()) {
+            if (Arrays.stream(args)
+                    .anyMatch(all -> all.equalsIgnoreCase("--l") || all.toLowerCase().contains("-loc"))) {
                 teleportLocation = uhcPlayer.getLastKnownPosition().toLocation();
 
                 if (teleportLocation == null || !world.getWorldBorder().isInside(teleportLocation))
@@ -214,7 +214,7 @@ public class UHCCommand extends BaseCommand {
     @CommandPermission("uhc.admin")
     @Syntax("<target> - UHCPlayer to recieve the kills")
     public void checkPlayerObjectStatus(CommandSender sender, @Flags("other") UHCPlayer target,
-            @Optional String args[]) {
+            @Optional String[] args) {
         var player = Bukkit.getPlayer(target.getUUID());
         if (player != null && player.isOnline()) {
             target.setLastKnownHealth(player.getHealth() + player.getAbsorptionAmount());
@@ -222,10 +222,10 @@ public class UHCCommand extends BaseCommand {
             target.setLastKnownInventory(player.getInventory().getContents());
         }
         // Check if optional argument --i is present
-        if (args.length > 0
-                && Arrays.stream(args).filter(all -> all.equalsIgnoreCase("--i") || all.toLowerCase().contains("-inv"))
-                        .findFirst().isPresent()) {
+        if (args.length > 0 && Arrays.stream(args)
+                .anyMatch(all -> all.equalsIgnoreCase("--i") || all.toLowerCase().contains("-inv"))) {
             sender.sendMessage(target.toString());
+
             return;
         }
         sender.sendMessage(target.toStringNoInventory());
@@ -237,20 +237,17 @@ public class UHCCommand extends BaseCommand {
         sender.sendMessage("Current scatter locations (" + instance.getChunkManager().getLocations().size() + "):");
         if (sender instanceof Player) {
             var player = (Player) sender;
-            instance.getChunkManager().getLocations().stream().forEach(locs -> {
-                player.sendMessage(new ComponentBuilder(
-                        " - " + locs.getBlockX() + ", " + locs.getBlockY() + ", " + locs.getBlockZ())
-                                .event(new ClickEvent(Action.RUN_COMMAND,
-                                        String.format("/tp %d %d %d", locs.getBlockX(), locs.getBlockY(),
-                                                locs.getBlockZ())))
-                                .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Click to teleport")))
-                                .create());
-            });
+            instance.getChunkManager().getLocations().stream().forEach(locs -> player.sendMessage(
+                    new ComponentBuilder(" - " + locs.getBlockX() + ", " + locs.getBlockY() + ", " + locs.getBlockZ())
+                            .event(new ClickEvent(Action.RUN_COMMAND,
+                                    String.format("/tp %d %d %d", locs.getBlockX(), locs.getBlockY(),
+                                            locs.getBlockZ())))
+                            .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Click to teleport")))
+                            .create()));
         } else {
 
-            instance.getChunkManager().getLocations().stream().forEach(all -> {
-                sender.sendMessage("- " + all.toString());
-            });
+            instance.getChunkManager().getLocations().stream()
+                    .forEach(all -> sender.sendMessage("- " + all.toString()));
         }
     }
 
@@ -269,9 +266,7 @@ public class UHCCommand extends BaseCommand {
     @CommandPermission("uhc.admin")
     public void unloadForceLoaded(CommandSender sender) {
         sender.sendMessage("Unloaded all chunks");
-        Bukkit.getWorlds().get(0).getForceLoadedChunks().forEach(all -> {
-            all.setForceLoaded(false);
-        });
+        Bukkit.getWorlds().get(0).getForceLoadedChunks().forEach(all -> all.setForceLoaded(false));
 
     }
 
@@ -279,10 +274,8 @@ public class UHCCommand extends BaseCommand {
     @CommandPermission("uhc.admin")
     public void onPending(Player sender) {
         sender.sendMessage("Pending chunk load tasks, -1 means not started:");
-        instance.getChunkManager().getPendingChunkLoadTasks().forEach(all -> {
-            sender.sendMessage(
-                    all.getLocationID().toString().substring(0, 8) + " running: " + all.getChunksLeft() + " left");
-        });
+        instance.getChunkManager().getPendingChunkLoadTasks().forEach(all -> sender.sendMessage(
+                all.getLocationID().toString().substring(0, 8) + " running: " + all.getChunksLeft() + " left"));
 
     }
 

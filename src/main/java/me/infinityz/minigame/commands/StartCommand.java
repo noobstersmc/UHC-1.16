@@ -60,7 +60,7 @@ public class StartCommand extends BaseCommand {
             sender.sendMessage("Queued up " + tasks + " task(s)...");
             return;
         }
-        instance.gameStage = Stage.SCATTER;
+        instance.setGameStage(Stage.SCATTER);
         if (instance.getTeamManger().isTeamManagement()) {
             Bukkit.dispatchCommand(sender, "team man false");
         }

@@ -17,22 +17,19 @@ import net.md_5.bungee.api.ChatColor;
 public class HelpopCommand extends BaseCommand {
 
     private @NonNull UHC instance;
+    private final ChatColor sunflowerYellow = ChatColor.of("#DABC12");
 
     @Default
     @Syntax("<message> &e- The message you want ")
-    public void onList(Player player, String[] message) {
-        if (message.length < 1) {
+    public void onList(Player player, String message) {
+        if (message.length() < 1) {
             player.sendMessage("Correct usage: /helpop <message>");
             return;
         }
-        player.sendMessage(ChatColor.of("#DABC12") + "Your message has been sent!");
 
-        StringBuilder sb = new StringBuilder();
-        for (String string : message) {
-            sb.append(string + " ");
-        }
-        Bukkit.broadcast(
-                ChatColor.of("#DABC12") + "[Helpop] " + ChatColor.GRAY + player.getName() + ": " + sb.toString(),
+        player.sendMessage(sunflowerYellow + "Your message has been sent!");
+
+        Bukkit.broadcast(sunflowerYellow + "[Helpop] " + ChatColor.GRAY + player.getName() + ": " + message,
                 "staff.perm");
     }
 

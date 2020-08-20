@@ -66,7 +66,7 @@ public class ContextConditions {
                 });
 
         instance.getCommandManager().getCommandConditions().addCondition("ingame", (context) -> {
-            if (!instance.gameStage.equals(Stage.INGAME))
+            if (!instance.getGameStage().equals(Stage.INGAME))
                 throw new ConditionFailedException(("Game must be playing!"));
         });
 
@@ -80,7 +80,7 @@ public class ContextConditions {
             }
         });
         instance.getCommandManager().getCommandConditions().addCondition("lobby", (context) -> {
-            if (instance.gameStage != Stage.LOBBY)
+            if (instance.getGameStage() != Stage.LOBBY)
                 throw new ConditionFailedException(("You must be in lobby game stage to do this"));
         });
         // Add a condition to test for team management.

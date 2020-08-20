@@ -6,44 +6,28 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 
+import lombok.Getter;
 import me.infinityz.minigame.UHC;
 
 public class ScoreboardManager {
-    UHC instance;
-    private Map<String, IScoreboard> fastboardMap;
+    private @Getter Map<String, IScoreboard> fastboardMap = new HashMap<>();
 
     public ScoreboardManager(UHC instance) {
-        this.instance = instance;
-        fastboardMap = new HashMap<>();
+        Bukkit.getScheduler().runTaskTimerAsynchronously(instance,
+                () -> instance.getScoreboardManager().getFastboardMap().values().forEach(IScoreboard::update), 20, 5);
 
-        Bukkit.getScheduler().runTaskTimerAsynchronously(instance, () -> {
-            instance.getScoreboardManager().getFastboardMap().values().forEach(all -> {
-                all.update();
-            });
+        Bukkit.getScheduler().runTaskTimerAsynchronously(instance,
+                () -> instance.getScoreboardManager().getFastboardMap().values().forEach(IScoreboard::runUpdates), 20,
+                20);
 
-        }, 20, 5);
-
-        Bukkit.getScheduler().runTaskTimerAsynchronously(instance, () -> {
-            instance.getScoreboardManager().getFastboardMap().values().forEach(all -> {
-                all.runUpdates();
-            });
-
-        }, 20, 20);
-        
     }
-    public void purgeScoreboards(){
 
-        fastboardMap.entrySet().forEach(entry -> {
-            entry.getValue().delete();
-        });
+    public void purgeScoreboards() {
+        fastboardMap.values().forEach(IScoreboard::delete);
         fastboardMap.clear();
     }
 
-    public Map<String, IScoreboard> getFastboardMap() {
-        return fastboardMap;
-    }
-
-    public IScoreboard findScoreboard(UUID uuid){
+    public IScoreboard findScoreboard(UUID uuid) {
         return fastboardMap.get(uuid.toString());
     }
 }

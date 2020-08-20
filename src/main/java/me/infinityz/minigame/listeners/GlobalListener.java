@@ -47,7 +47,7 @@ public class GlobalListener implements Listener {
         e.getPlayer().sendMessage(ChatColor.BLUE + "Discord! discord.noobsters.net\n" + ChatColor.AQUA
                 + "Twitter! twitter.com/NoobstersUHC\n" + ChatColor.GOLD + "Donations! noobsters.buycraft.net");
         e.setJoinMessage("");
-        var footer = ChatColor.of("#4788d9") + "Join Our UHC Community!\n" + ChatColor.of("#2be49c")
+        var footer = GameLoop.HAVELOCK_BLUE + "Join Our UHC Community!\n" + GameLoop.SHAMROCK_GREEN
                 + "discord.noobsters.net";
         e.getPlayer().setPlayerListHeaderFooter(Game.getTablistHeader(), footer);
     }
@@ -66,11 +66,8 @@ public class GlobalListener implements Listener {
         var radius = (int) worldToTeleport.getWorldBorder().getSize() / 2;
         // Teleport all players currently in the nether to the overworld.
         Bukkit.getOnlinePlayers().stream().filter(player -> player.getWorld().getEnvironment() == Environment.NETHER)
-                .forEach(netherPlayer -> {
-                    // Enviar mensaje a los players?
-                    netherPlayer.teleportAsync(
-                            ChunksManager.centerLocation(ChunksManager.findScatterLocation(worldToTeleport, radius)));
-                });
+                .forEach(netherPlayer -> netherPlayer.teleportAsync(
+                        ChunksManager.centerLocation(ChunksManager.findScatterLocation(worldToTeleport, radius))));
         // Mensaje para todos. Algo mas?
         Bukkit.broadcastMessage(ChatColor.of("#2be49c") + "The Nether has been disabled.");
 
@@ -78,20 +75,16 @@ public class GlobalListener implements Listener {
 
     @EventHandler
     public void onPortal(PlayerPortalEvent e) {
-        if (!instance.getGame().isNether()) {
-            if (e.getTo().getWorld().getEnvironment() == Environment.NETHER) {
-                e.getPlayer().sendMessage(ChatColor.RED + "Nether is currently disabled!");
-                e.setCancelled(true);
-            }
+        if (!instance.getGame().isNether() && e.getTo().getWorld().getEnvironment() == Environment.NETHER) {
+            e.getPlayer().sendMessage(ChatColor.RED + "Nether is currently disabled!");
+            e.setCancelled(true);
         }
     }
 
     @EventHandler
     public void onPortalCreate(PortalCreateEvent e) {
-        if (!instance.getGame().isNether()) {
-            if (e.getReason() == CreateReason.FIRE) {
-                e.setCancelled(true);
-            }
+        if (!instance.getGame().isNether() && e.getReason() == CreateReason.FIRE) {
+            e.setCancelled(true);
         }
     }
 
@@ -116,11 +109,9 @@ public class GlobalListener implements Listener {
 
     @EventHandler
     public void onInteractWithPortal(PlayerInteractEvent e) {
-        if (!instance.getGame().isEnd() && e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            if (e.getItem().getType() == Material.ENDER_EYE) {
-                e.setCancelled(true);
-            }
-        }
+        if (!instance.getGame().isEnd() && e.getAction() == Action.RIGHT_CLICK_BLOCK
+                && e.getItem().getType() == Material.ENDER_EYE)
+            e.setCancelled(true);
 
     }
 
@@ -148,14 +139,12 @@ public class GlobalListener implements Listener {
                 p2 = (Player) e.getDamager();
             } else if (e.getDamager() instanceof Projectile) {
                 Projectile proj = (Projectile) e.getDamager();
-                if (proj.getShooter() != null && proj.getShooter() instanceof Player) {
+                if (proj.getShooter() instanceof Player) {
                     p2 = (Player) proj.getShooter();
                 }
             }
-            if (p2 != null) {
-                if (!instance.getGame().isPvp())
-                    e.setCancelled(true);
-            }
+            if (p2 != null && !instance.getGame().isPvp())
+                e.setCancelled(true);
         }
     }
 
@@ -167,11 +156,12 @@ public class GlobalListener implements Listener {
         if (e.getDamager().getType() != EntityType.PLAYER)
             return;
         var damager = (Player) e.getDamager();
-        if (damager.hasPotionEffect(PotionEffectType.INCREASE_DAMAGE)) {
-            var strengthAmplifier = damager.getActivePotionEffects().stream()
-                    .filter(type -> type.getType().equals(PotionEffectType.INCREASE_DAMAGE)).findAny().get()
-                    .getAmplifier() + 1;
+        var strength = damager.getActivePotionEffects().stream()
+                .filter(pot -> pot.getType() == PotionEffectType.INCREASE_DAMAGE).findFirst();
+        if (strength.isPresent()) {
+            var strengthAmplifier = 1 + strength.get().getAmplifier();
             var differential = strengthAmplifier * 1.5;
+
             e.setDamage(e.getDamage() - differential);
         }
 
@@ -190,7 +180,7 @@ public class GlobalListener implements Listener {
 
     @EventHandler
     public void onTeleportCompleted(TeleportationCompletedEvent e) {
-        Bukkit.broadcastMessage(ChatColor.of("#2be49c") + "Starting soon...");
+        Bukkit.broadcastMessage(GameLoop.SHAMROCK_GREEN + "Starting soon...");
 
         Bukkit.getScheduler().runTaskLater(instance, () -> {
             instance.getScoreboardManager().purgeScoreboards();
@@ -200,7 +190,7 @@ public class GlobalListener implements Listener {
             // Remove all potion effects
             var bar = instance.getGame().getBossbar();
             Bukkit.getOnlinePlayers().forEach(players -> {
-                // Send the new scoreboard;
+                // Send the new scoreboard
                 var sb = new IngameScoreboard(players);
                 sb.update();
                 instance.getScoreboardManager().getFastboardMap().put(players.getUniqueId().toString(), sb);
@@ -213,8 +203,9 @@ public class GlobalListener implements Listener {
 
                 bar.addPlayer(players);
             });
-            Bukkit.broadcastMessage(ChatColor.of("#2be49c") + "UHC has started!");
-            instance.gameStage = Stage.INGAME;
+            Bukkit.broadcastMessage(GameLoop.SHAMROCK_GREEN + "UHC has started!");
+
+            instance.setGameStage(Stage.INGAME);
 
             instance.getListenerManager().registerListener(instance.getListenerManager().getIngameListeners());
             new GameLoop(instance).runTaskTimerAsynchronously(instance, 0L, 20L);

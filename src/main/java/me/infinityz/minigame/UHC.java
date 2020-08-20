@@ -1,13 +1,17 @@
 package me.infinityz.minigame;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
 import org.bukkit.NamespacedKey;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitWorker;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.RenderType;
@@ -19,6 +23,7 @@ import co.aikar.taskchain.TaskChain;
 import co.aikar.taskchain.TaskChainFactory;
 import fr.mrmicky.fastinv.FastInvManager;
 import lombok.Getter;
+import lombok.Setter;
 import me.infinityz.minigame.chunks.ChunksManager;
 import me.infinityz.minigame.commands.ContextConditions;
 import me.infinityz.minigame.commands.GlobalMute;
@@ -40,7 +45,7 @@ import net.md_5.bungee.api.ChatColor;
 
 public class UHC extends JavaPlugin {
 
-    public Stage gameStage;
+    private @Getter @Setter Stage gameStage;
     private @Getter ScoreboardManager scoreboardManager;
     private @Getter PaperCommandManager commandManager;
     private @Getter PlayerManager playerManager;
@@ -49,14 +54,14 @@ public class UHC extends JavaPlugin {
     private @Getter TeamManager teamManger;
     private @Getter ChunksManager chunkManager;
     private @Getter Game game;
-    private static TaskChainFactory taskChainFactory;
+    private static @Setter TaskChainFactory taskChainFactory;
 
     @Override
     public void onEnable() {
         /**
          * Initialize taskChain, fastInv, and set the game stage to loading
          */
-        taskChainFactory = BukkitTaskChainFactory.create(this);
+        setTaskChainFactory(BukkitTaskChainFactory.create(this));
         FastInvManager.register(this);
         gameStage = Stage.LOADING;
 
@@ -89,13 +94,30 @@ public class UHC extends JavaPlugin {
         /* Run some startup code */
         runStartUp();
 
+        /* In case the server is already running and it is a reload */
+        Bukkit.getOnlinePlayers().forEach(all -> Bukkit.getPluginManager().callEvent(new PlayerJoinEvent(all, "")));
+
+        /* Lobby stage has been reached */
         gameStage = Stage.LOBBY;
+    }
+
+    @Override
+    public void onDisable() {
+        /* Clean up in case it was a reload */
+        game.getBossbar().removeAll();
+        scoreboardManager.purgeScoreboards();
+        Bukkit.getWorlds()
+                .forEach(world -> world.getForceLoadedChunks().forEach(chunks -> chunks.setForceLoaded(false)));
+        getServer().getScheduler().getActiveWorkers().stream().filter(w -> w.getOwner() == this)
+                .map(BukkitWorker::getThread).forEach(Thread::interrupt);
+        getServer().getScheduler().cancelTasks(this);
+        craftingManager.purgeRecipes();
     }
 
     void runStartUp() {
         try {
             Scoreboard mainScoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
-            mainScoreboard.getObjectives().forEach(obj -> obj.unregister());
+            mainScoreboard.getObjectives().forEach(Objective::unregister);
             Objective obj = mainScoreboard.registerNewObjective("health_name", "health", ChatColor.DARK_RED + "❤");
             obj.setDisplaySlot(DisplaySlot.BELOW_NAME);
             Objective obj2 = mainScoreboard.registerNewObjective("health_list", "health", " ", RenderType.INTEGER);
@@ -116,17 +138,20 @@ public class UHC extends JavaPlugin {
             it.setSpawnLocation(0, it.getHighestBlockAt(0, 0).getZ() + 10, 0);
             it.getWorldBorder().setCenter(0, 0);
             it.getWorldBorder().setSize(101);
+            it.getWorldBorder().setDamageBuffer(0.0);
+            it.getWorldBorder().setDamageAmount(0.0);
         });
     }
 
-    boolean deleteDirectory(File directoryToBeDeleted) {
+    void deleteDirectory(File directoryToBeDeleted) throws IOException {
         File[] allContents = directoryToBeDeleted.listFiles();
         if (allContents != null) {
             for (File file : allContents) {
                 deleteDirectory(file);
             }
         }
-        return directoryToBeDeleted.delete();
+
+        Files.delete(directoryToBeDeleted.toPath());
     }
 
     /* Task Chain factories */

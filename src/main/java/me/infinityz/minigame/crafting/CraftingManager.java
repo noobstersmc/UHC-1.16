@@ -3,10 +3,13 @@ package me.infinityz.minigame.crafting;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Keyed;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
@@ -16,6 +19,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import lombok.Getter;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.crafting.recipes.GoldenHead;
 import me.infinityz.minigame.crafting.recipes.NetheriteRecipe;
@@ -25,11 +29,10 @@ import net.md_5.bungee.api.ChatColor;
 public class CraftingManager implements Listener {
 
     UHC instance;
-    List<CustomRecipe> recipes;
+    private @Getter List<CustomRecipe> recipes = new ArrayList<>();
 
     public CraftingManager(UHC instance) {
         this.instance = instance;
-        this.recipes = new ArrayList<>();
         try {
             Iterator<Recipe> iter = Bukkit.recipeIterator();
 
@@ -39,11 +42,11 @@ public class CraftingManager implements Listener {
                     break;
                 }
             }
-
             this.recipes.add(new GoldenHead(new NamespacedKey(instance, "ghead")));
             this.recipes.add(new SimpleNetherite(new NamespacedKey(instance, "netherite_simple")));
             this.recipes.add(new NetheriteRecipe(new NamespacedKey(instance, "netherite_multiple")));
         } catch (Exception ex) {
+            instance.getLogger().warning("Exception occured when registering custom recipes. " + ex.getMessage());
         }
     }
 
@@ -51,7 +54,7 @@ public class CraftingManager implements Listener {
     public void onItemConsume(PlayerItemConsumeEvent e) {
         if (e.isCancelled())
             return;
-        if (e.getItem().getType() == Material.AIR || e.getItem() == null)
+        if (e.getItem().getType() == Material.AIR)
             return;
         if (e.getItem().getType() != Material.GOLDEN_APPLE)
             return;
@@ -65,7 +68,22 @@ public class CraftingManager implements Listener {
 
     @EventHandler
     public void onJoinGiveRecipe(PlayerJoinEvent e) {
-        recipes.stream().forEach(recipe -> e.getPlayer().discoverRecipe(recipe.namespacedKey));
+        discoverCustomRecipes(e.getPlayer());
+    }
+
+    public void discoverCustomRecipes(Player player) {
+        var bukkitRecipes = Bukkit.recipeIterator();
+        while (bukkitRecipes.hasNext()) {
+            var recipe = bukkitRecipes.next();
+            if (recipe instanceof Keyed) {
+                player.discoverRecipe(((Keyed) recipe).getKey());
+            }
+        }
+
+    }
+
+    public void purgeRecipes() {
+        Bukkit.resetRecipes();
     }
 
 }

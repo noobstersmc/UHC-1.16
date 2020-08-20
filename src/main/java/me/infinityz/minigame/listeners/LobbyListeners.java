@@ -22,11 +22,6 @@ import me.infinityz.minigame.scoreboard.LobbyScoreboard;
 @RequiredArgsConstructor
 public class LobbyListeners implements Listener {
     private @NonNull UHC instance;
-    /*
-     * private Location spawnLocation =
-     * Bukkit.getWorlds().get(0).getHighestBlockAt(0, 0).getLocation().add(0.0,
-     * 15.0, 0);
-     */
 
     /*
      * Events cancelled during lobby starts.
@@ -68,21 +63,11 @@ public class LobbyListeners implements Listener {
 
     @EventHandler
     public void onJoinTeleport(PlayerJoinEvent e) {
-        // TODO: Sometimes teleport location doesn't work
         var player = e.getPlayer();
         /*
          * Teleport to spawn and set to survival mode
          */
         player.setGameMode(GameMode.SURVIVAL);
-        // Commented out code to clean up player and tp to spawn
-        /*
-         * player.teleport(spawnLocation); player.setLevel(0); player.setExp(0f);
-         * player.setTotalExperience(0); player.getInventory().clear();
-         * player.getInventory().setArmorContents(null); player.setHealth(20.0);
-         * player.setFoodLevel(20); player.setSaturation(20.0F);
-         * player.getActivePotionEffects().forEach(effect ->
-         * player.removePotionEffect(effect.getType()));
-         */
         player.setStatistic(Statistic.TIME_SINCE_REST, 0);
 
     }
@@ -95,6 +80,7 @@ public class LobbyListeners implements Listener {
         if (instance.getScoreboardManager().findScoreboard(e.getPlayer().getUniqueId()) != null) {
             return;
         }
+        
         final IScoreboard sb = new LobbyScoreboard(e.getPlayer());
         instance.getScoreboardManager().getFastboardMap().put(e.getPlayer().getUniqueId().toString(), sb);
 

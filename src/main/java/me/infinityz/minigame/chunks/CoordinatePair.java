@@ -17,7 +17,7 @@ public @Data @AllArgsConstructor(staticName = "of") class CoordinatePair {
     }
 
     public ChunkObject toChunkObject() {
-        return ChunkObject.of((int) x / 16, (int) z / 16);
+        return ChunkObject.of( x / 16, z / 16);
     }
 
     public static double distanceTo(CoordinatePair pair1, CoordinatePair pair2) {
@@ -38,7 +38,7 @@ public @Data @AllArgsConstructor(staticName = "of") class CoordinatePair {
 
     public static Location toLocation(CoordinatePair pair, World world, boolean highestBlock) {
         if (highestBlock) {
-            return world.getHighestBlockAt(pair.getX(), pair.getZ()).getLocation();
+            return world.getHighestBlockAt(pair.toLocation(world)).getLocation();
         } else {
             return toLocation(pair, world);
         }

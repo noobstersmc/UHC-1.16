@@ -27,7 +27,7 @@ public class PlayerManager {
     }
 
     public int getAlivePlayers() {
-        return (int) uhcPlayerMap.entrySet().stream().filter(c -> c.getValue().isAlive() == true).count();
+        return (int) uhcPlayerMap.values().stream().filter(UHCPlayer::isAlive).count();
     }
 
 }

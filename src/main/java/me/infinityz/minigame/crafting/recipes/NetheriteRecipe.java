@@ -29,7 +29,10 @@ public class NetheriteRecipe extends CustomRecipe {
 
     @Override
     public void logic() {
-        Bukkit.getServer().addRecipe(getRecipe());
+        var recipe = Bukkit.getServer().getRecipe(getNamespacedKey());
+        if(recipe == null){
+            Bukkit.getServer().addRecipe(getRecipe());
+        }
     }
 
 }

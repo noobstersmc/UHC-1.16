@@ -13,10 +13,10 @@ public @Data @AllArgsConstructor(staticName = "of") class ChunkObject {
     private @Setter(value = AccessLevel.PRIVATE) int z;
 
     public Chunk toChunk(World world) {
-        return world.getChunkAt((int) x / 16, (int) z / 16);
+        return world.getChunkAt(x / 16, z / 16);
     }
 
     public static Chunk toChunk(ChunkObject chunkObject, World world) {
-        return world.getChunkAt((int) chunkObject.getX() / 16, (int) chunkObject.getZ() / 16);
+        return world.getChunkAt(chunkObject.getX() / 16, chunkObject.getZ() / 16);
     }
 }
