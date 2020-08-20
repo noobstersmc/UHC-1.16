@@ -59,7 +59,6 @@ public class IngameListeners implements Listener {
             .filter(material -> material.name().contains("FENCE") && !material.name().contains("FENCE_GATE"))
             .collect(Collectors.toList());
 
-
     /** INCREASED TRIDENT DROP START */
 
     @EventHandler
@@ -200,13 +199,16 @@ public class IngameListeners implements Listener {
     }
 
     @EventHandler
-    public void onPlayerDQ(UHCPlayerDequalificationEvent e){
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "whitelist remove " + e.getOfflinePlayer().getName());
+    public void onPlayerDQ(UHCPlayerDequalificationEvent e) {
+        Bukkit.getScheduler().runTask(instance, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
+                "whitelist remove " + e.getOfflinePlayer().getName())
+
+        );
         switch (e.getReason()) {
             case OFFLINE_DQ:
-            Bukkit.broadcastMessage(e.getOfflinePlayer().getName() + " has abandoned the game");
+                Bukkit.broadcastMessage(e.getOfflinePlayer().getName() + " has abandoned the game");
 
-            break;
+                break;
             default:
                 break;
         }
@@ -223,7 +225,7 @@ public class IngameListeners implements Listener {
         p.sendTitle(Title.builder().title("")
                 .subtitle(new ComponentBuilder("YOU ARE DEAD").bold(true).color(ChatColor.DARK_RED).create()).build());
         p.playSound(p.getLocation(), Sound.BLOCK_RESPAWN_ANCHOR_DEPLETE, SoundCategory.VOICE, 1.0f, 0.1f);
-        
+
         var inv = p.getInventory().getContents();
         UHCPlayer uhcPlayer = instance.getPlayerManager().getPlayer(p.getUniqueId());
         if (uhcPlayer != null) {
@@ -233,7 +235,8 @@ public class IngameListeners implements Listener {
                 uhcPlayer.setLastKnownHealth(0.0);
                 uhcPlayer.setLastKnownPositionFromLoc(p.getLocation());
                 uhcPlayer.setLastKnownInventory(inv);
-                Bukkit.getPluginManager().callEvent(new UHCPlayerDequalificationEvent(uhcPlayer, DQReason.DEATH, false));
+                Bukkit.getPluginManager()
+                        .callEvent(new UHCPlayerDequalificationEvent(uhcPlayer, DQReason.DEATH, false));
             } // TODO: Send update to players left.
 
             /**

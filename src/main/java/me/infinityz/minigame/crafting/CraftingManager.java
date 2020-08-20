@@ -72,13 +72,7 @@ public class CraftingManager implements Listener {
     }
 
     public void discoverCustomRecipes(Player player) {
-        var bukkitRecipes = Bukkit.recipeIterator();
-        while (bukkitRecipes.hasNext()) {
-            var recipe = bukkitRecipes.next();
-            if (recipe instanceof Keyed) {
-                player.discoverRecipe(((Keyed) recipe).getKey());
-            }
-        }
+        recipes.stream().map(CustomRecipe::getNamespacedKey).forEach(player::discoverRecipe);
 
     }
 
