@@ -59,22 +59,6 @@ public class IngameListeners implements Listener {
             .filter(material -> material.name().contains("FENCE") && !material.name().contains("FENCE_GATE"))
             .collect(Collectors.toList());
 
-    /** STRIDER DAMAGE PATCH STARTS */
-    @EventHandler
-    public void onDamageByStriderLava(EntityDamageEvent e) {
-        if (e.getEntity().getType() != EntityType.PLAYER)
-            return;
-        if (e.getCause() == DamageCause.FIRE || e.getCause() == DamageCause.FIRE_TICK
-                || e.getCause() == DamageCause.LAVA) {
-            var player = (Player) e.getEntity();
-            if (player.getVehicle() != null && player.getVehicle().getType() == EntityType.STRIDER) {
-                e.setCancelled(true);
-                player.setFireTicks(0);
-            }
-        }
-    }
-
-    /** STRIDER DAMAGE PATCH ENDS */
 
     /** INCREASED TRIDENT DROP START */
 
