@@ -217,7 +217,6 @@ public class GlobalListener implements Listener {
             instance.gameStage = Stage.INGAME;
 
             instance.getListenerManager().registerListener(instance.getListenerManager().getIngameListeners());
-            instance.getListenerManager().registerListener(instance.getListenerManager().getSpectatorListener());
             new GameLoop(instance).runTaskTimerAsynchronously(instance, 0L, 20L);
 
         }, e.getStartDelayTicks());

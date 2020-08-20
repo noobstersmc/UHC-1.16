@@ -25,10 +25,7 @@ public class UpdatableInventory extends FastInv {
 
         this.addCloseHandler(e -> {
             if (!updateTask.isCancelled()) {
-                System.out.println("Canceled updating the inventory");
                 updateTask.cancel();
-            } else {
-                System.err.println("Already cancelled.");
             }
         });
     }

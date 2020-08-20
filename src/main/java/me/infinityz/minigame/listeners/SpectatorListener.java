@@ -22,11 +22,8 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
-import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -55,11 +52,15 @@ public class SpectatorListener implements Listener {
         if (player.getGameMode() == GameMode.SPECTATOR && !player.hasPermission("staff.perm")) {
             e.getRecipients().removeIf(recipient -> !(recipient.getGameMode() == GameMode.SPECTATOR
                     || recipient.hasPermission("staff.perm")));
+
             e.setFormat(ChatColor.GRAY + "" + ChatColor.ITALIC + "[SPEC] " + e.getFormat());
+
         } else if (player.hasPermission("uhc.spec.chat") && e.getMessage().startsWith("@")) {
             e.getRecipients().removeIf(recipient -> !(recipient.getGameMode() == GameMode.SPECTATOR
                     || recipient.hasPermission("staff.perm")));
+
             e.setMessage(e.getMessage().replaceFirst("@", ""));
+
             e.setFormat(ChatColor.GRAY + "" + ChatColor.ITALIC + "[SPEC] " + e.getFormat());
 
         }
@@ -195,37 +196,12 @@ public class SpectatorListener implements Listener {
     }
 
     @EventHandler
-    public void onRightClickAir(PlayerInteractEvent e) {
-        var player = e.getPlayer();
-        // Open the Spectator GUI for staff members.
-        if (player.getGameMode() == GameMode.SPECTATOR && player.hasPermission("uhc.spec.gui")) {
-            var inv = new FastInv(9 * 6, ChatColor.GOLD + "Spectator GUI");
-            inv.open(player);
-        }
-    }
-
-    @EventHandler
     public void onStartSpec(PlayerStartSpectatingEntityEvent e) {
         if (e.getNewSpectatorTarget().getType() != EntityType.PLAYER) {
             e.setCancelled(true);
             return;
         }
         var player = e.getPlayer();
-        var targetPlayer = (Player) e.getNewSpectatorTarget();
-        if (e.getNewSpectatorTarget().isDead()) {
-            e.setCancelled(true);
-            return;
-        }
-        if (targetPlayer.getGameMode() == GameMode.SPECTATOR) {
-            e.setCancelled(true);
-            return;
-        }
-        // Close open inventories to avoid glitches.
-        Bukkit.getScheduler().runTaskLater(instance, () -> {
-            if (player.getOpenInventory() != null) {
-                player.closeInventory();
-            }
-        }, 1l);
         // Change the name to display who they are spectating
         if (player.hasPermission("uhc.spec.name")) {
             player.setPlayerListName(player.getName() + ChatColor.RESET + "" + ChatColor.DARK_GRAY + " ("
@@ -237,28 +213,8 @@ public class SpectatorListener implements Listener {
     public void onStopSpectating(PlayerStopSpectatingEntityEvent e) {
         var player = e.getPlayer();
         // Change the name back
-        player.setPlayerListName(e.getPlayer().getName());
-    }
-
-    @EventHandler
-    public void onTeleport(PlayerTeleportEvent e) {
-        var player = e.getPlayer();
-        // When tp with Spec GUI spec to body
-        if (player.getGameMode() == GameMode.SPECTATOR) {
-            if (e.getCause() == TeleportCause.SPECTATE) {
-                e.getTo().getNearbyPlayers(1.0).stream().findFirst().ifPresent(target -> {
-                    e.setCancelled(true);
-                    player.teleport(target);
-                    player.setSpectatorTarget(target);
-                });
-            } else if (e.getCause() == TeleportCause.COMMAND) {
-                // When teleported with command, find player in radius and mount.
-                e.getTo().getNearbyPlayers(10.0).stream().findFirst().ifPresent(target -> {
-                    e.setCancelled(true);
-                    player.teleport(target);
-                    player.setSpectatorTarget(target);
-                });
-            }
+        if (!player.getPlayerListName().equalsIgnoreCase(player.getName())) {
+            player.setPlayerListName(player.getName());
         }
     }
 
