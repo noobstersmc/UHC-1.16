@@ -22,6 +22,10 @@
       <id>aikar</id>
       <url>https://repo.aikar.co/content/groups/aikar/</url>
     </repository>
+    <repository>
+      <id>vault-repo</id>
+      <url>http://nexus.hc.to/content/repositories/pub_releases</url>
+    </repository>
   </repositories>
 
   <dependencies>
@@ -71,6 +75,12 @@
       <artifactId>paperlib</artifactId>
       <version>1.0.4</version>
       <scope>compile</scope>
+    </dependency>
+    <dependency>
+        <groupId>net.milkbowl.vault</groupId>
+        <artifactId>VaultAPI</artifactId>
+        <version>1.7</version>
+        <scope>provided</scope>
     </dependency>
   </dependencies>
 

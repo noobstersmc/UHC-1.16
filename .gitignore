@@ -12,3 +12,6 @@ buildNumber.properties
 .DS_Store
 .settings/org.eclipse.jdt.apt.core.prefs
 .factorypath
+.settings/org.eclipse.jdt.apt.core.prefs
+.factorypath
+.settings/
