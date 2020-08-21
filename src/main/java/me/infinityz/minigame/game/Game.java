@@ -2,6 +2,8 @@ package me.infinityz.minigame.game;
 
 import java.util.UUID;
 
+import com.google.gson.GsonBuilder;
+
 import org.bukkit.boss.BossBar;
 
 import lombok.Data;
@@ -11,7 +13,6 @@ import net.md_5.bungee.api.ChatColor;
 
 @Data
 public class Game {
-    private BossBar bossbar;
     private long startTime;
     private int gameTime = 0;
     private boolean pvp = false;
@@ -19,7 +20,15 @@ public class Game {
     private boolean nether = true;
     private boolean end = true;
     private UUID gameID = UUID.randomUUID();
+    private static @Getter @Setter BossBar bossbar;
     private static @Getter @Setter String scoreboardTitle = ChatColor.BOLD + "UHC";
     private static @Getter @Setter String tablistHeader = ChatColor.DARK_RED + "Noobsters UHC";
+
+    @Override
+    public String toString() {
+
+        var gson = new GsonBuilder().setPrettyPrinting().create();
+        return gson.toJson(this);
+    }
 
 }

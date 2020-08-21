@@ -30,7 +30,7 @@ import net.md_5.bungee.api.chat.hover.content.Text;
 
 public class TeamManager {
     UHC instance;
-    private @Getter THashMap<UUID, Team> teamMap = new THashMap<>();
+    private @Getter @Setter THashMap<UUID, Team> teamMap = new THashMap<>();
     private @Getter Cache<Long, UUID> cache = Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.MINUTES).build();
     private @Getter LoadingCache<Long, TeamInvite> teamInvite = Caffeine.newBuilder()
             .scheduler(Scheduler.systemScheduler())
@@ -114,8 +114,8 @@ public class TeamManager {
     public boolean addTeam(final Team team) {
         // Lambda check if the team already exist or is the the leader of new team if a
         // member of the old one.
-        if (teamMap.values().stream().filter(t -> t.getTeamID() == team.getTeamID() || t.isMember(team.getTeamLeader()))
-                .findFirst().isPresent())
+        if (teamMap.values().stream()
+                .anyMatch(t -> t.getTeamID() == team.getTeamID() || t.isMember(team.getTeamLeader())))
             return false;
         // Add the new team to the map
         teamMap.put(team.getTeamID(), team);
@@ -127,7 +127,7 @@ public class TeamManager {
         return teamMap.values().stream()
                 .filter(all -> all.getOfflinePlayersStream()
                         .map(uuid -> instance.getPlayerManager().getPlayer(uuid.getUniqueId()))
-                        .filter(UHCPlayer::isAlive).findFirst().isPresent())
+                        .anyMatch(UHCPlayer::isAlive))
                 .collect(Collectors.toList());
     }
 

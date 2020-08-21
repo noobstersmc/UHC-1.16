@@ -53,7 +53,7 @@ public class UHC extends JavaPlugin {
     private @Getter CraftingManager craftingManager;
     private @Getter TeamManager teamManger;
     private @Getter ChunksManager chunkManager;
-    private @Getter Game game;
+    private @Getter @Setter Game game;
     private static @Setter TaskChainFactory taskChainFactory;
 
     @Override
@@ -89,7 +89,7 @@ public class UHC extends JavaPlugin {
         listenerManager = new ListenerManager(this);
         chunkManager = new ChunksManager(this);
         game = new Game();
-        game.setBossbar(Bukkit.createBossBar(new NamespacedKey(this, "henix"), "Time", BarColor.RED, BarStyle.SOLID));
+        Game.setBossbar(Bukkit.createBossBar(new NamespacedKey(this, "henix"), "Time", BarColor.RED, BarStyle.SOLID));
 
         /* Run some startup code */
         runStartUp();
@@ -104,7 +104,7 @@ public class UHC extends JavaPlugin {
     @Override
     public void onDisable() {
         /* Clean up in case it was a reload */
-        game.getBossbar().removeAll();
+        Game.getBossbar().removeAll();
         scoreboardManager.purgeScoreboards();
         Bukkit.getWorlds()
                 .forEach(world -> world.getForceLoadedChunks().forEach(chunks -> chunks.setForceLoaded(false)));

@@ -1,8 +1,11 @@
 package me.infinityz.minigame.teams.objects;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Stream;
+
+import com.google.gson.GsonBuilder;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Bukkit;
@@ -42,7 +45,6 @@ public class Team {
         return false;
     }
 
-
     public boolean isTeamLeader(UUID member) {
         return member.compareTo(this.teamLeader) == 0;
     }
@@ -78,16 +80,21 @@ public class Team {
     }
 
     public Stream<Player> getPlayerStream() {
-        return Arrays.stream(members).map(member -> Bukkit.getOfflinePlayer(member))
-                .filter(member -> member != null && member.isOnline()).map(OfflinePlayer::getPlayer);
+        return Arrays.stream(members).map(Bukkit::getOfflinePlayer).filter(Objects::nonNull)
+                .filter(OfflinePlayer::isOnline).map(OfflinePlayer::getPlayer);
     }
 
     public Stream<OfflinePlayer> getOfflinePlayersStream() {
-        return Arrays.stream(members).map(member -> Bukkit.getOfflinePlayer(member)).filter(member -> member != null);
+        return Arrays.stream(members).map(Bukkit::getOfflinePlayer).filter(Objects::nonNull);
     }
 
     public void addKills(int kill) {
         this.teamKills = this.teamKills + kill;
+    }
+
+    @Override
+    public String toString() {
+        return new GsonBuilder().setPrettyPrinting().create().toJson(this);
     }
 
 }
