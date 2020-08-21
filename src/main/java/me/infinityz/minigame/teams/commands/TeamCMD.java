@@ -150,6 +150,7 @@ public class TeamCMD extends BaseCommand {
     }
 
     @Subcommand("color|colorchange")
+    @CommandCompletion("@range:0-21")
     @Syntax("<newColorIndex> - New EnumChatFormat Var Int")
     public void changeColorIndex(@Conditions("hasTeam|isTeamLeader") Player player,
             @Conditions("limits:min=0,max=21") Integer newColorIndex) {
