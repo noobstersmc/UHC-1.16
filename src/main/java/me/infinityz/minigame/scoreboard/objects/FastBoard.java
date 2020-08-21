@@ -465,7 +465,7 @@ public class FastBoard {
         sendPacket(packet, target);
     }
 
-    public static void createTeam(Collection<String> players, Player target, String prefix)
+    public static void createTeam(Collection<String> players, Player target, String prefix, int colorIndex)
             throws ReflectiveOperationException {
         var mode = TeamMode.CREATE;
 
@@ -484,18 +484,27 @@ public class FastBoard {
             }
         }
 
+        setField(packet, Collection.class, players); // Add players to team
         setComponentField(packet, prefix, 2); // Prefix
         setComponentField(packet, suffix, 3); // Suffix
         setField(packet, String.class, "always", 4); // Visibility for 1.8+
         setField(packet, String.class, "never", 5); // Collisions for 1.9+
-        setField(packet, Collection.class, players); // Add players to team
 
+        // Team Color starts
+        var g = packet.getClass().getDeclaredField("g");
+        g.setAccessible(true);
+        g.set(packet, getEnumChatFormat(colorIndex));
+        // Team Color ends
         var list = Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
         list.removeAll(players);
 
         UpCorner(list, target, "");
 
         sendPacket(packet, target);
+    }
+
+    public static Object getEnumChatFormat(int index) throws ClassNotFoundException {
+        return FastReflection.nmsClass("EnumChatFormat").getEnumConstants()[index];
     }
 
     public static void removeTeam(Player target) throws ReflectiveOperationException {
@@ -598,7 +607,6 @@ public class FastBoard {
     private static void setField(Object object, Class<?> fieldType, Object value, int count)
             throws ReflectiveOperationException {
         int i = 0;
-
         for (Field f : object.getClass().getDeclaredFields()) {
             if (f.getType() == fieldType && i++ == count) {
                 f.setAccessible(true);

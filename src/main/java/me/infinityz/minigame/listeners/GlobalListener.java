@@ -188,7 +188,7 @@ public class GlobalListener implements Listener {
             instance.getGame().setStartTime(System.currentTimeMillis());
             instance.getListenerManager().unregisterListener(instance.getListenerManager().getScatter());
             // Remove all potion effects
-            var bar = instance.getGame().getBossbar();
+            var bar = Game.getBossbar();
             Bukkit.getOnlinePlayers().forEach(players -> {
                 // Send the new scoreboard
                 var sb = new IngameScoreboard(players);

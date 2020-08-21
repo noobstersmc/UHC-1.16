@@ -181,6 +181,17 @@ public class ContextConditions {
             }
             return null;
         });
+        instance.getCommandManager().getCommandConditions().addCondition(Integer.class, "limits", (c, exec, value) -> {
+            if (value == null) {
+                return;
+            }
+            if (c.hasConfig("min") && c.getConfigValue("min", 0) > value) {
+                throw new ConditionFailedException("Min value must be " + c.getConfigValue("min", 0));
+            }
+            if (c.hasConfig("max") && c.getConfigValue("max", 3) < value) {
+                throw new ConditionFailedException("Max value must be " + c.getConfigValue("max", 3));
+            }
+        });
     }
 
 }

@@ -3,6 +3,7 @@ package me.infinityz.minigame.teams.objects;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.google.gson.GsonBuilder;
@@ -14,6 +15,7 @@ import org.bukkit.entity.Player;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.infinityz.minigame.scoreboard.objects.FastBoard;
 import net.md_5.bungee.api.chat.BaseComponent;
 
 public class Team {
@@ -23,6 +25,8 @@ public class Team {
     private @Getter @Setter UUID[] members;
     private @Getter @Setter String teamDisplayName;
     private @Getter @Setter int teamKills;
+    private @Getter @Setter String teamPrefix = "➤";
+    private @Getter @Setter int teamColorIndex = 10;
 
     public Team(UUID teamLeader) {
         this.teamID = UUID.randomUUID();
@@ -95,6 +99,19 @@ public class Team {
     @Override
     public String toString() {
         return new GsonBuilder().setPrettyPrinting().create().toJson(this);
+    }
+
+    public void updateDisplay() {
+
+        getPlayerStream().forEach(all -> {
+            try {
+                FastBoard.removeTeam(all);
+                FastBoard.createTeam(getOfflinePlayersStream().map(OfflinePlayer::getName).collect(Collectors.toList()),
+                        all, getTeamPrefix(), getTeamColorIndex());
+            } catch (ReflectiveOperationException ex) {
+                ex.printStackTrace();
+            }
+        });
     }
 
 }

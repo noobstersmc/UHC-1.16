@@ -22,6 +22,7 @@ import co.aikar.commands.annotation.Optional;
 import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.annotation.Syntax;
 import me.infinityz.minigame.UHC;
+import me.infinityz.minigame.scoreboard.objects.FastBoard;
 import me.infinityz.minigame.teams.events.PlayerJoinedTeamEvent;
 import me.infinityz.minigame.teams.events.PlayerLeftTeamEvent;
 import me.infinityz.minigame.teams.events.TeamCreatedEvent;
@@ -146,6 +147,33 @@ public class TeamCMD extends BaseCommand {
         var team = getPlayerTeam(player.getUniqueId());
         team.setTeamDisplayName(teamName);
         team.sendTeamMessage(ChatColor.of("#7ab83c") + player.getName() + " has change the team name to: " + teamName);
+    }
+
+    @Subcommand("color|colorchange")
+    @Syntax("<newColorIndex> - New EnumChatFormat Var Int")
+    public void changeColorIndex(@Conditions("isTeamLeader") Player player,
+            @Conditions("limits:min=0,max=21") Integer newColorIndex) {
+        var team = getPlayerTeam(player.getUniqueId());
+        team.setTeamColorIndex(newColorIndex);
+        try {
+            team.sendTeamMessage(ChatColor.of("#7ab83c") + player.getName() + " has change the team color to: "
+                    + FastBoard.getEnumChatFormat(newColorIndex) + "Color");
+            team.updateDisplay();
+        } catch (ClassNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    @Subcommand("prefix")
+    @Syntax("<prefix> - New team prefix")
+    public void changeTeamPrefix(@Conditions("isTeamLeader") Player player, String newPrefix) {
+        var team = getPlayerTeam(player.getUniqueId());
+        newPrefix = ChatColor.translateAlternateColorCodes('&', newPrefix);
+        team.setTeamPrefix(newPrefix);
+        team.sendTeamMessage(
+                ChatColor.of("#7ab83c") + player.getName() + " has change the team prefix to: " + newPrefix);
+        team.updateDisplay();
     }
 
     @Conditions("teamManagement")

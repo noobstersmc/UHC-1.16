@@ -24,7 +24,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockExplodeEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -42,6 +41,7 @@ import me.infinityz.minigame.enums.DQReason;
 import me.infinityz.minigame.events.PlayerWinEvent;
 import me.infinityz.minigame.events.TeamWinEvent;
 import me.infinityz.minigame.events.UHCPlayerDequalificationEvent;
+import me.infinityz.minigame.game.Game;
 import me.infinityz.minigame.players.PositionObject;
 import me.infinityz.minigame.players.UHCPlayer;
 import me.infinityz.minigame.scoreboard.IScoreboard;
@@ -128,7 +128,7 @@ public class IngameListeners implements Listener {
         /*
          * Bossbar code
          */
-        var bossbar = instance.getGame().getBossbar();
+        var bossbar = Game.getBossbar();
         if (bossbar != null) {
             bossbar.addPlayer(p);
         }

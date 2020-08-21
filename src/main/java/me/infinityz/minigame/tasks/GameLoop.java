@@ -17,6 +17,7 @@ import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.enums.DQReason;
 import me.infinityz.minigame.events.NetherDisabledEvent;
 import me.infinityz.minigame.events.UHCPlayerDequalificationEvent;
+import me.infinityz.minigame.game.Game;
 import me.infinityz.minigame.players.UHCPlayer;
 import me.infinityz.minigame.scoreboard.objects.UpdateObject;
 import net.md_5.bungee.api.ChatColor;
@@ -121,7 +122,7 @@ public class GameLoop extends BukkitRunnable {
     }
 
     private void handleBossbar(final int time){
-        var bossBar = instance.getGame().getBossbar();
+        var bossBar = Game.getBossbar();
         double percent = 0;
         if (time < 600) {
             bossBar.setColor(BarColor.GREEN);

@@ -25,6 +25,8 @@ import net.md_5.bungee.api.ChatColor;
 @RequiredArgsConstructor
 public class TeamListeners implements Listener {
     private @NonNull UHC instance;
+    /* Constant */
+    private static final ChatColor SUSHI_GREEN = ChatColor.of("#7ab83c");
 
     @EventHandler
     public void onInviteExpireEvent(TeamInviteExpireEvent e) {
@@ -32,12 +34,10 @@ public class TeamListeners implements Listener {
         var target = Bukkit.getOfflinePlayer(invite.getTarget());
         var sender = Bukkit.getOfflinePlayer(invite.getSender());
 
-        if (e.getRemovalCause() != RemovalCause.EXPLICIT) {
-            if (sender != null && sender.isOnline())
-                sender.getPlayer().sendMessage(ChatColor.RED + "Your invite to " + target.getName() + " has expired.");
-
+        if (e.getRemovalCause() != RemovalCause.EXPLICIT && sender.isOnline()) {
+            sender.getPlayer().sendMessage(ChatColor.RED + "Your invite to " + target.getName() + " has expired.");
         }
-        if (target != null && target.isOnline()) {
+        if (target.isOnline()) {
             var team = instance.getTeamManger().getPlayerTeam(target.getUniqueId());
             if (team != null
                     && team.getTeamID().getMostSignificantBits() == invite.getTeamToJoin().getMostSignificantBits()) {
@@ -52,12 +52,12 @@ public class TeamListeners implements Listener {
     @EventHandler
     public void onCreate(TeamCreatedEvent e) {
         var team = e.getTeam();
-        e.getPlayer().sendMessage(ChatColor.of("#7ab83c") + "Team " + team.getTeamDisplayName() + " has been created!");
+        e.getPlayer().sendMessage(SUSHI_GREEN + "Team " + team.getTeamDisplayName() + " has been created!");
         var nameList = team.getOfflinePlayersStream().map(OfflinePlayer::getName).collect(Collectors.toList());
         team.getPlayerStream().forEach(all -> {
             try {
                 FastBoard.removeTeam(all);
-                FastBoard.createTeam(nameList, all, ChatColor.GREEN + "[Team] ");
+                FastBoard.createTeam(nameList, all, team.getTeamPrefix(), team.getTeamColorIndex());
             } catch (ReflectiveOperationException ex) {
                 ex.printStackTrace();
             }
@@ -97,13 +97,13 @@ public class TeamListeners implements Listener {
     public void onJoinTeam(PlayerJoinedTeamEvent e) {
         var team = e.getTeam();
         // Notify the team that the player has joined
-        team.sendTeamMessage(ChatColor.of("#7ab83c") + e.getPlayer().getName() + " has joined the team!");
+        team.sendTeamMessage(SUSHI_GREEN + e.getPlayer().getName() + " has joined the team!");
 
         var nameList = team.getOfflinePlayersStream().map(OfflinePlayer::getName).collect(Collectors.toList());
         team.getPlayerStream().forEach(all -> {
             try {
                 FastBoard.removeTeam(all);
-                FastBoard.createTeam(nameList, all, ChatColor.GREEN + "[Team] ");
+                FastBoard.createTeam(nameList, all, team.getTeamPrefix(), team.getTeamColorIndex());
             } catch (ReflectiveOperationException ex) {
                 ex.printStackTrace();
             }
@@ -115,12 +115,12 @@ public class TeamListeners implements Listener {
     public void onLeftTeam(PlayerLeftTeamEvent e) {
         var team = e.getTeam();
         e.getPlayer().sendMessage(ChatColor.of("#DABC12") + "You've abandoned Team " + team.getTeamDisplayName());
-        team.sendTeamMessage(ChatColor.of("#7ab83c") + e.getPlayer().getName() + " has abandoned the team!");
+        team.sendTeamMessage(SUSHI_GREEN + e.getPlayer().getName() + " has abandoned the team!");
         var nameList = team.getOfflinePlayersStream().map(OfflinePlayer::getName).collect(Collectors.toList());
         team.getPlayerStream().forEach(all -> {
             try {
                 FastBoard.removeTeam(all);
-                FastBoard.createTeam(nameList, all, ChatColor.GREEN + "[Team] ");
+                FastBoard.createTeam(nameList, all, team.getTeamPrefix(), team.getTeamColorIndex());
             } catch (ReflectiveOperationException ex) {
                 ex.printStackTrace();
             }
@@ -143,7 +143,7 @@ public class TeamListeners implements Listener {
             var nameList = team.getOfflinePlayersStream().map(OfflinePlayer::getName).collect(Collectors.toList());
             try {
                 FastBoard.removeTeam(player);
-                FastBoard.createTeam(nameList, player, ChatColor.GREEN + "[Team] ");
+                FastBoard.createTeam(nameList, player, team.getTeamPrefix(), team.getTeamColorIndex());
             } catch (ReflectiveOperationException ex) {
                 ex.printStackTrace();
             }

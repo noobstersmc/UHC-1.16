@@ -26,6 +26,7 @@ import lombok.Getter;
 import lombok.Setter;
 import me.infinityz.minigame.chunks.ChunksManager;
 import me.infinityz.minigame.commands.ContextConditions;
+import me.infinityz.minigame.commands.GameRestoreCMD;
 import me.infinityz.minigame.commands.GlobalMute;
 import me.infinityz.minigame.commands.HelpopCommand;
 import me.infinityz.minigame.commands.LatescatterCMD;
@@ -78,6 +79,7 @@ public class UHC extends JavaPlugin {
         commandManager.registerCommand(new GlobalMute(this));
         commandManager.registerCommand(new TeamCMD(this));
         commandManager.registerCommand(new Utilities(this));
+        commandManager.registerCommand(new GameRestoreCMD(this));
 
         /*
          * Initilialize all the managers
