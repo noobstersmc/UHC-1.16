@@ -143,7 +143,7 @@ public class TeamCMD extends BaseCommand {
 
     @Subcommand("rename|name")
     @Syntax("<teamName> - New name for your team")
-    public void teamRename(@Conditions("isTeamLeader") Player player, String teamName) {
+    public void teamRename(@Conditions("hasTeam|isTeamLeader") Player player, String teamName) {
         var team = getPlayerTeam(player.getUniqueId());
         team.setTeamDisplayName(teamName);
         team.sendTeamMessage(ChatColor.of("#7ab83c") + player.getName() + " has change the team name to: " + teamName);
@@ -151,7 +151,7 @@ public class TeamCMD extends BaseCommand {
 
     @Subcommand("color|colorchange")
     @Syntax("<newColorIndex> - New EnumChatFormat Var Int")
-    public void changeColorIndex(@Conditions("isTeamLeader") Player player,
+    public void changeColorIndex(@Conditions("hasTeam|isTeamLeader") Player player,
             @Conditions("limits:min=0,max=21") Integer newColorIndex) {
         var team = getPlayerTeam(player.getUniqueId());
         team.setTeamColorIndex(newColorIndex);
@@ -167,7 +167,7 @@ public class TeamCMD extends BaseCommand {
 
     @Subcommand("prefix")
     @Syntax("<prefix> - New team prefix")
-    public void changeTeamPrefix(@Conditions("isTeamLeader") Player player, String newPrefix) {
+    public void changeTeamPrefix(@Conditions("hasTeam|isTeamLeader") Player player, String newPrefix) {
         var team = getPlayerTeam(player.getUniqueId());
         newPrefix = ChatColor.translateAlternateColorCodes('&', newPrefix);
         team.setTeamPrefix(newPrefix);
@@ -178,7 +178,7 @@ public class TeamCMD extends BaseCommand {
 
     @Conditions("teamManagement")
     @Subcommand("disband")
-    public void teamDisband(@Conditions("isTeamLeader") Player player) {
+    public void teamDisband(@Conditions("hasTeam|isTeamLeader") Player player) {
         var team = getPlayerTeam(player.getUniqueId());
         if (instance.getTeamManger().getTeamMap().remove(team.getTeamID(), team)) {
             // Clear the cache
