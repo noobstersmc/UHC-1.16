@@ -50,11 +50,14 @@ public class GameLoop extends BukkitRunnable {
         timedEvent(time);
 
         var border = ((int) (worldBorder.getSize() / 2));
-        updateScoreboards(border, worldBorder);
+        updateScoreboards(border);
 
         handleBossbar(time);
 
         autoDQ();
+
+        Bukkit.getOnlinePlayers().parallelStream()
+                .forEach(player -> borderDistanceActionBar(player, worldBorder, border));
 
     }
 
@@ -161,15 +164,14 @@ public class GameLoop extends BukkitRunnable {
                 });
     }
 
-    private void updateScoreboards(final int border, final WorldBorder worldBorder) {
+    private void updateScoreboards(final int border) {
         final int alivePlayers = instance.getPlayerManager().getAlivePlayers();
         final String timeFormatted = timeConvert(instance.getGame().getGameTime());
         instance.getScoreboardManager().getFastboardMap().values().stream().forEach(value -> {
             value.addAllUpdates(new UpdateObject(ChatColor.GRAY + "Game Time: " + ChatColor.WHITE + timeFormatted, 0),
-                    new UpdateObject(ChatColor.GRAY +"Players: " + ChatColor.WHITE + alivePlayers, 3),
+                    new UpdateObject(ChatColor.GRAY + "Players: " + ChatColor.WHITE + alivePlayers, 3),
                     new UpdateObject(ChatColor.GRAY + "Border: " + ChatColor.WHITE + border, 5));
 
-            borderDistanceActionBar(value.getPlayer(), worldBorder, border);
         });
 
     }
