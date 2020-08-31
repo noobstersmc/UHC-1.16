@@ -59,12 +59,7 @@ public class GameLoop extends BukkitRunnable {
     }
 
     private void timedEvent(int time) {
-        final int oi = 120;
         switch (time) {
-            case oi:{
-                //CODIGO AQUI
-                break;
-            }
             case 300:
                 // AVISO DE FINAL HEAL 5min left
                 Bukkit.getOnlinePlayers()
@@ -121,7 +116,7 @@ public class GameLoop extends BukkitRunnable {
 
     }
 
-    private void handleBossbar(final int time){
+    private void handleBossbar(final int time) {
         var bossBar = Game.getBossbar();
         double percent = 0;
         if (time < 600) {
@@ -157,7 +152,8 @@ public class GameLoop extends BukkitRunnable {
                 .forEach(all -> {
                     var of = Bukkit.getOfflinePlayer(all.getUUID());
                     if (!of.isOnline() && System.currentTimeMillis() - of.getLastSeen() > 600_000) {
-                        Bukkit.getPluginManager().callEvent(new UHCPlayerDequalificationEvent(all, DQReason.OFFLINE_DQ));
+                        Bukkit.getPluginManager()
+                                .callEvent(new UHCPlayerDequalificationEvent(all, DQReason.OFFLINE_DQ));
                         all.setDead(true);
                         all.setAlive(false);
                     }
@@ -170,7 +166,7 @@ public class GameLoop extends BukkitRunnable {
         final String timeFormatted = timeConvert(instance.getGame().getGameTime());
         instance.getScoreboardManager().getFastboardMap().values().stream().forEach(value -> {
             value.addAllUpdates(new UpdateObject(ChatColor.GRAY + "Game Time: " + ChatColor.WHITE + timeFormatted, 0),
-                    new UpdateObject(ChatColor.GRAY + "Players: " + ChatColor.WHITE + alivePlayers, 3),
+                    new UpdateObject(ChatColor.GRAY +"Players: " + ChatColor.WHITE + alivePlayers, 3),
                     new UpdateObject(ChatColor.GRAY + "Border: " + ChatColor.WHITE + border, 5));
 
             borderDistanceActionBar(value.getPlayer(), worldBorder, border);

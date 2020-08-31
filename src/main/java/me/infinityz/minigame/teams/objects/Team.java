@@ -2,10 +2,12 @@ package me.infinityz.minigame.teams.objects;
 
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -20,12 +22,13 @@ import net.md_5.bungee.api.chat.BaseComponent;
 
 public class Team {
 
+    private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private @Getter @Setter UUID teamLeader;
     private @Getter UUID teamID;
     private @Getter @Setter UUID[] members;
     private @Getter @Setter String teamDisplayName;
     private @Getter @Setter int teamKills;
-    private @Getter @Setter String teamPrefix = "➤";
+    private @Getter @Setter String teamPrefix = "➤ ";
     private @Getter @Setter int teamColorIndex = 10;
 
     public Team(UUID teamLeader) {
@@ -33,20 +36,14 @@ public class Team {
         this.teamLeader = teamLeader;
         this.teamKills = 0;
         this.teamDisplayName = teamID.toString().substring(0, 6);
+        this.teamColorIndex = new Random().nextInt(13) + 1;
         addMember(teamLeader);
     }
 
     public boolean isMember(UUID uuid) {
-        if (members == null || members.length < 1)// Null safety
-            return false;
-        for (var m : members) {
-            if (m == null)// Ensure not looping through nulls
-                continue;
-            // Double check, perhaps unnecesary.
-            if (m.compareTo(uuid) == 0 || m.getMostSignificantBits() == uuid.getMostSignificantBits())
-                return true;
-        }
-        return false;
+        return (members == null || members.length < 1) ? false
+                : getMembersUUIDStream().anyMatch(member -> member.compareTo(uuid) == 0
+                        || member.getMostSignificantBits() == uuid.getMostSignificantBits());
     }
 
     public boolean isTeamLeader(UUID member) {
@@ -68,19 +65,11 @@ public class Team {
     }
 
     public void sendTeamMessage(BaseComponent component) {
-        for (var uuid : members) {
-            var player = Bukkit.getOfflinePlayer(uuid);
-            if (player.isOnline())
-                player.getPlayer().sendMessage(component);
-        }
+        getPlayerStream().forEach(player -> player.sendMessage(component));
     }
 
     public void sendTeamMessage(String str) {
-        for (var uuid : members) {
-            var player = Bukkit.getOfflinePlayer(uuid);
-            if (player.isOnline())
-                player.getPlayer().sendMessage(str);
-        }
+        getPlayerStream().forEach(player -> player.sendMessage(str));
     }
 
     public Stream<Player> getPlayerStream() {
@@ -92,26 +81,32 @@ public class Team {
         return Arrays.stream(members).map(Bukkit::getOfflinePlayer).filter(Objects::nonNull);
     }
 
+    public Stream<UUID> getMembersUUIDStream() {
+        return Arrays.stream(members).filter(Objects::nonNull);
+    }
+
     public void addKills(int kill) {
         this.teamKills = this.teamKills + kill;
     }
 
     @Override
     public String toString() {
-        return new GsonBuilder().setPrettyPrinting().create().toJson(this);
+        return gson.toJson(this);
     }
 
     public void updateDisplay() {
+        getPlayerStream().forEach(this::updateDisplayToPlayer);
+    }
 
-        getPlayerStream().forEach(all -> {
-            try {
-                FastBoard.removeTeam(all);
-                FastBoard.createTeam(getOfflinePlayersStream().map(OfflinePlayer::getName).collect(Collectors.toList()),
-                        all, getTeamPrefix(), getTeamColorIndex());
-            } catch (ReflectiveOperationException ex) {
-                ex.printStackTrace();
-            }
-        });
+    private void updateDisplayToPlayer(Player player) {
+        try {
+            FastBoard.removeTeam(player);
+            FastBoard.createTeam(getOfflinePlayersStream().map(OfflinePlayer::getName).collect(Collectors.toList()),
+                    player, getTeamPrefix(), getTeamColorIndex());
+        } catch (ReflectiveOperationException ex) {
+            ex.printStackTrace();
+        }
+
     }
 
 }
