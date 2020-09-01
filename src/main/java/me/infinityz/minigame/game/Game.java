@@ -19,6 +19,9 @@ public class Game {
     private boolean globalMute = false;
     private boolean nether = true;
     private boolean end = true;
+    private int borderTime = 3600;
+    private int pvpTime = 1200;
+    private int finalHealTime = 600;
     private UUID gameID = UUID.randomUUID();
     private static @Getter @Setter BossBar bossbar;
     private static @Getter @Setter String scoreboardTitle = ChatColor.BOLD + "UHC";

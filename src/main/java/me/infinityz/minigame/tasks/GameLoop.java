@@ -102,14 +102,22 @@ public class GameLoop extends BukkitRunnable {
                     worlds.setGameRule(GameRule.DO_INSOMNIA, false);
                     worlds.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
                     worlds.setTime(400);
-                    worlds.getWorldBorder().setSize(200, 1500);
+                    worlds.getWorldBorder().setSize(200, 1800);
 
                 }));
                 break;
-
             case 1800:
+                sendPromo();
+                break;
+            case 2400:
+                sendPromo();
+                break;
             case 3000:
+                sendPromo();
+                break;
             case 4200:
+                sendPromo();
+                break;
             case 4800:
                 sendPromo();
                 break;
