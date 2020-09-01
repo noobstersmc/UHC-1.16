@@ -113,7 +113,7 @@ public class IngameListeners implements Listener {
     @EventHandler
     public void onExplode(BlockExplodeEvent e) {
         if (e.getBlock().getWorld().getEnvironment() != Environment.NORMAL) {
-            e.setYield(0.001f);
+            e.setYield(0.005f);
         }
     }
 
@@ -274,8 +274,8 @@ public class IngameListeners implements Listener {
         }
         if (p.getKiller() != null) {
             Player killer = p.getKiller();
-            /*Bukkit.getScheduler().runTaskLater(instance,
-                    () -> new SpecAnimation(instance, p, killer).runTaskTimer(instance, 0, 1), 20L * 6);*/
+            Bukkit.getScheduler().runTaskLater(instance,
+                    () -> new SpecAnimation(instance, p, killer).runTaskTimer(instance, 0, 1), 20L * 6);
             Bukkit.getScheduler().runTaskLater(instance, () -> {
                 p.getInventory().setContents(killer.getInventory().getContents());
                 p.setGameMode(GameMode.SPECTATOR);

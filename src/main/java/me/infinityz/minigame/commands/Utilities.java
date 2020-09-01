@@ -30,7 +30,7 @@ public @RequiredArgsConstructor class Utilities extends BaseCommand {
     @Syntax("<target> - player to change")
     @CommandCompletion("@onlineplayers")
     public void onVipCommand(CommandSender sender, @Flags("other") OfflinePlayer target) {
-        Bukkit.dispatchCommand(sender, "lp user " + target.getName() + " parent set vip");
+        Bukkit.dispatchCommand(sender, "lp user " + target.getName() + " parent addtemp vip 30d");
     }
 
     @CommandPermission("admin.perm")
@@ -39,7 +39,7 @@ public @RequiredArgsConstructor class Utilities extends BaseCommand {
     @Syntax("<target> - player to change")
     @CommandCompletion("@onlineplayers")
     public void onVipPlusCommand(CommandSender sender, @Flags("other") OfflinePlayer target) {
-        Bukkit.dispatchCommand(sender, "lp user " + target.getName() + " parent set vip+");
+        Bukkit.dispatchCommand(sender, "lp user " + target.getName() + " parent addtemp vip+ 30d");
     }
 
     @CommandPermission("admin.perm")
