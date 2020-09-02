@@ -25,6 +25,7 @@ import fr.mrmicky.fastinv.FastInvManager;
 import lombok.Getter;
 import lombok.Setter;
 import me.infinityz.minigame.chunks.ChunksManager;
+import me.infinityz.minigame.commands.ConfigCommand;
 import me.infinityz.minigame.commands.ContextConditions;
 import me.infinityz.minigame.commands.GameRestoreCMD;
 import me.infinityz.minigame.commands.GlobalMute;
@@ -37,6 +38,7 @@ import me.infinityz.minigame.commands.Utilities;
 import me.infinityz.minigame.crafting.CraftingManager;
 import me.infinityz.minigame.enums.Stage;
 import me.infinityz.minigame.game.Game;
+import me.infinityz.minigame.gamemodes.GamemodeManager;
 import me.infinityz.minigame.listeners.ListenerManager;
 import me.infinityz.minigame.players.PlayerManager;
 import me.infinityz.minigame.scoreboard.ScoreboardManager;
@@ -54,6 +56,7 @@ public class UHC extends JavaPlugin {
     private @Getter CraftingManager craftingManager;
     private @Getter TeamManager teamManger;
     private @Getter ChunksManager chunkManager;
+    private @Getter GamemodeManager gamemodeManager;
     private @Getter @Setter Game game;
     private static @Setter TaskChainFactory taskChainFactory;
 
@@ -80,6 +83,8 @@ public class UHC extends JavaPlugin {
         commandManager.registerCommand(new TeamCMD(this));
         commandManager.registerCommand(new Utilities(this));
         commandManager.registerCommand(new GameRestoreCMD(this));
+        commandManager.registerCommand(new ConfigCommand(this));
+
 
         /*
          * Initilialize all the managers
@@ -90,6 +95,7 @@ public class UHC extends JavaPlugin {
         craftingManager = new CraftingManager(this);
         listenerManager = new ListenerManager(this);
         chunkManager = new ChunksManager(this);
+        gamemodeManager = new GamemodeManager(this);
         game = new Game();
         Game.setBossbar(Bukkit.createBossBar(new NamespacedKey(this, "henix"), "Time", BarColor.RED, BarStyle.SOLID));
 
@@ -113,6 +119,7 @@ public class UHC extends JavaPlugin {
         getServer().getScheduler().getActiveWorkers().stream().filter(w -> w.getOwner() == this)
                 .map(BukkitWorker::getThread).forEach(Thread::interrupt);
         getServer().getScheduler().cancelTasks(this);
+        commandManager.unregisterCommands();
         craftingManager.purgeRecipes();
     }
 

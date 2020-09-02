@@ -274,8 +274,6 @@ public class IngameListeners implements Listener {
         }
         if (p.getKiller() != null) {
             Player killer = p.getKiller();
-            Bukkit.getScheduler().runTaskLater(instance,
-                    () -> new SpecAnimation(instance, p, killer).runTaskTimer(instance, 0, 1), 20L * 6);
             Bukkit.getScheduler().runTaskLater(instance, () -> {
                 p.getInventory().setContents(killer.getInventory().getContents());
                 p.setGameMode(GameMode.SPECTATOR);

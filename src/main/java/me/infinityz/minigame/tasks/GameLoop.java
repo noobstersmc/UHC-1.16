@@ -33,7 +33,7 @@ public class GameLoop extends BukkitRunnable {
     // Move from
     @Override
     public void run() {
-        var time = (int) (Math.floor((System.currentTimeMillis() - instance.getGame().getStartTime()) / 1000.0));
+        int time = (int) (Math.floor((System.currentTimeMillis() - instance.getGame().getStartTime()) / 1000.0));
         instance.getGame().setGameTime(time);
 
         var worldBorder = mainWorld.getWorldBorder();
@@ -62,84 +62,80 @@ public class GameLoop extends BukkitRunnable {
     }
 
     private void timedEvent(int time) {
-        switch (time) {
-            case 300:
-                // AVISO DE FINAL HEAL 5min left
-                Bukkit.getOnlinePlayers()
-                        .forEach(all -> all.playSound(all.getLocation(), Sound.BLOCK_NOTE_BLOCK_BIT, 1, 1));
-                Bukkit.broadcastMessage(HAVELOCK_BLUE + "5 minutes left for Final Heal.");
-                break;
-            case 600:
-                // TODO: FINAL HEAL
-                Bukkit.getOnlinePlayers().forEach(all -> {
-                    all.setHealth(20.0);
-                    all.setFoodLevel(20);
-                    all.playSound(all.getLocation(), Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO, 1, 1);
-                });
-                Bukkit.broadcastMessage(SHAMROCK_GREEN + "Final heal!");
-                break;
-            case 900:
-                // AVISO DE PVP 5min left
-                Bukkit.getOnlinePlayers()
-                        .forEach(all -> all.playSound(all.getLocation(), Sound.BLOCK_NOTE_BLOCK_BIT, 1, 1));
-                Bukkit.broadcastMessage(HAVELOCK_BLUE + "PvP will be enabled in 5 minutes.");
-                break;
-            case 1200:
-                // TODO: PVP ON
-                Bukkit.getOnlinePlayers()
-                        .forEach(all -> all.playSound(all.getLocation(), Sound.BLOCK_END_PORTAL_SPAWN, 1, 1.9F));
-                instance.getGame().setPvp(true);
-                Bukkit.broadcastMessage(SHAMROCK_GREEN + "PvP has been enabled.");
-                break;
-            case 3600:
-                Bukkit.broadcastMessage(HAVELOCK_BLUE
-                        + "The world will shrink to 100 blocks in the next 25 minutes at a speed of 1 block per second!");
-                Bukkit.broadcastMessage(SHAMROCK_GREEN
-                        + "Players in the nether will be randomly teleported to the overworld once the border reaches 500 blocks.");
-                Bukkit.getOnlinePlayers()
-                        .forEach(all -> all.playSound(all.getLocation(), Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO, 1, 1));
-                Bukkit.getScheduler().runTask(instance, () -> Bukkit.getWorlds().forEach(worlds -> {
-                    worlds.setGameRule(GameRule.DO_INSOMNIA, false);
-                    worlds.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
-                    worlds.setTime(400);
-                    worlds.getWorldBorder().setSize(200, 1500);
+        if (time == instance.getGame().getHealTime() - 300) {
+            // AVISO 5MIN LEFT FOR FINAL HEAL
+            Bukkit.getOnlinePlayers()
+                    .forEach(all -> all.playSound(all.getLocation(), Sound.BLOCK_NOTE_BLOCK_BIT, 1, 1));
+            Bukkit.broadcastMessage(HAVELOCK_BLUE + "5 minutes left for Final Heal.");
 
-                }));
-                break;
+        } else if (time == instance.getGame().getHealTime()) {
+            // TODO: FINAL HEAL
+            Bukkit.getOnlinePlayers().forEach(all -> {
+                all.setHealth(20.0);
+                all.setFoodLevel(20);
+                all.playSound(all.getLocation(), Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO, 1, 1);
+            });
+            Bukkit.broadcastMessage(SHAMROCK_GREEN + "Final heal!");
 
-            case 1800:
-            case 3000:
-            case 4200:
-            case 4800:
-                sendPromo();
-                break;
-            default:
-                break;
+        } else if (time == instance.getGame().getPvpTime() - 300) {
+            // AVISO 5 MINS LEFT FOR PVP
+            Bukkit.getOnlinePlayers()
+                    .forEach(all -> all.playSound(all.getLocation(), Sound.BLOCK_NOTE_BLOCK_BIT, 1, 1));
+            Bukkit.broadcastMessage(HAVELOCK_BLUE + "PvP will be enabled in 5 minutes.");
+
+        } else if (time == instance.getGame().getPvpTime()) {
+            // TODO: PVP ON
+            Bukkit.getOnlinePlayers()
+                    .forEach(all -> all.playSound(all.getLocation(), Sound.BLOCK_END_PORTAL_SPAWN, 1, 1.9F));
+            instance.getGame().setPvp(true);
+            Bukkit.broadcastMessage(SHAMROCK_GREEN + "PvP has been enabled.");
+
+        } else if (time == instance.getGame().getBorderTime()) {
+            // BORDER TIME
+            Bukkit.broadcastMessage(HAVELOCK_BLUE
+                    + "The world will shrink to 100 blocks in the next 30 minutes at a speed of 1 block per second!");
+            Bukkit.broadcastMessage(SHAMROCK_GREEN
+                    + "Players in the nether will be randomly teleported to the overworld once the border reaches 500 blocks.");
+            Bukkit.getOnlinePlayers()
+                    .forEach(all -> all.playSound(all.getLocation(), Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO, 1, 1));
+            Bukkit.getScheduler().runTask(instance, () -> Bukkit.getWorlds().forEach(worlds -> {
+                worlds.setGameRule(GameRule.DO_INSOMNIA, false);
+                worlds.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
+                worlds.setTime(400);
+                worlds.getWorldBorder().setSize(200, 1800);
+            }));
+
+        } else if (time == 1800 || time == 2400 || time == 3000 || time == 4200 || time == 4800) {
+            // PROMOS
+            sendPromo();
         }
 
     }
 
     private void handleBossbar(final int time) {
         var bossBar = Game.getBossbar();
+        var game = instance.getGame();
         double percent = 0;
-        if (time < 600) {
+        if (time < game.getHealTime()) {
             bossBar.setColor(BarColor.GREEN);
-            var differential = 600 - time;
+            var differential = game.getHealTime() - time;
             bossBar.setTitle("Final heal in: " + timeFormat(differential));
-            percent = time / 600.0;
-        } else if (time < 1200) {
+            percent = (double) time / game.getHealTime();
+
+        } else if (time < game.getPvpTime()) {
             bossBar.setColor(BarColor.YELLOW);
-            var differential = 1200 - time;
+            var differential = game.getPvpTime() - time;
             bossBar.setTitle("PvP in: " + timeFormat(differential));
-            percent = time / 1200.0;
-        } else if (time >= 3000 && time <= 3600) {
+            percent = (double) time / game.getPvpTime();
+
+        } else if (time >= game.getBorderTime() - 600 && time <= game.getBorderTime()) {
             if (!bossBar.isVisible()) {
                 bossBar.setVisible(true);
             }
             bossBar.setColor(BarColor.BLUE);
-            var differential = 3600 - time;
+            var differential = game.getBorderTime() - time;
             bossBar.setTitle("Border Shrink in: " + timeFormat(differential));
-            percent = time / 3600.0;
+            percent = (double) time / game.getBorderTime();
 
         } else {
             bossBar.setVisible(false);
