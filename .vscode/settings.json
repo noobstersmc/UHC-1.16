@@ -1,6 +1,0 @@
-{
-    "java.configuration.updateBuildConfiguration": "automatic",
-    "extensions.ignoreRecommendations": true,
-    "files.autoSave": "afterDelay",
-    "debug.allowBreakpointsEverywhere": true,
-}
