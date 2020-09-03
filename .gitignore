@@ -16,3 +16,4 @@ buildNumber.properties
 .factorypath
 .settings/
 .factorypath
+.DS_Store
