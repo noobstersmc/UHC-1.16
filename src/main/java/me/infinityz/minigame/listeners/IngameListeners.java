@@ -31,6 +31,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.World;
 
 import co.aikar.taskchain.TaskChain;
 import lombok.Getter;
@@ -113,7 +114,8 @@ public class IngameListeners implements Listener {
     @EventHandler
     public void onExplode(BlockExplodeEvent e) {
         if (e.getBlock().getWorld().getEnvironment() != Environment.NORMAL) {
-            e.setYield(0.005f);
+            e.setCancelled(true);
+            //world.createExplosion(e.getLocation(), 10.0f);
         }
     }
 

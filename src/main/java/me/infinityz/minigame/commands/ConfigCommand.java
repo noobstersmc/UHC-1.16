@@ -24,7 +24,7 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
     public void configCMD(CommandSender sender){
         var color = ChatColor.of("#5EA95F");
         var color2 = ChatColor.of("#776FC4");
-        var color3 = ChatColor.of("#A40A0A");
+        var color3 = ChatColor.of("#A40A0A") + "" + ChatColor.BOLD;
         var color4 = ChatColor.of("#BCBCBC");
         sender.sendMessage(color4 +"---------------------------------\n"
                                             + color3 + "        Noobsters\n"
@@ -39,7 +39,7 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
 
     private String getGameType(){ 
         final int teamSize = instance.getTeamManger().getTeamSize();
-        return teamSize > 1 ? "To" + teamSize : "FFA";
+        return teamSize > 1 ? "Teams of " + teamSize : "FFA";
     }
 
     @CommandPermission("uhc.config.pvp")
