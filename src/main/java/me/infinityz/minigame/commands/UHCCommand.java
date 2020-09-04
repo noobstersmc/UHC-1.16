@@ -252,7 +252,7 @@ public class UHCCommand extends BaseCommand {
     }
 
     @Subcommand("load")
-    @CommandPermission("uhc.admin")
+    @CommandPermission("staff.perm")
     public void onDelta(Player sender, int size) {
         for (var i = 0; i < size; i++) {
             var task = new ChunkLoadTask(sender.getWorld(), instance.getChunkManager());

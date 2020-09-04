@@ -37,6 +37,7 @@ public abstract class IGamemode {
             instance.getListenerManager().registerListener(listener.get());
         if (command.isPresent())
             instance.getCommandManager().registerCommand(command.get());
+        enabled = true;
 
         return true;
     }
@@ -48,6 +49,8 @@ public abstract class IGamemode {
             instance.getListenerManager().unregisterListener(listener.get());
         if (command.isPresent())
             instance.getCommandManager().unregisterCommand(command.get());
+
+        enabled = false;
 
         return true;
     }
