@@ -2,7 +2,6 @@ package me.infinityz.minigame.gamemodes.types;
 
 import java.util.Random;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -12,8 +11,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
@@ -36,17 +35,18 @@ public class CutcleanListener implements Listener {
 
         if (itemInHand.getType() == Material.AIR || itemInHand.containsEnchantment(Enchantment.SILK_TOUCH))
             return;
-
-        Bukkit.broadcastMessage(e.getBlock().getType().toString());
-
         switch (block.getType()) {
             case IRON_ORE: {
                 if (!block.getDrops(itemInHand, player).isEmpty()) {
 
                     final int fortune = fortuneMultiplier(itemInHand);
                     e.setDropItems(false);
+                    
+                    // 70% chance of getting xp
+                    if (random.nextDouble() <= 0.70) {
+                        e.setExpToDrop(1);
 
-                    e.setExpToDrop(ironXp * fortune);
+                    }
 
                     dropCenter(new ItemStack(Material.IRON_INGOT, fortune), block.getLocation());
 
@@ -59,7 +59,7 @@ public class CutcleanListener implements Listener {
 
                     e.setDropItems(false);
 
-                    e.setExpToDrop(goldXp * fortune);
+                    e.setExpToDrop(fortune);
 
                     dropCenter(new ItemStack(Material.GOLD_INGOT, fortune), block.getLocation());
                 }
@@ -73,7 +73,7 @@ public class CutcleanListener implements Listener {
                     final int fortune = fortuneMultiplier(itemInHand);
                     e.setDropItems(false);
 
-                    //10% chance of getting xp
+                    // 10% chance of getting xp
                     if (random.nextInt(5) + 1 <= 1 * fortune) {
                         e.setExpToDrop(sandXp);
 
@@ -82,8 +82,6 @@ public class CutcleanListener implements Listener {
                     dropCenter(new ItemStack(Material.GLASS, fortune), block.getLocation());
                 }
                 break;
-            case ANCIENT_DEBRIS:
-                break;
             default:
                 break;
         }
@@ -91,12 +89,16 @@ public class CutcleanListener implements Listener {
     }
 
     @EventHandler
-    public void onDispense(BlockDropItemEvent e){
-        e.getItems().forEach(all->{
-            Bukkit.broadcastMessage(all.getType() + " drop");
-        });
-        e.getItems().clear();
-        
+    public void onItemSpawn(ItemSpawnEvent e) {
+        var stack = e.getEntity().getItemStack();
+        var type = stack.getType();
+        if (type == Material.POTATO) {
+            stack.setType(Material.BAKED_POTATO);
+        } else if (type == Material.ANCIENT_DEBRIS) {
+            stack.setType(Material.NETHERITE_SCRAP);
+        } else if (type == Material.KELP) {
+            stack.setType(Material.DRIED_KELP);
+        }
     }
 
     @EventHandler(ignoreCancelled = true)

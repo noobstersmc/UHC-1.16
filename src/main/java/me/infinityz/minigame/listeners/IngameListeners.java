@@ -21,17 +21,20 @@ import org.bukkit.block.Skull;
 import org.bukkit.entity.Drowned;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.Event.Result;
 import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerBedEnterEvent.BedEnterResult;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.World;
 
 import co.aikar.taskchain.TaskChain;
 import lombok.Getter;
@@ -48,7 +51,6 @@ import me.infinityz.minigame.players.UHCPlayer;
 import me.infinityz.minigame.scoreboard.IScoreboard;
 import me.infinityz.minigame.scoreboard.IngameScoreboard;
 import me.infinityz.minigame.scoreboard.objects.UpdateObject;
-import me.infinityz.minigame.tasks.SpecAnimation;
 import me.infinityz.minigame.teams.objects.Team;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -77,6 +79,7 @@ public class IngameListeners implements Listener {
                 Damageable dmg = (Damageable) mainHand.getItemMeta();
                 dmg.setDamage(new Random().nextInt(125));
                 mainHand.setItemMeta((ItemMeta) dmg);
+                
             }
             drowned.getLocation().getWorld().dropItemNaturally(drowned.getLocation(), mainHand);
 
@@ -112,11 +115,14 @@ public class IngameListeners implements Listener {
     }
 
     @EventHandler
-    public void onExplode(BlockExplodeEvent e) {
-        if (e.getBlock().getWorld().getEnvironment() != Environment.NORMAL) {
+    public void nerfBedExplosion(PlayerBedEnterEvent e){
+        if(e.getBed().getWorld().getEnvironment() ==Environment.NETHER){
             e.setCancelled(true);
-            //world.createExplosion(e.getLocation(), 10.0f);
+            e.setUseBed(Result.DENY);
+            e.getBed().setType(Material.AIR);
+            e.getBed().getLocation().createExplosion(4.0f, true, true);
         }
+
     }
 
     /** INCREASED TRIDENT END */

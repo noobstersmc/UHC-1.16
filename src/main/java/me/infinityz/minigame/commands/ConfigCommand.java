@@ -30,7 +30,7 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
                                             + color3 + "        Noobsters\n"
                                             + color4 +"---------------------------------\n"
                                             + color + "Config: " + ChatColor.WHITE + "UHC " + getGameType() + "\n" 
-                                            + color + "Scenarios: " +  ChatColor.WHITE + "\n\n"
+                                            + color + "Scenarios: " +  ChatColor.WHITE + instance.getGamemodeManager().getEnabledGamemodesToString() +"\n"
                                             + color2 + "FinalHeal: " + ChatColor.WHITE + (instance.getGame().getHealTime() / 60) + "m\n"
                                             + color2 + "PvP Enabled: " + ChatColor.WHITE + (instance.getGame().getPvpTime() / 60)+ "m\n"
                                             + color2 + "Border Time: " + ChatColor.WHITE + (instance.getGame().getBorderTime() / 60) + "m\n"
