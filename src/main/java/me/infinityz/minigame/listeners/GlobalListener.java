@@ -156,12 +156,10 @@ public class GlobalListener implements Listener {
         if (e.getDamager().getType() != EntityType.PLAYER)
             return;
         var damager = (Player) e.getDamager();
-        var strength = damager.getActivePotionEffects().stream()
-                .filter(pot -> pot.getType() == PotionEffectType.INCREASE_DAMAGE).findFirst();
-        if (strength.isPresent()) {
-            var strengthAmplifier = 1 + strength.get().getAmplifier();
+        var strength = damager.getPotionEffect(PotionEffectType.INCREASE_DAMAGE);
+        if (strength != null) {
+            var strengthAmplifier = 1 + strength.getAmplifier();
             var differential = strengthAmplifier * 1.5;
-
             e.setDamage(e.getDamage() - differential);
         }
 
