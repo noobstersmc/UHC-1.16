@@ -103,6 +103,19 @@ public class UHCCommand extends BaseCommand {
         });
     }
 
+    @Subcommand("ltp")
+    @CommandPermission("PRO")
+    public void teleportTest(Player sender, Integer index){
+       var loc = instance.getChunkManager().getLocations().get(index);
+       if(loc != null){
+           sender.teleport(loc);
+       }else{
+           sender.sendMessage("Null index loc.");
+       }
+
+
+    }
+
     @Subcommand("color")
     @CommandPermission("uhc.admin")
     public void onTeamColor(Player sender, @Optional Player target, Integer index, String str) {

@@ -21,18 +21,16 @@ import org.bukkit.block.Skull;
 import org.bukkit.entity.Drowned;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.TNTPrimed;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.Event.Result;
-import org.bukkit.event.block.BlockExplodeEvent;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerBedEnterEvent.BedEnterResult;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -182,12 +180,13 @@ public class IngameListeners implements Listener {
         if (sb != null) {
             sb.delete();
         }
+        
 
         var uhcp = instance.getPlayerManager().getPlayer(e.getPlayer().getUniqueId());
         if (uhcp.isAlive()) {
             uhcp.setLastKnownPosition(PositionObject.getPositionFromWorld(e.getPlayer().getLocation()));
             uhcp.setLastKnownInventory(e.getPlayer().getInventory().getContents());
-            uhcp.setLastKnownHealth(e.getPlayer().getHealth() + e.getPlayer().getAbsorptionAmount());
+            uhcp.setLastKnownHealth(e.getPlayer().getHealth());
         }
 
     }
@@ -290,23 +289,27 @@ public class IngameListeners implements Listener {
             UHCPlayer uhcKiller = instance.getPlayerManager().getPlayer(killer.getUniqueId());
             uhcKiller.setKills(uhcKiller.getKills() + 1);
             IScoreboard sb = instance.getScoreboardManager().findScoreboard(killer.getUniqueId());
+
+            if(sb != null){
             if (sb instanceof IngameScoreboard) {
                 IngameScoreboard sbi = (IngameScoreboard) sb;
                 sbi.addUpdates(
                         new UpdateObject(ChatColor.GRAY + "Kills: " + ChatColor.WHITE + uhcKiller.getKills(), 2));
             }
         }
+        }
 
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onPlayerWin(PlayerWinEvent e) {
         var player = e.getPlayer();
         playWinEffect(player);
 
     }
 
-    @EventHandler
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onTeamWinEvent(TeamWinEvent e) {
         var team = instance.getTeamManger().getTeamMap().get(e.getTeamUUID());
         playTeamWinEffect(team);

@@ -8,6 +8,8 @@ import gnu.trove.set.hash.THashSet;
 import lombok.Getter;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.gamemodes.types.Cutclean;
+import me.infinityz.minigame.gamemodes.types.EnderRespawn;
+import me.infinityz.minigame.gamemodes.types.Moles;
 
 public class GamemodeManager {
     UHC instance;
@@ -15,7 +17,9 @@ public class GamemodeManager {
 
     public GamemodeManager(UHC instance) {
         this.instance = instance;
-        registerGamemode(new Cutclean());
+        registerGamemode(new Cutclean(instance));
+        registerGamemode(new EnderRespawn(instance));
+        registerGamemode(new Moles(instance));
 
     }
 
@@ -31,8 +35,9 @@ public class GamemodeManager {
         });
 
         return list;
-
     }
+
+    //
 
     public String getEnabledGamemodesToString() {
         final StringBuilder sb = new StringBuilder();

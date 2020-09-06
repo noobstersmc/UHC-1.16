@@ -28,21 +28,25 @@ public class GamemodesCMD extends BaseCommand {
     @CommandPermission("uhc.gamemodes.toggle")
     @Default
     public void onEnable(CommandSender sender, String scenario) {
-        var optional = instance.getGamemodeManager().getGamemodesList().stream()
-                .filter(scen -> scen.getName().equalsIgnoreCase(scenario)).findAny();
-
-        if (optional.isPresent()) {
-            if (optional.get().enableScenario(instance)) {
-                sender.sendMessage("Scenario " + scenario + " has been enabled");
-            }else if(optional.get().disableScenario(instance)){
-                sender.sendMessage("Scenario " + scenario + " has been disabled");
+        var gamemode = getScenarioFromName(scenario);
+        if(gamemode != null){
+            if(gamemode.enableScenario()){
+                sender.sendMessage("Scenario " + gamemode.getName() + " has been enabled.");
+            }else if(gamemode.disableScenario()){
+                sender.sendMessage("Scenario" + gamemode.getName() + " has been disabled.");
             }else{
-                sender.sendMessage("Couldn't do that");
+                sender.sendMessage("Couldn't enable or disable " + gamemode.getName() + ".");
             }
-        } else {
-            // Scenario not found
-            command(sender);
+        }else{
+            sender.sendMessage("Scenario " + scenario + " doesn't exist");
         }
+    }
+
+    private IGamemode getScenarioFromName(String name) {
+        for (var scenario : instance.getGamemodeManager().getGamemodesList())
+            if (scenario.getName().equalsIgnoreCase(name))
+                return scenario;
+        return null;
     }
 
 }

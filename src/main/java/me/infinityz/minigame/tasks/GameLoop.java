@@ -41,6 +41,11 @@ public class GameLoop extends BukkitRunnable {
         if (!borderShrink && worldBorder.getSize() <= 1000) {
             borderShrink = true;
             Bukkit.getScheduler().runTask(instance, () -> {
+                Bukkit.getWorlds().forEach(worlds -> {
+                    worlds.setGameRule(GameRule.DO_INSOMNIA, false);
+                    worlds.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
+                    worlds.setTime(400);
+                });
                 Bukkit.getPluginManager().callEvent(new NetherDisabledEvent());
                 instance.getGame().setNether(false);
             });
@@ -99,9 +104,6 @@ public class GameLoop extends BukkitRunnable {
             Bukkit.getOnlinePlayers()
                     .forEach(all -> all.playSound(all.getLocation(), Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO, 1, 1));
             Bukkit.getScheduler().runTask(instance, () -> Bukkit.getWorlds().forEach(worlds -> {
-                worlds.setGameRule(GameRule.DO_INSOMNIA, false);
-                worlds.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
-                worlds.setTime(400);
                 worlds.getWorldBorder().setSize(200, 1800);
             }));
 
@@ -150,7 +152,7 @@ public class GameLoop extends BukkitRunnable {
         instance.getPlayerManager().getUhcPlayerMap().values().parallelStream().filter(UHCPlayer::isAlive)
                 .forEach(all -> {
                     var of = Bukkit.getOfflinePlayer(all.getUUID());
-                    if (!of.isOnline() && System.currentTimeMillis() - of.getLastSeen() > 600_000) {
+                    if (!of.isOnline() && (System.currentTimeMillis() - of.getLastSeen() > 600_000)) {
                         Bukkit.getPluginManager()
                                 .callEvent(new UHCPlayerDequalificationEvent(all, DQReason.OFFLINE_DQ));
                         all.setDead(true);
