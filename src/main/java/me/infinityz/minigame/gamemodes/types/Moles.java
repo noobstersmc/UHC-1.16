@@ -2,16 +2,18 @@ package me.infinityz.minigame.gamemodes.types;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
@@ -25,8 +27,11 @@ import gnu.trove.set.hash.THashSet;
 import lombok.Getter;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.events.TeamWinEvent;
+import me.infinityz.minigame.events.UHCPlayerDequalificationEvent;
 import me.infinityz.minigame.gamemodes.IGamemode;
+import me.infinityz.minigame.listeners.IngameListeners;
 import me.infinityz.minigame.players.UHCPlayer;
+import me.infinityz.minigame.scoreboard.objects.FastBoard;
 import me.infinityz.minigame.teams.objects.Team;
 
 public class Moles extends IGamemode implements Listener {
@@ -52,21 +57,29 @@ public class Moles extends IGamemode implements Listener {
     }
 
     @EventHandler
-    public void onTeamWinEvent(TeamWinEvent e){
-        var aliveTeam = instance.getTeamManger().getAliveTeams();
-        var aliveMoles = getAliveMoleTeams();
-        if(aliveTeam.size() <= 1){
-            if(aliveMoles.size() >= 1){
-                Bukkit.broadcastMessage("Moles are still alive...");
-                e.setCancelled(true);
+    public void onTeamWinEvent(TeamWinEvent e) {
+        e.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onDequal(UHCPlayerDequalificationEvent e) {
+        var uhcPlayer = e.getUhcPlayer();
+        var isMole = isMole(uhcPlayer.getUUID());
+        var playerTeam = instance.getTeamManger().getPlayerTeam(uhcPlayer.getUUID());
+        if (playerTeam != null) {
+            if (isMole != null) {
+                isMole.sendTeamMessage(ChatColor.RED + "[MoleChat] " + e.getOfflinePlayer().getName() + " has died");
+                playerTeam.sendTeamMessage(ChatColor.RED + "" + e.getOfflinePlayer().getName() + " was the mole!");
+            } else {
+                playerTeam.sendTeamMessage(ChatColor.RED + "" + e.getOfflinePlayer().getName() + " was not the mole.");
             }
-            
-            
-            
+
         }
 
-    
+        var moles = getAliveMoleTeams();
+        var aliveTeams = instance.getTeamManger().getAliveTeams();
     }
+
     public Collection<Team> getAliveMoleTeams() {
         return molesSet.stream()
                 .filter(all -> all.getOfflinePlayersStream()
@@ -74,6 +87,29 @@ public class Moles extends IGamemode implements Listener {
                         .anyMatch(UHCPlayer::isAlive))
                 .collect(Collectors.toList());
     }
+
+    public void giveMoleTag(Player player, Team t) {
+        try {
+            FastBoard.createTeam(player,
+                    t.getOfflinePlayersStream()
+                            .filter(member -> player.getUniqueId().getMostSignificantBits() != member.getUniqueId()
+                                    .getMostSignificantBits())
+                            .map(OfflinePlayer::getName).collect(Collectors.toList()),
+                    "001Mole", t.getTeamPrefix(), 12);
+        } catch (ReflectiveOperationException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @EventHandler
+    public void onJoin(PlayerJoinEvent e) {
+        var player = e.getPlayer();
+        var mole = isMole(player.getUniqueId());
+        if (mole != null) {
+            giveMoleTag(player, mole);
+        }
+    }
+
     @Override
     public boolean enableScenario() {
         if (isEnabled())
@@ -105,10 +141,64 @@ public class Moles extends IGamemode implements Listener {
             molesSet.clear();
             final StringBuilder builder = new StringBuilder();
             var moles = findMoles();
-            findMoles().forEach(all -> builder.append(" - " + all.getName() + "\n"));
             createMoles(moles);
             sender.sendMessage(builder.toString());
-            sender.sendMessage("Moles have been found.");
+
+            final List<UUID> molesUUID = moles.stream().map(OfflinePlayer::getUniqueId).collect(Collectors.toList());
+
+            Bukkit.broadcastMessage(ChatColor.RED + "The Moles have been choosen.");
+            Bukkit.getOnlinePlayers().forEach(players -> {
+                try {
+                    FastBoard.removeTeam(players, "001Mole");
+                } catch (ReflectiveOperationException e) {
+                    e.printStackTrace();
+                }
+                players.playSound(players.getLocation(), Sound.ENTITY_RAVAGER_CELEBRATE, 1, 1);
+                var mole = false;
+                for (UUID uuid : molesUUID) {
+                    if (uuid.getMostSignificantBits() == players.getUniqueId().getMostSignificantBits()) {
+                        try {
+                            var team = isMole(players.getUniqueId());
+                            if(team != null ){
+                                players.sendMessage("You are the mole.");
+                                giveMoleTag(players, team);
+                                mole = true;
+                            }
+                            
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    }
+                }
+                if (!mole) {
+                    players.sendMessage("You are not the mole.");
+                }
+
+            });
+
+            sender.sendMessage("Moles: ");
+            moles.forEach(all->{
+                sender.sendMessage(" - " + all.getName() );
+            });
+        }
+
+        @Subcommand("win")
+        @CommandAlias("win")
+        @CommandPermission("uhc.moles.win")
+        public void winCommand(CommandSender sender, @Flags("other")OfflinePlayer target, String customMessage){
+            var mole = isMole(target.getUniqueId());
+            var team = instance.getTeamManger().getPlayerTeam(target.getUniqueId());
+
+            if(mole != null){
+                IngameListeners.playWinForTeam(mole, ChatColor.translateAlternateColorCodes('&', customMessage));
+            }
+            else if(team != null){
+                IngameListeners.playWinForTeam(team, ChatColor.translateAlternateColorCodes('&', customMessage));
+            }else{
+                sender.sendMessage("That player isn't mole or has no team");
+            }
+
 
         }
 
@@ -142,14 +232,15 @@ public class Moles extends IGamemode implements Listener {
 
         @Subcommand("chat")
         @CommandAlias("mc")
-        public void moleChat(Player player, String message){
+        public void moleChat(Player player, String message) {
             if (!isEnabled())
                 return;
             var mole = isMole(player.getUniqueId());
-            if(mole != null){
-                mole.sendTeamMessage("[Mole][TeamChat] "+player.getName() + ": " + message);
-            }else{
-                player.sendMessage("You are not the mole.");
+            if (mole != null) {
+                mole.sendTeamMessage(
+                        ChatColor.RED + "[MoleChat] " + player.getName() + ": " + ChatColor.GRAY + "" + message);
+            } else {
+                player.sendMessage(ChatColor.RED + "You are not the mole.");
             }
 
         }

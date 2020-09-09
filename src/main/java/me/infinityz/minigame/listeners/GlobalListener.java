@@ -197,6 +197,7 @@ public class GlobalListener implements Listener {
 
                 players.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 30, 20));
                 players.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20 * 30, 20));
+                players.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20 * 30, 20));
                 players.playSound(players.getLocation(), Sound.ENTITY_RAVAGER_CELEBRATE, 1, 1);
 
                 bar.addPlayer(players);

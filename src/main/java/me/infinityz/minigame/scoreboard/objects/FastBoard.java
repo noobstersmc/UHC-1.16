@@ -465,6 +465,40 @@ public class FastBoard {
         sendPacket(packet, target);
     }
 
+    public static void createTeam(Player target, Collection<String> players, String teamName, String prefix, int colorIndex)
+            throws ReflectiveOperationException {
+        var mode = TeamMode.CREATE;
+
+        Object packet = PACKET_SB_TEAM.newInstance();
+
+        setField(packet, String.class, teamName); // Team name
+        setField(packet, int.class, mode.ordinal(), VERSION_TYPE == VersionType.V1_8 ? 1 : 0); // Update mode
+
+        String suffix = "";
+
+        if (VERSION_TYPE != VersionType.V1_13) {
+            if (prefix.length() > 16 || (suffix != null && suffix.length() > 16)) {
+                // Something went wrong, just cut to prevent client crash/kick
+                prefix = prefix.substring(0, 16);
+                suffix = (suffix != null) ? suffix.substring(0, 16) : null;
+            }
+        }
+
+        setField(packet, Collection.class, players); // Add players to team
+        setComponentField(packet, prefix, 2); // Prefix
+        setComponentField(packet, suffix, 3); // Suffix
+        setField(packet, String.class, "always", 4); // Visibility for 1.8+
+        setField(packet, String.class, "never", 5); // Collisions for 1.9+
+
+        // Team Color starts
+        var g = packet.getClass().getDeclaredField("g");
+        g.setAccessible(true);
+        g.set(packet, getEnumChatFormat(colorIndex));
+        // Team Color ends
+
+        sendPacket(packet, target);
+    }
+
     public static void createTeam(Collection<String> players, Player target, String prefix, int colorIndex)
             throws ReflectiveOperationException {
         var mode = TeamMode.CREATE;
@@ -513,6 +547,17 @@ public class FastBoard {
         Object packet = PACKET_SB_TEAM.newInstance();
 
         setField(packet, String.class, "allies"); // Team name
+        setField(packet, int.class, mode.ordinal(), VERSION_TYPE == VersionType.V1_8 ? 1 : 0); // Update mode
+
+        sendPacket(packet, target);
+    }
+
+    public static void removeTeam(Player target, String name) throws ReflectiveOperationException {
+        var mode = TeamMode.REMOVE;
+
+        Object packet = PACKET_SB_TEAM.newInstance();
+
+        setField(packet, String.class, name); // Team name
         setField(packet, int.class, mode.ordinal(), VERSION_TYPE == VersionType.V1_8 ? 1 : 0); // Update mode
 
         sendPacket(packet, target);

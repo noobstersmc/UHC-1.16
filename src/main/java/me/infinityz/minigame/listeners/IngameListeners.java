@@ -321,8 +321,28 @@ public class IngameListeners implements Listener {
     private Material getRandomFence() {
         return possibleFence.get(new Random().nextInt(possibleFence.size()));
     }
+    public static void playWinForTeam(Team team, String title) {
+        var winnersName = team.getOfflinePlayersStream().map(OfflinePlayer::getName).collect(Collectors.toList());
+        var winnersTitle = Title.builder()
+                .title(new ComponentBuilder("You Win!").bold(true).color(ChatColor.GOLD).create())
+                .subtitle(ChatColor.GREEN + "Congratulations " + winnersName.toString()).stay(6 * 20).fadeIn(10)
+                .fadeOut(3 * 20).build();
+        var titleToOthers = Title.builder()
+                .title(new ComponentBuilder(title).bold(true).color(ChatColor.GOLD).create())
+                .subtitle(ChatColor.GREEN + winnersName.toString() + " have won!").stay(6 * 20).fadeIn(10)
+                .fadeOut(3 * 20).build();
 
-    private void playTeamWinEffect(Team team) {
+        team.getPlayerStream().forEach(member -> {
+            member.playEffect(EntityEffect.TOTEM_RESURRECT);
+            member.sendTitle(winnersTitle);
+            fireWorksEffect(member);
+        });
+
+        Bukkit.getOnlinePlayers().stream().filter(all -> !winnersName.contains(all.getName()))
+                .forEach(all -> all.sendTitle(titleToOthers));
+    }
+
+    public void playTeamWinEffect(Team team) {
         var winnersName = team.getOfflinePlayersStream().map(OfflinePlayer::getName).collect(Collectors.toList());
         var winnersTitle = Title.builder()
                 .title(new ComponentBuilder("Victory!").bold(true).color(ChatColor.GOLD).create())
@@ -359,7 +379,7 @@ public class IngameListeners implements Listener {
 
     }
 
-    private void fireWorksEffect(Player player) {
+    private static void fireWorksEffect(Player player) {
         var command1 = "summon firework_rocket %d %d %d {LifeTime:30,FireworksItem:{id:firework_rocket,Count:1,tag:{Fireworks:{Flight:1,Explosions:[{Type:2,Flicker:0,Trail:1,Colors:[I;3887386,8073150,2651799,4312372],FadeColors:[I;3887386,11250603,4312372,15790320]}]}}}}";
         var command2 = "summon firework_rocket %d %d %d {LifeTime:30,FireworksItem:{id:firework_rocket,Count:1,tag:{Fireworks:{Flight:2,Explosions:[{Type:3,Flicker:1,Trail:1,Colors:[I;5320730,2437522,8073150,11250603,6719955],FadeColors:[I;2437522,2651799,11250603,6719955,15790320]}]}}}}";
         var command3 = "summon firework_rocket %d %d %d {LifeTime:30,FireworksItem:{id:firework_rocket,Count:1,tag:{Fireworks:{Flight:3,Explosions:[{Type:1,Flicker:1,Trail:1,Colors:[I;11743532,14602026,12801229,15435844],FadeColors:[I;11743532,14188952,15435844]}]}}}}";

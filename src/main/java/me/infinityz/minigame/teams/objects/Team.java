@@ -2,7 +2,6 @@ package me.infinityz.minigame.teams.objects;
 
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -36,7 +35,6 @@ public class Team {
         this.teamLeader = teamLeader;
         this.teamKills = 0;
         this.teamDisplayName = teamID.toString().substring(0, 6);
-        this.teamColorIndex = new Random().nextInt(13) + 1;
         addMember(teamLeader);
     }
 
