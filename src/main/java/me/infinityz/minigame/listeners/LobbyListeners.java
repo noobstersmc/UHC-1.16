@@ -1,6 +1,8 @@
 package me.infinityz.minigame.listeners;
 
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Statistic;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -22,6 +24,7 @@ import me.infinityz.minigame.scoreboard.LobbyScoreboard;
 @RequiredArgsConstructor
 public class LobbyListeners implements Listener {
     private @NonNull UHC instance;
+    private Location spawnLoc = Bukkit.getWorlds().get(0).getHighestBlockAt(0, 0).getLocation().add(0.0, 10.0, 0.0);
 
     /*
      * Events cancelled during lobby starts.
@@ -69,6 +72,8 @@ public class LobbyListeners implements Listener {
          */
         player.setGameMode(GameMode.SURVIVAL);
         player.setStatistic(Statistic.TIME_SINCE_REST, 0);
+        if(!player.hasPlayedBefore())
+            player.teleport(spawnLoc);
 
     }
 
