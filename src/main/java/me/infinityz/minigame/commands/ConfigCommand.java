@@ -31,7 +31,6 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
                                             + color4 +"---------------------------------\n"
                                             + color + "Config: " + ChatColor.WHITE + "UHC " + getGameType() + "\n" 
                                             + color + "Scenarios: " +  ChatColor.WHITE + instance.getGamemodeManager().getEnabledGamemodesToString() +"\n"
-                                            + color2 + "FinalHeal: " + ChatColor.WHITE + (instance.getGame().getHealTime() / 60) + "m\n"
                                             + color2 + "PvP Enabled: " + ChatColor.WHITE + (instance.getGame().getPvpTime() / 60)+ "m\n"
                                             + color2 + "Border Time: " + ChatColor.WHITE + (instance.getGame().getBorderTime() / 60) + "m\n"
                         + color4 +"---------------------------------\n");    
@@ -44,23 +43,38 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
 
     @CommandPermission("uhc.config.pvp")
     @Subcommand("pvptime")
-    @CommandAlias("pvp|pvptime")
+    @CommandAlias("pvptime")
     public void changePvpTime(CommandSender sender, Integer newPvpTime) {
         instance.getGame().setPvpTime(newPvpTime);
     }
 
     @CommandPermission("uhc.config.heal")
     @Subcommand("healtime")
-    @CommandAlias("heal|healtime")
+    @CommandAlias("healtime")
     public void changeHealTime(CommandSender sender, Integer newHealTime) {
         instance.getGame().setHealTime(newHealTime);
     }
 
     @CommandPermission("uhc.config.border")
     @Subcommand("bordertime")
-    @CommandAlias("border|bordertime")
+    @CommandAlias("bordertime")
     public void changeBorderTime(CommandSender sender, Integer newBorderTime) {
         instance.getGame().setBorderTime(newBorderTime);
     }
+
+    @CommandPermission("uhc.config.border")
+    @Subcommand("bordercentertime")
+    @CommandAlias("bordercentertime")
+    public void changeBorderCenterTime(CommandSender sender, Integer newBorderCenterTime) {
+        instance.getGame().setBorderCenterTime(newBorderCenterTime);
+    }
+
+    @CommandPermission("uhc.config.border")
+    @Subcommand("bordersize")
+    @CommandAlias("bordersize")
+    public void changeBorderSize(CommandSender sender, Integer newBorderSize) {
+        instance.getGame().setBorderSize(newBorderSize);
+    }
+    
 
 }

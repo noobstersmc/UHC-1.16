@@ -77,7 +77,7 @@ public class IngameListeners implements Listener {
                 Damageable dmg = (Damageable) mainHand.getItemMeta();
                 dmg.setDamage(new Random().nextInt(125));
                 mainHand.setItemMeta((ItemMeta) dmg);
-                
+
             }
             drowned.getLocation().getWorld().dropItemNaturally(drowned.getLocation(), mainHand);
 
@@ -113,8 +113,8 @@ public class IngameListeners implements Listener {
     }
 
     @EventHandler
-    public void nerfBedExplosion(PlayerBedEnterEvent e){
-        if(e.getBed().getWorld().getEnvironment() ==Environment.NETHER){
+    public void nerfBedExplosion(PlayerBedEnterEvent e) {
+        if (e.getBed().getWorld().getEnvironment() == Environment.NETHER) {
             e.setCancelled(true);
             e.setUseBed(Result.DENY);
             e.getBed().setType(Material.AIR);
@@ -180,7 +180,6 @@ public class IngameListeners implements Listener {
         if (sb != null) {
             sb.delete();
         }
-        
 
         var uhcp = instance.getPlayerManager().getPlayer(e.getPlayer().getUniqueId());
         if (uhcp.isAlive()) {
@@ -221,6 +220,39 @@ public class IngameListeners implements Listener {
         }
     }
 
+    void calculateWin(){
+            Bukkit.getScheduler().runTaskAsynchronously(instance, () -> {
+                if (instance.getTeamManger().getTeamSize() > 1) {
+                    // ToX games
+                    var teamsAlive = instance.getTeamManger().getAliveTeams();
+                    var solos = instance.getPlayerManager().getUhcPlayerMap().values().stream()
+                            .filter(pl -> instance.getTeamManger().getPlayerTeam(pl.getUUID()) == null)
+                            .filter(UHCPlayer::isAlive).collect(Collectors.toList());
+
+                    if ((teamsAlive.size() + solos.size()) == 1) {
+                        var optionalTeam = teamsAlive.stream().findFirst();
+                        if (optionalTeam.isPresent()) {
+                            Bukkit.getPluginManager().callEvent(new TeamWinEvent(optionalTeam.get().getTeamID(), true));
+                        } else if (solos.size() == 1) {
+                            var optionalPlayer = solos.get(0);
+                            if (optionalPlayer != null) 
+                                Bukkit.getPluginManager().callEvent(new PlayerWinEvent(optionalPlayer.getUUID(), true));
+                            
+                        }
+                    }
+
+                } else if (instance.getPlayerManager().getAlivePlayers() == 1) {
+                    // FFA Games
+                    var lastAlivePlayer = instance.getPlayerManager().getUhcPlayerMap().values().stream()
+                            .filter(UHCPlayer::isAlive).findFirst();
+                    if (lastAlivePlayer.isPresent()) {
+                        Bukkit.getPluginManager().callEvent(new PlayerWinEvent(lastAlivePlayer.get().getUUID(), true));
+                    } 
+
+                }
+            });
+    }
+
     @EventHandler
     public void onDeath(PlayerDeathEvent e) {
         // 3-second timeout to get respawned in spectator mode.
@@ -244,40 +276,8 @@ public class IngameListeners implements Listener {
                 uhcPlayer.setLastKnownInventory(inv);
                 Bukkit.getPluginManager()
                         .callEvent(new UHCPlayerDequalificationEvent(uhcPlayer, DQReason.DEATH, false));
-            } // TODO: Send update to players left.
-
-            /**
-             * Team and Player win event takes places here.
-             */
-            Bukkit.getScheduler().runTaskAsynchronously(instance, () -> {
-                if (instance.getTeamManger().getTeamSize() > 1) {
-                    // ToX games
-                    var teamsAlive = instance.getTeamManger().getAliveTeams();
-                    if (teamsAlive.size() <= 1) {
-                        var optionalTeam = teamsAlive.stream().findFirst();
-                        if (optionalTeam.isPresent()) {
-                            Bukkit.getPluginManager().callEvent(new TeamWinEvent(optionalTeam.get().getTeamID(), true));
-                        } else {
-                            Bukkit.broadcastMessage("Hm... this is awkward... there is no winner.");
-                        }
-
-                    }
-
-                } else {
-                    // FFA Games
-                    if (instance.getPlayerManager().getAlivePlayers() <= 1) {
-                        var lastAlivePlayer = instance.getPlayerManager().getUhcPlayerMap().values().stream()
-                                .filter(UHCPlayer::isAlive).findFirst();
-                        if (lastAlivePlayer.isPresent()) {
-                            Bukkit.getPluginManager()
-                                    .callEvent(new PlayerWinEvent(lastAlivePlayer.get().getUUID(), true));
-                        } else {
-                            Bukkit.broadcastMessage("Hm... this is awkward... there is no winner.");
-                        }
-                    }
-                }
-            });
-
+            }
+            calculateWin();
         }
         if (p.getKiller() != null) {
             Player killer = p.getKiller();
@@ -289,14 +289,12 @@ public class IngameListeners implements Listener {
             UHCPlayer uhcKiller = instance.getPlayerManager().getPlayer(killer.getUniqueId());
             uhcKiller.setKills(uhcKiller.getKills() + 1);
             IScoreboard sb = instance.getScoreboardManager().findScoreboard(killer.getUniqueId());
-
-            if(sb != null){
-            if (sb instanceof IngameScoreboard) {
-                IngameScoreboard sbi = (IngameScoreboard) sb;
-                sbi.addUpdates(
-                        new UpdateObject(ChatColor.GRAY + "Kills: " + ChatColor.WHITE + uhcKiller.getKills(), 2));
+            if ( sb instanceof IngameScoreboard) {
+                    IngameScoreboard sbi = (IngameScoreboard) sb;
+                    sbi.addUpdates(
+                            new UpdateObject(ChatColor.GRAY + "Kills: " + ChatColor.WHITE + uhcKiller.getKills(), 2));
+                
             }
-        }
         }
 
     }
@@ -307,7 +305,6 @@ public class IngameListeners implements Listener {
         playWinEffect(player);
 
     }
-
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onTeamWinEvent(TeamWinEvent e) {
@@ -321,14 +318,14 @@ public class IngameListeners implements Listener {
     private Material getRandomFence() {
         return possibleFence.get(new Random().nextInt(possibleFence.size()));
     }
+
     public static void playWinForTeam(Team team, String title) {
         var winnersName = team.getOfflinePlayersStream().map(OfflinePlayer::getName).collect(Collectors.toList());
         var winnersTitle = Title.builder()
                 .title(new ComponentBuilder("You Win!").bold(true).color(ChatColor.GOLD).create())
                 .subtitle(ChatColor.GREEN + "Congratulations " + winnersName.toString()).stay(6 * 20).fadeIn(10)
                 .fadeOut(3 * 20).build();
-        var titleToOthers = Title.builder()
-                .title(new ComponentBuilder(title).bold(true).color(ChatColor.GOLD).create())
+        var titleToOthers = Title.builder().title(new ComponentBuilder(title).bold(true).color(ChatColor.GOLD).create())
                 .subtitle(ChatColor.GREEN + winnersName.toString() + " have won!").stay(6 * 20).fadeIn(10)
                 .fadeOut(3 * 20).build();
 
@@ -346,12 +343,14 @@ public class IngameListeners implements Listener {
         var winnersName = team.getOfflinePlayersStream().map(OfflinePlayer::getName).collect(Collectors.toList());
         var winnersTitle = Title.builder()
                 .title(new ComponentBuilder("Victory!").bold(true).color(ChatColor.GOLD).create())
-                .subtitle(ChatColor.GREEN + "Congratulations " + winnersName.toString()).stay(6 * 20).fadeIn(10)
-                .fadeOut(3 * 20).build();
+                .subtitle(ChatColor.GREEN + "Congratulations "
+                        + (team.isCustomName() ? team.getTeamDisplayName() : winnersName.toString()))
+                .stay(6 * 20).fadeIn(10).fadeOut(3 * 20).build();
         var titleToOthers = Title.builder()
                 .title(new ComponentBuilder("Victory!").bold(true).color(ChatColor.GOLD).create())
-                .subtitle(ChatColor.GREEN + winnersName.toString() + " have won!").stay(6 * 20).fadeIn(10)
-                .fadeOut(3 * 20).build();
+                .subtitle(ChatColor.GREEN + (team.isCustomName() ? team.getTeamDisplayName() : winnersName.toString())
+                        + " have won!")
+                .stay(6 * 20).fadeIn(10).fadeOut(3 * 20).build();
 
         team.getPlayerStream().forEach(member -> {
             member.playEffect(EntityEffect.TOTEM_RESURRECT);

@@ -13,6 +13,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
+
 public @RequiredArgsConstructor class ChunkLoadTask implements Runnable {
     private @Getter UUID locationID = UUID.randomUUID();
     private @NonNull @Getter World world;
@@ -20,7 +21,8 @@ public @RequiredArgsConstructor class ChunkLoadTask implements Runnable {
     private @Getter boolean isDone = false;
     private @Getter boolean isRunning = false;
     private @Getter int chunksLeft = -1;
-
+    private int border  = chunksManager.getBorder();
+    
     @Override
     public void run() {
         isRunning = true;
@@ -35,11 +37,11 @@ public @RequiredArgsConstructor class ChunkLoadTask implements Runnable {
                 // Test whether the loc is safe or not
                 while (!ChunksManager.isSafe(loc)) {
                     // Obtain a new coordiante
-                    coordinatePair = getRandomCoordinatePair(-2000, 2000);
+                    coordinatePair = getRandomCoordinatePair(-border, border);
                     // Load the chunk async and hold the async thread to prevent errors
                     world.getChunkAtAsync(coordinatePair.getX(), coordinatePair.getZ()).get();
 
-                    loc = getRandomCoordinatePair(-2000, 2000).toLocation(world, true);
+                    loc = getRandomCoordinatePair(-border, border).toLocation(world, true);
                 }
                 // Add the coordinates to the Collection.
                 chunksManager.getLocations().add(ChunksManager.centerLocation(loc));
@@ -94,9 +96,10 @@ public @RequiredArgsConstructor class ChunkLoadTask implements Runnable {
 
     private Location isSafeValidate(CoordinatePair toTest, final int distance,
             final Collection<CoordinatePair> coordinatePairs) {
+        
         // Check the numbers mucho rapido.
         while (!validate(toTest, distance, coordinatePairs.iterator())) {
-            toTest = getRandomCoordinatePair(-2000, 2000);
+            toTest = getRandomCoordinatePair(-border, border);
         }
         // Change the coordinate set to a location
         try {
@@ -109,7 +112,7 @@ public @RequiredArgsConstructor class ChunkLoadTask implements Runnable {
         if (ChunksManager.isSafe(loc)) {
             return loc;
         } else {
-            return isSafeValidate(getRandomCoordinatePair(-2000, 2000), distance, coordinatePairs);
+            return isSafeValidate(getRandomCoordinatePair(-border, border), distance, coordinatePairs);
         }
     }
 

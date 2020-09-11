@@ -75,7 +75,7 @@ public class StartCommand extends BaseCommand {
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "whitelist add @a");
 
         Bukkit.getWorlds().forEach(it -> {
-            it.getWorldBorder().setSize(4001);
+            it.getWorldBorder().setSize(instance.getGame().getBorderSize());
             it.setDifficulty(Difficulty.HARD);
             it.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, true);
             it.setTime(0);

@@ -1,6 +1,7 @@
 package me.infinityz.minigame.teams.objects;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -16,6 +17,8 @@ import org.bukkit.entity.Player;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.infinityz.minigame.UHC;
+import me.infinityz.minigame.players.UHCPlayer;
 import me.infinityz.minigame.scoreboard.objects.FastBoard;
 import net.md_5.bungee.api.chat.BaseComponent;
 
@@ -44,6 +47,10 @@ public class Team {
                         || member.getMostSignificantBits() == uuid.getMostSignificantBits());
     }
 
+    public boolean isCustomName(){
+        return !teamID.toString().substring(0, 6).equalsIgnoreCase(teamDisplayName);
+    }
+
     public boolean isTeamLeader(UUID member) {
         return member.compareTo(this.teamLeader) == 0;
     }
@@ -60,6 +67,11 @@ public class Team {
             return false;
         members = (UUID[]) ArrayUtils.removeElement(members, uuid);
         return true;
+    }
+
+    public Collection<UHCPlayer> getAliveMembers(UHC instance) {
+        return getMembersUUIDStream().map(id -> instance.getPlayerManager().getPlayer(id))
+                .filter(uhcp -> uhcp.isAlive()).collect(Collectors.toList());
     }
 
     public void sendTeamMessage(BaseComponent component) {

@@ -32,6 +32,7 @@ import me.infinityz.minigame.commands.GlobalMute;
 import me.infinityz.minigame.commands.HelpopCommand;
 import me.infinityz.minigame.commands.LatescatterCMD;
 import me.infinityz.minigame.commands.PVP;
+import me.infinityz.minigame.commands.ShieldFeature;
 import me.infinityz.minigame.commands.StartCommand;
 import me.infinityz.minigame.commands.UHCCommand;
 import me.infinityz.minigame.commands.Utilities;
@@ -87,10 +88,13 @@ public class UHC extends JavaPlugin {
         commandManager.registerCommand(new GameRestoreCMD(this));
         commandManager.registerCommand(new ConfigCommand(this));
         commandManager.registerCommand(new GamemodesCMD(this));
+        commandManager.registerCommand(new ShieldFeature());
 
         /*
          * Initilialize all the managers
          */
+        game = new Game();
+        Game.setBossbar(Bukkit.createBossBar(new NamespacedKey(this, "henix"), "Time", BarColor.RED, BarStyle.SOLID));
         teamManger = new TeamManager(this);
         scoreboardManager = new ScoreboardManager(this);
         playerManager = new PlayerManager(this);
@@ -98,8 +102,6 @@ public class UHC extends JavaPlugin {
         listenerManager = new ListenerManager(this);
         chunkManager = new ChunksManager(this);
         gamemodeManager = new GamemodeManager(this);
-        game = new Game();
-        Game.setBossbar(Bukkit.createBossBar(new NamespacedKey(this, "henix"), "Time", BarColor.RED, BarStyle.SOLID));
 
         /* Run some startup code */
         runStartUp();

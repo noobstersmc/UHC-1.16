@@ -216,7 +216,7 @@ public class TeamCMD extends BaseCommand {
         team.getPlayerStream().filter(player -> player != sender).forEach(members -> {
             members.playSound(members.getLocation(), Sound.BLOCK_NOTE_BLOCK_BIT, 0.25f, 1);
         });
-        team.sendTeamMessage(ChatColor.of("#DABC12") + "[Team " + team.getTeamDisplayName() + "] " + sender.getName()
+        team.sendTeamMessage(ChatColor.of("#DABC12") + "[Team" + (team.isCustomName() ? " " + team.getTeamDisplayName() : "") + "] " + sender.getName()
                 + ": " + ChatColor.GRAY + message);
     }
 

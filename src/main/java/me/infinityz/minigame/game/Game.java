@@ -28,7 +28,9 @@ public class Game {
     /* Game config */
     private int borderTime = 3600;
     private int pvpTime = 1200;
-    private int healTime = 600;
+    private int healTime = 120;
+    private int borderCenterTime = 1800;
+    private int borderSize = 4000;
 
     @Override
     public String toString() {
