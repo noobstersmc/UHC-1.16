@@ -164,7 +164,7 @@ public class IngameListeners implements Listener {
         if (instance.getScoreboardManager().findScoreboard(e.getPlayer().getUniqueId()) != null) {
             return;
         }
-        final IngameScoreboard sb = new IngameScoreboard(e.getPlayer());
+        final IngameScoreboard sb = new IngameScoreboard(e.getPlayer(), instance);
         sb.update();
         instance.getScoreboardManager().getFastboardMap().put(e.getPlayer().getUniqueId().toString(), sb);
         UHCPlayer uhcp = instance.getPlayerManager().getPlayer(e.getPlayer().getUniqueId());
@@ -210,47 +210,37 @@ public class IngameListeners implements Listener {
                 "whitelist remove " + e.getOfflinePlayer().getName())
 
         );
-        switch (e.getReason()) {
-            case OFFLINE_DQ:
-                Bukkit.broadcastMessage(e.getOfflinePlayer().getName() + " has abandoned the game");
-
-                break;
-            default:
-                break;
+        if (e.getReason() == DQReason.OFFLINE_DQ) {
+            Bukkit.broadcastMessage(e.getOfflinePlayer().getName() + " has abandoned the game");
         }
     }
 
-    void calculateWin(){
-            Bukkit.getScheduler().runTaskAsynchronously(instance, () -> {
-                if (instance.getTeamManger().getTeamSize() > 1) {
-                    // ToX games
-                    var teamsAlive = instance.getTeamManger().getAliveTeams();
-                    var solos = instance.getPlayerManager().getUhcPlayerMap().values().stream()
-                            .filter(pl -> instance.getTeamManger().getPlayerTeam(pl.getUUID()) == null)
-                            .filter(UHCPlayer::isAlive).collect(Collectors.toList());
+    private void calculateWin() {
+        if(instance.getGame().isHasSomeoneWon())
+            return;
+        var solos = instance.getPlayerManager().getAliveSoloPlayersListNonLambda();
 
-                    if ((teamsAlive.size() + solos.size()) == 1) {
-                        var optionalTeam = teamsAlive.stream().findFirst();
-                        if (optionalTeam.isPresent()) {
-                            Bukkit.getPluginManager().callEvent(new TeamWinEvent(optionalTeam.get().getTeamID(), true));
-                        } else if (solos.size() == 1) {
-                            var optionalPlayer = solos.get(0);
-                            if (optionalPlayer != null) 
-                                Bukkit.getPluginManager().callEvent(new PlayerWinEvent(optionalPlayer.getUUID(), true));
-                            
-                        }
-                    }
-
-                } else if (instance.getPlayerManager().getAlivePlayers() == 1) {
-                    // FFA Games
-                    var lastAlivePlayer = instance.getPlayerManager().getUhcPlayerMap().values().stream()
-                            .filter(UHCPlayer::isAlive).findFirst();
-                    if (lastAlivePlayer.isPresent()) {
-                        Bukkit.getPluginManager().callEvent(new PlayerWinEvent(lastAlivePlayer.get().getUUID(), true));
-                    } 
-
+        // Team Games
+        if (instance.getTeamManger().getTeamSize() > 1) {
+            var teamsAlive = instance.getTeamManger().getAliveTeams();
+            if ((teamsAlive.size() + solos.size()) == 1) {
+                var optionalTeam = teamsAlive.stream().findFirst();
+                if (optionalTeam.isPresent()) {
+                    Bukkit.getPluginManager().callEvent(new TeamWinEvent(optionalTeam.get().getTeamID(), true));
+                } else if (solos.size() == 1) {
+                    var optionalPlayer = solos.get(0);
+                    if (optionalPlayer != null)
+                        Bukkit.getPluginManager().callEvent(new PlayerWinEvent(optionalPlayer.getUUID(), true));
                 }
-            });
+            }
+
+        } else if (instance.getPlayerManager().getAlivePlayers() == 1) {
+            // FFA Games
+            var lastAlivePlayer = solos.get(0);
+            if (lastAlivePlayer != null)
+                Bukkit.getPluginManager().callEvent(new PlayerWinEvent(lastAlivePlayer.getUUID(), true));
+
+        }
     }
 
     @EventHandler
@@ -277,24 +267,17 @@ public class IngameListeners implements Listener {
                 Bukkit.getPluginManager()
                         .callEvent(new UHCPlayerDequalificationEvent(uhcPlayer, DQReason.DEATH, false));
             }
-            calculateWin();
+            Bukkit.getScheduler().runTaskAsynchronously(instance, this::calculateWin);
         }
         if (p.getKiller() != null) {
             Player killer = p.getKiller();
-            Bukkit.getScheduler().runTaskLater(instance, () -> {
-                p.getInventory().setContents(killer.getInventory().getContents());
-                p.setGameMode(GameMode.SPECTATOR);
-                p.setSpectatorTarget(killer);
-            }, 20L * 8);
+            Bukkit.getScheduler().runTaskLater(instance, () -> p.setSpectatorTarget(killer), 160L);
             UHCPlayer uhcKiller = instance.getPlayerManager().getPlayer(killer.getUniqueId());
+            var team = instance.getTeamManger().getPlayerTeam(killer.getUniqueId());
+            if (team != null)
+                team.addKills(1);
+
             uhcKiller.setKills(uhcKiller.getKills() + 1);
-            IScoreboard sb = instance.getScoreboardManager().findScoreboard(killer.getUniqueId());
-            if ( sb instanceof IngameScoreboard) {
-                    IngameScoreboard sbi = (IngameScoreboard) sb;
-                    sbi.addUpdates(
-                            new UpdateObject(ChatColor.GRAY + "Kills: " + ChatColor.WHITE + uhcKiller.getKills(), 2));
-                
-            }
         }
 
     }

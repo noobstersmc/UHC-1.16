@@ -1,5 +1,6 @@
 package me.infinityz.minigame.scoreboard.objects;
 
+//DEPRECATED
 public class UpdateObject {
     private String text;
     private int line;

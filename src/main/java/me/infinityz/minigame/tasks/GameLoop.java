@@ -19,7 +19,6 @@ import me.infinityz.minigame.events.NetherDisabledEvent;
 import me.infinityz.minigame.events.UHCPlayerDequalificationEvent;
 import me.infinityz.minigame.game.Game;
 import me.infinityz.minigame.players.UHCPlayer;
-import me.infinityz.minigame.scoreboard.objects.UpdateObject;
 import net.md_5.bungee.api.ChatColor;
 
 @RequiredArgsConstructor
@@ -55,8 +54,6 @@ public class GameLoop extends BukkitRunnable {
         timedEvent(time);
 
         var border = ((int) (worldBorder.getSize() / 2));
-        updateScoreboards(border);
-
         handleBossbar(time);
 
         autoDQ();
@@ -163,18 +160,6 @@ public class GameLoop extends BukkitRunnable {
                 });
     }
 
-    private void updateScoreboards(final int border) {
-        final int alivePlayers = instance.getPlayerManager().getAlivePlayers();
-        final String timeFormatted = timeConvert(instance.getGame().getGameTime());
-        instance.getScoreboardManager().getFastboardMap().values().stream().forEach(value -> {
-            value.addAllUpdates(new UpdateObject(ChatColor.GRAY + "Game Time: " + ChatColor.WHITE + timeFormatted, 0),
-                    new UpdateObject(ChatColor.GRAY + "Players: " + ChatColor.WHITE + alivePlayers, 3),
-                    new UpdateObject(ChatColor.GRAY + "Border: " + ChatColor.WHITE + border, 5));
-
-        });
-
-    }
-
     private void borderDistanceActionBar(final Player player, final WorldBorder worldBorder, final int border) {
         if (border != 2000 && border != 100) {
             String distanceText = "";
@@ -222,7 +207,7 @@ public class GameLoop extends BukkitRunnable {
                 }));
     }
 
-    private String timeConvert(int t) {
+    public static String timeConvert(int t) {
         int hours = t / 3600;
 
         int minutes = (t % 3600) / 60;

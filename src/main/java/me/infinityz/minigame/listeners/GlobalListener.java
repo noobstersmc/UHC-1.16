@@ -189,7 +189,7 @@ public class GlobalListener implements Listener {
             var bar = Game.getBossbar();
             Bukkit.getOnlinePlayers().forEach(players -> {
                 // Send the new scoreboard
-                var sb = new IngameScoreboard(players);
+                var sb = new IngameScoreboard(players, instance);
                 sb.update();
                 instance.getScoreboardManager().getFastboardMap().put(players.getUniqueId().toString(), sb);
 

@@ -21,10 +21,10 @@ public @RequiredArgsConstructor class ChunkLoadTask implements Runnable {
     private @Getter boolean isDone = false;
     private @Getter boolean isRunning = false;
     private @Getter int chunksLeft = -1;
-    private int border  = chunksManager.getBorder();
-    
+    private int border;
     @Override
     public void run() {
+        border = chunksManager.getBorder();
         isRunning = true;
         var coordinatePair = getRandomCoordinatePair(-2000, 2000);
         System.out.println("Finding location...");

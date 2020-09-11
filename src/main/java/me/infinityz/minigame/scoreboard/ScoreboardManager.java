@@ -21,7 +21,6 @@ public class ScoreboardManager {
                 20);
 
     }
-
     public void purgeScoreboards() {
         fastboardMap.values().forEach(IScoreboard::delete);
         fastboardMap.clear();
