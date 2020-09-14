@@ -40,7 +40,9 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.enums.DQReason;
+import me.infinityz.minigame.events.GameTickEvent;
 import me.infinityz.minigame.events.PlayerWinEvent;
+import me.infinityz.minigame.events.ScoreboardUpdateEvent;
 import me.infinityz.minigame.events.TeamWinEvent;
 import me.infinityz.minigame.events.UHCPlayerDequalificationEvent;
 import me.infinityz.minigame.game.Game;
@@ -111,6 +113,64 @@ public class IngameListeners implements Listener {
             instance.getLogger().info(deathMessageEnglish);
         }
     }
+    /*
+     * Game tick events start
+     */
+
+    @EventHandler
+    public void onGameTick(GameTickEvent e) {
+        instance.getScoreboardManager().getScoreboardsOfType(IngameScoreboard.class).parallelStream()
+                .forEach(all -> Bukkit.getPluginManager().callEvent(new ScoreboardUpdateEvent(all, true, "")));
+
+    }
+
+    private String timeConvert(int t) {
+        int hours = t / 3600;
+
+        int minutes = (t % 3600) / 60;
+        int seconds = t % 60;
+
+        return hours > 0 ? String.format("%02d:%02d:%02d", hours, minutes, seconds)
+                : String.format("%02d:%02d", minutes, seconds);
+    }
+
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    public void onScoreboardUpdate(ScoreboardUpdateEvent e) {
+        var uhcPlayer = instance.getPlayerManager().getPlayer(e.getScoreboard().getPlayer().getUniqueId());
+        var isTeams = instance.getTeamManger().getTeamSize() > 1;
+
+        if (isTeams) {
+            var team = instance.getTeamManger().getPlayerTeam(e.getScoreboard().getPlayer().getUniqueId());
+            e.setLines(new String[] {
+                    ChatColor.GRAY + "Time: " + ChatColor.WHITE + timeConvert(instance.getGame().getGameTime()), "",
+                    ChatColor.GRAY + "Kills: " + ChatColor.WHITE + (uhcPlayer != null ? uhcPlayer.getKills() : 0),
+                    ChatColor.GRAY + "Team Kills: " + ChatColor.WHITE + (team != null ? team.getTeamKills() : 0), "",
+                    ChatColor.GRAY + "Players: " + ChatColor.WHITE + instance.getPlayerManager().getAlivePlayers(),
+                    ChatColor.GRAY + "Border: " + ChatColor.WHITE
+                            + ((int) e.getScoreboard().getPlayer().getWorld().getWorldBorder().getSize() / 2),
+                    "", ChatColor.WHITE + "noobsters.net" });
+
+        } else {
+            e.setLines(new String[] {
+                    ChatColor.GRAY + "Time: " + ChatColor.WHITE + timeConvert(instance.getGame().getGameTime()), "",
+                    ChatColor.GRAY + "Kills: " + ChatColor.WHITE + (uhcPlayer != null ? uhcPlayer.getKills() : 0), "",
+                    ChatColor.GRAY + "Players: " + ChatColor.WHITE + instance.getPlayerManager().getAlivePlayers(),
+                    ChatColor.GRAY + "Border: " + ChatColor.WHITE
+                            + ((int) e.getScoreboard().getPlayer().getWorld().getWorldBorder().getSize() / 2),
+                    "", ChatColor.WHITE + "noobsters.net" });
+        }
+
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void updateGameboards(ScoreboardUpdateEvent e) {
+        if (!e.isCancelled()) {
+            e.getScoreboard().updateLines(e.getLines());
+        }
+    }
+    /*
+     * Game tick events end
+     */
 
     @EventHandler
     public void nerfBedExplosion(PlayerBedEnterEvent e) {
@@ -216,7 +276,7 @@ public class IngameListeners implements Listener {
     }
 
     private void calculateWin() {
-        if(instance.getGame().isHasSomeoneWon())
+        if (instance.getGame().isHasSomeoneWon())
             return;
         var solos = instance.getPlayerManager().getAliveSoloPlayersListNonLambda();
 
@@ -227,18 +287,23 @@ public class IngameListeners implements Listener {
                 var optionalTeam = teamsAlive.stream().findFirst();
                 if (optionalTeam.isPresent()) {
                     Bukkit.getPluginManager().callEvent(new TeamWinEvent(optionalTeam.get().getTeamID(), true));
+                    instance.getGame().setHasSomeoneWon(true);
                 } else if (solos.size() == 1) {
                     var optionalPlayer = solos.get(0);
-                    if (optionalPlayer != null)
+                    if (optionalPlayer != null) {
                         Bukkit.getPluginManager().callEvent(new PlayerWinEvent(optionalPlayer.getUUID(), true));
+                        instance.getGame().setHasSomeoneWon(true);
+                    }
                 }
             }
 
         } else if (instance.getPlayerManager().getAlivePlayers() == 1) {
             // FFA Games
             var lastAlivePlayer = solos.get(0);
-            if (lastAlivePlayer != null)
+            if (lastAlivePlayer != null) {
                 Bukkit.getPluginManager().callEvent(new PlayerWinEvent(lastAlivePlayer.getUUID(), true));
+                instance.getGame().setHasSomeoneWon(true);
+            }
 
         }
     }

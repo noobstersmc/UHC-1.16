@@ -4,6 +4,7 @@ import org.bukkit.command.CommandSender;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.HelpCommand;
@@ -27,6 +28,7 @@ public class GamemodesCMD extends BaseCommand {
 
     @CommandPermission("uhc.gamemodes.toggle")
     @Default
+    @CommandCompletion("@scenarios")
     public void onEnable(CommandSender sender, String scenario) {
         var gamemode = getScenarioFromName(scenario);
         if(gamemode != null){

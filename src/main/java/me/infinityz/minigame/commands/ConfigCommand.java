@@ -1,6 +1,7 @@
 package me.infinityz.minigame.commands;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
@@ -11,6 +12,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import me.infinityz.minigame.UHC;
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.ComponentBuilder;
 
 /**
  *Config COMMAND
@@ -26,6 +28,19 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
         var color2 = ChatColor.of("#776FC4");
         var color3 = ChatColor.of("#A40A0A") + "" + ChatColor.BOLD;
         var color4 = ChatColor.of("#BCBCBC");
+    if(sender instanceof Player){
+        var player = (Player) sender;
+        sender.sendMessage(color4 +"---------------------------------\n"
+        + color3 + "        Noobsters\n"
+        + color4 +"---------------------------------\n"
+        + color + "Config: " + ChatColor.WHITE + "UHC " + getGameType() + "\n");
+        player.sendMessage(new ComponentBuilder("Scenarios: ").color(color).append(instance.getGamemodeManager().getScenariosWithDescription()).color(ChatColor.WHITE).create());
+        sender.sendMessage(
+        color2 + "PvP Enabled: " + ChatColor.WHITE + (instance.getGame().getPvpTime() / 60)+ "m\n"
+        + color2 + "Border Time: " + ChatColor.WHITE + (instance.getGame().getBorderTime() / 60) + "m\n"
+        + color4 +"---------------------------------\n");
+
+    }else{
         sender.sendMessage(color4 +"---------------------------------\n"
                                             + color3 + "        Noobsters\n"
                                             + color4 +"---------------------------------\n"
@@ -33,7 +48,10 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
                                             + color + "Scenarios: " +  ChatColor.WHITE + instance.getGamemodeManager().getEnabledGamemodesToString() +"\n"
                                             + color2 + "PvP Enabled: " + ChatColor.WHITE + (instance.getGame().getPvpTime() / 60)+ "m\n"
                                             + color2 + "Border Time: " + ChatColor.WHITE + (instance.getGame().getBorderTime() / 60) + "m\n"
-                        + color4 +"---------------------------------\n");    
+                        + color4 +"---------------------------------\n");
+
+    }
+    
     }
 
     private String getGameType(){ 

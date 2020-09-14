@@ -45,9 +45,9 @@ public class GlobalListener implements Listener {
     @EventHandler
     public void joinMessage(PlayerJoinEvent e) {
         e.getPlayer().sendMessage(ChatColor.BLUE + "Discord! discord.noobsters.net\n" + ChatColor.AQUA
-                + "Twitter! twitter.com/NoobstersUHC\n" + ChatColor.GOLD + "Donations! noobsters.buycraft.net");
+                + "Twitter! twitter.com/NoobstersMC\n" + ChatColor.GOLD + "Donations! noobsters.buycraft.net");
         e.setJoinMessage("");
-        var footer = GameLoop.HAVELOCK_BLUE + "Join Our UHC Community!\n" + GameLoop.SHAMROCK_GREEN
+        var footer = GameLoop.HAVELOCK_BLUE + "\nJoin Our UHC Community!\n" + GameLoop.SHAMROCK_GREEN
                 + "discord.noobsters.net";
         e.getPlayer().setPlayerListHeaderFooter(Game.getTablistHeader(), footer);
     }
@@ -179,6 +179,7 @@ public class GlobalListener implements Listener {
     @EventHandler
     public void onTeleportCompleted(TeleportationCompletedEvent e) {
         Bukkit.broadcastMessage(GameLoop.SHAMROCK_GREEN + "Starting soon...");
+        instance.getScoreboardManager().getUpdateTask().cancel();
 
         Bukkit.getScheduler().runTaskLater(instance, () -> {
             instance.getScoreboardManager().purgeScoreboards();
@@ -195,9 +196,9 @@ public class GlobalListener implements Listener {
 
                 players.getActivePotionEffects().forEach(all -> players.removePotionEffect(all.getType()));
 
-                players.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 30, 20));
-                players.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20 * 30, 20));
-                players.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20 * 30, 20));
+                players.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 15, 20));
+                players.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20 * 15, 20));
+                players.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20 * 15, 20));
                 players.playSound(players.getLocation(), Sound.ENTITY_RAVAGER_CELEBRATE, 1, 1);
 
                 bar.addPlayer(players);

@@ -16,7 +16,7 @@ public class ScatterScoreboard extends IScoreboard {
     }
 
     @Override
-    public void update() {
+    public void update(String... schema) {
         this.updateLines(ChatColor.GRAY + " Scatter Players: " + ChatColor.WHITE + Bukkit.getOnlinePlayers().size(),
                 ChatColor.WHITE + "noobsters.net");
     }

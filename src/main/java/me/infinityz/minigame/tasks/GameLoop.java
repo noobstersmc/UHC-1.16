@@ -15,9 +15,11 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.enums.DQReason;
+import me.infinityz.minigame.events.GameTickEvent;
 import me.infinityz.minigame.events.NetherDisabledEvent;
 import me.infinityz.minigame.events.UHCPlayerDequalificationEvent;
 import me.infinityz.minigame.game.Game;
+import me.infinityz.minigame.gamemodes.types.GoToHell;
 import me.infinityz.minigame.players.UHCPlayer;
 import net.md_5.bungee.api.ChatColor;
 
@@ -34,20 +36,24 @@ public class GameLoop extends BukkitRunnable {
     public void run() {
         int time = (int) (Math.floor((System.currentTimeMillis() - instance.getGame().getStartTime()) / 1000.0));
         instance.getGame().setGameTime(time);
+        Bukkit.getPluginManager().callEvent(new GameTickEvent(time, true));
+
 
         var worldBorder = mainWorld.getWorldBorder();
 
-        if (!borderShrink && worldBorder.getSize() <= 1000) {
-            borderShrink = true;
-            Bukkit.getScheduler().runTask(instance, () -> {
-                Bukkit.getWorlds().forEach(worlds -> {
-                    worlds.setGameRule(GameRule.DO_INSOMNIA, false);
-                    worlds.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
-                    worlds.setTime(400);
+        if(!instance.getGamemodeManager().isScenarioEnable(GoToHell.class)){
+            if (!borderShrink && worldBorder.getSize() <= 1000) {
+                borderShrink = true;
+                Bukkit.getScheduler().runTask(instance, () -> {
+                    Bukkit.getWorlds().forEach(worlds -> {
+                        worlds.setGameRule(GameRule.DO_INSOMNIA, false);
+                        worlds.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
+                        worlds.setTime(400);
+                    });
+                    Bukkit.getPluginManager().callEvent(new NetherDisabledEvent());
+                    instance.getGame().setNether(false);
                 });
-                Bukkit.getPluginManager().callEvent(new NetherDisabledEvent());
-                instance.getGame().setNether(false);
-            });
+            }
         }
 
         performBorderDamage();
@@ -194,7 +200,7 @@ public class GameLoop extends BukkitRunnable {
 
     private void sendPromo() {
         Bukkit.broadcastMessage(ChatColor.BLUE + "Discord! discord.noobsters.net\n" + ChatColor.AQUA
-                + "Twitter! twitter.com/NoobstersUHC");
+                + "Twitter! twitter.com/NoobstersMC");
     }
 
     private void performBorderDamage() {

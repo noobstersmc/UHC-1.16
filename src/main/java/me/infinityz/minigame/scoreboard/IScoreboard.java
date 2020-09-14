@@ -19,7 +19,7 @@ public abstract class IScoreboard extends FastBoard {
         super(player);
     }
 
-    public abstract void update();
+    public abstract void update(String... schema);
 
     public void runUpdates() {
         Iterator<UpdateObject> iterator = updateQueue.iterator();

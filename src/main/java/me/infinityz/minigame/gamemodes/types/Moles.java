@@ -115,26 +115,6 @@ public class Moles extends IGamemode implements Listener {
         });
     }
 
-    public static void main(String[] args) {
-        ArrayList<Number> listOfNumbers = new ArrayList<>();
-        listOfNumbers.add(2);
-        listOfNumbers.add(3);
-        listOfNumbers.add(69.420);
-
-
-        for (int i = 0; i < listOfNumbers.size(); i++) {
-            var numb = listOfNumbers.get(i);
-            if(numb.doubleValue() == 3){
-                listOfNumbers.remove(numb);
-                System.out.println("removed");
-                i++;
-            }
-            System.out.println(numb);
-        }
-
-        System.out.println(listOfNumbers.toString());
-    }
-
     public Collection<Team> getAliveMoleTeams() {
         return molesSet.stream()
                 .filter(all -> all.getOfflinePlayersStream()

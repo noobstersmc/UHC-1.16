@@ -16,7 +16,7 @@ public class LobbyScoreboard extends IScoreboard {
     }
 
     @Override
-    public void update() {
+    public void update(String... schema) {
         this.updateLines(ChatColor.GRAY + "Players: " + ChatColor.WHITE + Bukkit.getOnlinePlayers().size(),
                 ChatColor.WHITE + "noobsters.net");
     }

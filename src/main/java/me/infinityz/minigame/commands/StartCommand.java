@@ -113,7 +113,7 @@ public class StartCommand extends BaseCommand {
         instance.getChunkManager().getAutoChunkScheduler().cancel();
 
         Bukkit.getWorlds().forEach(it -> {
-            it.getWorldBorder().setSize(4001);
+            it.getWorldBorder().setSize(4000);
             it.setDifficulty(Difficulty.HARD);
             it.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, true);
             it.setTime(0);
