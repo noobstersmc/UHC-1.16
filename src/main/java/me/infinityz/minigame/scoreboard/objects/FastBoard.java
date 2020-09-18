@@ -542,14 +542,7 @@ public class FastBoard {
     }
 
     public static void removeTeam(Player target) throws ReflectiveOperationException {
-        var mode = TeamMode.REMOVE;
-
-        Object packet = PACKET_SB_TEAM.newInstance();
-
-        setField(packet, String.class, "allies"); // Team name
-        setField(packet, int.class, mode.ordinal(), VERSION_TYPE == VersionType.V1_8 ? 1 : 0); // Update mode
-
-        sendPacket(packet, target);
+        removeTeam(target, "allies");
     }
 
     public static void removeTeam(Player target, String name) throws ReflectiveOperationException {

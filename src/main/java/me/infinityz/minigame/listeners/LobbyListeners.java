@@ -3,6 +3,7 @@ package me.infinityz.minigame.listeners;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Statistic;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -11,6 +12,8 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -53,7 +56,19 @@ public class LobbyListeners implements Listener {
 
     @EventHandler
     public void onAction(PlayerInteractEvent e) {
-        e.setCancelled(true);
+        if (!(e.getClickedBlock() != null && e.getClickedBlock().getType() == Material.LOOM))
+            e.setCancelled(true);
+
+    }
+
+    @EventHandler
+    public void invClick(InventoryClickEvent e) {
+        if (e.getInventory().getType() == InventoryType.LOOM) {
+            if (e.getSlot() == 3) {
+                e.getInventory().setItem(0, e.getCurrentItem().clone());
+            }
+        }
+
     }
 
     @EventHandler
@@ -72,7 +87,7 @@ public class LobbyListeners implements Listener {
          */
         player.setGameMode(GameMode.SURVIVAL);
         player.setStatistic(Statistic.TIME_SINCE_REST, 0);
-        if(!player.hasPlayedBefore())
+        if (!player.hasPlayedBefore())
             player.teleport(spawnLoc);
 
     }
@@ -85,7 +100,7 @@ public class LobbyListeners implements Listener {
         if (instance.getScoreboardManager().findScoreboard(e.getPlayer().getUniqueId()) != null) {
             return;
         }
-        
+
         final IScoreboard sb = new LobbyScoreboard(e.getPlayer());
         instance.getScoreboardManager().getFastboardMap().put(e.getPlayer().getUniqueId().toString(), sb);
 

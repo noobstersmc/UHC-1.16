@@ -1,8 +1,14 @@
 package me.infinityz.minigame;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
+import java.util.Properties;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
@@ -62,6 +68,26 @@ public class UHC extends JavaPlugin {
     private @Getter GamemodeManager gamemodeManager;
     private @Getter @Setter Game game;
     private static @Setter TaskChainFactory taskChainFactory;
+
+    public void changeSeed(String seed) {
+        Properties properties = new Properties();
+        File propertiesFile = new File("server.properties");
+
+        try {
+            try (InputStream is = new FileInputStream(propertiesFile)) {
+                properties.load(is);
+            }
+
+            getLogger().info("Saving max players to server.properties...");
+            properties.setProperty("level-seed", seed);
+
+            try (OutputStream os = new FileOutputStream(propertiesFile)) {
+                properties.store(os, "Minecraft server properties");
+            }
+        } catch (IOException e) {
+            getLogger().log(Level.SEVERE, "An error occurred while updating the server properties", e);
+        }
+    }
 
     @Override
     public void onEnable() {

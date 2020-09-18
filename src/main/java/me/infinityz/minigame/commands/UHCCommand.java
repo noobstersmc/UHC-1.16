@@ -12,12 +12,14 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.meta.BannerMeta;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Conditions;
+import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Flags;
 import co.aikar.commands.annotation.Optional;
 import co.aikar.commands.annotation.Subcommand;
@@ -116,6 +118,34 @@ public class UHCCommand extends BaseCommand {
 
     }
 
+    @Subcommand("ocs")
+    @CommandPermission("UHC.CRACK")
+    public void openChunkSystem(Player player){        
+        var mainHandItem = player.getInventory().getItemInMainHand();
+        if(mainHandItem != null){
+            if(mainHandItem.getItemMeta() instanceof BannerMeta){
+                var bannerMeta = (BannerMeta)mainHandItem.getItemMeta();
+                var team = instance.getTeamManger().getPlayerTeam(player.getUniqueId());
+                if(team != null){
+                    team.setTeamShieldPattern(bannerMeta.getPatterns());
+                    team.sendTeamMessage("Team banner has been changed.");  
+                }
+                
+            }
+
+        }
+
+
+    }
+
+    @Subcommand("seed")
+    @CommandPermission("uhc.admin")
+    public void onChangeSeed(CommandSender sender, @Default("")String seed){
+        instance.changeSeed(seed);
+        sender.sendMessage("Attempting to change seed to: " + seed);
+
+    }
+
     @Subcommand("color")
     @CommandPermission("uhc.admin")
     public void onTeamColor(Player sender, @Optional Player target, Integer index, String str) {
@@ -130,6 +160,7 @@ public class UHCCommand extends BaseCommand {
             e.printStackTrace();
         }
     }
+
 
     @Conditions("ingame")
     @CommandAlias("kt|killtop")

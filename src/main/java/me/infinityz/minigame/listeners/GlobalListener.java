@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.World.Environment;
+import org.bukkit.block.Banner;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -13,6 +14,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -21,6 +23,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.event.world.PortalCreateEvent.CreateReason;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -174,6 +177,30 @@ public class GlobalListener implements Listener {
             e.setCancelled(true);
             e.getPlayer().sendMessage(ChatColor.RED + "Globalmute is Enabled.");
         }
+    }
+
+    @EventHandler
+    public void onCraft(PrepareItemCraftEvent  e){
+        if(e.getRecipe() != null && e.getRecipe().getResult().getType() == Material.SHIELD){
+            var team = instance.getTeamManger().getPlayerTeam(e.getView().getPlayer().getUniqueId());
+            if(team != null){
+                var pattern = team.getTeamShieldPattern();
+                if(pattern != null){
+                    var item = e.getRecipe().getResult();
+                    var meta = item.getItemMeta();
+                    var bmeta = (BlockStateMeta)meta;
+                    var banner = (Banner)bmeta.getBlockState();
+                    banner.setPatterns(pattern);
+                    banner.update();
+                    bmeta.setBlockState(banner);
+                    item.setItemMeta(bmeta);
+                    e.getInventory().setResult(item);
+
+                }
+            }
+        }
+        
+        
     }
 
     @EventHandler

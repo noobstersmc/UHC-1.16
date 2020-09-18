@@ -2,6 +2,7 @@ package me.infinityz.minigame.teams.objects;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -13,6 +14,7 @@ import com.google.gson.GsonBuilder;
 import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.block.banner.Pattern;
 import org.bukkit.entity.Player;
 
 import lombok.Getter;
@@ -20,6 +22,7 @@ import lombok.Setter;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.players.UHCPlayer;
 import me.infinityz.minigame.scoreboard.objects.FastBoard;
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 
 public class Team {
@@ -32,6 +35,7 @@ public class Team {
     private @Getter @Setter int teamKills;
     private @Getter @Setter String teamPrefix = "➤ ";
     private @Getter @Setter int teamColorIndex = 10;
+    private @Getter @Setter List<Pattern> teamShieldPattern;
 
     public Team(UUID teamLeader) {
         this.teamID = UUID.randomUUID();
@@ -47,7 +51,7 @@ public class Team {
                         || member.getMostSignificantBits() == uuid.getMostSignificantBits());
     }
 
-    public boolean isCustomName(){
+    public boolean isCustomName() {
         return !teamID.toString().substring(0, 6).equalsIgnoreCase(teamDisplayName);
     }
 
@@ -80,6 +84,11 @@ public class Team {
 
     public void sendTeamMessage(String str) {
         getPlayerStream().forEach(player -> player.sendMessage(str));
+    }
+
+    public void sendTeamMessageWithPrefix(String message) {
+        sendTeamMessage(
+                ChatColor.of("#DABC12") + "[Team" + (isCustomName() ? " " + getTeamDisplayName() : "") + "]" + message);
     }
 
     public Stream<Player> getPlayerStream() {

@@ -24,7 +24,9 @@ import co.aikar.commands.annotation.Syntax;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.scoreboard.objects.FastBoard;
 import me.infinityz.minigame.teams.events.PlayerJoinedTeamEvent;
+import me.infinityz.minigame.teams.events.PlayerKickedFromTeamEvent;
 import me.infinityz.minigame.teams.events.PlayerLeftTeamEvent;
+import me.infinityz.minigame.teams.events.PlayerPromotedToLeaderEvent;
 import me.infinityz.minigame.teams.events.TeamCreatedEvent;
 import me.infinityz.minigame.teams.events.TeamDisbandedEvent;
 import me.infinityz.minigame.teams.events.TeamInviteSentEvent;
@@ -122,14 +124,75 @@ public class TeamCMD extends BaseCommand {
     @Syntax("<target> - player to be kicked.")
     public void onKickMember(@Conditions("hasTeam|isTeamLeader") Player player,
             @Flags("other") @Conditions("sameTeam") Player target) {
+        if (target == player) {
+            player.sendMessage(ChatColor.RED + "You can't kick yourself...");
+            return;
+        }
+
+        var team = getPlayerTeam(player.getUniqueId());
+        if (team != null && team.removeMember(target.getUniqueId())) {
+            Bukkit.getPluginManager().callEvent(new PlayerKickedFromTeamEvent(team, target));
+        }
 
     }
+
+    @Subcommand("promote|leader")
+    @CommandCompletion("@teamMembers")
+    @Syntax("<target> - player to be promoted")
+    public void teamPromote(@Conditions("hasTeam|isTeamLeader") Player player,
+            @Flags("other") @Conditions("sameTeam") Player target) {
+        if (target == player) {
+            player.sendMessage(ChatColor.RED + "You can't promote yourself...");
+            return;
+        }
+        var team = getPlayerTeam(player.getUniqueId());
+        if (team != null) {
+            team.setTeamLeader(target.getUniqueId());
+            Bukkit.getPluginManager().callEvent(new PlayerPromotedToLeaderEvent(team, target));
+        }
+    }
+
+    @CommandCompletion("@otherplayers")
+    @CommandPermission("uhc.team.forcejoin")
+    @Subcommand("forcejoin|fj")
+    @Syntax("/team forcejoin <target> <targetTeam>")
+    public void forceJoin(CommandSender sender, @Flags("other") Player target,
+            @Flags("other") @Conditions("hasTeam") Player toTeamPlayer) {
+        var targetTeam = getPlayerTeam(target.getUniqueId());
+        if (targetTeam != null) {
+            if (targetTeam.isTeamLeader(target.getUniqueId()) && disbandTeam(targetTeam, true))
+                targetTeam.sendTeamMessageWithPrefix(" Your team has been removed by an admin.");
+            else
+                removePlayerFromTeam(targetTeam, target);
+        }
+        var toTeam = getPlayerTeam(toTeamPlayer.getUniqueId());
+        if (toTeam != null && toTeam.addMember(target.getUniqueId())){
+            toTeam.sendTeamMessageWithPrefix(" " + target.getName() + " has been added to the team by an admin.");
+            var event = new PlayerJoinedTeamEvent(toTeam, target);
+            event.setQuiet(true);
+            Bukkit.getPluginManager().callEvent(event);
+        }
+        else
+            sender.sendMessage(target.getName() + " could not be added to the target team.");
+
+    }
+
+    
+    public void forceRemove(CommandSender sender,  @Flags("other") Player target,
+    @Flags("other") @Conditions("hasTeam") Player toTeamPlayer){
+
+    }
+
+    // TODO: ADD FORCE JOIN | REMOVE
 
     @Conditions("teamManagement")
     @Subcommand("leave|quit|abandon")
     public void leaveTeam(@Conditions("isNotTeamLeader") Player player) {
         var team = getPlayerTeam(player.getUniqueId());
+        removePlayerFromTeam(team, player);
+    }
 
+    private void removePlayerFromTeam(Team team, Player player) {
         if (team.removeMember(player.getUniqueId())) {
             // Clear cache and team set
             instance.getTeamManger().getCache().invalidate(player.getUniqueId().getMostSignificantBits());
@@ -139,6 +202,7 @@ public class TeamCMD extends BaseCommand {
             player.sendMessage(ChatColor.RED + "Could not remove your from the team.");
             System.err.println(player.getName() + " tried to left their team but couldn't");
         }
+
     }
 
     @Subcommand("rename|name")
@@ -181,16 +245,27 @@ public class TeamCMD extends BaseCommand {
     @Subcommand("disband")
     public void teamDisband(@Conditions("hasTeam|isTeamLeader") Player player) {
         var team = getPlayerTeam(player.getUniqueId());
+        if (!disbandTeam(team))
+            player.sendMessage(ChatColor.RED + "Couldn't disband the team.");
+
+    }
+
+    private boolean disbandTeam(Team team) {
+        return disbandTeam(team, false);
+    }
+
+    private boolean disbandTeam(Team team, boolean quiet) {
         if (instance.getTeamManger().getTeamMap().remove(team.getTeamID(), team)) {
             // Clear the cache
             for (var uuid : team.getMembers())
                 instance.getTeamManger().getCache().invalidate(uuid.getMostSignificantBits());
 
-            Bukkit.getPluginManager().callEvent(new TeamDisbandedEvent(team));
-        } else {
-            player.sendMessage(ChatColor.RED + "Couldn't disband the team.");
+            var event = new TeamDisbandedEvent(team);
+            event.setQuiet(quiet);
+            Bukkit.getPluginManager().callEvent(event);
+            return true;
         }
-
+        return false;
     }
 
     @CommandPermission("uhc.team.reset")
@@ -203,10 +278,6 @@ public class TeamCMD extends BaseCommand {
         instance.getTeamManger().clearCache();
     }
 
-    public void teamPromote() {
-
-    }
-
     @Subcommand("chat|tc")
     @Syntax("<message> - Message to send to your team")
     @CommandAlias("tc|teamchat")
@@ -216,8 +287,7 @@ public class TeamCMD extends BaseCommand {
         team.getPlayerStream().filter(player -> player != sender).forEach(members -> {
             members.playSound(members.getLocation(), Sound.BLOCK_NOTE_BLOCK_BIT, 0.25f, 1);
         });
-        team.sendTeamMessage(ChatColor.of("#DABC12") + "[Team" + (team.isCustomName() ? " " + team.getTeamDisplayName() : "") + "] " + sender.getName()
-                + ": " + ChatColor.GRAY + message);
+        team.sendTeamMessageWithPrefix(sender.getName() + ": " + ChatColor.GRAY + message);
     }
 
     @CommandAlias("sendcoord|sendcoords|sc")

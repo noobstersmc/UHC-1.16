@@ -15,7 +15,9 @@ import lombok.RequiredArgsConstructor;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.scoreboard.objects.FastBoard;
 import me.infinityz.minigame.teams.events.PlayerJoinedTeamEvent;
+import me.infinityz.minigame.teams.events.PlayerKickedFromTeamEvent;
 import me.infinityz.minigame.teams.events.PlayerLeftTeamEvent;
+import me.infinityz.minigame.teams.events.PlayerPromotedToLeaderEvent;
 import me.infinityz.minigame.teams.events.TeamCreatedEvent;
 import me.infinityz.minigame.teams.events.TeamDisbandedEvent;
 import me.infinityz.minigame.teams.events.TeamInviteExpireEvent;
@@ -50,6 +52,22 @@ public class TeamListeners implements Listener {
     }
 
     @EventHandler
+    public void onTeamPromotedEvent(PlayerPromotedToLeaderEvent e) {
+        var team = e.getTeam();
+        team.sendTeamMessage(
+                ChatColor.of("#DABC12") + "[Team" + (team.isCustomName() ? " " + team.getTeamDisplayName() : "") + "] "
+                        + e.getPlayer().getName() + " has been promoted to team leader.");
+    }
+
+    @EventHandler
+    public void onPlayerKicked(PlayerKickedFromTeamEvent e) {
+        var team = e.getTeam();
+        var player = e.getPlayer();
+        team.sendTeamMessage(SUSHI_GREEN + player.getName() + " has been kicked from the team!");
+        player.sendMessage(SUSHI_GREEN + "You've been kicked out of your team!");
+    }
+
+    @EventHandler
     public void onCreate(TeamCreatedEvent e) {
         var team = e.getTeam();
         e.getPlayer().sendMessage(SUSHI_GREEN + "Team " + team.getTeamDisplayName() + " has been created!");
@@ -67,7 +85,6 @@ public class TeamListeners implements Listener {
     @EventHandler
     public void onRemove(TeamRemovedEvent e) {
         var team = e.getTeam();
-        team.sendTeamMessage("Your team has been removed!");
         team.getPlayerStream().forEach(all -> {
             try {
                 FastBoard.removeTeam(all);
@@ -75,21 +92,18 @@ public class TeamListeners implements Listener {
                 ex.printStackTrace();
             }
         });
+        if (e instanceof TeamDisbandedEvent)
+            return;
 
+        team.sendTeamMessage("Your team has been removed!");
     }
 
     @EventHandler
     public void onRemove(TeamDisbandedEvent e) {
         var team = e.getTeam();
-        team.sendTeamMessage(ChatColor.RED + "Team has been disbanded by "
-                + Bukkit.getOfflinePlayer(e.getTeam().getTeamLeader()).getName());
-        team.getPlayerStream().forEach(all -> {
-            try {
-                FastBoard.removeTeam(all);
-            } catch (ReflectiveOperationException ex) {
-                ex.printStackTrace();
-            }
-        });
+        if (!e.isQuiet())
+            team.sendTeamMessage(ChatColor.RED + "Team has been disbanded by "
+                    + Bukkit.getOfflinePlayer(e.getTeam().getTeamLeader()).getName());
 
     }
 
@@ -97,7 +111,8 @@ public class TeamListeners implements Listener {
     public void onJoinTeam(PlayerJoinedTeamEvent e) {
         var team = e.getTeam();
         // Notify the team that the player has joined
-        team.sendTeamMessage(SUSHI_GREEN + e.getPlayer().getName() + " has joined the team!");
+        if (!e.isQuiet())
+            team.sendTeamMessage(SUSHI_GREEN + e.getPlayer().getName() + " has joined the team!");
 
         var nameList = team.getOfflinePlayersStream().map(OfflinePlayer::getName).collect(Collectors.toList());
         team.getPlayerStream().forEach(all -> {
@@ -113,9 +128,13 @@ public class TeamListeners implements Listener {
 
     @EventHandler
     public void onLeftTeam(PlayerLeftTeamEvent e) {
+        var player = e.getPlayer();
         var team = e.getTeam();
-        e.getPlayer().sendMessage(ChatColor.of("#DABC12") + "You've abandoned Team " + team.getTeamDisplayName());
-        team.sendTeamMessage(SUSHI_GREEN + e.getPlayer().getName() + " has abandoned the team!");
+        try {
+            FastBoard.removeTeam(player);
+        } catch (ReflectiveOperationException ex) {
+            ex.printStackTrace();
+        }
         var nameList = team.getOfflinePlayersStream().map(OfflinePlayer::getName).collect(Collectors.toList());
         team.getPlayerStream().forEach(all -> {
             try {
@@ -126,12 +145,11 @@ public class TeamListeners implements Listener {
             }
         });
 
-        var player = e.getPlayer();
-        try {
-            FastBoard.removeTeam(player);
-        } catch (ReflectiveOperationException ex) {
-            ex.printStackTrace();
-        }
+        if (e instanceof PlayerKickedFromTeamEvent)
+            return;
+
+        e.getPlayer().sendMessage(ChatColor.of("#DABC12") + "You've abandoned Team " + team.getTeamDisplayName());
+        team.sendTeamMessage(SUSHI_GREEN + e.getPlayer().getName() + " has abandoned the team!");
 
     }
 
