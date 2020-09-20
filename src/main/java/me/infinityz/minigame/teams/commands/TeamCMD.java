@@ -490,7 +490,7 @@ public class TeamCMD extends BaseCommand {
     @CommandPermission("uhc.team.management")
     @CommandCompletion("@range:1-9")
     @Syntax("<number> - Team size to be set")
-    @Subcommand("size")
+    @Subcommand("size|limit|lim")
     public void teamSize(CommandSender sender, @Conditions("limits:min=1,max=100") Integer number) {
         sender.sendMessage(ChatColor.of("#DABC12") + "Team size has been set from "
                 + instance.getTeamManger().getTeamSize() + " to " + number);

@@ -4,19 +4,17 @@ import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
 
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.gamemodes.IGamemode;
 
-public class SwordLess extends IGamemode implements Listener {
+public class ShieldLess extends IGamemode implements Listener {
     private UHC instance;
 
-    public SwordLess(UHC instance) {
-        super("SwordLess", "Swords are disabled.");
+    public ShieldLess(UHC instance) {
+        super("ShieldLess", "Shields are disabled.");
         this.instance = instance;
     }
 
@@ -40,14 +38,7 @@ public class SwordLess extends IGamemode implements Listener {
 
     @EventHandler
     public void onCraft(CraftItemEvent e) {
-        if (isSword(e.getCurrentItem()))
-            e.setCancelled(true);
-
-    }
-
-    @EventHandler
-    public void onDrop(ItemSpawnEvent e) {
-        if (isSword(e.getEntity().getItemStack()))
+        if (e.getCurrentItem().getType().equals(Material.SHIELD))
             e.setCancelled(true);
 
     }
@@ -56,12 +47,8 @@ public class SwordLess extends IGamemode implements Listener {
     public void onHold(PlayerInteractEvent e) {
         if(e.getAction() == Action.PHYSICAL)
             return;        
-        if(isSword(e.getItem()))
+        if(e.getItem() != null && e.getItem().getType().equals(Material.SHIELD))
             e.getItem().setType(Material.AIR);
-    }
-
-    private boolean isSword(ItemStack e){
-        return e != null && e.getType().toString().contains("_SWORD");
     }
 
 }

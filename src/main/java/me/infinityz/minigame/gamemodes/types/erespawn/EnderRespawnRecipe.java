@@ -1,4 +1,4 @@
-package me.infinityz.minigame.gamemodes.types;
+package me.infinityz.minigame.gamemodes.types.erespawn;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -19,7 +19,7 @@ public class EnderRespawnRecipe extends CustomRecipe {
 
                 final ItemStack respawnCrystal = new ItemStack(Material.END_CRYSTAL);
                 final ItemMeta im = respawnCrystal.getItemMeta();
-                im.setDisplayName(ChatColor.BOLD + "" + ChatColor.LIGHT_PURPLE + "" + "Respawn Crystal");
+                im.setDisplayName(ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "Respawn Crystal");
                 respawnCrystal.setItemMeta(im);
 
                 final ShapelessRecipe recipe = new ShapelessRecipe(getNamespacedKey(), respawnCrystal);

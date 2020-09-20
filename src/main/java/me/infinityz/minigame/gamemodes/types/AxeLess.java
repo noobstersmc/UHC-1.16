@@ -7,6 +7,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.gamemodes.IGamemode;
@@ -39,14 +40,14 @@ public class AxeLess extends IGamemode implements Listener {
 
     @EventHandler
     public void onCraft(CraftItemEvent e) {
-        if (e.getCurrentItem().getType().toString().contains("_AXE"))
+        if (isAxe(e.getCurrentItem()))
             e.setCancelled(true);
 
     }
 
     @EventHandler
     public void onDrop(ItemSpawnEvent e) {
-        if (e.getEntity().getItemStack().getType().toString().contains("_AXE"))
+        if (isAxe(e.getEntity().getItemStack()))
             e.setCancelled(true);
 
     }
@@ -54,9 +55,14 @@ public class AxeLess extends IGamemode implements Listener {
     @EventHandler
     public void onHold(PlayerInteractEvent e) {
         if(e.getAction() == Action.PHYSICAL)
-            return;        
-        if(e.getItem() != null && e.getItem().getType().toString().contains("_AXE"))
-            e.getItem().setType(Material.AIR);
+            return;
+        var item = e.getItem();      
+        if(isAxe(item))
+            item.setType(Material.AIR);
+    }
+
+    private boolean isAxe(ItemStack e){
+        return e != null && e.getType().toString().contains("_AXE");
     }
 
 }

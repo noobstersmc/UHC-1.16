@@ -1,4 +1,4 @@
-package me.infinityz.minigame.gamemodes.types;
+package me.infinityz.minigame.gamemodes.types.erespawn;
 
 import java.util.ArrayList;
 
@@ -9,16 +9,21 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.EnderCrystal;
+import org.bukkit.event.Event.Result;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.inventory.ItemStack;
 
 import co.aikar.taskchain.TaskChain;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.gamemodes.IGamemode;
-import net.md_5.bungee.api.ChatColor;
+import me.infinityz.minigame.teams.objects.Team;
 
 /**
  * EnderRespawn
@@ -27,7 +32,7 @@ public class EnderRespawn extends IGamemode implements Listener {
     private UHC instance;
     private EnderRespawnRecipe recipe;
 
-    private ArrayList<String> alreadyRespawn = new ArrayList<>();
+    private ArrayList<Long> respawnedList = new ArrayList<>();
 
     public EnderRespawn(UHC instance) {
         super("Ender Respawn", "Respawn team leader with EnderCrystal.");
@@ -64,59 +69,65 @@ public class EnderRespawn extends IGamemode implements Listener {
 
     }
 
+    boolean allowEnderRespawn(ItemStack item) {
+        return item != null && item.getType() == Material.END_CRYSTAL && item.hasItemMeta()
+                && item.getItemMeta().getDisplayName().contains("Respawn Crystal");
+    }
+
+    boolean canTeamLeaderRespawn(Team team) {
+        if (team != null) {
+            var leader = team.getTeamLeader();
+            var leaderPlayer = Bukkit.getOfflinePlayer(leader);
+            if (leaderPlayer.isOnline() && !respawnedList.contains(leader.getMostSignificantBits()))
+                return true;
+        }
+        return false;
+    }
+
     @EventHandler
-    public void onEntityHanging(PlayerInteractEvent e) {
-        if (e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+    public void onEnderRespawnPlaceAttempt(PlayerInteractEvent e) {
+        if (e.getAction() == Action.RIGHT_CLICK_BLOCK && instance.getTeamManger().isTeams()) {
             var block = e.getClickedBlock();
             if (block.getType() != Material.AIR) {
                 var itemInHand = e.getItem();
-                if (itemInHand != null && itemInHand.getType() == Material.END_CRYSTAL) {
-                    if (itemInHand.hasItemMeta()
-                            && itemInHand.getItemMeta().getDisplayName().contains("Respawn Crystal")
-                            && (itemInHand.getItemMeta().getDisplayName().contains(ChatColor.LIGHT_PURPLE + ""))) {
-                                var player = e.getPlayer();
-
-                                respawnAnimation(e.getClickedBlock().getLocation());
-                                /*
-                                var team = instance.getTeamManger().getPlayerTeam(player.getUniqueId());
-                                if(team != null){
-                                    var uhcLeader = instance.getPlayerManager().getPlayer(team.getTeamLeader());
-                                    if(uhcLeader != null){
-                                        if(!alreadyRespawn.contains(uhcLeader.getUUID().toString())){
-                                            alreadyRespawn.add(uhcLeader.getUUID().toString());
-                                            respawnAnimation(e.getClickedBlock().getLocation());
-
-                                        }else{
-                                            player.sendMessage(ChatColor.RED + "You can only respawn your leader once.");
-                                            
-                                        e.setUseItemInHand(Result.DENY);
-                                        }
-
-                                    }else{
-                                        e.setUseItemInHand(Result.DENY);
-                                    }
-                                }else{
-                                    e.setUseItemInHand(Result.DENY);
-                                }
-
-                                */
-
-
+                if (allowEnderRespawn(itemInHand)) {
+                    var player = e.getPlayer();
+                    var team = instance.getTeamManger().getPlayerTeam(player.getUniqueId());
+                    if (canTeamLeaderRespawn(team)) {
+                        respawnAnimation(block.getLocation());
+                        respawnedList.add(team.getTeamLeader().getMostSignificantBits());
+                    } else {
+                        e.setCancelled(true);
+                        e.setUseInteractedBlock(Result.DENY);
+                        e.setUseItemInHand(Result.DENY);
                     }
+
                 }
             }
 
         }
     }
 
+    @EventHandler
+    public void onAnvilRename(InventoryClickEvent e) {
+        var clickedInventory = e.getClickedInventory();
+        if (clickedInventory != null && clickedInventory.getType() == InventoryType.ANVIL) {
+            var itemSlot0 = e.getInventory().getItem(0);
+            if ((e.getSlotType() == SlotType.RESULT && allowEnderRespawn(e.getCurrentItem()))
+                    || allowEnderRespawn(itemSlot0)) {
+                e.setCancelled(true);
+            }
+        }
+    }
+
     public void respawnAnimation(Location loc) {
-        final double x = loc.getBlockX()+ 0.0;
-        final double y = loc.getBlockY()+ 0.0;
+        final double x = loc.getBlockX() + 0.0;
+        final double y = loc.getBlockY() + 0.0;
         final double z = loc.getBlockZ() + 0.0;
         final var tower = "fill %.0f %.0f %.0f %.0f %.0f %.0f minecraft:obsidian destroy";
         UHC.newChain().delay(1).sync(() -> {
             // TOWER 1
-            
+
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "execute in minecraft:overworld run weather thunder");
 
             loc.getWorld().playSound(loc, Sound.ENTITY_BLAZE_SHOOT, SoundCategory.VOICE, 10, 0.1f);
@@ -188,7 +199,8 @@ public class EnderRespawn extends IGamemode implements Listener {
                 .sync(() -> loc.getWorld().strikeLightningEffect(loc.clone().set(x, y, z))).delay(10)
                 .sync(() -> loc.getWorld().strikeLightningEffect(loc.clone().set(x, y, z))).delay(10).sync(() -> {
                     loc.getWorld().strikeLightningEffect(loc.clone().set(x, y, z));
-                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "execute in minecraft:overworld run weather clear");
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
+                            "execute in minecraft:overworld run weather clear");
                 }).sync(TaskChain::abort).execute();
     }
 

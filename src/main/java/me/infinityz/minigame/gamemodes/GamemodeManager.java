@@ -11,11 +11,16 @@ import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.gamemodes.types.AxeLess;
 import me.infinityz.minigame.gamemodes.types.BowLess;
 import me.infinityz.minigame.gamemodes.types.Cutclean;
-import me.infinityz.minigame.gamemodes.types.EnderRespawn;
+import me.infinityz.minigame.gamemodes.types.DebugMode;
+import me.infinityz.minigame.gamemodes.types.FireLess;
 import me.infinityz.minigame.gamemodes.types.GoToHell;
 import me.infinityz.minigame.gamemodes.types.Moles;
+import me.infinityz.minigame.gamemodes.types.NoFall;
+import me.infinityz.minigame.gamemodes.types.ShieldLess;
 import me.infinityz.minigame.gamemodes.types.SwordLess;
 import me.infinityz.minigame.gamemodes.types.UHCLatamT2;
+import me.infinityz.minigame.gamemodes.types.erespawn.EnderRespawn;
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -35,7 +40,10 @@ public class GamemodeManager {
         registerGamemode(new BowLess(instance));
         registerGamemode(new AxeLess(instance));
         registerGamemode(new SwordLess(instance));
-        registerGamemode(new FlowerPower(instance));
+        registerGamemode(new ShieldLess(instance));
+        registerGamemode(new FireLess(instance));
+        registerGamemode(new NoFall(instance));
+        registerGamemode(new DebugMode(instance));
 
         instance.getCommandManager().getCommandCompletions().registerAsyncCompletion("scenarios",
                 c -> gamemodesList.stream().map(IGamemode::getName).collect(Collectors.toList()));
@@ -81,6 +89,7 @@ public class GamemodeManager {
         var componentBuilder = new ComponentBuilder();
         var enabledScenarios = getEnabledGamemodes();
         var iter = enabledScenarios.iterator();
+        componentBuilder.color(ChatColor.WHITE);
 
         if (iter.hasNext()) {
             while (iter.hasNext()) {

@@ -9,7 +9,6 @@ import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -20,7 +19,6 @@ import org.bukkit.util.Vector;
 import lombok.Getter;
 import lombok.Setter;
 import me.infinityz.minigame.UHC;
-import me.infinityz.minigame.events.ScoreboardUpdateEvent;
 import me.infinityz.minigame.gamemodes.IGamemode;
 
 public class Cutclean extends IGamemode implements Listener{
@@ -52,20 +50,7 @@ public class Cutclean extends IGamemode implements Listener{
         setEnabled(false);
         return true;
     }
-    /*
-    @EventHandler(priority = EventPriority.LOW)
-    public void onScoreboardUpdate(ScoreboardUpdateEvent e){
-        e.setCancelled(true);
-        e.setLines(new String[]{"UHC", "CUTCLEAN"});
-    }
-
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onScoreboardUpdateHigh(ScoreboardUpdateEvent e){
-        e.setCancelled(false);
-    }
-
-    */
-
+    
     @EventHandler(ignoreCancelled = true)
     public void onBlockBreak(final BlockBreakEvent e) {
 

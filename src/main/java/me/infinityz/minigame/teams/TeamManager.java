@@ -65,6 +65,10 @@ public class TeamManager {
         return newInvite;
     }
 
+    public boolean isTeams() {
+        return teamSize > 1;
+    }
+
     public TeamInvite getTeamInviteForSender(UUID sender) {
         return teamInvite.getIfPresent(sender.getMostSignificantBits());
     }

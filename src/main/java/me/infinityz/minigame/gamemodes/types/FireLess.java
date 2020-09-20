@@ -1,15 +1,18 @@
 package me.infinityz.minigame.gamemodes.types;
 
+import org.bukkit.entity.EntityType;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
 
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.gamemodes.IGamemode;
 
-public class FlowerPower extends IGamemode implements Listener {
+public class FireLess extends IGamemode implements Listener {
     private UHC instance;
 
-    public FlowerPower(UHC instance) {
-        super("FlowerPower", "Flowers drop random items.");
+    public FireLess(UHC instance) {
+        super("FireLess", "Fire damage is disabled.");
         this.instance = instance;
     }
 
@@ -31,14 +34,12 @@ public class FlowerPower extends IGamemode implements Listener {
         return true;
     }
 
-    /*@EventHandler
-    public void onBreak(BlockBreakEvent e) {
-        switch(e.getBlock().getType()){
-
+    @EventHandler
+    public void onDamage(EntityDamageEvent e) {
+        if (e.getEntityType() == EntityType.PLAYER && (e.getCause() == EntityDamageEvent.DamageCause.FIRE
+                || e.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK
+                || e.getCause() == EntityDamageEvent.DamageCause.LAVA)) {
+            e.setCancelled(true);
         }
-            
-    }*/
-
-
-
+    }
 }
