@@ -16,10 +16,11 @@ import me.infinityz.minigame.gamemodes.types.FireLess;
 import me.infinityz.minigame.gamemodes.types.GoToHell;
 import me.infinityz.minigame.gamemodes.types.Moles;
 import me.infinityz.minigame.gamemodes.types.NoFall;
-import me.infinityz.minigame.gamemodes.types.ShadouneMode;
+import me.infinityz.minigame.gamemodes.types.Baguettes;
 import me.infinityz.minigame.gamemodes.types.ShieldLess;
 import me.infinityz.minigame.gamemodes.types.SwordLess;
 import me.infinityz.minigame.gamemodes.types.UHCLatamT2;
+import me.infinityz.minigame.gamemodes.types.HasteyBoys;
 import me.infinityz.minigame.gamemodes.types.erespawn.EnderRespawn;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -45,7 +46,8 @@ public class GamemodeManager {
         registerGamemode(new FireLess(instance));
         registerGamemode(new NoFall(instance));
         registerGamemode(new DebugMode(instance));
-        registerGamemode(new ShadouneMode(instance));
+        registerGamemode(new Baguettes(instance));
+        registerGamemode(new HasteyBoys(instance));
 
         instance.getCommandManager().getCommandCompletions().registerAsyncCompletion("scenarios",
                 c -> gamemodesList.stream().map(IGamemode::getName).collect(Collectors.toList()));

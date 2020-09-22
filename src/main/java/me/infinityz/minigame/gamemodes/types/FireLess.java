@@ -38,7 +38,8 @@ public class FireLess extends IGamemode implements Listener {
     public void onDamage(EntityDamageEvent e) {
         if (e.getEntityType() == EntityType.PLAYER && (e.getCause() == EntityDamageEvent.DamageCause.FIRE
                 || e.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK
-                || e.getCause() == EntityDamageEvent.DamageCause.LAVA)) {
+                || e.getCause() == EntityDamageEvent.DamageCause.LAVA
+                || e.getCause() == EntityDamageEvent.DamageCause.HOT_FLOOR)) {
             e.setCancelled(true);
         }
     }

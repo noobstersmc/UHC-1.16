@@ -10,13 +10,13 @@ import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.gamemodes.IGamemode;
 import net.md_5.bungee.api.ChatColor;
 
-public class ShadouneMode extends IGamemode implements Listener {
+public class Baguettes extends IGamemode implements Listener {
     private UHC instance;
 
-    public ShadouneMode(UHC instance) {
-        super("Shadoune Mode", "Some extra rules might be active. Please ask the staff for now.");
+    public Baguettes(UHC instance) {
+        super("Baguettes", "Some extra rules might be active. Please ask the staff for now.");
         this.instance = instance;
-        instance.getCommandManager().registerCommand(new InnerShadouneMode());
+        instance.getCommandManager().registerCommand(new InnerBaguettes());
     }
 
     /**
@@ -24,7 +24,7 @@ public class ShadouneMode extends IGamemode implements Listener {
      */
 
     @CommandAlias("shadoune")
-    public class InnerShadouneMode extends BaseCommand {
+    public class InnerBaguettes extends BaseCommand {
 
         @Subcommand("set")
         public void setRuleDescription(CommandSender sender, String args) {

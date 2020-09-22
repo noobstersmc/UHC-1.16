@@ -61,6 +61,7 @@ public class StartCommand extends BaseCommand {
             return;
         }
         instance.setGameStage(Stage.SCATTER);
+        //
         if (instance.getTeamManger().isTeamManagement()) {
             Bukkit.dispatchCommand(sender, "team man false");
         }

@@ -50,13 +50,13 @@ public class BowLess extends IGamemode implements Listener {
             e.setCancelled(true);
 
     }
-
-    @EventHandler
+    
+    /*@EventHandler
     public void onHold(PlayerInteractEvent e) {
-        if(e.getAction() == Action.PHYSICAL)
-            return;        
-        if(e.getItem() != null && e.getItem().getType().equals(Material.BOW))
-            e.getItem().setType(Material.AIR);
-    }
-
+        if (e.getPlayer().getItemInHand().getType() == Material.BOW) {
+            e.getPlayer().setItemInHand(new ItemStack(Material.AIR));
+            e.setCancelled(true);
+        }
+    }*/
+    
 }
