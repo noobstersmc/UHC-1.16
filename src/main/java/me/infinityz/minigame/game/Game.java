@@ -32,6 +32,9 @@ public class Game {
     private int healTime = 120;
     private int borderCenterTime = 1800;
     private int borderSize = 4000;
+    private boolean strengthNerf = true;
+    private boolean criticalNerf = true;
+    private double applerate = 0.80;
 
     @Override
     public String toString() {

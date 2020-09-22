@@ -38,7 +38,6 @@ import me.infinityz.minigame.commands.GlobalMute;
 import me.infinityz.minigame.commands.HelpopCommand;
 import me.infinityz.minigame.commands.LatescatterCMD;
 import me.infinityz.minigame.commands.PVP;
-import me.infinityz.minigame.commands.ShieldFeature;
 import me.infinityz.minigame.commands.StartCommand;
 import me.infinityz.minigame.commands.UHCCommand;
 import me.infinityz.minigame.commands.Utilities;
@@ -114,7 +113,6 @@ public class UHC extends JavaPlugin {
         commandManager.registerCommand(new GameRestoreCMD(this));
         commandManager.registerCommand(new ConfigCommand(this));
         commandManager.registerCommand(new GamemodesCMD(this));
-        commandManager.registerCommand(new ShieldFeature());
 
         /*
          * Initilialize all the managers

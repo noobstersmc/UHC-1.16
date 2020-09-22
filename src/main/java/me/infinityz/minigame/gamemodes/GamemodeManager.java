@@ -16,6 +16,7 @@ import me.infinityz.minigame.gamemodes.types.FireLess;
 import me.infinityz.minigame.gamemodes.types.GoToHell;
 import me.infinityz.minigame.gamemodes.types.Moles;
 import me.infinityz.minigame.gamemodes.types.NoFall;
+import me.infinityz.minigame.gamemodes.types.ShadouneMode;
 import me.infinityz.minigame.gamemodes.types.ShieldLess;
 import me.infinityz.minigame.gamemodes.types.SwordLess;
 import me.infinityz.minigame.gamemodes.types.UHCLatamT2;
@@ -44,6 +45,7 @@ public class GamemodeManager {
         registerGamemode(new FireLess(instance));
         registerGamemode(new NoFall(instance));
         registerGamemode(new DebugMode(instance));
+        registerGamemode(new ShadouneMode(instance));
 
         instance.getCommandManager().getCommandCompletions().registerAsyncCompletion("scenarios",
                 c -> gamemodesList.stream().map(IGamemode::getName).collect(Collectors.toList()));

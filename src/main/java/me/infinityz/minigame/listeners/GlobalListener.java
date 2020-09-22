@@ -123,7 +123,9 @@ public class GlobalListener implements Listener {
      */
     @EventHandler
     public void onLeaf(LeavesDecayEvent e) {
-        if (Math.random() <= 0.0080) {
+        if (instance.getGame().getApplerate() == 0.5)
+            return;
+        if (Math.random() <= (instance.getGame().getApplerate() / 100)) {
             e.getBlock().setType(Material.AIR);
             e.getBlock().getLocation().getWorld().dropItemNaturally(e.getBlock().getLocation(),
                     new ItemStack(Material.APPLE));
@@ -156,7 +158,7 @@ public class GlobalListener implements Listener {
      */
     @EventHandler
     public void strengthFix(EntityDamageByEntityEvent e) {
-        if (e.getDamager().getType() != EntityType.PLAYER)
+        if (e.getDamager().getType() != EntityType.PLAYER || !instance.getGame().isStrengthNerf())
             return;
         var damager = (Player) e.getDamager();
         var strength = damager.getPotionEffect(PotionEffectType.INCREASE_DAMAGE);
@@ -173,7 +175,8 @@ public class GlobalListener implements Listener {
      */
     @EventHandler(priority = EventPriority.LOW)
     public void nerfCriticalDamage(EntityDamageByEntityEvent e) {
-        if (e.getEntity().getType() != EntityType.PLAYER || e.getDamager().getType() != EntityType.PLAYER)
+        if (e.getEntity().getType() != EntityType.PLAYER || e.getDamager().getType() != EntityType.PLAYER
+                || !instance.getGame().isCriticalNerf())
             return;
         var damager = (Player) e.getDamager();
         if (isCritical(damager)) {
@@ -204,17 +207,20 @@ public class GlobalListener implements Listener {
         }
     }
 
+    /**
+     * Shield feature
+     */
     @EventHandler
-    public void onCraft(PrepareItemCraftEvent  e){
-        if(e.getRecipe() != null && e.getRecipe().getResult().getType() == Material.SHIELD){
+    public void onCraft(PrepareItemCraftEvent e) {
+        if (e.getRecipe() != null && e.getRecipe().getResult().getType() == Material.SHIELD) {
             var team = instance.getTeamManger().getPlayerTeam(e.getView().getPlayer().getUniqueId());
-            if(team != null){
+            if (team != null) {
                 var pattern = team.getTeamShieldPattern();
-                if(pattern != null){
+                if (pattern != null) {
                     var item = e.getRecipe().getResult();
                     var meta = item.getItemMeta();
-                    var bmeta = (BlockStateMeta)meta;
-                    var banner = (Banner)bmeta.getBlockState();
+                    var bmeta = (BlockStateMeta) meta;
+                    var banner = (Banner) bmeta.getBlockState();
                     banner.setPatterns(pattern);
                     banner.update();
                     bmeta.setBlockState(banner);
@@ -224,8 +230,7 @@ public class GlobalListener implements Listener {
                 }
             }
         }
-        
-        
+
     }
 
     @EventHandler

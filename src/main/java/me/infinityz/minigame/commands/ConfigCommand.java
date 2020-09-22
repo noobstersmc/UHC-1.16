@@ -7,6 +7,7 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
+import co.aikar.commands.annotation.Optional;
 import co.aikar.commands.annotation.Subcommand;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -92,6 +93,36 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
     @CommandAlias("bordersize")
     public void changeBorderSize(CommandSender sender, Integer newBorderSize) {
         instance.getGame().setBorderSize(newBorderSize);
+    }
+
+    @CommandPermission("uhc.config.strength")
+    @Subcommand("strength nerf")
+    @CommandAlias("strength-nerf")
+    public void changeStrengthNerf(CommandSender sender, @Optional Boolean bool) {
+        if(bool == null)
+            bool = !instance.getGame().isStrengthNerf();
+                
+        instance.getGame().setStrengthNerf(bool);
+        sender.sendMessage("Strength has been set to: " + bool);
+    }
+
+    @CommandPermission("uhc.config.critical")
+    @Subcommand("critical nerf")
+    @CommandAlias("critical-nerf")
+    public void changeCriticalNerf(CommandSender sender, @Optional Boolean bool) {
+        if(bool == null)
+            bool = !instance.getGame().isCriticalNerf();
+                
+        instance.getGame().setCriticalNerf(bool);
+        sender.sendMessage("Critcal nerf has been set to: " + bool);
+    }
+
+    @CommandPermission("uhc.config.applerate")
+    @Subcommand("applerate")
+    @CommandAlias("apple-rate")
+    public void changeApplerate(CommandSender sender, Double rate) {
+        sender.sendMessage("Applerate has been changed from " + instance.getGame().getApplerate() + "% to " + rate + "%");
+        instance.getGame().setApplerate(rate);
     }
     
 
