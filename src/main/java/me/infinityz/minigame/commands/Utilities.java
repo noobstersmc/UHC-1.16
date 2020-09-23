@@ -30,7 +30,7 @@ public @RequiredArgsConstructor class Utilities extends BaseCommand {
     @Syntax("<target> - player to change")
     @CommandCompletion("@onlineplayers")
     public void onVipCommand(CommandSender sender, @Flags("other") OfflinePlayer target) {
-        Bukkit.dispatchCommand(sender, "lp user " + target.getName() + " parent addtemp vip 30d");
+        Bukkit.dispatchCommand(sender, "lp user " + target.getName() + " parent set vip");
     }
 
     @CommandPermission("admin.perm")
@@ -39,7 +39,7 @@ public @RequiredArgsConstructor class Utilities extends BaseCommand {
     @Syntax("<target> - player to change")
     @CommandCompletion("@onlineplayers")
     public void onVipPlusCommand(CommandSender sender, @Flags("other") OfflinePlayer target) {
-        Bukkit.dispatchCommand(sender, "lp user " + target.getName() + " parent addtemp vip+ 30d");
+        Bukkit.dispatchCommand(sender, "lp user " + target.getName() + " parent set vip+");
     }
 
     @CommandPermission("admin.perm")
@@ -66,7 +66,7 @@ public @RequiredArgsConstructor class Utilities extends BaseCommand {
     @CommandAlias("promo")
     public void promotion(CommandSender sender){
         Bukkit.broadcastMessage(ChatColor.BLUE + "Discord! discord.noobsters.net\n" + ChatColor.AQUA
-        + "Twitter! twitter.com/NoobstersUHC\n" + ChatColor.GOLD + "Donations! noobsters.buycraft.net");
+        + "Twitter! twitter.com/NoobstersMC\n" + ChatColor.GOLD + "Donations! noobsters.buycraft.net");
     }
 
     @CommandPermission("admin.perm")

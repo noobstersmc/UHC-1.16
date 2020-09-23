@@ -24,7 +24,7 @@ public class Game {
     private boolean pvp = false;
     private boolean globalMute = false;
     private boolean nether = true;
-    private boolean end = true;
+    private boolean end = false;
     private boolean hasSomeoneWon = false;
     /* Game config */
     private int borderTime = 3600;

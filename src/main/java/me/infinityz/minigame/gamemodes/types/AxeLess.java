@@ -42,11 +42,8 @@ public class AxeLess extends IGamemode implements Listener {
 
     /*@EventHandler
     public void onDamage(EntityDamageEvent e) {
-        if(e.get)
-            return;
-        var item = e.getItem();      
-        if(isAxe(item))
-            item.setType(Material.AIR);
+        if(isAxe(e.getEntity().getDamager().getItemInHand()))
+            e.setCancelled(true);
     }
     
     

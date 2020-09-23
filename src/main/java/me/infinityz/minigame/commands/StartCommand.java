@@ -8,6 +8,9 @@ import org.bukkit.GameMode;
 import org.bukkit.GameRule;
 import org.bukkit.Statistic;
 import org.bukkit.command.CommandSender;
+import com.destroystokyo.paper.Title;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import co.aikar.taskchain.TaskChain;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
@@ -61,7 +64,19 @@ public class StartCommand extends BaseCommand {
             return;
         }
         instance.setGameStage(Stage.SCATTER);
-        //
+        
+        for(var count = 10; count<0; count--){
+            UHC.newChain().delay(20).sync(() -> {
+                // CUENTA REGRESIVA
+                Bukkit.getOnlinePlayers().forEach(players -> {
+                    players.sendTitle(Title.builder().title("")
+                    .subtitle(new ComponentBuilder(count).bold(true).color(ChatColor.GREEN).create()).build());
+                });
+            }).sync(TaskChain::abort).execute();
+        }
+
+
+
         if (instance.getTeamManger().isTeamManagement()) {
             Bukkit.dispatchCommand(sender, "team man false");
         }

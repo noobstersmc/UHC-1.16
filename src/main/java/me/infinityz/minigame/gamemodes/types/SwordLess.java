@@ -52,13 +52,12 @@ public class SwordLess extends IGamemode implements Listener {
 
     }
 
-    @EventHandler
+    /*EventHandler
     public void onHold(PlayerInteractEvent e) {
-        if(e.getAction() == Action.PHYSICAL)
-            return;        
-        if(isSword(e.getItem()))
-            e.getItem().setType(Material.AIR);
-    }
+        if(e.getAction() == Action.RIGHT_CLICK_AIR && isSword(e.getItem()))
+            var sword = e.getItem()
+            e.getPlayer().getInventory().Clear(sword);
+    }*/
 
     private boolean isSword(ItemStack e){
         return e != null && e.getType().toString().contains("_SWORD");

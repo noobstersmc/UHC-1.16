@@ -64,28 +64,28 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
     @Subcommand("pvptime")
     @CommandAlias("pvptime")
     public void changePvpTime(CommandSender sender, Integer newPvpTime) {
-        instance.getGame().setPvpTime(newPvpTime);
+        instance.getGame().setPvpTime(newPvpTime*60);
     }
 
     @CommandPermission("uhc.config.heal")
     @Subcommand("healtime")
     @CommandAlias("healtime")
     public void changeHealTime(CommandSender sender, Integer newHealTime) {
-        instance.getGame().setHealTime(newHealTime);
+        instance.getGame().setHealTime(newHealTime*60);
     }
 
     @CommandPermission("uhc.config.border")
     @Subcommand("bordertime")
     @CommandAlias("bordertime")
     public void changeBorderTime(CommandSender sender, Integer newBorderTime) {
-        instance.getGame().setBorderTime(newBorderTime);
+        instance.getGame().setBorderTime(newBorderTime*60);
     }
 
     @CommandPermission("uhc.config.border")
     @Subcommand("bordercentertime")
     @CommandAlias("bordercentertime")
     public void changeBorderCenterTime(CommandSender sender, Integer newBorderCenterTime) {
-        instance.getGame().setBorderCenterTime(newBorderCenterTime);
+        instance.getGame().setBorderCenterTime(newBorderCenterTime*60);
     }
 
     @CommandPermission("uhc.config.border")
