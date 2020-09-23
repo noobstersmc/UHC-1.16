@@ -1,14 +1,10 @@
 package me.infinityz.minigame.gamemodes.types;
 
-import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.ItemSpawnEvent;
-import org.bukkit.event.inventory.CraftItemEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerItemDamageEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 
 import me.infinityz.minigame.UHC;
@@ -40,16 +36,18 @@ public class AxeLess extends IGamemode implements Listener {
         return true;
     }
 
-    /*@EventHandler
-    public void onDamage(EntityDamageEvent e) {
-        if(isAxe(e.getEntity().getDamager().getItemInHand()))
-            e.setCancelled(true);
-    }
-    
-    
+    @EventHandler
+    public void onDamageByEntity(EntityDamageByEntityEvent e) {
+        if (e.getDamager() instanceof Player) {
+            var player = (Player) e.getDamager();
+            if (isAxe(player.getInventory().getItemInMainHand()))
+                e.setCancelled(true);
 
-    private boolean isAxe(ItemStack e){
+        }
+    }
+
+    private boolean isAxe(ItemStack e) {
         return e != null && e.getType().toString().contains("_AXE");
-    }*/
+    }
 
 }

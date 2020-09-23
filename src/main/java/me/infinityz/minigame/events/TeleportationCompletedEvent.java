@@ -16,7 +16,7 @@ public class TeleportationCompletedEvent extends Event {
     /*
      * Custom Data
      */
-    private @Getter @Setter int startDelayTicks = 200;
+    private @Getter @Setter int startDelayTicks = 20;
 
     public TeleportationCompletedEvent(boolean isASync) {
         super(isASync);

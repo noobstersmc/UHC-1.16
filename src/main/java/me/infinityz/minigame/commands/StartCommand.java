@@ -2,15 +2,15 @@ package me.infinityz.minigame.commands;
 
 import java.util.ArrayList;
 
+import com.destroystokyo.paper.Title;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Difficulty;
 import org.bukkit.GameMode;
 import org.bukkit.GameRule;
+import org.bukkit.Sound;
 import org.bukkit.Statistic;
 import org.bukkit.command.CommandSender;
-import com.destroystokyo.paper.Title;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import co.aikar.taskchain.TaskChain;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
@@ -20,6 +20,7 @@ import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Optional;
 import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.annotation.Syntax;
+import co.aikar.taskchain.TaskChain;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import me.infinityz.minigame.UHC;
@@ -29,12 +30,25 @@ import me.infinityz.minigame.events.TeleportationCompletedEvent;
 import me.infinityz.minigame.scoreboard.ScatterScoreboard;
 import me.infinityz.minigame.tasks.TeleportTemporalTask;
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.ComponentBuilder;
 
 @RequiredArgsConstructor
 @Conditions("lobby")
 @CommandAlias("start")
 public class StartCommand extends BaseCommand {
     private @NonNull UHC instance;
+
+    void countDown(final int time) {
+        final var title = Title.builder().title("")
+                .subtitle(new ComponentBuilder("" + time).bold(true).color(ChatColor.GREEN).create()).stay(10).fadeIn(0)
+                .build();
+        Bukkit.getOnlinePlayers().forEach(players -> {
+
+            players.sendTitle(title);
+            if (time < 4)
+                players.playSound(players.getLocation(), Sound.BLOCK_NOTE_BLOCK_BIT, 1, 1);
+        });
+    }
 
     @CommandPermission("staff.perm")
     @Default
@@ -63,20 +77,17 @@ public class StartCommand extends BaseCommand {
             sender.sendMessage("Queued up " + tasks + " task(s)...");
             return;
         }
-        instance.setGameStage(Stage.SCATTER);
-        
-        for(var count = 10; count<0; count--){
-            UHC.newChain().delay(20).sync(() -> {
-                // CUENTA REGRESIVA
-                Bukkit.getOnlinePlayers().forEach(players -> {
-                    players.sendTitle(Title.builder().title("")
-                    .subtitle(new ComponentBuilder(count).bold(true).color(ChatColor.GREEN).create()).build());
-                });
-            }).sync(TaskChain::abort).execute();
+
+        var count = 10;
+        var chain = UHC.newChain().sync(() -> countDown(10));
+
+        while (count-- > 1) {
+            final var current = count;
+            chain.delay(20).sync(() -> countDown(current));
         }
+        // chain.delay(20).sync(TaskChain::abort).execute();
 
-
-
+        instance.setGameStage(Stage.SCATTER);
         if (instance.getTeamManger().isTeamManagement()) {
             Bukkit.dispatchCommand(sender, "team man false");
         }
@@ -90,31 +101,38 @@ public class StartCommand extends BaseCommand {
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "scoreboard objectives setdisplay list health_name");
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "whitelist add @a");
 
-        Bukkit.getWorlds().forEach(it -> {
-            it.getWorldBorder().setSize(instance.getGame().getBorderSize());
-            it.setDifficulty(Difficulty.HARD);
-            it.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, true);
-            it.setTime(0);
-        });
+        chain.delay(20).sync(() -> {
 
-        new TeleportTemporalTask(instance, locs, new ArrayList<>(Bukkit.getOnlinePlayers())).runTaskTimer(instance, 20L,
-                20L);
 
-        instance.getListenerManager().unregisterListener(instance.getListenerManager().getLobby());
+            Bukkit.getWorlds().forEach(it -> {
+                it.getWorldBorder().setSize(instance.getGame().getBorderSize());
+                it.setDifficulty(Difficulty.HARD);
+                it.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, true);
+                it.setTime(0);
+            });
 
-        instance.getScoreboardManager().purgeScoreboards();
+            new TeleportTemporalTask(instance, locs, new ArrayList<>(Bukkit.getOnlinePlayers())).runTaskTimer(instance,
+                    0, 10L);
 
-        Bukkit.getOnlinePlayers().forEach(players -> {
-            // cosas del inicio
-            players.setStatistic(Statistic.TIME_SINCE_REST, 0);
-            players.getInventory().clear();
-            players.setGameMode(GameMode.SURVIVAL);
-            ScatterScoreboard sb = new ScatterScoreboard(players);
-            sb.update();
-            instance.getScoreboardManager().getFastboardMap().put(players.getUniqueId().toString(), sb);
-        });
+            instance.getListenerManager().unregisterListener(instance.getListenerManager().getLobby());
 
-        instance.getListenerManager().registerListener(instance.getListenerManager().getScatter());
+            instance.getScoreboardManager().purgeScoreboards();
+
+            Bukkit.getOnlinePlayers().forEach(players -> {
+                // cosas del inicio
+                players.setStatistic(Statistic.TIME_SINCE_REST, 0);
+                players.getInventory().clear();
+                players.setExp(0.0f);
+                players.setTotalExperience(0);
+                players.setGameMode(GameMode.SURVIVAL);
+                ScatterScoreboard sb = new ScatterScoreboard(players);
+                sb.update();
+                instance.getScoreboardManager().getFastboardMap().put(players.getUniqueId().toString(), sb);
+            });
+
+            instance.getListenerManager().registerListener(instance.getListenerManager().getScatter());
+        }).sync(TaskChain::abort).execute();
+
     }
 
     @CommandPermission("uhc.admin")

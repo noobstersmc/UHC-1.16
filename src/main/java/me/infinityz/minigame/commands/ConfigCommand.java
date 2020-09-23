@@ -65,6 +65,7 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
     @CommandAlias("pvptime")
     public void changePvpTime(CommandSender sender, Integer newPvpTime) {
         instance.getGame().setPvpTime(newPvpTime*60);
+        sender.sendMessage("Pvp time changed to " + newPvpTime + "minutes.");
     }
 
     @CommandPermission("uhc.config.heal")
@@ -72,6 +73,7 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
     @CommandAlias("healtime")
     public void changeHealTime(CommandSender sender, Integer newHealTime) {
         instance.getGame().setHealTime(newHealTime*60);
+        sender.sendMessage("Heal time changed to " + newHealTime + "minutes.");
     }
 
     @CommandPermission("uhc.config.border")
@@ -79,6 +81,7 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
     @CommandAlias("bordertime")
     public void changeBorderTime(CommandSender sender, Integer newBorderTime) {
         instance.getGame().setBorderTime(newBorderTime*60);
+        sender.sendMessage("Border time changed to " + newBorderTime + "minutes.");
     }
 
     @CommandPermission("uhc.config.border")
@@ -86,6 +89,7 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
     @CommandAlias("bordercentertime")
     public void changeBorderCenterTime(CommandSender sender, Integer newBorderCenterTime) {
         instance.getGame().setBorderCenterTime(newBorderCenterTime*60);
+        sender.sendMessage("Border center time changed to " + newBorderCenterTime + "minutes.");
     }
 
     @CommandPermission("uhc.config.border")
@@ -93,6 +97,7 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
     @CommandAlias("bordersize")
     public void changeBorderSize(CommandSender sender, Integer newBorderSize) {
         instance.getGame().setBorderSize(newBorderSize);
+        sender.sendMessage("Border size time changed to " + newBorderSize + "minutes.");
     }
 
     @CommandPermission("uhc.config.strength")
@@ -114,7 +119,7 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
             bool = !instance.getGame().isCriticalNerf();
                 
         instance.getGame().setCriticalNerf(bool);
-        sender.sendMessage("Critcal nerf has been set to: " + bool);
+        sender.sendMessage("Critical nerf has been set to: " + bool);
     }
 
     @CommandPermission("uhc.config.applerate")

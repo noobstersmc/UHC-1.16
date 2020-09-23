@@ -113,7 +113,7 @@ public class GlobalListener implements Listener {
     @EventHandler
     public void onInteractWithPortal(PlayerInteractEvent e) {
         if (!instance.getGame().isEnd() && e.getAction() == Action.RIGHT_CLICK_BLOCK
-                && e.getItem().getType() == Material.ENDER_EYE)
+                && e.getItem() != null &&e.getItem().getType() == Material.ENDER_EYE)
             e.setCancelled(true);
 
     }

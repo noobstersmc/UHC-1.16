@@ -2,8 +2,8 @@ package me.infinityz.minigame.gamemodes.types;
 
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -51,12 +51,13 @@ public class BowLess extends IGamemode implements Listener {
 
     }
     
-    /*@EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void onHold(PlayerInteractEvent e) {
-        if (e.getPlayer().getItemInHand().getType() == Material.BOW) {
-            e.getPlayer().setItemInHand(new ItemStack(Material.AIR));
-            e.setCancelled(true);
+        final var player = e.getPlayer();
+        final var item = player.getInventory().getItemInMainHand();
+        if (item.getType() == Material.BOW) {
+            player.getInventory().setItemInMainHand(null);
         }
-    }*/
+    }
     
 }

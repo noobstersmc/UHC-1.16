@@ -1,9 +1,8 @@
 package me.infinityz.minigame.gamemodes.types;
 
-import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -52,12 +51,14 @@ public class SwordLess extends IGamemode implements Listener {
 
     }
 
-    /*EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void onHold(PlayerInteractEvent e) {
-        if(e.getAction() == Action.RIGHT_CLICK_AIR && isSword(e.getItem()))
-            var sword = e.getItem()
-            e.getPlayer().getInventory().Clear(sword);
-    }*/
+        final var player = e.getPlayer();
+        final var item = player.getInventory().getItemInMainHand();
+        if (isSword(item)) {
+            player.getInventory().setItemInMainHand(null);
+        }
+    }
 
     private boolean isSword(ItemStack e){
         return e != null && e.getType().toString().contains("_SWORD");

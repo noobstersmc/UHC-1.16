@@ -9,6 +9,8 @@ import org.bukkit.boss.BarColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import lombok.NonNull;
@@ -78,10 +80,12 @@ public class GameLoop extends BukkitRunnable {
 
         } else if (time == instance.getGame().getHealTime()) {
             // TODO: FINAL HEAL
-            Bukkit.getOnlinePlayers().forEach(all -> {
-                all.setHealth(20.0);
-                all.setFoodLevel(20);
-                all.playSound(all.getLocation(), Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO, 1, 1);
+            Bukkit.getScheduler().runTask(instance, ()->{
+                Bukkit.getOnlinePlayers().forEach(all -> {
+                    all.addPotionEffect(new PotionEffect(PotionEffectType.HEAL, 20 * 15, 20));
+                    all.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20 * 15, 20));
+                    all.playSound(all.getLocation(), Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO, 1, 1);
+                });
             });
             Bukkit.broadcastMessage(SHAMROCK_GREEN + "Final heal!");
 

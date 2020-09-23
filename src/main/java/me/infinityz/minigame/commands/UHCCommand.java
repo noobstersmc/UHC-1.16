@@ -5,10 +5,13 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 
+import com.destroystokyo.paper.Title;
+
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -24,6 +27,7 @@ import co.aikar.commands.annotation.Flags;
 import co.aikar.commands.annotation.Optional;
 import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.annotation.Syntax;
+import co.aikar.taskchain.TaskChain;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import me.infinityz.minigame.UHC;
@@ -47,6 +51,40 @@ import net.md_5.bungee.api.chat.hover.content.Text;
 public class UHCCommand extends BaseCommand {
 
     private @NonNull UHC instance;
+
+    /*
+    var winnersTitle = Title.builder()
+                .title(new ComponentBuilder("You Win!").bold(true).color(ChatColor.GOLD).create())
+                .subtitle(ChatColor.GREEN + "Congratulations " + winnersName.toString()).stay(6 * 20).fadeIn(10)
+                .fadeOut(3 * 20).build();
+    */
+
+    
+    void countDown(final int time) {
+        final var title = Title.builder().title("")
+                .subtitle(new ComponentBuilder("" + time).bold(true).color(ChatColor.GREEN).create()).stay(20).fadeIn(0).build();
+        Bukkit.getOnlinePlayers().forEach(players -> {
+
+            players.sendTitle(title);
+            if(time < 4)
+                players.playSound(players.getLocation(), Sound.BLOCK_NOTE_BLOCK_BIT, 1, 1);
+        });
+    }
+    
+    
+
+    @CommandPermission("uhc.debug")
+    @Subcommand("debug")
+    public void onC(CommandSender sender){
+        var count = 10;
+        var chain = UHC.newChain().sync(() -> countDown(20));
+
+        while(count-- > 1){
+            final var current = count;
+            chain.delay(20).sync(() -> countDown(current));
+        }
+        chain.delay(20).sync(TaskChain::abort).execute();
+    }
 
     @CommandPermission("staff.perm")
     @Conditions("ingame")
