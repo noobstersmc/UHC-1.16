@@ -46,9 +46,11 @@ public @RequiredArgsConstructor class Utilities extends BaseCommand {
     @Subcommand("worldload")
     @CommandAlias("worldload")
     public void wordLoad(CommandSender sender) {
-        Bukkit.dispatchCommand(sender, "chunky radius 2000");
+        Bukkit.dispatchCommand(sender, "chunky world world");
+        Bukkit.dispatchCommand(sender, "chunky radius " + instance.getChunkManager().getBorder());
         Bukkit.dispatchCommand(sender, "chunky start");
         Bukkit.dispatchCommand(sender, "chunky world world_nether");
+        Bukkit.dispatchCommand(sender, "chunky radius " + instance.getChunkManager().getBorder());
         Bukkit.dispatchCommand(sender, "chunky start");
     }
 

@@ -22,13 +22,13 @@ import co.aikar.commands.annotation.Optional;
 import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.annotation.Syntax;
 import me.infinityz.minigame.UHC;
-import me.infinityz.minigame.scoreboard.objects.FastBoard;
 import me.infinityz.minigame.teams.events.PlayerJoinedTeamEvent;
 import me.infinityz.minigame.teams.events.PlayerKickedFromTeamEvent;
 import me.infinityz.minigame.teams.events.PlayerLeftTeamEvent;
 import me.infinityz.minigame.teams.events.PlayerPromotedToLeaderEvent;
 import me.infinityz.minigame.teams.events.TeamCreatedEvent;
 import me.infinityz.minigame.teams.events.TeamDisbandedEvent;
+import me.infinityz.minigame.teams.events.TeamDisplayUpdateEvent;
 import me.infinityz.minigame.teams.events.TeamInviteSentEvent;
 import me.infinityz.minigame.teams.events.TeamRemovedEvent;
 import me.infinityz.minigame.teams.objects.Team;
@@ -166,20 +166,18 @@ public class TeamCMD extends BaseCommand {
                 removePlayerFromTeam(targetTeam, target);
         }
         var toTeam = getPlayerTeam(toTeamPlayer.getUniqueId());
-        if (toTeam != null && toTeam.addMember(target.getUniqueId())){
+        if (toTeam != null && toTeam.addMember(target.getUniqueId())) {
             toTeam.sendTeamMessageWithPrefix(" " + target.getName() + " has been added to the team by an admin.");
             var event = new PlayerJoinedTeamEvent(toTeam, target);
             event.setQuiet(true);
             Bukkit.getPluginManager().callEvent(event);
-        }
-        else
+        } else
             sender.sendMessage(target.getName() + " could not be added to the target team.");
 
     }
 
-    
-    public void forceRemove(CommandSender sender,  @Flags("other") Player target,
-    @Flags("other") @Conditions("hasTeam") Player toTeamPlayer){
+    public void forceRemove(CommandSender sender, @Flags("other") Player target,
+            @Flags("other") @Conditions("hasTeam") Player toTeamPlayer) {
 
     }
 
@@ -210,23 +208,42 @@ public class TeamCMD extends BaseCommand {
     public void teamRename(@Conditions("hasTeam|isTeamLeader") Player player, String teamName) {
         var team = getPlayerTeam(player.getUniqueId());
         team.setTeamDisplayName(teamName);
+        if(instance.getTeamManger().isBroacastColor()){
+            team.updateDisplay(instance.getTeamManger().isBroacastColor(), instance.getTeamManger().isShowPrefix());
+        }
         team.sendTeamMessage(ChatColor.of("#7ab83c") + player.getName() + " has change the team name to: " + teamName);
     }
 
+    @CommandPermission("uhc.team.color")
     @Subcommand("color|colorchange")
-    @CommandCompletion("@range:0-21")
+    @CommandCompletion("@range:0-14")
     @Syntax("<newColorIndex> - New EnumChatFormat Var Int")
     public void changeColorIndex(@Conditions("hasTeam|isTeamLeader") Player player,
-            @Conditions("limits:min=0,max=21") Integer newColorIndex) {
+            @Conditions("limits:min=0,max=14") Integer newColorIndex) {
         var team = getPlayerTeam(player.getUniqueId());
-        team.setTeamColorIndex(newColorIndex);
-        try {
-            team.sendTeamMessage(ChatColor.of("#7ab83c") + player.getName() + " has change the team color to: "
-                    + FastBoard.getEnumChatFormat(newColorIndex) + "Color");
-            team.updateDisplay();
-        } catch (ClassNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        if (team != null) {
+            team.setTeamColorIndex(newColorIndex);
+            Bukkit.getPluginManager().callEvent(new TeamDisplayUpdateEvent(getPlayerTeam(player.getUniqueId())));
+        } else {
+            player.sendMessage("You must be in a team.");
+
+        }
+    }
+    @CommandPermission("uhc.team.color")
+    @Subcommand("forceColor|forceColorchange")
+    @CommandCompletion("@range:0-14")
+    @Syntax("<newColorIndex> - New EnumChatFormat Var Int")
+    public void forceChangeTeamColor(CommandSender sender, @Flags("other") @Conditions("hasTeam") Player player,
+            @Conditions("limits:min=0,max=14") Integer newColorIndex) {
+        var team = getPlayerTeam(player.getUniqueId());
+        if (team != null) {
+            team.setTeamColorIndex(newColorIndex);
+            Bukkit.getPluginManager().callEvent(new TeamDisplayUpdateEvent(getPlayerTeam(player.getUniqueId())));
+            team.sendTeamMessage("Your team color has been updated by an admin.");
+            sender.sendMessage("Changed " + player.getName() + "'s team's color");
+        } else {
+            sender.sendMessage(player.getName() + " doesn't have a team.");
+
         }
     }
 
@@ -238,7 +255,8 @@ public class TeamCMD extends BaseCommand {
         team.setTeamPrefix(newPrefix);
         team.sendTeamMessage(
                 ChatColor.of("#7ab83c") + player.getName() + " has change the team prefix to: " + newPrefix);
-        team.updateDisplay();
+
+        team.updateDisplay(false, true);
     }
 
     @Conditions("teamManagement")
@@ -445,6 +463,33 @@ public class TeamCMD extends BaseCommand {
         }
         sender.sendMessage(ChatColor.of("#DABC12") + "Team management has been set to "
                 + instance.getTeamManger().isTeamManagement());
+    }
+    @CommandPermission("uhc.team.gcolor")
+    @Subcommand("gcolor|globalcolor|broadcastcolor")
+    @CommandCompletion("@bool")
+    @Syntax("<bool> - True or False to set the management")
+    public void broadcastcolor(CommandSender sender, @Optional Boolean bool) {
+        if (bool == null) {
+            instance.getTeamManger().setBroacastColor(!instance.getTeamManger().isBroacastColor());
+        } else {
+            instance.getTeamManger().setBroacastColor(bool);
+        }
+        sender.sendMessage(ChatColor.of("#DABC12") + "Team BroadcastColor has been set to "
+                + instance.getTeamManger().isBroacastColor());
+    }
+
+    @CommandPermission("uhc.team.gprefix")
+    @Subcommand("gprefix|globalprefix|broadcastprefix")
+    @CommandCompletion("@bool")
+    @Syntax("<bool> - True or False to set the management")
+    public void broadcastPrefix(CommandSender sender, @Optional Boolean bool) {
+        if (bool == null) {
+            instance.getTeamManger().setShowPrefix(!instance.getTeamManger().isShowPrefix());
+        } else {
+            instance.getTeamManger().setShowPrefix(bool);
+        }
+        sender.sendMessage(ChatColor.of("#DABC12") + "Team BroadcastColor has been set to "
+                + instance.getTeamManger().isShowPrefix());
     }
 
     @CommandPermission("uhc.team.random")

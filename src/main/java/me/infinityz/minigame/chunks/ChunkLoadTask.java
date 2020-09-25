@@ -26,7 +26,7 @@ public @RequiredArgsConstructor class ChunkLoadTask implements Runnable {
     public void run() {
         border = chunksManager.getBorder();
         isRunning = true;
-        var coordinatePair = getRandomCoordinatePair(-2000, 2000);
+        var coordinatePair = getRandomCoordinatePair(-border, border);
         System.out.println("Finding location...");
 
         try {
@@ -62,7 +62,7 @@ public @RequiredArgsConstructor class ChunkLoadTask implements Runnable {
         }
         System.out.println("Done finding the location at " + coordinatePair.toString() + ", moving to chunk load.");
         // Once this point is reach, lots of chunks must be loaded.
-        var neighbours = ChunksManager.getNeighbouringChunks(coordinatePair.toChunkObject(), 8);
+        var neighbours = ChunksManager.getNeighbouringChunks(coordinatePair.toChunkObject(), 6);
         chunksLeft = neighbours.size();
         var iterator = neighbours.iterator();
         var semaphore = new Semaphore(50);
@@ -77,11 +77,10 @@ public @RequiredArgsConstructor class ChunkLoadTask implements Runnable {
                     chunksLeft--;
                     // Changed 1 to 5 to allow for error margin and avoid getting stuck
                     if (chunksLeft <= 5) {
-                        System.out.println("(Virrtually) Done with chunkload task " + getLocationID().toString() + ".");
                         isDone = true;
                     }
                     // Notify every 25 chunks to reduce spam.
-                    if (chunksLeft % 25 == 0) {
+                    if (chunksLeft % 50 == 0) {
                         System.out.println("Another chunk loaded for task " + getLocationID().toString() + ". "
                                 + chunksLeft + " left.");
                     }

@@ -25,11 +25,9 @@ public class ChunksManager {
     private final @Getter ArrayList<Location> locations = new ArrayList<>();
     private final @Getter LinkedList<ChunkLoadTask> pendingChunkLoadTasks = new LinkedList<>();
     private @Getter BukkitTask autoChunkScheduler;
-    private @Getter @Setter int border;
 
     public ChunksManager(UHC instance) {
         this.instance = instance;
-        border = instance.getGame().getBorderSize() / 2;
 
         autoChunkScheduler = Bukkit.getScheduler().runTaskTimerAsynchronously(instance, () -> {
             if (!pendingChunkLoadTasks.isEmpty()) {
@@ -47,6 +45,9 @@ public class ChunksManager {
         }, 5L, 20L);
     }
 
+    public int getBorder(){
+        return instance.getGame().getBorderSize() / 2;
+    }
     private void iterate(Iterator<ChunkLoadTask> iter){
         while (iter.hasNext()) {
             var task = iter.next();

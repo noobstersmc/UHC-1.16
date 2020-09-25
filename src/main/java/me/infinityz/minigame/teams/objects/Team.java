@@ -1,9 +1,11 @@
 package me.infinityz.minigame.teams.objects;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -28,6 +30,7 @@ import net.md_5.bungee.api.chat.BaseComponent;
 public class Team {
 
     private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    private static Random localRandom = new Random();
     private @Getter @Setter UUID teamLeader;
     private @Getter UUID teamID;
     private @Getter @Setter UUID[] members;
@@ -42,6 +45,7 @@ public class Team {
         this.teamLeader = teamLeader;
         this.teamKills = 0;
         this.teamDisplayName = teamID.toString().substring(0, 6);
+        this.teamColorIndex = localRandom.nextInt(14);
         addMember(teamLeader);
     }
 
@@ -49,6 +53,10 @@ public class Team {
         return (members == null || members.length < 1) ? false
                 : getMembersUUIDStream().anyMatch(member -> member.compareTo(uuid) == 0
                         || member.getMostSignificantBits() == uuid.getMostSignificantBits());
+    }
+
+    public String getIdentifier() {
+        return teamID.toString().substring(0, 14);
     }
 
     public boolean isCustomName() {
@@ -113,15 +121,81 @@ public class Team {
         return gson.toJson(this);
     }
 
-    public void updateDisplay() {
-        getPlayerStream().forEach(this::updateDisplayToPlayer);
+    public List<String> getListOfMembers() {
+        var names = new ArrayList<String>();
+        for (var member : members) {
+            var ofPlayer = Bukkit.getOfflinePlayer(member);
+            if (ofPlayer != null)
+                names.add(ofPlayer.getName());
+        }
+        return names;
     }
 
-    private void updateDisplayToPlayer(Player player) {
+    public void removeDisplay() {
+        Bukkit.getOnlinePlayers().forEach(all -> {
+            if (isMember(all.getUniqueId())) {
+                removeDisplayToMember(all);
+            } else {
+                removeDisplayToPlayer(all);
+            }
+
+        });
+
+    }
+
+    public void removeDisplayToPlayer(Player player) {
         try {
-            FastBoard.removeTeam(player);
-            FastBoard.createTeam(getOfflinePlayersStream().map(OfflinePlayer::getName).collect(Collectors.toList()),
-                    player, getTeamPrefix(), getTeamColorIndex());
+            var ID = "1" + getIdentifier();
+            FastBoard.removeTeam(player, ID);
+        } catch (ReflectiveOperationException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void removeDisplayToMember(Player player) {
+        try {
+            var ID = "0" + getIdentifier();
+            FastBoard.removeTeam(player, ID);
+        } catch (ReflectiveOperationException ex) {
+            ex.printStackTrace();
+        }
+
+    }
+
+    public void updateDisplay(boolean broadcastColor, boolean showPrefix) {
+        var members = getOfflinePlayersStream().map(OfflinePlayer::getName).collect(Collectors.toList());
+        if (broadcastColor) {
+            Bukkit.getOnlinePlayers().forEach(all -> {
+                if (isMember(all.getUniqueId()))
+                    updateDisplayToMember(all, members);
+                else
+                    updateDisplayToPlayer(all, members, showPrefix);
+            });
+        } else {
+            for (var uuid : getMembers()) {
+                var ofp = Bukkit.getOfflinePlayer(uuid);
+
+                if (ofp != null && ofp.isOnline())
+                    updateDisplayToMember(ofp.getPlayer(), members);
+            }
+        }
+    }
+
+    public void updateDisplayToPlayer(Player player, Collection<String> members, boolean showPrefix) {
+        try {
+            var ID = "1" + getIdentifier();
+            FastBoard.removeTeam(player, ID);
+            FastBoard.createTeam(player, members, ID, showPrefix ? "["+ getTeamDisplayName() + "] " : "", getTeamColorIndex());
+        } catch (ReflectiveOperationException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void updateDisplayToMember(Player player, Collection<String> members) {
+        try {
+            var ID = "0" + getIdentifier();
+            FastBoard.removeTeam(player, ID);
+            FastBoard.createTeam(player, members, ID, getTeamPrefix(), getTeamColorIndex());
         } catch (ReflectiveOperationException ex) {
             ex.printStackTrace();
         }

@@ -23,9 +23,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.mrmicky.fastinv.FastInv;
@@ -46,6 +44,7 @@ public class SpectatorListener implements Listener {
     /*
      * Spectators chat
      */
+    /*
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onSpecChat(AsyncPlayerChatEvent e) {
         var player = e.getPlayer();
@@ -64,7 +63,7 @@ public class SpectatorListener implements Listener {
             e.setFormat(ChatColor.GRAY + "" + ChatColor.ITALIC + "[SPEC] " + e.getFormat());
 
         }
-    }
+    }*/
 
     /*
      * Spec hider from no spectators
@@ -182,6 +181,7 @@ public class SpectatorListener implements Listener {
      * Custom spectator sytem code:
      */
 
+     /*
     @EventHandler
     public void onMoveSpecNoClip(PlayerMoveEvent e) {
         var player = e.getPlayer();
@@ -194,6 +194,7 @@ public class SpectatorListener implements Listener {
             player.addPotionEffect(PotionEffectType.BLINDNESS.createEffect(5, 10));
         }
     }
+    */
 
     @EventHandler
     public void onStartSpec(PlayerStartSpectatingEntityEvent e) {

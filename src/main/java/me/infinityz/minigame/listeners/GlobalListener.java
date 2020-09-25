@@ -196,16 +196,6 @@ public class GlobalListener implements Listener {
                 && player.getLocation().getBlock().getType() != Material.VINE;
     }
 
-    /**
-     * Global Mute
-     */
-    @EventHandler(priority = EventPriority.NORMAL)
-    public void onChat(AsyncPlayerChatEvent e) {
-        if (instance.getGame().isGlobalMute() && !e.getPlayer().hasPermission("staff.perm")) {
-            e.setCancelled(true);
-            e.getPlayer().sendMessage(ChatColor.RED + "Globalmute is Enabled.");
-        }
-    }
 
     /**
      * Shield feature

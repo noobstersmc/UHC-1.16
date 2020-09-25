@@ -1,5 +1,6 @@
 package me.infinityz.minigame.commands;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -97,7 +98,8 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
     @CommandAlias("bordersize")
     public void changeBorderSize(CommandSender sender, Integer newBorderSize) {
         instance.getGame().setBorderSize(newBorderSize);
-        sender.sendMessage("Border size time changed to " + newBorderSize + "minutes.");
+        sender.sendMessage("Border size changed " + newBorderSize + " blocks");
+        Bukkit.getWorlds().forEach(it -> it.getWorldBorder().setSize(newBorderSize));
     }
 
     @CommandPermission("uhc.config.strength")

@@ -30,6 +30,7 @@ import co.aikar.taskchain.TaskChainFactory;
 import fr.mrmicky.fastinv.FastInvManager;
 import lombok.Getter;
 import lombok.Setter;
+import me.infinityz.minigame.chat.ChatManager;
 import me.infinityz.minigame.chunks.ChunksManager;
 import me.infinityz.minigame.commands.ConfigCommand;
 import me.infinityz.minigame.commands.ContextConditions;
@@ -65,6 +66,7 @@ public class UHC extends JavaPlugin {
     private @Getter TeamManager teamManger;
     private @Getter ChunksManager chunkManager;
     private @Getter GamemodeManager gamemodeManager;
+    private @Getter ChatManager chatManager;
     private @Getter @Setter Game game;
     private static @Setter TaskChainFactory taskChainFactory;
 
@@ -126,6 +128,7 @@ public class UHC extends JavaPlugin {
         listenerManager = new ListenerManager(this);
         chunkManager = new ChunksManager(this);
         gamemodeManager = new GamemodeManager(this);
+        chatManager = new ChatManager(this);
 
         /* Run some startup code */
         runStartUp();
@@ -175,7 +178,7 @@ public class UHC extends JavaPlugin {
             it.setGameRule(GameRule.SPECTATORS_GENERATE_CHUNKS, false);
             it.setSpawnLocation(0, it.getHighestBlockAt(0, 0).getZ() + 10, 0);
             it.getWorldBorder().setCenter(0, 0);
-            it.getWorldBorder().setSize(101);
+            it.getWorldBorder().setSize(game.getBorderSize());
             it.getWorldBorder().setDamageBuffer(0.0);
             it.getWorldBorder().setDamageAmount(0.0);
         });

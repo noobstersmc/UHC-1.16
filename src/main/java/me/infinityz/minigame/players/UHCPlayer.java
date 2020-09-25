@@ -11,7 +11,9 @@ import org.bukkit.inventory.ItemStack;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.players.serializers.ItemStackSerializers;
+import me.infinityz.minigame.teams.objects.Team;
 
 @RequiredArgsConstructor
 public class UHCPlayer {
@@ -39,6 +41,9 @@ public class UHCPlayer {
         return gsonNoInv.toJson(this);
     }
 
+    public Team getTeam(UHC instance){
+        return instance.getTeamManger().getPlayerTeam(UUID);
+    }
     public void setLastKnownPositionFromLoc(Location loc) {
         setLastKnownPosition(PositionObject.getPositionFromWorld(loc));
     }

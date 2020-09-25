@@ -40,6 +40,7 @@ public class TeamManager {
     private @Getter @Setter int teamSize = 1;
     private @Getter @Setter boolean teamManagement = false;
     private @Getter @Setter boolean broacastColor = false;
+    private @Getter @Setter boolean showPrefix = false;
 
     public TeamManager(final UHC instance) {
         this.instance = instance;

@@ -10,9 +10,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -465,8 +463,8 @@ public class FastBoard {
         sendPacket(packet, target);
     }
 
-    public static void createTeam(Player target, Collection<String> players, String teamName, String prefix, int colorIndex)
-            throws ReflectiveOperationException {
+    public static void createTeam(Player target, Collection<String> players, String teamName, String prefix,
+            int colorIndex) throws ReflectiveOperationException {
         var mode = TeamMode.CREATE;
 
         Object packet = PACKET_SB_TEAM.newInstance();
@@ -529,10 +527,13 @@ public class FastBoard {
         g.setAccessible(true);
         g.set(packet, getEnumChatFormat(colorIndex));
         // Team Color ends
-        var list = Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
-        list.removeAll(players);
 
-        UpCorner(list, target, "");
+        /*
+         * Top left corner code, doesn't work ok yet var list =
+         * Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.
+         * toList()); list.removeAll(players);
+         * UpCorner(list, target, "");
+         */
 
         sendPacket(packet, target);
     }
