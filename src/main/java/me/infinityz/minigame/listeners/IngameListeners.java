@@ -247,7 +247,7 @@ public class IngameListeners implements Listener {
         }
 
         var uhcp = instance.getPlayerManager().getPlayer(e.getPlayer().getUniqueId());
-        if (uhcp.isAlive()) {
+        if (uhcp != null && uhcp.isAlive()) {
             uhcp.setLastKnownPosition(PositionObject.getPositionFromWorld(e.getPlayer().getLocation()));
             uhcp.setLastKnownInventory(e.getPlayer().getInventory().getContents());
             uhcp.setLastKnownHealth(e.getPlayer().getHealth());
@@ -273,7 +273,7 @@ public class IngameListeners implements Listener {
     public void onPlayerDQ(UHCPlayerDequalificationEvent e) {
         
         Bukkit.getScheduler().runTaskAsynchronously(instance, this::calculateWin);
-        
+
         Bukkit.getScheduler().runTask(instance, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
                 "whitelist remove " + e.getOfflinePlayer().getName())
 
