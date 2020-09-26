@@ -1,37 +1,52 @@
 package me.infinityz.minigame.chat;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.UUID;
 
 import org.bukkit.entity.Player;
 
+import gnu.trove.map.hash.THashMap;
 import lombok.Getter;
-import lombok.NonNull;
 import me.infinityz.minigame.UHC;
 import net.milkbowl.vault.chat.Chat;
 
 public class ChatManager {
-    private @NonNull Chat vaulChat;
-    private @Getter HashMap<Long, EnumChatChannel> chatChannelMap = new HashMap<>();
+    private UHC instance;
+    private @Getter THashMap<UUID, String> defaultChat = new THashMap<>();
+    private @Getter Chat vaultChat;
+    public ChatManager(UHC instance) {
+        this.instance = instance;
+        refreshVault();
 
-    public ChatManager(UHC instance){
+        instance.getCommandManager().getCommandCompletions().registerAsyncCompletion("channels", c->{
+            var completion = new ArrayList<String>();
+            completion.add("global");
+            if(c.getSender().hasPermission("uhc.chat.staff")){
+                completion.add("staff");
+            }
+            if(instance.getTeamManger().isTeams()){
+                completion.add("team");
+            }
+            return completion;
+
+        });
+
         instance.getCommandManager().registerCommand(new ChatCommand(instance));
         instance.getListenerManager().registerListener(new ChatListener(instance));
 
-        /*
-        * https://github.com/lucko/VaultChatFormatter/blob/master/src/main/java/me/lucko/chatformatter/ChatFormatterPlugin.java
-        */
-
-    }
-    public EnumChatChannel getCurrentPlayerChannel(final Player player){
-        return getCurrentPlayerChannel(player.getUniqueId());
-    }
-    public EnumChatChannel getCurrentPlayerChannel(final UUID uuid){
-        return chatChannelMap.getOrDefault(uuid.getMostSignificantBits(), EnumChatChannel.GLOBAL);
     }
 
-    public void setPlayerChatChannel(final UUID uuid, final EnumChatChannel channel){
-        chatChannelMap.put(uuid.getMostSignificantBits(), channel);
+    public String getDefaultOrNull(Player player){
+        return defaultChat.getOrDefault(player.getUniqueId(), "global");
     }
-    
+
+    public void refreshVault() {
+        Chat vaultChat = instance.getServer().getServicesManager().load(Chat.class);
+        if (vaultChat != this.vaultChat) {
+            instance.getLogger().info(
+                    "New Vault Chat implementation registered: " + (vaultChat == null ? "null" : vaultChat.getName()));
+        }
+        this.vaultChat = vaultChat;
+    }
+
 }

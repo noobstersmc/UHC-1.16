@@ -10,8 +10,22 @@ import java.nio.file.Files;
 import java.util.Properties;
 import java.util.logging.Level;
 
+import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.WorldEdit;
+import com.sk89q.worldedit.WorldEditException;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.extent.clipboard.Clipboard;
+import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
+import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats;
+import com.sk89q.worldedit.extent.clipboard.io.ClipboardReader;
+import com.sk89q.worldedit.function.operation.Operation;
+import com.sk89q.worldedit.function.operation.Operations;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.session.ClipboardHolder;
+
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
+import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -68,6 +82,7 @@ public class UHC extends JavaPlugin {
     private @Getter GamemodeManager gamemodeManager;
     private @Getter ChatManager chatManager;
     private @Getter @Setter Game game;
+    private @Getter EditSession session;
     private static @Setter TaskChainFactory taskChainFactory;
 
     public void changeSeed(String seed) {
@@ -155,6 +170,34 @@ public class UHC extends JavaPlugin {
         craftingManager.purgeRecipes();
     }
 
+    private void pasteSchematic(File file, Location loc) {
+        try {
+            ClipboardFormat format = ClipboardFormats.findByFile(file);
+            ClipboardReader reader = format.getReader(new FileInputStream(file));
+            Clipboard clipboard = reader.read();
+            com.sk89q.worldedit.world.World adaptedWorld = BukkitAdapter.adapt(loc.getWorld());
+
+            session = WorldEdit.getInstance().getEditSessionFactory().getEditSession(adaptedWorld, -1);
+
+            // Saves our operation and builds the paste - ready to be completed.
+            Operation operation = new ClipboardHolder(clipboard).createPaste(session).to(BlockVector3.at(0, 140, 0))
+                    .ignoreAirBlocks(true).build();
+
+            try { // This simply completes our paste and then cleans up.
+                Operations.complete(operation);
+                session.flushSession();
+
+            } catch (WorldEditException e) { // If worldedit generated an exception it will go here
+                Bukkit.broadcastMessage(ChatColor.RED + "OOPS! Something went wrong, please contact an administrator");
+                e.printStackTrace();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
     void runStartUp() {
         try {
             Scoreboard mainScoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
@@ -182,6 +225,22 @@ public class UHC extends JavaPlugin {
             it.getWorldBorder().setDamageBuffer(0.0);
             it.getWorldBorder().setDamageAmount(0.0);
         });
+        Bukkit.getScheduler().runTaskLater(this, () -> {
+            var antiDoublePaste = new File(Bukkit.getWorldContainer().getPath() + File.separatorChar + "seed"
+                    + File.separatorChar + Bukkit.getWorlds().get(0).getSeed() + ".json");
+            if (!antiDoublePaste.exists()) {
+                getLogger().info("Pasting a lobby in the world...");
+                try {
+                    antiDoublePaste.mkdirs();
+                    antiDoublePaste.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                pasteSchematic(new File(Bukkit.getWorldContainer().getPath() + File.separatorChar + "lobby.schem"),
+                        Bukkit.getWorlds().get(0).getSpawnLocation());
+            }
+
+        }, 60L);
     }
 
     void deleteDirectory(File directoryToBeDeleted) throws IOException {

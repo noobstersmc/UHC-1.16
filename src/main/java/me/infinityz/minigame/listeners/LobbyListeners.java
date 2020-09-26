@@ -27,19 +27,21 @@ import me.infinityz.minigame.scoreboard.LobbyScoreboard;
 @RequiredArgsConstructor
 public class LobbyListeners implements Listener {
     private @NonNull UHC instance;
-    private Location spawnLoc = Bukkit.getWorlds().get(0).getHighestBlockAt(0, 0).getLocation().add(0.0, 10.0, 0.0);
+    private Location spawnLoc = Bukkit.getWorlds().get(0).getBlockAt(0, 142, 0).getLocation();
 
     /*
      * Events cancelled during lobby starts.
      */
     @EventHandler
     public void onBlockBreak(BlockBreakEvent e) {
-        e.setCancelled(true);
+        if (!e.getPlayer().hasPermission("lobby.edit"))
+            e.setCancelled(true);
     }
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent e) {
-        e.setCancelled(true);
+        if (!e.getPlayer().hasPermission("lobby.edit"))
+            e.setCancelled(true);
 
     }
 
@@ -56,8 +58,9 @@ public class LobbyListeners implements Listener {
 
     @EventHandler
     public void onAction(PlayerInteractEvent e) {
-        if (!(e.getClickedBlock() != null && e.getClickedBlock().getType() == Material.LOOM))
-            e.setCancelled(true);
+        if (!e.getPlayer().hasPermission("lobby.edit"))
+            if (!(e.getClickedBlock() != null && e.getClickedBlock().getType() == Material.LOOM))
+                e.setCancelled(true);
 
     }
 
@@ -73,7 +76,8 @@ public class LobbyListeners implements Listener {
 
     @EventHandler
     public void onPickup(EntityPickupItemEvent e) {
-        e.setCancelled(true);
+        if (!e.getEntity().hasPermission("lobby.edit"))
+            e.setCancelled(true);
     }
     /*
      * Events cancelled during lobby ends.

@@ -119,6 +119,11 @@ public class IngameListeners implements Listener {
 
     @EventHandler
     public void onGameTick(GameTickEvent e) {
+        if(e.getSecond() == 10){
+            Bukkit.getScheduler().runTask(instance, ()->{
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "chat oi");
+            });
+        }
         instance.getScoreboardManager().getScoreboardsOfType(IngameScoreboard.class).parallelStream()
                 .forEach(all -> Bukkit.getPluginManager().callEvent(new ScoreboardUpdateEvent(all, true, "")));
 
