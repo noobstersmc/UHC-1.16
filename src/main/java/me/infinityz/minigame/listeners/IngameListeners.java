@@ -271,6 +271,9 @@ public class IngameListeners implements Listener {
 
     @EventHandler
     public void onPlayerDQ(UHCPlayerDequalificationEvent e) {
+        
+        Bukkit.getScheduler().runTaskAsynchronously(instance, this::calculateWin);
+        
         Bukkit.getScheduler().runTask(instance, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
                 "whitelist remove " + e.getOfflinePlayer().getName())
 
@@ -337,7 +340,6 @@ public class IngameListeners implements Listener {
                 Bukkit.getPluginManager()
                         .callEvent(new UHCPlayerDequalificationEvent(uhcPlayer, DQReason.DEATH, false));
             }
-            Bukkit.getScheduler().runTaskAsynchronously(instance, this::calculateWin);
         }
         if (p.getKiller() != null) {
             Player killer = p.getKiller();

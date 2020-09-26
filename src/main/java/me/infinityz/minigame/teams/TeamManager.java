@@ -1,6 +1,7 @@
 package me.infinityz.minigame.teams;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -135,9 +136,15 @@ public class TeamManager {
 
     public List<Team> getAliveTeams() {
         return teamMap.values().stream()
-                .filter(all -> all.getOfflinePlayersStream()
-                        .map(uuid -> instance.getPlayerManager().getPlayer(uuid.getUniqueId()))
+                .filter(all -> all.getOfflinePlayersStream().filter(Objects::nonNull)
+                        .map(uuid -> instance.getPlayerManager().getPlayer(uuid.getUniqueId())).filter(Objects::nonNull)
                         .anyMatch(UHCPlayer::isAlive))
+                .collect(Collectors.toList());
+    }
+
+    public List<Team> teamsOnline() {
+        return teamMap.values().stream()
+                .filter(all -> all.getOfflinePlayersStream().filter(Objects::nonNull).anyMatch(a -> a.isOnline()))
                 .collect(Collectors.toList());
     }
 

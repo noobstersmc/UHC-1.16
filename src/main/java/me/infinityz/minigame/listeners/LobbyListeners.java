@@ -17,6 +17,8 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -89,10 +91,12 @@ public class LobbyListeners implements Listener {
         /*
          * Teleport to spawn and set to survival mode
          */
-        player.setGameMode(GameMode.SURVIVAL);
         player.setStatistic(Statistic.TIME_SINCE_REST, 0);
-        if (!player.hasPlayedBefore())
+        player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 20*999999, 69, false, false));
+        if (!player.hasPlayedBefore()) {
+            player.setGameMode(GameMode.SURVIVAL);
             player.teleport(spawnLoc);
+        }
 
     }
 
@@ -112,6 +116,7 @@ public class LobbyListeners implements Listener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
+        e.getPlayer().removePotionEffect(PotionEffectType.NIGHT_VISION);
         IScoreboard sb = instance.getScoreboardManager().getFastboardMap()
                 .remove(e.getPlayer().getUniqueId().toString());
         if (sb != null) {

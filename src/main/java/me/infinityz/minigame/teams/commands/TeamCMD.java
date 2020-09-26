@@ -318,6 +318,17 @@ public class TeamCMD extends BaseCommand {
         teamChat(sender, "I'm at " + getLocation(sender.getLocation()));
     }
 
+    @CommandPermission("uhc.admin")
+    @Subcommand("listall")
+    public void onListAll(CommandSender sender){
+        instance.getTeamManger().getTeamMap().values().forEach(team->{
+            sender.sendMessage( "Team " + team.getTeamDisplayName() + ": " +team.getListOfMembers().toString());
+        });
+        StringBuffer sb = new StringBuffer();
+        Bukkit.getOnlinePlayers().stream().filter(all-> getPlayerTeam(all.getUniqueId()) == null).forEach(solo-> sb.append(solo.getName() + " "));
+        sender.sendMessage("Solos: " + sb.toString().trim());
+    }
+
     @CommandCompletion("@otherplayers")
     @CommandAlias("tl|kc")
     @Subcommand("list")

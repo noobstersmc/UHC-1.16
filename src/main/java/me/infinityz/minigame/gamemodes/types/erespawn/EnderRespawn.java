@@ -3,12 +3,14 @@ package me.infinityz.minigame.gamemodes.types.erespawn;
 import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.EnderCrystal;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Result;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -19,6 +21,7 @@ import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffectType;
 
 import co.aikar.taskchain.TaskChain;
 import me.infinityz.minigame.UHC;
@@ -42,11 +45,11 @@ public class EnderRespawn extends IGamemode implements Listener {
 
     @Override
     public boolean enableScenario() {
-        if (isEnabled())
+        if (isEnabled() || !instance.getTeamManger().isTeams())
             return false;
+    
         instance.getListenerManager().registerListener(this);
         Bukkit.addRecipe(recipe.getRecipe());
-
         Bukkit.getOnlinePlayers().forEach(all -> all.discoverRecipe(this.recipe.getNamespacedKey()));
         setEnabled(true);
         return true;
@@ -58,6 +61,7 @@ public class EnderRespawn extends IGamemode implements Listener {
             return false;
         instance.getListenerManager().unregisterListener(this);
         Bukkit.removeRecipe(recipe.getNamespacedKey());
+        respawnedList.clear();
         Bukkit.getOnlinePlayers().forEach(all -> all.undiscoverRecipe(this.recipe.getNamespacedKey()));
         setEnabled(false);
         return true;
@@ -93,9 +97,25 @@ public class EnderRespawn extends IGamemode implements Listener {
                 if (allowEnderRespawn(itemInHand)) {
                     var player = e.getPlayer();
                     var team = instance.getTeamManger().getPlayerTeam(player.getUniqueId());
+                    if(team == null){
+                        player.sendMessage("You don't have a team.");
+                        e.setCancelled(true);
+                        e.setUseInteractedBlock(Result.DENY);
+                        e.setUseItemInHand(Result.DENY);
+                        return;                        
+                    }
                     if (canTeamLeaderRespawn(team)) {
-                        respawnAnimation(block.getLocation());
-                        respawnedList.add(team.getTeamLeader().getMostSignificantBits());
+                        var uhcPlayer = instance.getPlayerManager().getPlayer(team.getTeamLeader());
+                        if(uhcPlayer.isAlive()){
+                            player.sendMessage("Leader is still alive.");
+                            e.setCancelled(true);
+                            e.setUseInteractedBlock(Result.DENY);
+                            e.setUseItemInHand(Result.DENY);
+                        }else{
+                            respawnAnimation(block.getLocation(), Bukkit.getPlayer(team.getTeamLeader()));
+                            respawnedList.add(team.getTeamLeader().getMostSignificantBits());
+
+                        }
                     } else {
                         e.setCancelled(true);
                         e.setUseInteractedBlock(Result.DENY);
@@ -120,7 +140,7 @@ public class EnderRespawn extends IGamemode implements Listener {
         }
     }
 
-    public void respawnAnimation(Location loc) {
+    public void respawnAnimation(Location loc, Player toRespawn) {
         final double x = loc.getBlockX() + 0.0;
         final double y = loc.getBlockY() + 0.0;
         final double z = loc.getBlockZ() + 0.0;
@@ -196,8 +216,20 @@ public class EnderRespawn extends IGamemode implements Listener {
         loc.getWorld().strikeLightning(loc.clone().set(x, y, z))).delay(10)
                 .sync(() -> loc.getWorld().strikeLightningEffect(loc.clone().set(x, y, z))).delay(10)
                 .sync(() -> loc.getWorld().strikeLightningEffect(loc.clone().set(x, y, z))).delay(10)
-                .sync(() -> loc.getWorld().strikeLightningEffect(loc.clone().set(x, y, z))).delay(10)
                 .sync(() -> loc.getWorld().strikeLightningEffect(loc.clone().set(x, y, z))).delay(10).sync(() -> {
+                    loc.getWorld().strikeLightningEffect(loc.clone().set(x, y, z));
+                    //Respawn player and give resistance
+                    var uhcPlayer = instance.getPlayerManager().getPlayer(toRespawn.getUniqueId());
+                    if(uhcPlayer != null){
+                        uhcPlayer.setAlive(true);
+                        uhcPlayer.setLastKnownPositionFromLoc(loc);
+                    }
+                    toRespawn.teleport(loc);
+                    toRespawn.setGameMode(GameMode.SURVIVAL);
+                    toRespawn.addPotionEffect(PotionEffectType.DAMAGE_RESISTANCE.createEffect(200, 10));
+                    toRespawn.sendMessage("You have been respawned!");
+
+                }).delay(10).sync(() -> {
                     loc.getWorld().strikeLightningEffect(loc.clone().set(x, y, z));
                     Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
                             "execute in minecraft:overworld run weather clear");

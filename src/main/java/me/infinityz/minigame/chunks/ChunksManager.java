@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
 import lombok.Getter;
@@ -32,12 +35,12 @@ public class ChunksManager {
         autoChunkScheduler = Bukkit.getScheduler().runTaskTimerAsynchronously(instance, () -> {
             if (!pendingChunkLoadTasks.isEmpty()) {
                 iterate(pendingChunkLoadTasks.iterator());
-                notifyOnActionbar(ChatColor.RED + "Not ready to start, currently loading "
+                notifyOnActionbar(ChatColor.GOLD + "Not ready to start, currently loading "
                         + pendingChunkLoadTasks.size() + " locations...", "staff.perm");
             } else {
-                var online = Bukkit.getOnlinePlayers().size();
-                var message = online > locations.size() ? ChatColor.RED + "Not ready to start. "
-                        + (online - locations.size()) + " location needed to start."
+                var needed = neededLocations();
+                var message = needed > 0 ? ChatColor.RED + "Not ready to start. "
+                        + needed + " location needed to start."
                         : ChatColor.GREEN + "Ready to start.";
                 notifyOnActionbar(message, "staff.pern");
 
@@ -45,10 +48,11 @@ public class ChunksManager {
         }, 5L, 20L);
     }
 
-    public int getBorder(){
+    public int getBorder() {
         return instance.getGame().getBorderSize() / 2;
     }
-    private void iterate(Iterator<ChunkLoadTask> iter){
+
+    private void iterate(Iterator<ChunkLoadTask> iter) {
         while (iter.hasNext()) {
             var task = iter.next();
             if (task.isDone()) {
@@ -63,6 +67,30 @@ public class ChunksManager {
                 break;
             }
         }
+    }
+
+    private List<Player> getOnlinePlayers() {
+        return Bukkit.getOnlinePlayers().stream().map(Player::getPlayer).collect(Collectors.toList());
+    }
+
+    public int neededLocations() {
+        var loadedOrLoading = locations.size() + pendingChunkLoadTasks.size();
+        var list = getOnlinePlayers();
+        var teamManager = instance.getTeamManger();
+        /*
+         * SI alguien tiene team, ellos y todos los miembros de ese equipo deberia ser
+         * restados de la list de jugadores en linea, pero añadidos a la lista de teams
+         * en linea para posicioens.
+         */
+
+        if (teamManager.isTeams()) {
+            list.removeIf(it -> teamManager.getPlayerTeam(it.getUniqueId()) != null);
+        }
+
+        return teamManager.isTeams()
+                ? ((list.size() / teamManager.getTeamSize()) + (list.size() > 0 ? 1 : 0)
+                        + teamManager.teamsOnline().size()) - loadedOrLoading
+                : list.size() - loadedOrLoading;
     }
 
     private void notifyOnActionbar(final String message, final String perm) {
@@ -112,7 +140,7 @@ public class ChunksManager {
 
     public static boolean isSafe(final Location loc) {
         return !(loc.getBlock().isLiquid() || loc.getBlock().getRelative(BlockFace.DOWN).isLiquid()
-        || loc.getBlock().getRelative(BlockFace.DOWN).getRelative(BlockFace.DOWN).isLiquid());
+                || loc.getBlock().getRelative(BlockFace.DOWN).getRelative(BlockFace.DOWN).isLiquid());
     }
 
 }

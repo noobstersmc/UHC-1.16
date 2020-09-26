@@ -1,5 +1,7 @@
 package me.infinityz.minigame.listeners;
 
+import java.util.stream.Collectors;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -33,6 +35,7 @@ import me.infinityz.minigame.events.NetherDisabledEvent;
 import me.infinityz.minigame.events.TeleportationCompletedEvent;
 import me.infinityz.minigame.game.Game;
 import me.infinityz.minigame.scoreboard.IngameScoreboard;
+import me.infinityz.minigame.tasks.AntiFallDamage;
 import me.infinityz.minigame.tasks.GameLoop;
 import net.md_5.bungee.api.ChatColor;
 
@@ -111,8 +114,8 @@ public class GlobalListener implements Listener {
 
     @EventHandler
     public void onInteractWithPortal(PlayerInteractEvent e) {
-        if (!instance.getGame().isEnd() && e.getAction() == Action.RIGHT_CLICK_BLOCK
-                && e.getItem() != null &&e.getItem().getType() == Material.ENDER_EYE)
+        if (!instance.getGame().isEnd() && e.getAction() == Action.RIGHT_CLICK_BLOCK && e.getItem() != null
+                && e.getItem().getType() == Material.ENDER_EYE)
             e.setCancelled(true);
 
     }
@@ -188,13 +191,13 @@ public class GlobalListener implements Listener {
         }
     }
 
+    @SuppressWarnings("all")
     private boolean isCritical(Player player) {
         return player.getFallDistance() > 0.0F && !player.isOnGround() && !player.isInsideVehicle()
                 && !player.hasPotionEffect(PotionEffectType.BLINDNESS)
                 && player.getLocation().getBlock().getType() != Material.LADDER
                 && player.getLocation().getBlock().getType() != Material.VINE;
     }
-
 
     /**
      * Shield feature
@@ -250,6 +253,9 @@ public class GlobalListener implements Listener {
                 bar.addPlayer(players);
             });
             Bukkit.broadcastMessage(GameLoop.SHAMROCK_GREEN + "UHC has started!");
+            // TODO: Add No fall damage for first hit
+            new AntiFallDamage(instance, Bukkit.getOnlinePlayers().stream()
+                    .map(p -> p.getUniqueId().getMostSignificantBits()).collect(Collectors.toList()));
 
             instance.setGameStage(Stage.INGAME);
 

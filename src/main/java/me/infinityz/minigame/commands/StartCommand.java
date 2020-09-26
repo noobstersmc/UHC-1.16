@@ -11,6 +11,7 @@ import org.bukkit.GameRule;
 import org.bukkit.Sound;
 import org.bukkit.Statistic;
 import org.bukkit.command.CommandSender;
+import org.bukkit.potion.PotionEffectType;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
@@ -54,10 +55,9 @@ public class StartCommand extends BaseCommand {
     @Default
     public void newScatter(CommandSender sender) {
         var locs = instance.getChunkManager().getLocations();
+        var tasks = instance.getChunkManager().neededLocations();
         if (locs == null || locs.isEmpty()) {
             sender.sendMessage("No locations have been found yet.");
-
-            var tasks = Bukkit.getOnlinePlayers().size();
             for (int i = 0; i < tasks; i++) {
                 var task = new ChunkLoadTask(Bukkit.getWorlds().get(0), instance.getChunkManager());
                 instance.getChunkManager().getPendingChunkLoadTasks().add(task);
@@ -65,11 +65,10 @@ public class StartCommand extends BaseCommand {
             sender.sendMessage("Queued up " + tasks + " task(s)...");
             return;
         }
-        if (locs.size() < Bukkit.getOnlinePlayers().size()) {
-            sender.sendMessage("Not enough locations have been found. (" + locs.size() + "/"
-                    + Bukkit.getOnlinePlayers().size() + ")\n Scheduling more locations now...");
+        if (tasks > 0) {
+            sender.sendMessage("Not enough locations have been found. (" + locs.size() + "/" + tasks
+                    + ")\n Scheduling more locations now...");
 
-            var tasks = Bukkit.getOnlinePlayers().size() - locs.size();
             for (int i = 0; i < tasks; i++) {
                 var task = new ChunkLoadTask(Bukkit.getWorlds().get(0), instance.getChunkManager());
                 instance.getChunkManager().getPendingChunkLoadTasks().add(task);
@@ -85,7 +84,6 @@ public class StartCommand extends BaseCommand {
             final var current = count;
             chain.delay(20).sync(() -> countDown(current));
         }
-        // chain.delay(20).sync(TaskChain::abort).execute();
 
         instance.setGameStage(Stage.SCATTER);
         if (instance.getTeamManger().isTeamManagement()) {
@@ -102,7 +100,6 @@ public class StartCommand extends BaseCommand {
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "whitelist add @a");
 
         chain.delay(20).sync(() -> {
-
 
             Bukkit.getWorlds().forEach(it -> {
                 it.getWorldBorder().setSize(instance.getGame().getBorderSize());
@@ -124,6 +121,8 @@ public class StartCommand extends BaseCommand {
                 players.getInventory().clear();
                 players.setExp(0.0f);
                 players.setTotalExperience(0);
+                players.setLevel(0);
+                players.removePotionEffect(PotionEffectType.NIGHT_VISION);
                 players.setGameMode(GameMode.SURVIVAL);
                 ScatterScoreboard sb = new ScatterScoreboard(players);
                 sb.update();
@@ -159,6 +158,7 @@ public class StartCommand extends BaseCommand {
 
         Bukkit.getOnlinePlayers().stream().filter(it -> it.getGameMode() != GameMode.SPECTATOR)
                 .forEach(players -> instance.getPlayerManager().addCreateUHCPlayer(players.getUniqueId(), true));
+        Bukkit.getOnlinePlayers().forEach(all -> all.removePotionEffect(PotionEffectType.NIGHT_VISION));
 
         var teleportEvent = new TeleportationCompletedEvent();
         if (delayTicks != null && delayTicks > 0) {
