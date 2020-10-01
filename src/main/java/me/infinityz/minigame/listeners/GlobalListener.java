@@ -53,7 +53,8 @@ public class GlobalListener implements Listener {
                 + "Twitter! twitter.com/NoobstersMC\n" + ChatColor.GOLD + "Donations! noobsters.buycraft.net");
         e.setJoinMessage("");
         var footer = GameLoop.HAVELOCK_BLUE + "\nJoin Our UHC Community!\n" + GameLoop.SHAMROCK_GREEN
-                + "discord.noobsters.net";
+                + "discord.noobsters.net\n" + ChatColor.AQUA
+                + "twitter.com/NoobstersMC";
         e.getPlayer().setPlayerListHeaderFooter(Game.getTablistHeader(), footer);
     }
 

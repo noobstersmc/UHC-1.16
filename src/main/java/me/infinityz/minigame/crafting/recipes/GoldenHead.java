@@ -5,6 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
+import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -28,7 +29,8 @@ public class GoldenHead extends CustomRecipe {
         final ShapedRecipe recipe = new ShapedRecipe(namespacedKey, goldenHead);
         recipe.shape("AAA", "ABA", "AAA");
         recipe.setIngredient('A', Material.GOLD_INGOT);
-        recipe.setIngredient('B', Material.PLAYER_HEAD);
+        recipe.setIngredient('B', new RecipeChoice.MaterialChoice(Material.WITHER_SKELETON_SKULL, Material.PLAYER_HEAD,
+                Material.SKELETON_SKULL, Material.CREEPER_HEAD, Material.ZOMBIE_HEAD));
 
         setRecipe(recipe);
 

@@ -1,20 +1,23 @@
-package me.infinityz.minigame.gamemodes.types;
+package me.infinityz.minigame.gamemodes.types.uhclatam;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.ItemSpawnEvent;
 
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.events.GameTickEvent;
 import me.infinityz.minigame.gamemodes.IGamemode;
 
-public class UHCLatamT2 extends IGamemode implements Listener {
+public class UHCLatam extends IGamemode implements Listener {
     private UHC instance;
 
-    public UHCLatamT2(UHC instance) {
-        super("UHC Latam T2", "Kernel es muy tierno");
+    public UHCLatam(UHC instance) {
+        super("UHC Latam", "T2");
         this.instance = instance;
     }
 
@@ -43,9 +46,23 @@ public class UHCLatamT2 extends IGamemode implements Listener {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
                         "scoreboard objectives modify health_name rendertype hearts");
             });
+        } else if(e.getSecond() == instance.getGame().getBorderTime()){
+            Bukkit.getOnlinePlayers().forEach(players -> {
+                players.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(40.0);
+            });
         }
 
     }
+
+    @EventHandler
+    public void onItemSpawn(ItemSpawnEvent e) {
+        var stack = e.getEntity().getItemStack();
+        var type = stack.getType();
+        if (type == Material.GHAST_TEAR) {
+            stack.setType(Material.GOLD_INGOT);
+        }
+    }
+
     @EventHandler
     public void onBorderDamage(EntityDamageEvent e){
         if(e.getCause() == DamageCause.CUSTOM){

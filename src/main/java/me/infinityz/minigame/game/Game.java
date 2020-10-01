@@ -16,7 +16,7 @@ public class Game {
     /* Static data */
     private static @Getter @Setter BossBar bossbar;
     private static @Getter @Setter String scoreboardTitle = ChatColor.BOLD + "UHC";
-    private static @Getter @Setter String tablistHeader =  ChatColor.of("#A40A0A") + "" + ChatColor.BOLD + "\nNoobsters\n";
+    private static @Getter @Setter String tablistHeader =  ChatColor.of("#A40A0A") + "" + ChatColor.BOLD + "\nNOOBSTERS\n";
     /* Game data */
     private UUID gameID = UUID.randomUUID();
     private long startTime;
@@ -32,6 +32,7 @@ public class Game {
     private int healTime = 120;
     private int borderCenterTime = 1800;
     private int borderSize = 4000;
+    private int borderCenter = 200;
     private boolean strengthNerf = true;
     private boolean criticalNerf = true;
     private double applerate = 0.80;

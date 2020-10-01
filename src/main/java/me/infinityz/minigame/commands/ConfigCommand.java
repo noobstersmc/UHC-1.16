@@ -66,7 +66,7 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
     @CommandAlias("pvptime")
     public void changePvpTime(CommandSender sender, Integer newPvpTime) {
         instance.getGame().setPvpTime(newPvpTime*60);
-        sender.sendMessage("Pvp time changed to " + newPvpTime + "minutes.");
+        sender.sendMessage("Pvp time changed to " + newPvpTime + " minutes.");
     }
 
     @CommandPermission("uhc.config.heal")
@@ -74,7 +74,7 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
     @CommandAlias("healtime")
     public void changeHealTime(CommandSender sender, Integer newHealTime) {
         instance.getGame().setHealTime(newHealTime*60);
-        sender.sendMessage("Heal time changed to " + newHealTime + "minutes.");
+        sender.sendMessage("Heal time changed to " + newHealTime + " minutes.");
     }
 
     @CommandPermission("uhc.config.border")
@@ -82,7 +82,7 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
     @CommandAlias("bordertime")
     public void changeBorderTime(CommandSender sender, Integer newBorderTime) {
         instance.getGame().setBorderTime(newBorderTime*60);
-        sender.sendMessage("Border time changed to " + newBorderTime + "minutes.");
+        sender.sendMessage("Border time changed to " + newBorderTime + " minutes.");
     }
 
     @CommandPermission("uhc.config.border")
@@ -90,7 +90,15 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
     @CommandAlias("bordercentertime")
     public void changeBorderCenterTime(CommandSender sender, Integer newBorderCenterTime) {
         instance.getGame().setBorderCenterTime(newBorderCenterTime*60);
-        sender.sendMessage("Border center time changed to " + newBorderCenterTime + "minutes.");
+        sender.sendMessage("Border center time changed to " + newBorderCenterTime + " minutes.");
+    }
+
+    @CommandPermission("uhc.config.border")
+    @Subcommand("bordercenter")
+    @CommandAlias("bordercenter")
+    public void changeBorderCenter(CommandSender sender, Integer newBorderCenter) {
+        instance.getGame().setBorderCenterTime(newBorderCenter);
+        sender.sendMessage("Border center changed to " + newBorderCenter + " minutes.");
     }
 
     @CommandPermission("uhc.config.border")
@@ -101,6 +109,8 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
         sender.sendMessage("Border size changed " + newBorderSize + " blocks");
         Bukkit.getWorlds().forEach(it -> it.getWorldBorder().setSize(newBorderSize));
     }
+
+    
 
     @CommandPermission("uhc.config.strength")
     @Subcommand("strength nerf")

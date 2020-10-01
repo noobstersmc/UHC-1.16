@@ -34,7 +34,7 @@ public class AxeLess extends IGamemode implements Listener {
         setEnabled(false);
         return true;
     }
-
+    
     @EventHandler
     public void onDamageByEntity(EntityDamageByEntityEvent e) {
         if (e.getDamager() instanceof Player) {

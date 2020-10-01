@@ -1,7 +1,10 @@
 package me.infinityz.minigame.gamemodes.types;
 
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.ItemSpawnEvent;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
@@ -74,5 +77,14 @@ public class Baguettes extends IGamemode implements Listener {
         instance.getListenerManager().unregisterListener(this);
         setEnabled(false);
         return true;
+    }
+
+    @EventHandler
+    public void onItemSpawn(ItemSpawnEvent e) {
+        var stack = e.getEntity().getItemStack();
+        var type = stack.getType();
+        if (type == Material.GHAST_TEAR) {
+            stack.setType(Material.GOLD_INGOT);
+        }
     }
 }

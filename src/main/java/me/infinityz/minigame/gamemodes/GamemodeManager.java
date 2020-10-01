@@ -19,7 +19,7 @@ import me.infinityz.minigame.gamemodes.types.NoFall;
 import me.infinityz.minigame.gamemodes.types.Baguettes;
 import me.infinityz.minigame.gamemodes.types.ShieldLess;
 import me.infinityz.minigame.gamemodes.types.SwordLess;
-import me.infinityz.minigame.gamemodes.types.UHCLatamT2;
+import me.infinityz.minigame.gamemodes.types.uhclatam.UHCLatam;
 import me.infinityz.minigame.gamemodes.types.HasteyBoys;
 import me.infinityz.minigame.gamemodes.types.erespawn.EnderRespawn;
 import net.md_5.bungee.api.ChatColor;
@@ -38,7 +38,7 @@ public class GamemodeManager {
         registerGamemode(new EnderRespawn(instance));
         registerGamemode(new Moles(instance));
         registerGamemode(new GoToHell(instance));
-        registerGamemode(new UHCLatamT2(instance));
+        registerGamemode(new UHCLatam(instance));
         registerGamemode(new BowLess(instance));
         registerGamemode(new AxeLess(instance));
         registerGamemode(new SwordLess(instance));
