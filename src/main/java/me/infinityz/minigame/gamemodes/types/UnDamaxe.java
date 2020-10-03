@@ -9,11 +9,11 @@ import org.bukkit.inventory.ItemStack;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.gamemodes.IGamemode;
 
-public class AxeLess extends IGamemode implements Listener {
+public class UnDamaxe extends IGamemode implements Listener {
     private UHC instance;
 
-    public AxeLess(UHC instance) {
-        super("AxeLess", "Axe damage is disabled.");
+    public UnDamaxe(UHC instance) {
+        super("UnDamaxe", "Axe damage is disabled.");
         this.instance = instance;
     }
 

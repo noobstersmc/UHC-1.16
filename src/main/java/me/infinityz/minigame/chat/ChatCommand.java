@@ -42,12 +42,18 @@ public class ChatCommand extends BaseCommand {
     @CommandPermission("world.oi")
     @Subcommand("oi")
     public void oi(CommandSender sender) {
-        instance.getSession().undo(instance.getSession());
-        Bukkit.getScheduler().runTaskLater(instance, () -> {
+        try {
+            instance.getSession().undo(instance.getSession());
+            Bukkit.getScheduler().runTaskLater(instance, () -> {
             Bukkit.dispatchCommand(sender, "kill @e[type=minecraft:item]");
             Bukkit.dispatchCommand(sender, "kill @e[type=minecraft:falling_block]");
-        }, 10);
+    
+            }, 10);
+            
+        } catch (Exception e) {
+        }
     }
+
 
     private void changeDefaultChat(final Player player, final String newChat) {
         instance.getChatManager().getDefaultChat().put(player.getUniqueId(), newChat.toLowerCase());

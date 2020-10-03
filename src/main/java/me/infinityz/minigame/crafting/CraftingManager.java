@@ -78,4 +78,10 @@ public class CraftingManager implements Listener {
         Bukkit.resetRecipes();
     }
 
+    public void restoreRecipes(){
+        recipes.stream().forEach(all->{
+            Bukkit.getServer().addRecipe(all.getRecipe());
+        });
+    }
+
 }

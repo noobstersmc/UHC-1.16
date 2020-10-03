@@ -22,6 +22,7 @@ import co.aikar.commands.annotation.Optional;
 import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.annotation.Syntax;
 import co.aikar.taskchain.TaskChain;
+import org.bukkit.attribute.Attribute;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import me.infinityz.minigame.UHC;
@@ -124,6 +125,7 @@ public class StartCommand extends BaseCommand {
                 players.setLevel(0);
                 players.removePotionEffect(PotionEffectType.NIGHT_VISION);
                 players.setGameMode(GameMode.SURVIVAL);
+                players.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
                 ScatterScoreboard sb = new ScatterScoreboard(players);
                 sb.update();
                 instance.getScoreboardManager().getFastboardMap().put(players.getUniqueId().toString(), sb);

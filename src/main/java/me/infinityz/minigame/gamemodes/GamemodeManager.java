@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import gnu.trove.set.hash.THashSet;
 import lombok.Getter;
 import me.infinityz.minigame.UHC;
-import me.infinityz.minigame.gamemodes.types.AxeLess;
+import me.infinityz.minigame.gamemodes.types.UnDamaxe;
 import me.infinityz.minigame.gamemodes.types.BowLess;
 import me.infinityz.minigame.gamemodes.types.Cutclean;
 import me.infinityz.minigame.gamemodes.types.DebugMode;
@@ -40,7 +40,7 @@ public class GamemodeManager {
         registerGamemode(new GoToHell(instance));
         registerGamemode(new UHCLatam(instance));
         registerGamemode(new BowLess(instance));
-        registerGamemode(new AxeLess(instance));
+        registerGamemode(new UnDamaxe(instance));
         registerGamemode(new SwordLess(instance));
         registerGamemode(new ShieldLess(instance));
         registerGamemode(new FireLess(instance));
@@ -86,7 +86,7 @@ public class GamemodeManager {
             if (all.isEnabled())
                 sb.append(all.getName() + ", ");
         });
-        return (sb.length() > 1 ? sb.toString().substring(0, sb.length() - 2) : "Vanilla") + ".";
+        return (sb.length() > 1 ? sb.toString().substring(0, sb.length() - 2) : "Vanilla+") + ".";
     }
 
     public BaseComponent[] getScenariosWithDescription() {
@@ -103,7 +103,7 @@ public class GamemodeManager {
             }
 
         } else {
-            componentBuilder.append("Vanilla").event(
+            componentBuilder.append("Vanilla+").event(
                     new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Vanilla game with some modifications.")));
         }
 

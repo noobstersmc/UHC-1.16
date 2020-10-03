@@ -116,7 +116,7 @@ public class GameLoop extends BukkitRunnable {
         } else if ((time % 600) == 0) {
             // PROMOS
             if (time == instance.getGame().getBorderTime() || time == instance.getGame().getPvpTime()
-                    || time == instance.getGame().getHealTime())
+                    || time == instance.getGame().getHealTime() || time == 0)
                 return;
             sendPromo();
         }
