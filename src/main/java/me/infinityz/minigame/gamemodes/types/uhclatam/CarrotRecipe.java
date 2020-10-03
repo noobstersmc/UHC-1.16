@@ -6,14 +6,12 @@
     import org.bukkit.inventory.ItemStack;
     import org.bukkit.inventory.Recipe;
     import org.bukkit.inventory.ShapedRecipe;
-    import org.bukkit.inventory.meta.ItemMeta;
-    
-    import me.infinityz.minigame.crafting.CustomRecipe;
-    import net.md_5.bungee.api.ChatColor;
 
-    public class NewCarrotRecipe extends CustomRecipe {
+    import me.infinityz.minigame.crafting.CustomRecipe;
+
+    public class CarrotRecipe extends CustomRecipe {
     
-        public NewCarrotRecipe(NamespacedKey namespacedKey, Recipe test) {
+        public CarrotRecipe(NamespacedKey namespacedKey, Recipe test) {
             super(namespacedKey, test);
     
                     final ItemStack newcarrotrecipe = new ItemStack(Material.GOLDEN_CARROT);

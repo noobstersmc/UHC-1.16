@@ -1,20 +1,20 @@
 package me.infinityz.minigame.gamemodes.types.uhclatam;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.entity.ItemSpawnEvent;
-import org.bukkit.NamespacedKey;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.Recipe;
-
 
 import lombok.Getter;
 import me.infinityz.minigame.UHC;
@@ -25,14 +25,14 @@ import me.infinityz.minigame.gamemodes.IGamemode;
 public class UHCLatam extends IGamemode implements Listener {
     private UHC instance;
     private @Getter List<CustomRecipe> recipes = new ArrayList<>();
-    private NewCarrotRecipe newcarrotrecipe;
-    private NewMelonRecipe newmelonrecipe;
+    private CarrotRecipe carrotRecipe;
+    private MelonRecipe melonRecipe;
 
     public UHCLatam(UHC instance) {
         super("UHC Latam", "T2");
         this.instance = instance;
-        this.newcarrotrecipe = new NewCarrotRecipe(new NamespacedKey(instance, "newcarrotrecipe"), null);
-        this.newmelonrecipe = new NewMelonRecipe(new NamespacedKey(instance, "newmelonrecipe"), null);
+        this.carrotRecipe = new CarrotRecipe(new NamespacedKey(instance, "newcarrotrecipe"), null);
+        this.melonRecipe = new MelonRecipe(new NamespacedKey(instance, "newmelonrecipe"), null);
     }
 
     @Override
@@ -41,11 +41,11 @@ public class UHCLatam extends IGamemode implements Listener {
             return false;
     
         instance.getListenerManager().registerListener(this);
-        Bukkit.addRecipe(newcarrotrecipe.getRecipe());
-        Bukkit.addRecipe(newmelonrecipe.getRecipe());
+        Bukkit.addRecipe(carrotRecipe.getRecipe());
+        Bukkit.addRecipe(melonRecipe.getRecipe());
         Bukkit.getOnlinePlayers().forEach(all -> {
-            all.discoverRecipe(this.newcarrotrecipe.getNamespacedKey());
-            all.discoverRecipe(this.newmelonrecipe.getNamespacedKey());
+            all.discoverRecipe(this.carrotRecipe.getNamespacedKey());
+            all.discoverRecipe(this.melonRecipe.getNamespacedKey());
         
         });
         
@@ -69,12 +69,12 @@ public class UHCLatam extends IGamemode implements Listener {
             return false;
         instance.getListenerManager().unregisterListener(this);
 
-        Bukkit.removeRecipe(newcarrotrecipe.getNamespacedKey());
-        Bukkit.removeRecipe(newmelonrecipe.getNamespacedKey());
+        Bukkit.removeRecipe(carrotRecipe.getNamespacedKey());
+        Bukkit.removeRecipe(melonRecipe.getNamespacedKey());
 
         Bukkit.getOnlinePlayers().forEach(all -> {
-            all.undiscoverRecipe(this.newcarrotrecipe.getNamespacedKey());
-            all.undiscoverRecipe(this.newmelonrecipe.getNamespacedKey());
+            all.undiscoverRecipe(this.carrotRecipe.getNamespacedKey());
+            all.undiscoverRecipe(this.melonRecipe.getNamespacedKey());
         
         });
         Bukkit.resetRecipes();
@@ -86,8 +86,8 @@ public class UHCLatam extends IGamemode implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
-        e.getPlayer().discoverRecipe(this.newcarrotrecipe.getNamespacedKey());
-        e.getPlayer().discoverRecipe(this.newmelonrecipe.getNamespacedKey());
+        e.getPlayer().discoverRecipe(this.carrotRecipe.getNamespacedKey());
+        e.getPlayer().discoverRecipe(this.melonRecipe.getNamespacedKey());
 
     }
 

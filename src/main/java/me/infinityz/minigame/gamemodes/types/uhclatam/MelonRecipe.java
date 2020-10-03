@@ -6,14 +6,12 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import me.infinityz.minigame.crafting.CustomRecipe;
-import net.md_5.bungee.api.ChatColor;
 
-public class NewMelonRecipe extends CustomRecipe {
+public class MelonRecipe extends CustomRecipe {
 
-    public NewMelonRecipe(NamespacedKey namespacedKey, Recipe test) {
+    public MelonRecipe(NamespacedKey namespacedKey, Recipe test) {
         super(namespacedKey, test);
 
                 final ItemStack newmelonrecipe = new ItemStack(Material.GLISTERING_MELON_SLICE);
