@@ -13,8 +13,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.ItemSpawnEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.Recipe;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SuspiciousStewMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import lombok.Getter;
 import me.infinityz.minigame.UHC;
@@ -122,4 +127,18 @@ public class UHCLatam extends IGamemode implements Listener {
             e.setCancelled(true);
         }
     }
-}   
+
+    @EventHandler(ignoreCancelled = true)
+    public void onItemConsume(PlayerItemConsumeEvent e) {
+        var item = e.getItem().getType();
+        if (item == Material.AIR || item != Material.SUSPICIOUS_STEW || !e.getItem().hasItemMeta())
+            return;
+        SuspiciousStewMeta stewMeta = (SuspiciousStewMeta) e.getItem().getItemMeta();
+        if (stewMeta.hasCustomEffect(PotionEffectType.REGENERATION)) {
+            stewMeta.removeCustomEffect(PotionEffectType.REGENERATION);
+            stewMeta.addCustomEffect(new PotionEffect(PotionEffectType.HARM, 1, 1), true);
+            e.getItem().setItemMeta(stewMeta);
+        }
+    }
+
+}

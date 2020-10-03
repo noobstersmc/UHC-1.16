@@ -48,15 +48,10 @@ public class CraftingManager implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onItemConsume(PlayerItemConsumeEvent e) {
-        if (e.isCancelled())
-            return;
-        if (e.getItem().getType() == Material.AIR)
-            return;
-        if (e.getItem().getType() != Material.GOLDEN_APPLE)
-            return;
-        if (!e.getItem().hasItemMeta())
+        var item = e.getItem().getType();
+        if (item == Material.AIR || item != Material.GOLDEN_APPLE || !e.getItem().hasItemMeta())
             return;
         ItemMeta itemMeta = e.getItem().getItemMeta();
         if (itemMeta.getDisplayName().equalsIgnoreCase(ChatColor.GOLD + "Golden Head")) {

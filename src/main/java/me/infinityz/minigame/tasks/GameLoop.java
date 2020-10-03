@@ -82,8 +82,8 @@ public class GameLoop extends BukkitRunnable {
             // TODO: FINAL HEAL
             Bukkit.getScheduler().runTask(instance, ()->{
                 Bukkit.getOnlinePlayers().forEach(all -> {
-                    all.addPotionEffect(new PotionEffect(PotionEffectType.HEAL, 20 * 15, 20));
-                    all.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20 * 15, 20));
+                    all.addPotionEffect(new PotionEffect(PotionEffectType.HEAL, 2 * 15, 20));
+                    all.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 2 * 15, 20));
                     all.playSound(all.getLocation(), Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO, 1, 1);
                 });
             });
