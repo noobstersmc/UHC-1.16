@@ -121,6 +121,7 @@ public class StartCommand extends BaseCommand {
                 players.setStatistic(Statistic.TIME_SINCE_REST, 0);
                 players.getInventory().clear();
                 players.setExp(0.0f);
+                players.setFoodLevel(26);
                 players.setTotalExperience(0);
                 players.setLevel(0);
                 players.removePotionEffect(PotionEffectType.NIGHT_VISION);
