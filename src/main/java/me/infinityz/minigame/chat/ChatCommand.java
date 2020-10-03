@@ -53,6 +53,11 @@ public class ChatCommand extends BaseCommand {
         } catch (Exception e) {
         }
     }
+    @CommandPermission("world.oi")
+    @Subcommand("hun")
+    public void s(Player sender) {
+        sender.sendMessage("Sat / Hunguer : " + sender.getSaturation() + " / " + sender.getFoodLevel());
+    }
 
 
     private void changeDefaultChat(final Player player, final String newChat) {

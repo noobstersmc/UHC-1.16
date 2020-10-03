@@ -16,7 +16,6 @@ import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.Recipe;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SuspiciousStewMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -46,8 +45,8 @@ public class UHCLatam extends IGamemode implements Listener {
             return false;
     
         instance.getListenerManager().registerListener(this);
-        Bukkit.addRecipe(carrotRecipe.getRecipe());
-        Bukkit.addRecipe(melonRecipe.getRecipe());
+        carrotRecipe.logic();
+        melonRecipe.logic();
         Bukkit.getOnlinePlayers().forEach(all -> {
             all.discoverRecipe(this.carrotRecipe.getNamespacedKey());
             all.discoverRecipe(this.melonRecipe.getNamespacedKey());
@@ -135,7 +134,7 @@ public class UHCLatam extends IGamemode implements Listener {
             return;
         SuspiciousStewMeta stewMeta = (SuspiciousStewMeta) e.getItem().getItemMeta();
         if (stewMeta.hasCustomEffect(PotionEffectType.REGENERATION)) {
-            stewMeta.removeCustomEffect(PotionEffectType.REGENERATION);
+            stewMeta.clearCustomEffects();
             stewMeta.addCustomEffect(new PotionEffect(PotionEffectType.HARM, 1, 1), true);
             e.getItem().setItemMeta(stewMeta);
         }
