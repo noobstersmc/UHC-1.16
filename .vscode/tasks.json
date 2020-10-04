@@ -4,7 +4,13 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "compile",
+            "label": "Compile",
+            "type": "shell",
+            "command": "mvn -B  install",
+            "group": "build"
+        },
+        {
+            "label": "Clean Compile",
             "type": "shell",
             "command": "mvn -B clean install",
             "group": "build"

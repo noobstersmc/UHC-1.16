@@ -21,6 +21,7 @@ import me.infinityz.minigame.gamemodes.types.ShieldLess;
 import me.infinityz.minigame.gamemodes.types.SwordLess;
 import me.infinityz.minigame.gamemodes.types.uhclatam.UHCLatam;
 import me.infinityz.minigame.gamemodes.types.HasteyBoys;
+import me.infinityz.minigame.gamemodes.types.Limits;
 import me.infinityz.minigame.gamemodes.types.erespawn.EnderRespawn;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -48,6 +49,7 @@ public class GamemodeManager {
         registerGamemode(new DebugMode(instance));
         registerGamemode(new Baguettes(instance));
         registerGamemode(new HasteyBoys(instance));
+        registerGamemode(new Limits(instance));
 
         instance.getCommandManager().getCommandCompletions().registerAsyncCompletion("scenarios",
                 c -> gamemodesList.stream().map(IGamemode::getName).collect(Collectors.toList()));
