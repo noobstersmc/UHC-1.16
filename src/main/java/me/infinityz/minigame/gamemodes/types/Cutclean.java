@@ -7,7 +7,6 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Item;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -57,6 +56,7 @@ public class Cutclean extends IGamemode implements Listener{
         final var block = e.getBlock();
         final var player = e.getPlayer();
         final var itemInHand = player.getInventory().getItemInMainHand();
+        var extras = instance.getGamemodeManager().getExtraOreAmount();
 
         if (itemInHand.getType() == Material.AIR || itemInHand.containsEnchantment(Enchantment.SILK_TOUCH))
             return;
@@ -73,7 +73,7 @@ public class Cutclean extends IGamemode implements Listener{
 
                     }
 
-                    dropCenter(new ItemStack(Material.IRON_INGOT, fortune), block.getLocation());
+                    dropCenter(new ItemStack(Material.IRON_INGOT, (fortune+extras)), block.getLocation());
 
                 }
                 break;
@@ -86,7 +86,7 @@ public class Cutclean extends IGamemode implements Listener{
 
                     e.setExpToDrop(fortune);
 
-                    dropCenter(new ItemStack(Material.GOLD_INGOT, fortune), block.getLocation());
+                    dropCenter(new ItemStack(Material.GOLD_INGOT, (fortune+extras)), block.getLocation());
                 }
                 break;
             }
@@ -167,20 +167,6 @@ public class Cutclean extends IGamemode implements Listener{
         return centeredLocation;
     }
 
-    // Quick int method to obtain what the fortune spell should bonus the player
-    // when they mine.
-    int fortune_bonus(Player player) {
-        ItemStack hand = player.getInventory().getItemInMainHand();
-        if (hand.getType() == Material.AIR || !hand.containsEnchantment(Enchantment.LOOT_BONUS_BLOCKS))
-            return 0;
-        int fortuneLevel = hand.getEnchantmentLevel(Enchantment.LOOT_BONUS_BLOCKS);
-        int bonus = (int) (Math.random() * (fortuneLevel + 2)) - 1;
-        if (bonus < 0) {
-            bonus = 0;
-        }
-        return bonus;
-    }
-
     private int fortuneMultiplier(final ItemStack itemstack) {
         if (itemstack.getType() == Material.AIR || !itemstack.containsEnchantment(Enchantment.LOOT_BONUS_BLOCKS))
             return 1;
@@ -193,7 +179,7 @@ public class Cutclean extends IGamemode implements Listener{
 
     boolean isTool(Material material) {
         return material.toString().contains("PICKAXE") || material.toString().contains("AXE")
-                || material.toString().contains("SPADE") || material.toString().contains("HOE");
+                || material.toString().contains("SHOVEL") || material.toString().contains("HOE");
     }
 
 

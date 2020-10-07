@@ -8,6 +8,7 @@ import org.bukkit.inventory.ItemStack;
 
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.gamemodes.IGamemode;
+import net.md_5.bungee.api.ChatColor;
 
 public class UnDamaxe extends IGamemode implements Listener {
     private UHC instance;
@@ -41,6 +42,7 @@ public class UnDamaxe extends IGamemode implements Listener {
             var player = (Player) e.getDamager();
             if (isAxe(player.getInventory().getItemInMainHand()))
                 e.setCancelled(true);
+                e.getDamager().sendMessage(ChatColor.RED + "Axe damage is disabled.");
 
         }
     }

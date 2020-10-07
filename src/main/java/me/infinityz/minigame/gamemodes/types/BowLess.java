@@ -10,6 +10,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.gamemodes.IGamemode;
+import net.md_5.bungee.api.ChatColor;
 
 public class BowLess extends IGamemode implements Listener {
     private UHC instance;
@@ -41,6 +42,7 @@ public class BowLess extends IGamemode implements Listener {
     public void onCraft(CraftItemEvent e) {
         if (e.getCurrentItem().getType().equals(Material.BOW))
             e.setCancelled(true);
+            e.getWhoClicked().sendMessage(ChatColor.RED + "Bows are disabled.");
 
     }
 
@@ -57,6 +59,7 @@ public class BowLess extends IGamemode implements Listener {
         final var item = player.getInventory().getItemInMainHand();
         if (item.getType() == Material.BOW) {
             player.getInventory().setItemInMainHand(null);
+            player.sendMessage(ChatColor.RED + "Bows are disabled.");
         }
     }
     

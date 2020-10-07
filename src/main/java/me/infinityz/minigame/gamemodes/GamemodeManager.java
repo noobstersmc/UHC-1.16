@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import gnu.trove.set.hash.THashSet;
 import lombok.Getter;
+import lombok.Setter;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.gamemodes.types.UnDamaxe;
 import me.infinityz.minigame.gamemodes.types.BowLess;
@@ -22,6 +23,11 @@ import me.infinityz.minigame.gamemodes.types.SwordLess;
 import me.infinityz.minigame.gamemodes.types.uhclatam.UHCLatam;
 import me.infinityz.minigame.gamemodes.types.HasteyBoys;
 import me.infinityz.minigame.gamemodes.types.Limits;
+import me.infinityz.minigame.gamemodes.types.LuckyLeaves;
+import me.infinityz.minigame.gamemodes.types.Timber;
+import me.infinityz.minigame.gamemodes.types.Totems.Totems;
+import me.infinityz.minigame.gamemodes.types.DoubleOres;
+import me.infinityz.minigame.gamemodes.types.TripleOres;
 import me.infinityz.minigame.gamemodes.types.erespawn.EnderRespawn;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -32,6 +38,7 @@ import net.md_5.bungee.api.chat.hover.content.Text;
 public class GamemodeManager {
     UHC instance;
     private @Getter THashSet<IGamemode> gamemodesList = new THashSet<>();
+    private @Getter @Setter int extraOreAmount = 0;
 
     public GamemodeManager(UHC instance) {
         this.instance = instance;
@@ -50,6 +57,11 @@ public class GamemodeManager {
         registerGamemode(new Baguettes(instance));
         registerGamemode(new HasteyBoys(instance));
         registerGamemode(new Limits(instance));
+        registerGamemode(new LuckyLeaves(instance));
+        registerGamemode(new Timber(instance));
+        registerGamemode(new Totems(instance));
+        registerGamemode(new DoubleOres(instance));
+        registerGamemode(new TripleOres(instance));
 
         instance.getCommandManager().getCommandCompletions().registerAsyncCompletion("scenarios",
                 c -> gamemodesList.stream().map(IGamemode::getName).collect(Collectors.toList()));

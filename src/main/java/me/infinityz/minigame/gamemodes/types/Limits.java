@@ -19,6 +19,7 @@ import me.infinityz.minigame.gamemodes.IGamemode;
 import me.infinityz.minigame.gamemodes.events.ArmorEquipEvent;
 import me.infinityz.minigame.gamemodes.events.ArmorListener;
 import me.infinityz.minigame.gamemodes.events.DispenserArmorListener;
+import net.md_5.bungee.api.ChatColor;
 
 /*
 * Protection 3 Max
@@ -70,7 +71,7 @@ public class Limits extends IGamemode implements Listener {
             return;
         }
         if (isMaxedOut(player)) {
-            player.sendMessage("Your armor is maxed out. Cannot equip anything more.");
+            player.sendMessage(ChatColor.RED + "Your armor is maxed out. Cannot equip anything more.");
             e.setCancelled(true);
         }
 

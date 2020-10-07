@@ -35,7 +35,7 @@ public class GamemodesCMD extends BaseCommand {
             if(gamemode.enableScenario()){
                 sender.sendMessage("Scenario " + gamemode.getName() + " has been enabled.");
             }else if(gamemode.disableScenario()){
-                sender.sendMessage("Scenario" + gamemode.getName() + " has been disabled.");
+                sender.sendMessage("Scenario " + gamemode.getName() + " has been disabled.");
             }else{
                 sender.sendMessage("Couldn't enable or disable " + gamemode.getName() + ".");
             }
