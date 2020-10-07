@@ -17,15 +17,15 @@ import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.gamemodes.IGamemode;
 import net.md_5.bungee.api.ChatColor;
 
-public class GoToHell extends IGamemode implements Listener {
+public class SkyHigh extends IGamemode implements Listener {
     private boolean damage = false;
     private BukkitTask task;
     private UHC instance;
 
-    public GoToHell(UHC instance) {
-        super("Go to Hell", "Players that stay in the overworld will periodically recieve damage after border time.");
+    public SkyHigh(UHC instance) {
+        super("SkyHigh", "Players that stay below Y=150 periodically recieve damage after border time.");
         this.instance = instance;
-        instance.getCommandManager().registerCommand(new GoToHellCMD());
+        instance.getCommandManager().registerCommand(new SkyHighCMD());
     }
 
     @Override
@@ -50,8 +50,8 @@ public class GoToHell extends IGamemode implements Listener {
      * InnerGoToHell
      */
     @CommandPermission("uhc.scenarios")
-    @CommandAlias("gotohell")
-    public class GoToHellCMD extends BaseCommand {
+    @CommandAlias("skyhigh")
+    public class SkyHighCMD extends BaseCommand {
 
         @Default
         public void toggleDamage(CommandSender sender) {
@@ -63,10 +63,10 @@ public class GoToHell extends IGamemode implements Listener {
         @Subcommand("start")
         public void startDamageTask(CommandSender sender,  @Default("600")Integer interval, @Default("600") Integer delay){
             if(task == null || task.isCancelled()){
-                task = new GoToHellDamageTask().runTaskTimerAsynchronously(instance, delay, interval);
+                task = new SkyHighDamageTask().runTaskTimerAsynchronously(instance, delay, interval);
                 damage = true;
                 sender.sendMessage("Starting the damage task with delay " + delay + " and interval of " + interval);
-                Bukkit.broadcastMessage(ChatColor.of("#cd4619") + "Go to the Nether now. Player's that remain in the overworld will take 1 heart of damage every " + (delay/20) + " seconds.");
+                Bukkit.broadcastMessage(ChatColor.of("#7fe5f0") + "Go above coordinate Y=150 now. Player's that remain below Y=150 will take 1 heart of damage every " + (delay/20) + " seconds.");
             }else{
 
                 sender.sendMessage("task is already running, cancel it first.");
@@ -88,7 +88,7 @@ public class GoToHell extends IGamemode implements Listener {
     /**
      * InnerGoToHell
      */
-    public class GoToHellDamageTask extends BukkitRunnable {
+    public class SkyHighDamageTask extends BukkitRunnable {
 
         @Override
         public void run() {
@@ -97,8 +97,8 @@ public class GoToHell extends IGamemode implements Listener {
             
             if (damage)
                 for (var players : Bukkit.getOnlinePlayers())
-                    if (players.getGameMode() == GameMode.SURVIVAL && players.getWorld().getEnvironment() != Environment.NETHER)
-                        players.damage(2);
+                    if (players.getGameMode() == GameMode.SURVIVAL && players.getLocation().getBlock().getY() >150)
+                        players.setHealth(players.getHealth()-2);
 
         }
 

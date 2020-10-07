@@ -127,6 +127,7 @@ public class UHCLatam extends IGamemode implements Listener {
         }
     }
 
+    //no funciona
     @EventHandler(ignoreCancelled = true)
     public void onItemConsume(PlayerItemConsumeEvent e) {
         var item = e.getItem().getType();
