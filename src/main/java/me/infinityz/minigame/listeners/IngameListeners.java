@@ -46,6 +46,8 @@ import me.infinityz.minigame.events.ScoreboardUpdateEvent;
 import me.infinityz.minigame.events.TeamWinEvent;
 import me.infinityz.minigame.events.UHCPlayerDequalificationEvent;
 import me.infinityz.minigame.game.Game;
+import me.infinityz.minigame.gamemodes.types.GoToHell;
+import me.infinityz.minigame.gamemodes.types.SkyHigh;
 import me.infinityz.minigame.players.PositionObject;
 import me.infinityz.minigame.players.UHCPlayer;
 import me.infinityz.minigame.scoreboard.IScoreboard;
@@ -98,6 +100,18 @@ public class IngameListeners implements Listener {
     public void onDeathFromBorder(PlayerDeathEvent e) {
         if (e.getEntity().getLastDamageCause().getCause() == DamageCause.CUSTOM) {
             e.setDeathMessage("");
+            var player = e.getEntity().getPlayer();
+            if(instance.getGamemodeManager().isScenarioEnable(SkyHigh.class) && 
+                player.getWorld().getWorldBorder().isInside(player.getLocation())){
+                    Bukkit.broadcastMessage(player.getName() + " was devoured by the earth");
+                    return;
+            }
+            if(instance.getGamemodeManager().isScenarioEnable(GoToHell.class) && 
+                player.getWorld().getWorldBorder().isInside(player.getLocation())
+                && player.getWorld().getEnvironment() != Environment.NETHER){
+                    Bukkit.broadcastMessage(player.getName() + " was devoured by his arrogance");
+                    return;
+            }
             var deathMessageEnglish = e.getEntity().getName() + " was devoured by the border";
             var deathMessageSpanish = e.getEntity().getName() + " fue devorado por el borde";
             var deathMessageFrench = e.getEntity().getName() + " a été dévoré par la frontière";

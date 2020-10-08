@@ -18,7 +18,7 @@ import me.infinityz.minigame.gamemodes.IGamemode;
 import net.md_5.bungee.api.ChatColor;
 
 public class GoToHell extends IGamemode implements Listener {
-    private boolean damage = false;
+    private boolean damage = true;
     private BukkitTask task;
     private UHC instance;
 
@@ -61,12 +61,12 @@ public class GoToHell extends IGamemode implements Listener {
         }
 
         @Subcommand("start")
-        public void startDamageTask(CommandSender sender,  @Default("600")Integer interval, @Default("600") Integer delay){
+        public void startDamageTask(CommandSender sender,  @Default("100")Integer interval, @Default("100") Integer delay){
             if(task == null || task.isCancelled()){
                 task = new GoToHellDamageTask().runTaskTimerAsynchronously(instance, delay, interval);
                 damage = true;
                 sender.sendMessage("Starting the damage task with delay " + delay + " and interval of " + interval);
-                Bukkit.broadcastMessage(ChatColor.of("#cd4619") + "Go to the Nether now. Player's that remain in the overworld will take 1 heart of damage every " + (delay/20) + " seconds.");
+                Bukkit.broadcastMessage(ChatColor.of("#cd4619") + "Go to the Nether now. Player's that remain in the overworld will take a heart of damage every " + (delay/20) + " seconds.");
             }else{
 
                 sender.sendMessage("task is already running, cancel it first.");

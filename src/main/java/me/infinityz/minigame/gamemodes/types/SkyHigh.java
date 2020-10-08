@@ -18,7 +18,7 @@ import me.infinityz.minigame.gamemodes.IGamemode;
 import net.md_5.bungee.api.ChatColor;
 
 public class SkyHigh extends IGamemode implements Listener {
-    private boolean damage = false;
+    private boolean damage = true;
     private BukkitTask task;
     private UHC instance;
 
@@ -61,12 +61,12 @@ public class SkyHigh extends IGamemode implements Listener {
         }
 
         @Subcommand("start")
-        public void startDamageTask(CommandSender sender,  @Default("600")Integer interval, @Default("600") Integer delay){
+        public void startDamageTask(CommandSender sender,  @Default("100")Integer interval, @Default("100") Integer delay){
             if(task == null || task.isCancelled()){
                 task = new SkyHighDamageTask().runTaskTimerAsynchronously(instance, delay, interval);
                 damage = true;
                 sender.sendMessage("Starting the damage task with delay " + delay + " and interval of " + interval);
-                Bukkit.broadcastMessage(ChatColor.of("#7fe5f0") + "Go above coordinate Y=150 now. Player's that remain below Y=150 will take 1 heart of damage every " + (delay/20) + " seconds.");
+                Bukkit.broadcastMessage(ChatColor.of("#7fe5f0") + "Go above coordinate Y=150 now. Player's that remain in surface will take a heart of damage every " + (delay/20) + " seconds.");
             }else{
 
                 sender.sendMessage("task is already running, cancel it first.");
@@ -97,8 +97,10 @@ public class SkyHigh extends IGamemode implements Listener {
             
             if (damage)
                 for (var players : Bukkit.getOnlinePlayers())
-                    if (players.getGameMode() == GameMode.SURVIVAL && players.getLocation().getBlock().getY() >150)
-                        players.setHealth(players.getHealth()-2);
+                    if (players.getGameMode() == GameMode.SURVIVAL 
+                    && players.getWorld().getEnvironment() != Environment.NETHER
+                    && players.getLocation().getY() < 150)
+                        players.damage(2);
 
         }
 
