@@ -125,7 +125,6 @@ public class UHC extends JavaPlugin {
         commandManager.registerCommand(new UHCCommand(this));
         commandManager.registerCommand(new LatescatterCMD(this));
         commandManager.registerCommand(new GlobalMute(this));
-        commandManager.registerCommand(new TeamCMD(this));
         commandManager.registerCommand(new Utilities(this));
         commandManager.registerCommand(new GameRestoreCMD(this));
         commandManager.registerCommand(new ConfigCommand(this));

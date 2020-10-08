@@ -19,6 +19,7 @@ import lombok.Getter;
 import lombok.Setter;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.players.UHCPlayer;
+import me.infinityz.minigame.teams.commands.TeamCMD;
 import me.infinityz.minigame.teams.events.TeamInviteExpireEvent;
 import me.infinityz.minigame.teams.objects.Team;
 import me.infinityz.minigame.teams.objects.TeamInvite;
@@ -42,9 +43,12 @@ public class TeamManager {
     private @Getter @Setter boolean teamManagement = false;
     private @Getter @Setter boolean broacastColor = false;
     private @Getter @Setter boolean showPrefix = false;
+    private @Getter TeamCMD teamCommand;
 
     public TeamManager(final UHC instance) {
         this.instance = instance;
+        this.teamCommand = new TeamCMD(instance);
+        instance.getCommandManager().registerCommand(teamCommand);
     }
 
     public TeamInvite sendTeamInvite(final Team team, final Player sender, final Player target) {

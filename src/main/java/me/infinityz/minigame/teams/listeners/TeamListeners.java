@@ -74,7 +74,9 @@ public class TeamListeners implements Listener {
 
     @EventHandler
     public void onTeamUpdateDisplay(TeamDisplayUpdateEvent e) {
-        e.getTeam().updateDisplay(instance.getTeamManger().isBroacastColor(), instance.getTeamManger().isShowPrefix());
+        var team = e.getTeam();
+        team.updateDisplay(instance.getTeamManger().isBroacastColor(), instance.getTeamManger().isShowPrefix());
+
     }
 
     @EventHandler
@@ -140,6 +142,8 @@ public class TeamListeners implements Listener {
         }
 
     }
+
+
 
 
 }

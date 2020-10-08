@@ -14,10 +14,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.ObjectUtils.Null;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -39,13 +41,14 @@ public class Team {
     private @Getter @Setter String teamPrefix = "➤ ";
     private @Getter @Setter int teamColorIndex = 10;
     private @Getter @Setter List<Pattern> teamShieldPattern;
+    private @Getter Inventory teamInventory;
 
     public Team(UUID teamLeader) {
         this.teamID = UUID.randomUUID();
         this.teamLeader = teamLeader;
         this.teamKills = 0;
         this.teamDisplayName = teamID.toString().substring(0, 6);
-        this.teamColorIndex = localRandom.nextInt(14);
+        this.teamColorIndex = localRandom.nextInt(13)+1;
         addMember(teamLeader);
     }
 
@@ -202,4 +205,15 @@ public class Team {
 
     }
 
+    //team inventory
+
+    public void createTeamInventory(){
+        teamInventory = Bukkit.createInventory(null, 36, isCustomName() ? 
+        getTeamDisplayName()+ "'s team inventory" : "Team inventory");
+
+    }
+
+    public void destroyTeamInventory(){
+        teamInventory = null;
+    }
 }

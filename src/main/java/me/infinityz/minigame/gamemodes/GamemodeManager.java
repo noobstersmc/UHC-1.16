@@ -30,6 +30,7 @@ import me.infinityz.minigame.gamemodes.types.DoubleOres;
 import me.infinityz.minigame.gamemodes.types.TripleOres;
 import me.infinityz.minigame.gamemodes.types.SkyHigh;
 import me.infinityz.minigame.gamemodes.types.BloodHunter;
+import me.infinityz.minigame.gamemodes.types.BackPack;
 import me.infinityz.minigame.gamemodes.types.erespawn.EnderRespawn;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -66,6 +67,7 @@ public class GamemodeManager {
         registerGamemode(new TripleOres(instance));
         registerGamemode(new BloodHunter(instance));
         registerGamemode(new SkyHigh(instance));
+        registerGamemode(new BackPack(instance));
 
         instance.getCommandManager().getCommandCompletions().registerAsyncCompletion("scenarios",
                 c -> gamemodesList.stream().map(IGamemode::getName).collect(Collectors.toList()));
