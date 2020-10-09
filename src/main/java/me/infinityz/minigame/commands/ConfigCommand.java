@@ -3,6 +3,7 @@ package me.infinityz.minigame.commands;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
@@ -10,6 +11,7 @@ import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Optional;
 import co.aikar.commands.annotation.Subcommand;
+import org.bukkit.event.player.PlayerLoginEvent;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import me.infinityz.minigame.UHC;
@@ -140,6 +142,21 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
     public void changeApplerate(CommandSender sender, Double rate) {
         sender.sendMessage("Applerate has been changed from " + instance.getGame().getApplerate() + "% to " + rate + "%");
         instance.getGame().setApplerate(rate);
+    }
+
+    @CommandPermission("uhc.config.slots")
+    @Subcommand("setslots")
+    @CommandAlias("slots||setslots||maxslots")
+    public void changeSlots(CommandSender sender, Integer newSlots) {
+        instance.getGame().setUhcslots(newSlots);
+        sender.sendMessage("Slots set to: " + newSlots);
+    }
+
+    @EventHandler
+    public void onLogin(PlayerLoginEvent e) {
+        if (Bukkit.getOnlinePlayers().size() >= instance.getGame().getUhcslots() && !e.getPlayer().hasPermission("reserved.slot"))
+            e.disallow(PlayerLoginEvent.Result.KICK_OTHER, ChatColor.translateAlternateColorCodes('&',
+                    "&fServer is full! \n Get a reserved slot on &anoobstersuhc.buycraft.net"));
     }
     
 

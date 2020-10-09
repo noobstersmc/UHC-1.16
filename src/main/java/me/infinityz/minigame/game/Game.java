@@ -26,6 +26,7 @@ public class Game {
     private boolean nether = true;
     private boolean end = false;
     private boolean hasSomeoneWon = false;
+    private int uhcslots = 60;
     /* Game config */
     private int borderTime = 3600;
     private int pvpTime = 1200;
