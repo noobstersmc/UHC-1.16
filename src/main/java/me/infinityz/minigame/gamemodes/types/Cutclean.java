@@ -29,7 +29,7 @@ public class Cutclean extends IGamemode implements Listener{
     private Random random = new Random();
 
     public Cutclean(UHC instance) {
-        super("Cutclean", "All drops are now melted");
+        super("Cutclean", "All drops are now melted.");
         this.instance = instance;
     }
 
