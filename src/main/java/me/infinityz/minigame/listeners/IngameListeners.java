@@ -106,8 +106,7 @@ public class IngameListeners implements Listener {
                     Bukkit.broadcastMessage(player.getName() + " was devoured by the earth");
                     return;
             }
-            if(instance.getGamemodeManager().isScenarioEnable(GoToHell.class) && 
-                player.getWorld().getWorldBorder().isInside(player.getLocation())
+            if(player.getWorld().getWorldBorder().isInside(player.getLocation())
                 && player.getWorld().getEnvironment() != Environment.NETHER){
                     Bukkit.broadcastMessage(player.getName() + " was devoured by his arrogance");
                     return;
