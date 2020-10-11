@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.util.Properties;
 import java.util.logging.Level;
 
+import com.google.gson.Gson;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.WorldEditException;
@@ -66,8 +67,8 @@ import me.infinityz.minigame.listeners.ListenerManager;
 import me.infinityz.minigame.players.PlayerManager;
 import me.infinityz.minigame.scoreboard.ScoreboardManager;
 import me.infinityz.minigame.teams.TeamManager;
-import me.infinityz.minigame.teams.commands.TeamCMD;
 import net.md_5.bungee.api.ChatColor;
+import us.jcedeno.condor.communicator.CommunicatorPlugin;
 
 public class UHC extends JavaPlugin {
 
@@ -83,27 +84,9 @@ public class UHC extends JavaPlugin {
     private @Getter ChatManager chatManager;
     private @Getter @Setter Game game;
     private @Getter EditSession session;
+    private @Getter CommunicatorPlugin communicator;
+    private @Getter Gson gson = new Gson();
     private static @Setter TaskChainFactory taskChainFactory;
-
-    public void changeSeed(String seed) {
-        Properties properties = new Properties();
-        File propertiesFile = new File("server.properties");
-
-        try {
-            try (InputStream is = new FileInputStream(propertiesFile)) {
-                properties.load(is);
-            }
-
-            getLogger().info("Saving max players to server.properties...");
-            properties.setProperty("level-seed", seed);
-
-            try (OutputStream os = new FileOutputStream(propertiesFile)) {
-                properties.store(os, "Minecraft server properties");
-            }
-        } catch (IOException e) {
-            getLogger().log(Level.SEVERE, "An error occurred while updating the server properties", e);
-        }
-    }
 
     @Override
     public void onEnable() {
@@ -143,6 +126,8 @@ public class UHC extends JavaPlugin {
         chunkManager = new ChunksManager(this);
         gamemodeManager = new GamemodeManager(this);
         chatManager = new ChatManager(this);
+        /* Hook with Condor Communicator */
+        CommunicatorPlugin.addRoute("/uhc/config", (req, res) -> getGame().toString());
 
         /* Run some startup code */
         runStartUp();
@@ -260,6 +245,27 @@ public class UHC extends JavaPlugin {
 
     public static <T> TaskChain<T> newSharedChain(String name) {
         return taskChainFactory.newSharedChain(name);
+    }
+    
+
+    public void changeSeed(String seed) {
+        Properties properties = new Properties();
+        File propertiesFile = new File("server.properties");
+
+        try {
+            try (InputStream is = new FileInputStream(propertiesFile)) {
+                properties.load(is);
+            }
+
+            getLogger().info("Saving max players to server.properties...");
+            properties.setProperty("level-seed", seed);
+
+            try (OutputStream os = new FileOutputStream(propertiesFile)) {
+                properties.store(os, "Minecraft server properties");
+            }
+        } catch (IOException e) {
+            getLogger().log(Level.SEVERE, "An error occurred while updating the server properties", e);
+        }
     }
 
 }

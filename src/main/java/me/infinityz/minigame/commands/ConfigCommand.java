@@ -58,7 +58,7 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
     
     }
 
-    private String getGameType(){ 
+    public String getGameType(){ 
         final int teamSize = instance.getTeamManger().getTeamSize();
         return teamSize > 1 ? "Teams of " + teamSize : "FFA";
     }
