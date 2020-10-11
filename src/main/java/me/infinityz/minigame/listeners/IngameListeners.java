@@ -196,7 +196,7 @@ public class IngameListeners implements Listener {
             e.setCancelled(true);
             e.setUseBed(Result.DENY);
             e.getBed().setType(Material.AIR);
-            e.getBed().getLocation().createExplosion(4.0f, true, true);
+            e.getBed().getLocation().createExplosion(2.0f, true, true);
         }
 
     }
