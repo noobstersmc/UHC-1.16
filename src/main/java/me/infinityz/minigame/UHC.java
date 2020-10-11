@@ -86,6 +86,7 @@ public class UHC extends JavaPlugin {
     private @Getter EditSession session;
     private @Getter CommunicatorPlugin communicator;
     private @Getter Gson gson = new Gson();
+    private static @Getter UHC instance;
     private static @Setter TaskChainFactory taskChainFactory;
 
     @Override
@@ -96,6 +97,7 @@ public class UHC extends JavaPlugin {
         setTaskChainFactory(BukkitTaskChainFactory.create(this));
         FastInvManager.register(this);
         gameStage = Stage.LOADING;
+        instance = this;
 
         /*
          * Register commands and contexts for AFC
@@ -116,7 +118,6 @@ public class UHC extends JavaPlugin {
         /*
          * Initilialize all the managers
          */
-        game = new Game();
         Game.setBossbar(Bukkit.createBossBar(new NamespacedKey(this, "henix"), "Time", BarColor.RED, BarStyle.SOLID));
         teamManger = new TeamManager(this);
         scoreboardManager = new ScoreboardManager(this);
@@ -128,6 +129,8 @@ public class UHC extends JavaPlugin {
         chatManager = new ChatManager(this);
         /* Hook with Condor Communicator */
         CommunicatorPlugin.addRoute("/uhc/config", (req, res) -> getGame().toString());
+        /* Initiliaze the game data */
+        game = new Game();
 
         /* Run some startup code */
         runStartUp();

@@ -1,14 +1,20 @@
 package me.infinityz.minigame.game;
 
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import com.google.gson.GsonBuilder;
 
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.boss.BossBar;
 
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import me.infinityz.minigame.UHC;
+import me.infinityz.minigame.enums.Stage;
+import me.infinityz.minigame.gamemodes.IGamemode;
 import net.md_5.bungee.api.ChatColor;
 
 @Data
@@ -16,7 +22,8 @@ public class Game {
     /* Static data */
     private static @Getter @Setter BossBar bossbar;
     private static @Getter @Setter String scoreboardTitle = ChatColor.BOLD + "UHC";
-    private static @Getter @Setter String tablistHeader =  ChatColor.of("#A40A0A") + "" + ChatColor.BOLD + "\nNOOBSTERS\n";
+    private static @Getter @Setter String tablistHeader = ChatColor.of("#A40A0A") + "" + ChatColor.BOLD
+            + "\nNOOBSTERS\n";
     /* Game data */
     private UUID gameID = UUID.randomUUID();
     private long startTime;
@@ -37,12 +44,43 @@ public class Game {
     private boolean strengthNerf = true;
     private boolean criticalNerf = true;
     private double applerate = 0.80;
+    String[] scenarios;
+    Stage gameStage;
+    double currentBorder;
+    int playersAlive;
+    int spectators;
 
     @Override
     public String toString() {
-
         var gson = new GsonBuilder().setPrettyPrinting().create();
+        var instance = UHC.getInstance();
+        scenarios = getScenarios(instance);
+        currentBorder = getCurrentBorderSize();
+        gameStage = getGameStage(instance);
+        spectators = getSpectators(instance);
+        playersAlive = getPlayersAlive(instance);
         return gson.toJson(this);
+    }
+
+    double getCurrentBorderSize() {
+        return Bukkit.getWorlds().get(0).getWorldBorder().getSize();
+    }
+
+    String[] getScenarios(UHC instance) {
+        return instance.getGamemodeManager().getEnabledGamemodes().stream().map(IGamemode::getName)
+                .collect(Collectors.toList()).toArray(new String[] {});
+    }
+
+    Stage getGameStage(UHC instance) {
+        return instance.getGameStage();
+    }
+
+    int getSpectators(UHC instance) {
+        return (int) Bukkit.getOnlinePlayers().stream().filter(p -> p.getGameMode() != GameMode.SURVIVAL).count();
+    }
+
+    int getPlayersAlive(UHC instance) {
+        return instance.getPlayerManager().getAlivePlayers();
     }
 
 }
