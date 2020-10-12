@@ -109,12 +109,17 @@ public class GamemodeManager {
     //
 
     public String getEnabledGamemodesToString() {
-        final StringBuilder sb = new StringBuilder();
-        gamemodesList.forEach(all -> {
-            if (all.isEnabled())
-                sb.append(all.getName() + ", ");
-        });
-        return (sb.length() > 1 ? sb.toString().substring(0, sb.length() - 2) : "Vanilla+") + ".";
+        var sb = new StringBuilder();
+        var enabledScenarios = getEnabledGamemodes();
+        var iter = enabledScenarios.iterator();
+
+        if (iter.hasNext())
+            while (iter.hasNext())
+                sb.append(iter.next().getName() + (iter.hasNext() ? ", " : "."));
+        else
+            sb.append("Vanilla+");
+
+        return sb.toString();
     }
 
     public BaseComponent[] getScenariosWithDescription() {
