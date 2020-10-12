@@ -389,5 +389,19 @@ public class UHCCommand extends BaseCommand {
         // TODO: Implement the Dequalify command.
 
     }
+    @Subcommand("setHost")
+    @CommandCompletion("@onlineplayers")
+    @CommandPermission("uhc.admin")
+    public void changeHost(CommandSender sender, String newHost) {
+        instance.getGame().setHostname(newHost);
+        sender.sendMessage("New host = " + newHost);
+
+    }
+    @Subcommand("claim")
+    @CommandPermission("staff.perm")
+    public void claimHost(CommandSender sender) {
+        instance.getGame().setHostname(sender.getName());
+        sender.sendMessage("New host = " + sender.getName());
+    }
 
 }

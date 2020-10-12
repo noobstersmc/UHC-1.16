@@ -51,6 +51,7 @@ public class Game {
     int spectators;
     int playersOnline;
     String gameType;
+    String hostname;
 
     @Override
     public String toString() {
@@ -62,10 +63,10 @@ public class Game {
         gameStage = getGameStage(instance);
         spectators = getSpectators(instance);
         playersAlive = getPlayersAlive(instance);
-        uhcslots = getUhcslots();
         playersOnline = Bukkit.getOnlinePlayers().size();
         var teamSize = instance.getTeamManger().getTeamSize();
         gameType = teamSize > 1 ? "To" + teamSize : "FFA";
+    
         //Return as json
         return gson.toJson(this);
     }
