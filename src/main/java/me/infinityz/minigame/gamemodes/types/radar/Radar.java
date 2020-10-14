@@ -10,7 +10,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.meta.CompassMeta;
 
@@ -95,7 +94,7 @@ public class Radar extends IGamemode implements Listener {
         var clickedInventory = e.getClickedInventory();
         if (clickedInventory != null && clickedInventory.getType() == InventoryType.ANVIL) {
             var itemSlot0 = e.getInventory().getItem(0);
-            if (itemSlot0.getI18NDisplayName().contains("RADAR")){
+            if (itemSlot0.getItemMeta().getDisplayName().contains("RADAR")){
                 e.setCancelled(true);
             }
         }

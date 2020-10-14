@@ -48,6 +48,22 @@ public class GlobalListener implements Listener {
     }
 
     @EventHandler
+    public void onShieldBreak(EntityDamageByEntityEvent e) {
+        if (e.getDamager() instanceof Player && e.getEntity() instanceof Player) {
+            var victim = (Player) e.getEntity();
+            var player = (Player) e.getDamager();
+            if (victim.isBlocking() && isAxe(player.getInventory().getItemInMainHand())){
+                player.playSound(player.getLocation(), Sound.ITEM_SHIELD_BREAK, 1.0f, 1.0f);
+            }
+
+        }
+    }
+
+    private boolean isAxe(ItemStack e) {
+        return e != null && e.getType().toString().contains("_AXE");
+    }
+
+    @EventHandler
     public void joinMessage(PlayerJoinEvent e) {
         e.getPlayer().sendMessage(ChatColor.BLUE + "Discord! discord.noobsters.net\n" + ChatColor.AQUA
                 + "Twitter! twitter.com/NoobstersMC\n" + ChatColor.GOLD + "Donations! noobsters.buycraft.net");

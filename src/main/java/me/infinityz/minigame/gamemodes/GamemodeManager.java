@@ -35,6 +35,7 @@ import me.infinityz.minigame.gamemodes.types.Switcheroo;
 import me.infinityz.minigame.gamemodes.types.InfiniteEnchanter;
 import me.infinityz.minigame.gamemodes.types.GoneFishing;
 import me.infinityz.minigame.gamemodes.types.BloodDiamonds;
+import me.infinityz.minigame.gamemodes.types.AdvancementHunter;
 import me.infinityz.minigame.gamemodes.types.erespawn.EnderRespawn;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -76,6 +77,7 @@ public class GamemodeManager {
         registerGamemode(new InfiniteEnchanter(instance));
         registerGamemode(new GoneFishing(instance));
         registerGamemode(new BloodDiamonds(instance));
+        registerGamemode(new AdvancementHunter(instance));
 
         instance.getCommandManager().getCommandCompletions().registerAsyncCompletion("scenarios",
                 c -> gamemodesList.stream().map(IGamemode::getName).collect(Collectors.toList()));

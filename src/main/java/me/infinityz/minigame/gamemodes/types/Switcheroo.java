@@ -48,8 +48,8 @@ public class Switcheroo extends IGamemode implements Listener {
                     final var teleport2 = player2.getLocation();
                     player1.teleport(teleport2);
                     player2.teleport(teleport1);
-                    player1.playSound(teleport2, Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1);
-                    player2.playSound(teleport1, Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1);
+                    player1.playSound(teleport2, Sound.ENTITY_ENDERMAN_TELEPORT, 1.0f, 0.5f);
+                    player2.playSound(teleport1, Sound.ENTITY_ENDERMAN_TELEPORT, 1.0f, 0.5f);
                 }
             }
         }

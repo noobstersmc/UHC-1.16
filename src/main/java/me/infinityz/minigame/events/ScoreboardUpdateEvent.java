@@ -32,5 +32,9 @@ public class ScoreboardUpdateEvent extends Event implements Cancellable{
         this(scoreboard, false, lines);
     }
 
+    public void setLinesArray(String... lines){ 
+        this.lines = lines;
+    }
+
 
 }

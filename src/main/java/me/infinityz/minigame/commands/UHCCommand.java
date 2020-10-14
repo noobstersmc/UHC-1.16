@@ -36,6 +36,7 @@ import me.infinityz.minigame.chunks.ChunksManager;
 import me.infinityz.minigame.events.NetherDisabledEvent;
 import me.infinityz.minigame.game.Game;
 import me.infinityz.minigame.game.border.FortniteBorder;
+import me.infinityz.minigame.gamemodes.types.uhclatam.PlayerCorpse;
 import me.infinityz.minigame.players.PositionObject;
 import me.infinityz.minigame.players.UHCPlayer;
 import me.infinityz.minigame.scoreboard.objects.FastBoard;
@@ -53,33 +54,31 @@ public class UHCCommand extends BaseCommand {
     private @NonNull UHC instance;
 
     /*
-    var winnersTitle = Title.builder()
-                .title(new ComponentBuilder("You Win!").bold(true).color(ChatColor.GOLD).create())
-                .subtitle(ChatColor.GREEN + "Congratulations " + winnersName.toString()).stay(6 * 20).fadeIn(10)
-                .fadeOut(3 * 20).build();
-    */
+     * var winnersTitle = Title.builder() .title(new
+     * ComponentBuilder("You Win!").bold(true).color(ChatColor.GOLD).create())
+     * .subtitle(ChatColor.GREEN + "Congratulations " +
+     * winnersName.toString()).stay(6 * 20).fadeIn(10) .fadeOut(3 * 20).build();
+     */
 
-    
     void countDown(final int time) {
         final var title = Title.builder().title("")
-                .subtitle(new ComponentBuilder("" + time).bold(true).color(ChatColor.GREEN).create()).stay(20).fadeIn(0).build();
+                .subtitle(new ComponentBuilder("" + time).bold(true).color(ChatColor.GREEN).create()).stay(20).fadeIn(0)
+                .build();
         Bukkit.getOnlinePlayers().forEach(players -> {
 
             players.sendTitle(title);
-            if(time < 4)
+            if (time < 4)
                 players.playSound(players.getLocation(), Sound.BLOCK_NOTE_BLOCK_BIT, 1, 1);
         });
     }
-    
-    
 
     @CommandPermission("uhc.debug")
     @Subcommand("debug")
-    public void onC(CommandSender sender){
+    public void onC(CommandSender sender) {
         var count = 10;
         var chain = UHC.newChain().sync(() -> countDown(20));
 
-        while(count-- > 1){
+        while (count-- > 1) {
             final var current = count;
             chain.delay(20).sync(() -> countDown(current));
         }
@@ -145,40 +144,38 @@ public class UHCCommand extends BaseCommand {
 
     @Subcommand("ltp")
     @CommandPermission("PRO")
-    public void teleportTest(Player sender, Integer index){
-       var loc = instance.getChunkManager().getLocations().get(index);
-       if(loc != null){
-           sender.teleport(loc);
-       }else{
-           sender.sendMessage("Null index loc.");
-       }
-
+    public void teleportTest(Player sender, Integer index) {
+        var loc = instance.getChunkManager().getLocations().get(index);
+        if (loc != null) {
+            sender.teleport(loc);
+        } else {
+            sender.sendMessage("Null index loc.");
+        }
 
     }
 
     @Subcommand("ocs")
     @CommandPermission("UHC.CRACK")
-    public void openChunkSystem(Player player){        
+    public void openChunkSystem(Player player) {
         var mainHandItem = player.getInventory().getItemInMainHand();
-        if(mainHandItem != null){
-            if(mainHandItem.getItemMeta() instanceof BannerMeta){
-                var bannerMeta = (BannerMeta)mainHandItem.getItemMeta();
+        if (mainHandItem != null) {
+            if (mainHandItem.getItemMeta() instanceof BannerMeta) {
+                var bannerMeta = (BannerMeta) mainHandItem.getItemMeta();
                 var team = instance.getTeamManger().getPlayerTeam(player.getUniqueId());
-                if(team != null){
+                if (team != null) {
                     team.setTeamShieldPattern(bannerMeta.getPatterns());
-                    team.sendTeamMessage("Team banner has been changed.");  
+                    team.sendTeamMessage("Team banner has been changed.");
                 }
-                
+
             }
 
         }
-
 
     }
 
     @Subcommand("seed")
     @CommandPermission("uhc.admin")
-    public void onChangeSeed(CommandSender sender, @Default("")String seed){
+    public void onChangeSeed(CommandSender sender, @Default("") String seed) {
         instance.changeSeed(seed);
         sender.sendMessage("Attempting to change seed to: " + seed);
 
@@ -198,7 +195,6 @@ public class UHCCommand extends BaseCommand {
             e.printStackTrace();
         }
     }
-
 
     @Conditions("ingame")
     @CommandAlias("kt|killtop")
@@ -389,6 +385,7 @@ public class UHCCommand extends BaseCommand {
         // TODO: Implement the Dequalify command.
 
     }
+
     @Subcommand("setHost")
     @CommandCompletion("@onlineplayers")
     @CommandPermission("uhc.admin")
@@ -397,11 +394,25 @@ public class UHCCommand extends BaseCommand {
         sender.sendMessage("New host = " + newHost);
 
     }
+
     @Subcommand("claim")
     @CommandPermission("staff.perm")
     public void claimHost(CommandSender sender) {
         instance.getGame().setHostname(sender.getName());
         sender.sendMessage("New host = " + sender.getName());
+    }
+
+    @Subcommand("ad")
+    @CommandPermission("admin.perm")
+    public void advancement(Player sender) {
+        var corpse = new PlayerCorpse(sender.getName(), sender.getLocation());
+        try {
+            corpse.spawn();
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
     }
 
 }

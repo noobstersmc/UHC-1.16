@@ -1,0 +1,66 @@
+package me.infinityz.minigame.gamemodes.types;
+
+import com.google.gson.GsonBuilder;
+
+import org.bukkit.Bukkit;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerAdvancementDoneEvent;
+
+import me.infinityz.minigame.UHC;
+import me.infinityz.minigame.events.GameTickEvent;
+import me.infinityz.minigame.gamemodes.IGamemode;
+
+public class AdvancementHunter extends IGamemode implements Listener {
+    private UHC instance;
+
+    public AdvancementHunter(UHC instance) {
+        super("Advancement Hunter", "You get 1 heart for each advancement.");
+        this.instance = instance;
+    }
+
+    @Override
+    public boolean enableScenario() {
+        if (isEnabled())
+            return false;
+        instance.getListenerManager().registerListener(this);
+        setEnabled(true);
+        return true;
+    }
+
+    @Override
+    public boolean disableScenario() {
+        if (!isEnabled())
+            return false;
+        instance.getListenerManager().unregisterListener(this);
+        setEnabled(false);
+        return true;
+    }
+
+    @EventHandler
+    public void onAdvancement(PlayerAdvancementDoneEvent e) {
+        Bukkit.broadcastMessage(
+                new GsonBuilder().setPrettyPrinting().create().toJson(e.getAdvancement().getCriteria()));
+        Bukkit.broadcastMessage(new GsonBuilder().setPrettyPrinting().create().toJson(e.getAdvancement().getKey()));
+        var adv = e.getAdvancement().getKey().getKey();
+        if (adv.startsWith("story") || adv.startsWith("nether") || adv.startsWith("adventure")
+                || adv.startsWith("end")) {
+            var playerHealth = e.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
+            e.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(playerHealth + 2);
+        }
+    }
+
+    @EventHandler
+    public void onStart(GameTickEvent e) {
+        if (e.getSecond() == 1) {
+            Bukkit.getScheduler().runTask(instance, () -> {
+                Bukkit.getOnlinePlayers()
+                        .forEach(players -> players.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(2.0));
+
+            });
+        }
+
+    }
+
+}

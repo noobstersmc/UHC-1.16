@@ -40,9 +40,10 @@ public class UnDamaxe extends IGamemode implements Listener {
     public void onDamageByEntity(EntityDamageByEntityEvent e) {
         if (e.getDamager() instanceof Player) {
             var player = (Player) e.getDamager();
-            if (isAxe(player.getInventory().getItemInMainHand()))
+            if (isAxe(player.getInventory().getItemInMainHand())){
                 e.setCancelled(true);
-                e.getDamager().sendMessage(ChatColor.RED + "Axe damage is disabled.");
+                e.getDamager().sendMessage(ChatColor.RED + "Axe damage is disabled in this game.");
+            }
 
         }
     }
