@@ -5,9 +5,10 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
-import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.inventory.ShapelessRecipe;
 
 import me.infinityz.minigame.crafting.CustomRecipe;
+import net.md_5.bungee.api.ChatColor;
 
 public class RadarRecipe extends CustomRecipe {
 
@@ -16,11 +17,12 @@ public class RadarRecipe extends CustomRecipe {
 
         final ItemStack newRadarRecipe = new ItemStack(Material.COMPASS);
         var meta = newRadarRecipe.getItemMeta();
+        meta.setDisplayName(ChatColor.GREEN+ "" + ChatColor.BOLD + "RADAR");
+        newRadarRecipe.setItemMeta(meta);
 
-        final ShapedRecipe recipe = new ShapedRecipe(namespacedKey, newRadarRecipe);
-        recipe.shape("AAA", "ABA", "AAA");
-        recipe.setIngredient('A', Material.AIR);
-        recipe.setIngredient('B', Material.COMPASS);
+        final ShapelessRecipe recipe = new ShapelessRecipe(namespacedKey, newRadarRecipe);
+        recipe.addIngredient(1, Material.DIAMOND);
+        recipe.addIngredient(1, Material.COMPASS);
 
         setRecipe(recipe);
     }

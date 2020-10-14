@@ -8,6 +8,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.meta.CompassMeta;
 
@@ -85,6 +88,17 @@ public class Radar extends IGamemode implements Listener {
         //Return optional object.
         return from.getLocation().getNearbyPlayers(radius).parallelStream()
                 .filter(p -> p != from || (localTeam != null && !localTeam.isMember(p.getUniqueId()))).findFirst();
+    }
+
+    @EventHandler
+    public void onAnvilRename(InventoryClickEvent e) {
+        var clickedInventory = e.getClickedInventory();
+        if (clickedInventory != null && clickedInventory.getType() == InventoryType.ANVIL) {
+            var itemSlot0 = e.getInventory().getItem(0);
+            if (itemSlot0.getI18NDisplayName().contains("RADAR")){
+                e.setCancelled(true);
+            }
+        }
     }
 
 }
