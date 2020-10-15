@@ -1,7 +1,5 @@
 package me.infinityz.minigame.gamemodes.types;
 
-import com.google.gson.GsonBuilder;
-
 import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.event.EventHandler;
@@ -40,9 +38,6 @@ public class AdvancementHunter extends IGamemode implements Listener {
 
     @EventHandler
     public void onAdvancement(PlayerAdvancementDoneEvent e) {
-        Bukkit.broadcastMessage(
-                new GsonBuilder().setPrettyPrinting().create().toJson(e.getAdvancement().getCriteria()));
-        Bukkit.broadcastMessage(new GsonBuilder().setPrettyPrinting().create().toJson(e.getAdvancement().getKey()));
         var adv = e.getAdvancement().getKey().getKey();
         if (adv.startsWith("story") || adv.startsWith("nether") || adv.startsWith("adventure")
                 || adv.startsWith("end")) {
