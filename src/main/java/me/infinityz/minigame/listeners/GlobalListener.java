@@ -7,6 +7,7 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Banner;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -61,6 +62,29 @@ public class GlobalListener implements Listener {
 
     private boolean isAxe(ItemStack e) {
         return e != null && e.getType().toString().contains("_AXE");
+    }
+
+    @EventHandler
+    public void onShoot(EntityDamageByEntityEvent e) {
+        if (e.getFinalDamage() <= 0.0)
+            return;
+        if (e.getDamager() instanceof Arrow) {
+            if (((Arrow) e.getDamager()).getShooter() instanceof Player) {
+                var shooter = (Player) ((Arrow) e.getDamager()).getShooter();
+                var victim = (Player) e.getEntity();
+                var health = (int) victim.getHealth() + victim.getAbsorptionAmount() - e.getFinalDamage();
+                var hearts = health / 2.0D;
+                if(e.getFinalDamage() <= 0.0) return;
+
+                if(hearts <= 0.0){
+                shooter.sendMessage(ChatColor.GOLD + "🏹 " + victim.getDisplayName() + ChatColor.GRAY + " has been " + 
+                    ChatColor.WHITE+ "eliminated" + ChatColor.DARK_RED + "❤");
+                    return;
+                }
+                shooter.sendMessage(ChatColor.GOLD + "🏹 " + victim.getDisplayName() + ChatColor.GRAY + " is at "
+                        + ChatColor.WHITE + hearts + ChatColor.DARK_RED + "❤");
+            }
+        }
     }
 
     @EventHandler
