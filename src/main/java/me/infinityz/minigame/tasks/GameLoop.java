@@ -72,13 +72,18 @@ public class GameLoop extends BukkitRunnable {
     }
 
     private void timedEvent(int time) {
-        if (time == instance.getGame().getHealTime() - 300) {
+
+        var game = instance.getGame();
+        var triggered = false;
+
+        if (time == game.getHealTime() - 300) {
             // AVISO 5MIN LEFT FOR FINAL HEAL
             Bukkit.getOnlinePlayers()
                     .forEach(all -> all.playSound(all.getLocation(), Sound.BLOCK_NOTE_BLOCK_BIT, 1, 1));
             Bukkit.broadcastMessage(HAVELOCK_BLUE + "5 minutes left for Final Heal.");
-
-        } else if (time == instance.getGame().getHealTime()) {
+            triggered = true;
+        } 
+         if (time == game.getHealTime()) {
             // TODO: FINAL HEAL
             Bukkit.getScheduler().runTask(instance, ()->{
                 Bukkit.getOnlinePlayers().forEach(all -> {
@@ -88,21 +93,27 @@ public class GameLoop extends BukkitRunnable {
                 });
             });
             Bukkit.broadcastMessage(SHAMROCK_GREEN + "Final heal!");
+            triggered = true;
 
-        } else if (time == instance.getGame().getPvpTime() - 300) {
+        } 
+         if (time == game.getPvpTime() - 300) {
             // AVISO 5 MINS LEFT FOR PVP
             Bukkit.getOnlinePlayers()
                     .forEach(all -> all.playSound(all.getLocation(), Sound.BLOCK_NOTE_BLOCK_BIT, 1, 1));
             Bukkit.broadcastMessage(HAVELOCK_BLUE + "PvP will be enabled in 5 minutes.");
+            triggered = true;
 
-        } else if (time == instance.getGame().getPvpTime()) {
+        } 
+         if (time == game.getPvpTime()) {
             // TODO: PVP ON
             Bukkit.getOnlinePlayers()
                     .forEach(all -> all.playSound(all.getLocation(), Sound.BLOCK_END_PORTAL_SPAWN, 1, 1.9F));
             instance.getGame().setPvp(true);
             Bukkit.broadcastMessage(SHAMROCK_GREEN + "PvP has been enabled.");
+            triggered = true;
 
-        } else if (time == instance.getGame().getBorderTime()) {
+        } 
+         if (time == game.getBorderTime()) {
             // BORDER TIME
             Bukkit.broadcastMessage(HAVELOCK_BLUE + "The world will shrink to 100 blocks in the next "
                     + (instance.getGame().getBorderCenterTime() / 60) + " minutes at a speed of 1 block per second!");
@@ -113,11 +124,9 @@ public class GameLoop extends BukkitRunnable {
             Bukkit.getScheduler().runTask(instance, () -> Bukkit.getWorlds().forEach(worlds -> {
                 worlds.getWorldBorder().setSize(instance.getGame().getBorderCenter(), instance.getGame().getBorderCenterTime());
             }));
-        } else if ((time % 600) == 0) {
-            // PROMOS
-            if (time == instance.getGame().getBorderTime() || time == instance.getGame().getPvpTime()
-                    || time == instance.getGame().getHealTime() || time == 0)
-                return;
+            triggered = true;
+        } 
+         if ((time % 600) == 0 && !triggered) {
             sendPromo();
         }
     }

@@ -17,6 +17,7 @@ public class ListenerManager {
     private @Getter ScatterListeners scatter;
     private @Getter IngameListeners ingameListeners;
     private @Getter SpectatorListener spectatorListener;
+    private @Getter ConfigListener configListener;
 
     public ListenerManager(UHC instance) {
         this.instance = instance;
@@ -24,8 +25,11 @@ public class ListenerManager {
         scatter = new ScatterListeners(instance);
         ingameListeners = new IngameListeners(instance);
         spectatorListener = new SpectatorListener(instance);
+        configListener = new ConfigListener(instance);
 
         Bukkit.getPluginManager().registerEvents(new GlobalListener(instance), instance);
+
+        Bukkit.getPluginManager().registerEvents(configListener, instance);
         Bukkit.getPluginManager().registerEvents(lobby, instance);
         // Team listener
         Bukkit.getPluginManager().registerEvents(new TeamListeners(instance), instance);

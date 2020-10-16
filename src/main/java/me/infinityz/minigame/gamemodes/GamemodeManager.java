@@ -33,9 +33,11 @@ import me.infinityz.minigame.gamemodes.types.Switcheroo;
 import me.infinityz.minigame.gamemodes.types.SwordLess;
 import me.infinityz.minigame.gamemodes.types.Timber;
 import me.infinityz.minigame.gamemodes.types.TripleOres;
+import me.infinityz.minigame.gamemodes.types.UHCRun;
 import me.infinityz.minigame.gamemodes.types.UnDamaxe;
 import me.infinityz.minigame.gamemodes.types.Totems.Totems;
 import me.infinityz.minigame.gamemodes.types.erespawn.EnderRespawn;
+import me.infinityz.minigame.gamemodes.types.radar.Radar;
 import me.infinityz.minigame.gamemodes.types.uhclatam.UHCLatam;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -50,6 +52,7 @@ public class GamemodeManager {
 
     public GamemodeManager(UHC instance) {
         this.instance = instance;
+        // Scenarios
         registerGamemode(new Cutclean(instance));
         registerGamemode(new EnderRespawn(instance));
         registerGamemode(new Moles(instance));
@@ -78,7 +81,9 @@ public class GamemodeManager {
         registerGamemode(new GoneFishing(instance));
         registerGamemode(new BloodDiamonds(instance));
         registerGamemode(new AdvancementHunter(instance));
-        registerGamemode(new me.infinityz.minigame.gamemodes.types.radar.Radar(instance));
+        registerGamemode(new Radar(instance));
+        // Scenarios pack
+        registerGamemode(new UHCRun(instance));
 
         instance.getCommandManager().getCommandCompletions().registerAsyncCompletion("scenarios",
                 c -> gamemodesList.stream().map(IGamemode::getName).collect(Collectors.toList()));
@@ -91,12 +96,26 @@ public class GamemodeManager {
 
     public Collection<IGamemode> getEnabledGamemodes() {
         final List<IGamemode> list = new ArrayList<>();
+        // Remove all scenarios inside pack if pack is toggled.
+        var uhcRun = getScenario(UHCRun.class);
+        if (uhcRun.isEnabled()) {
+            list.removeAll(uhcRun.getGamemodes());
+        }
+
         gamemodesList.forEach(gamemode -> {
             if (gamemode.isEnabled())
                 list.add(gamemode);
         });
 
         return list;
+    }
+
+    public <T extends IGamemode> T getScenario(Class<T> clazz) {
+        for (var gamemode : gamemodesList)
+            if (gamemode.getClass() == clazz)
+                return clazz.cast(gamemode);
+
+        return null;
     }
 
     public <T extends IGamemode> boolean isScenarioEnable(Class<T> clazz) {
@@ -114,6 +133,11 @@ public class GamemodeManager {
     public String getEnabledGamemodesToString() {
         var sb = new StringBuilder();
         var enabledScenarios = getEnabledGamemodes();
+
+        var uhcRun = getScenario(UHCRun.class);
+        if (uhcRun.isEnabled()) {
+            enabledScenarios.removeAll(uhcRun.getGamemodes());
+        }
         var iter = enabledScenarios.iterator();
 
         if (iter.hasNext())
@@ -128,6 +152,12 @@ public class GamemodeManager {
     public BaseComponent[] getScenariosWithDescription() {
         var componentBuilder = new ComponentBuilder();
         var enabledScenarios = getEnabledGamemodes();
+
+        var uhcRun = getScenario(UHCRun.class);
+        if (uhcRun.isEnabled()) {
+            enabledScenarios.removeAll(uhcRun.getGamemodes());
+        }
+
         var iter = enabledScenarios.iterator();
         componentBuilder.color(ChatColor.WHITE);
 

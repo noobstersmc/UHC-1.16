@@ -18,21 +18,14 @@ import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Skull;
-import org.bukkit.entity.Drowned;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event.Result;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.inventory.meta.Damageable;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import co.aikar.taskchain.TaskChain;
 import lombok.Getter;
@@ -62,38 +55,6 @@ public class IngameListeners implements Listener {
     private @Getter List<Material> possibleFence = Arrays.stream(Material.values())
             .filter(material -> material.name().contains("FENCE") && !material.name().contains("FENCE_GATE"))
             .collect(Collectors.toList());
-
-    /** INCREASED TRIDENT DROP START */
-
-    @EventHandler
-    public void onDrownedDeath(EntityDeathEvent e) {
-        if (e.getEntity().getType() != EntityType.DROWNED)
-            return;
-        var drowned = (Drowned) e.getEntity();
-        var equipment = drowned.getEquipment();
-        var mainHand = drowned.getEquipment().getItemInMainHand().clone();
-        var offHand = drowned.getEquipment().getItemInOffHand().clone();
-        equipment.clear();
-
-        if (mainHand.getType() != Material.AIR) {
-            if (mainHand.getType() == Material.TRIDENT) {
-                Damageable dmg = (Damageable) mainHand.getItemMeta();
-                dmg.setDamage(new Random().nextInt(125));
-                mainHand.setItemMeta((ItemMeta) dmg);
-
-            }
-            drowned.getLocation().getWorld().dropItemNaturally(drowned.getLocation(), mainHand);
-
-        }
-        if (offHand.getType() != Material.AIR) {
-            if (offHand.getType() == Material.TRIDENT) {
-                Damageable dmg = (Damageable) offHand.getItemMeta();
-                dmg.setDamage(new Random().nextInt(125));
-                offHand.setItemMeta((ItemMeta) dmg);
-            }
-            drowned.getLocation().getWorld().dropItemNaturally(drowned.getLocation(), offHand);
-        }
-    }
 
     @EventHandler
     public void onDeathFromBorder(PlayerDeathEvent e) {
@@ -185,22 +146,6 @@ public class IngameListeners implements Listener {
             e.getScoreboard().updateLines(e.getLines());
         }
     }
-    /*
-     * Game tick events end
-     */
-
-    @EventHandler
-    public void nerfBedExplosion(PlayerBedEnterEvent e) {
-        if (e.getBed().getWorld().getEnvironment() == Environment.NETHER) {
-            e.setCancelled(true);
-            e.setUseBed(Result.DENY);
-            e.getBed().setType(Material.AIR);
-            e.getBed().getLocation().createExplosion(2.0f, true, true);
-        }
-
-    }
-
-    /** INCREASED TRIDENT END */
 
     @EventHandler
     public void onJoinLater(PlayerJoinEvent e) {

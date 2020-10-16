@@ -39,7 +39,7 @@ public class Game {
     private int pvpTime = 1200;
     private int healTime = 120;
     private int borderCenterTime = 1800;
-    private int borderSize = 4000;
+    private int borderSize = 3000;
     private int borderCenter = 200;
     private boolean strengthNerf = true;
     private boolean criticalNerf = true;

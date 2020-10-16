@@ -111,6 +111,7 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
         sender.sendMessage("Border size changed " + newBorderSize + " blocks");
         Bukkit.getWorlds().forEach(it -> it.getWorldBorder().setSize(newBorderSize));
     }
+    
 
     @CommandPermission("uhc.config.strength")
     @Subcommand("strength nerf")
