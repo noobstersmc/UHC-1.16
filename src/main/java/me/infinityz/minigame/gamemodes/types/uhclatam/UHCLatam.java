@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.WorldBorder;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -39,6 +40,7 @@ import net.md_5.bungee.api.ChatColor;
 public class UHCLatam extends IGamemode implements Listener {
     private UHC instance;
     private @Getter List<CustomRecipe> recipes = new ArrayList<>();
+    private WorldBorder worldBorder = Bukkit.getWorlds().get(0).getWorldBorder();
     private AdvancementAPI advancement;
     private CarrotRecipe carrotRecipe;
     private MelonRecipe melonRecipe;
@@ -132,7 +134,6 @@ public class UHCLatam extends IGamemode implements Listener {
                         var x = location.getBlockX();
                         var z = location.getBlockZ();
                         if (onlineMember.getGameMode() != GameMode.SPECTATOR) {
-                            var health = (int) (onlineMember.getHealth() + onlineMember.getAbsorptionAmount());
                             list.add(ChatColor.GREEN + onlineMember.getName() + "");
                             list.add(String.format(
                                     ChatColor.GRAY + "(" + ChatColor.of("#E6E6FA") + x + ", " + z + ChatColor.GRAY
@@ -160,6 +161,7 @@ public class UHCLatam extends IGamemode implements Listener {
 
         }
         list.add("");
+        list.add(ChatColor.of("#66CDAA") + "➟Borde: " + ChatColor.of("#E6E6FA") + ((int) worldBorder.getSize() / 2));
         list.add(ChatColor.of("#66CDAA") + "➟Jugadores: " + ChatColor.of("#E6E6FA") + instance.getPlayerManager().getAlivePlayers());
         list.add(ChatColor.of("#66CDAA") + "➟Tiempo: " + ChatColor.of("#E6E6FA")
                 + GameLoop.timeConvert(instance.getGame().getGameTime()));
@@ -222,6 +224,7 @@ public class UHCLatam extends IGamemode implements Listener {
         } else if (e.getSecond() == instance.getGame().getBorderTime()) {
             Bukkit.getOnlinePlayers().forEach(players -> {
                 players.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(40.0);
+                players.addPotionEffect(new PotionEffect(PotionEffectType.HEAL, 1, 4));
             });
         }
 

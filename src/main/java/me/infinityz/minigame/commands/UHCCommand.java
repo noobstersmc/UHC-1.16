@@ -36,7 +36,6 @@ import me.infinityz.minigame.chunks.ChunksManager;
 import me.infinityz.minigame.events.NetherDisabledEvent;
 import me.infinityz.minigame.game.Game;
 import me.infinityz.minigame.game.border.FortniteBorder;
-import me.infinityz.minigame.gamemodes.types.uhclatam.PlayerCorpse;
 import me.infinityz.minigame.players.PositionObject;
 import me.infinityz.minigame.players.UHCPlayer;
 import me.infinityz.minigame.scoreboard.objects.FastBoard;
@@ -400,19 +399,6 @@ public class UHCCommand extends BaseCommand {
     public void claimHost(CommandSender sender) {
         instance.getGame().setHostname(sender.getName());
         sender.sendMessage("New host = " + sender.getName());
-    }
-
-    @Subcommand("ad")
-    @CommandPermission("admin.perm")
-    public void advancement(Player sender) {
-        var corpse = new PlayerCorpse(sender.getName(), sender.getLocation());
-        try {
-            corpse.spawn();
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
     }
 
 }

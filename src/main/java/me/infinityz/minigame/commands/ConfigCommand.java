@@ -112,8 +112,6 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
         Bukkit.getWorlds().forEach(it -> it.getWorldBorder().setSize(newBorderSize));
     }
 
-    
-
     @CommandPermission("uhc.config.strength")
     @Subcommand("strength nerf")
     @CommandAlias("strength-nerf")
