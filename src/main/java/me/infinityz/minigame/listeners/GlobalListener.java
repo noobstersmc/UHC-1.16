@@ -53,7 +53,7 @@ public class GlobalListener implements Listener {
         if (e.getDamager() instanceof Player && e.getEntity() instanceof Player) {
             var victim = (Player) e.getEntity();
             var player = (Player) e.getDamager();
-            if (victim.isBlocking() && isAxe(player.getInventory().getItemInMainHand())){
+            if (victim.isBlocking() && isAxe(player.getInventory().getItemInMainHand())) {
                 player.playSound(player.getLocation(), Sound.ITEM_SHIELD_BREAK, 1.0f, 1.0f);
             }
 
@@ -64,7 +64,7 @@ public class GlobalListener implements Listener {
         return e != null && e.getType().toString().contains("_AXE");
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onShoot(EntityDamageByEntityEvent e) {
         if (e.getFinalDamage() <= 0.0)
             return;
@@ -72,17 +72,19 @@ public class GlobalListener implements Listener {
             if (((Arrow) e.getDamager()).getShooter() instanceof Player) {
                 var shooter = (Player) ((Arrow) e.getDamager()).getShooter();
                 var victim = (Player) e.getEntity();
-                var health = (int) victim.getHealth() + victim.getAbsorptionAmount() - e.getFinalDamage();
-                var hearts = health / 2.0D;
-                if(e.getFinalDamage() <= 0.0) return;
+                if (victim.getUniqueId().getMostSignificantBits() == shooter.getUniqueId().getMostSignificantBits()) {
+                    return;
+                }
+                var health = victim.getHealth() + victim.getAbsorptionAmount() - e.getFinalDamage();
+                var hearts = Math.round(health) / 2.0D;
 
-                if(hearts <= 0.0){
-                shooter.sendMessage(ChatColor.GOLD + "🏹 " + victim.getDisplayName() + ChatColor.GRAY + " has been " + 
-                    ChatColor.WHITE+ "eliminated" + ChatColor.DARK_RED + "❤");
+                if (health <= 0.0) {
+                    shooter.sendMessage(ChatColor.GOLD + "🏹 " + victim.getDisplayName() + ChatColor.GRAY + " has been "
+                            + ChatColor.WHITE + "eliminated" + ChatColor.DARK_RED + "☠");
                     return;
                 }
                 shooter.sendMessage(ChatColor.GOLD + "🏹 " + victim.getDisplayName() + ChatColor.GRAY + " is at "
-                        + ChatColor.WHITE + hearts + ChatColor.DARK_RED + "❤");
+                        + ChatColor.WHITE + String.format("%.1f", hearts) + ChatColor.DARK_RED + "❤");
             }
         }
     }
@@ -93,8 +95,7 @@ public class GlobalListener implements Listener {
                 + "Twitter! twitter.com/NoobstersMC\n" + ChatColor.GOLD + "Donations! noobsters.buycraft.net");
         e.setJoinMessage("");
         var footer = GameLoop.HAVELOCK_BLUE + "\nJoin Our UHC Community!\n" + GameLoop.SHAMROCK_GREEN
-                + "discord.noobsters.net\n" + ChatColor.AQUA
-                + "twitter.com/NoobstersMC\n";
+                + "discord.noobsters.net\n" + ChatColor.AQUA + "twitter.com/NoobstersMC\n";
         e.getPlayer().setPlayerListHeaderFooter(Game.getTablistHeader(), footer);
     }
 
@@ -286,8 +287,8 @@ public class GlobalListener implements Listener {
 
                 players.getActivePotionEffects().forEach(all -> players.removePotionEffect(all.getType()));
 
-                players.addPotionEffect(new PotionEffect(PotionEffectType.HEAL, 20*1, 20));
-                players.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20*15, 20));
+                players.addPotionEffect(new PotionEffect(PotionEffectType.HEAL, 20 * 1, 20));
+                players.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 15, 20));
                 players.setFoodLevel(26);
                 players.playSound(players.getLocation(), Sound.ENTITY_RAVAGER_CELEBRATE, 1, 1);
 

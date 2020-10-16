@@ -39,7 +39,7 @@ public class AdvancementHunter extends IGamemode implements Listener {
     @EventHandler
     public void onAdvancement(PlayerAdvancementDoneEvent e) {
         var adv = e.getAdvancement().getKey().getKey();
-        if (adv.startsWith("story") || adv.startsWith("nether") || adv.startsWith("adventure")
+        if (adv.startsWith("husbandry") || adv.startsWith("story") || adv.startsWith("nether") || adv.startsWith("adventure")
                 || adv.startsWith("end")) {
             var playerHealth = e.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
             e.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(playerHealth + 2);

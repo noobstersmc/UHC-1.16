@@ -5,6 +5,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
+import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -39,10 +40,11 @@ public class SwordLess extends IGamemode implements Listener {
     }
 
     @EventHandler
-    public void onCraft(CraftItemEvent e) {
-        if (isSword(e.getCurrentItem()))
-            e.setCancelled(true);
-            e.getWhoClicked().sendMessage(ChatColor.RED + "Swords are disabled.");
+    public void onCraft(PrepareItemCraftEvent e) {
+        var recipe = e.getRecipe();
+        if(recipe != null && isSword(recipe.getResult())){
+            e.getInventory().setResult(null);
+        }
 
     }
 

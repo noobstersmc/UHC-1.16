@@ -4,6 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.CraftItemEvent;
+import org.bukkit.event.inventory.PrepareItemCraftEvent;
 
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.gamemodes.IGamemode;
@@ -36,10 +37,11 @@ public class ShieldLess extends IGamemode implements Listener {
     }
 
     @EventHandler
-    public void onCraft(CraftItemEvent e) {
-        if (e.getCurrentItem().getType().equals(Material.SHIELD))
-            e.setCancelled(true);
-            e.getWhoClicked().sendMessage(ChatColor.RED + "Shields are disabled.");
+    public void onCraft(PrepareItemCraftEvent e) {
+        var recipe = e.getRecipe();
+        if(recipe != null && recipe.getResult().getType() == Material.SHIELD){
+            e.getInventory().setResult(null);
+        }
 
     }
 

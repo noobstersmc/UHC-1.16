@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
@@ -32,6 +33,7 @@ import me.infinityz.minigame.events.GameTickEvent;
 import me.infinityz.minigame.events.ScoreboardUpdateEvent;
 import me.infinityz.minigame.game.Game;
 import me.infinityz.minigame.gamemodes.IGamemode;
+import me.infinityz.minigame.tasks.GameLoop;
 import net.md_5.bungee.api.ChatColor;
 
 public class UHCLatam extends IGamemode implements Listener {
@@ -66,8 +68,8 @@ public class UHCLatam extends IGamemode implements Listener {
 
         });
 
-        
-        Game.setScoreboardTitle("✘ " + ChatColor.GOLD + ""+ ChatColor.BOLD + "UHC Latam T2 "+ ChatColor.WHITE + "☠");
+        Game.setScoreboardTitle(ChatColor.of("#E6E6FA") + "🗡 " + ChatColor.of("#2ac7d5") + "" + ChatColor.BOLD
+                + "UHC Latam T2 " + ChatColor.of("#E6E6FA") + "☠");
 
         advancement.add();
 
@@ -94,34 +96,87 @@ public class UHCLatam extends IGamemode implements Listener {
         e.setCancelled(true);
     }
     /*
-
-        ✘ UHC LATAM ☠
-        AQUA ➟ Episodio: 1
-
-        GREEN CrisGreen
-        (-700, ) 9.5❤
-        GREEN Sparta
-        GRAY(WHITE-951, 1344 GRAY) WHITE 10 DARK RED❤
-
-        PINK Tiempo: WHITE 00:00:00
-
-        AWUA noobsters.net
-
-
+     * 
+     * ✘ UHC LATAM ☠ AQUA ➟ Episodio: 1
+     * 
+     * GREEN CrisGreen (-700, ) 9.5❤ GREEN Sparta GRAY(WHITE-951, 1344 GRAY) WHITE
+     * 10 DARK RED❤
+     * 
+     * PINK Tiempo: WHITE 00:00:00
+     * 
+     * AWUA noobsters.net
      *
+     * 
+     * 
      */
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onModifyScoreboard(ScoreboardUpdateEvent e) {
         e.setCancelled(false);
-        e.setLinesArray(ChatColor.of("#66CDAA") + "➟Episodio: " + ChatColor.WHITE+ "1", "", 
-        ChatColor.GREEN + " CrisGreen",
-        ChatColor.GRAY + "(" +  ChatColor.of("#E6E6FA")  + "-700, -1920" + ChatColor.GRAY + ") " + ChatColor.WHITE + "9.5" + ChatColor.DARK_RED + "❤"
-        ,ChatColor.GREEN + " Sparta",
-        ChatColor.GRAY + "(" +  ChatColor.of("#E6E6FA") + "-951, 1344" + ChatColor.GRAY + ") " + ChatColor.WHITE + "10" + ChatColor.DARK_RED + "❤",
-        "", ChatColor.of("#FF69B4") + "➟Tiempo: " + ChatColor.WHITE + "00:00:00", "",
-        ChatColor.of("#E6E6FA") + "noobsters.net");
-        //https://www.w3schools.com/colors/colors_groups.asp
+        var list = new ArrayList<String>();
+        var player = e.getScoreboard().getPlayer();
+
+        list.add(ChatColor.of("#66CDAA") + "➟Equipo: ");
+        list.add("");
+
+        var team = instance.getTeamManger().getPlayerTeam(player.getUniqueId());
+        // https://papermc.io/javadocs/paper/1.16/org/bukkit/event/inventory/PrepareItemCraftEvent.html
+        if (team != null) {
+            for (var members : team.getMembers()) {
+                if (members != null
+                        && members.getMostSignificantBits() != player.getUniqueId().getMostSignificantBits()) {
+                    var offlinePlayer = Bukkit.getOfflinePlayer(members);
+                    if (offlinePlayer.isOnline()) {
+                        var onlineMember = offlinePlayer.getPlayer();
+                        var location = onlineMember.getLocation();
+                        var x = location.getBlockX();
+                        var z = location.getBlockZ();
+                        if (onlineMember.getGameMode() != GameMode.SPECTATOR) {
+                            var health = (int) (onlineMember.getHealth() + onlineMember.getAbsorptionAmount());
+                            list.add(ChatColor.GREEN + onlineMember.getName() + "");
+                            list.add(String.format(
+                                    ChatColor.GRAY + "(" + ChatColor.of("#E6E6FA") + x + ", " + z + ChatColor.GRAY
+                                            + ") " + ChatColor.of("#E6E6FA") + "%.1f" + ChatColor.DARK_RED + "❤",
+                                    (double)Math.round((onlineMember.getHealth() + onlineMember.getAbsorptionAmount()) / 2.0D)));
+
+                        } else {
+                            list.add(ChatColor.RED + "☠ " + ChatColor.STRIKETHROUGH + onlineMember.getName() + "");
+                        }
+                    } else {
+
+                        var uhcPlayer = instance.getPlayerManager().getPlayer(members);
+                        if(uhcPlayer != null && !uhcPlayer.isAlive()){
+                            list.add(ChatColor.RED + "☠ " + ChatColor.STRIKETHROUGH + offlinePlayer.getName() + "");
+                        }else{
+                            list.add(ChatColor.GREEN + offlinePlayer.getName() + "");
+                            list.add(ChatColor.GRAY + "" + ChatColor.ITALIC + " Offline");
+                            
+                        }
+
+                    }
+
+                }
+            }
+
+        }
+        list.add("");
+        list.add(ChatColor.of("#66CDAA") + "➟Jugadores: " + ChatColor.of("#E6E6FA") + instance.getPlayerManager().getAlivePlayers());
+        list.add(ChatColor.of("#66CDAA") + "➟Tiempo: " + ChatColor.of("#E6E6FA")
+                + GameLoop.timeConvert(instance.getGame().getGameTime()));
+        list.add("");
+        list.add(ChatColor.of("#E6E6FA") + "noobsters.net");
+        /*
+         * e.setLinesArray(ChatColor.of("#66CDAA") + "➟Equipo: " + ChatColor.WHITE +
+         * "1", "", ChatColor.GREEN + " CrisGreen", ChatColor.GRAY + "(" +
+         * ChatColor.of("#E6E6FA") + "-700, -1920" + ChatColor.GRAY + ") " +
+         * ChatColor.WHITE + "9.5" + ChatColor.DARK_RED + "❤", ChatColor.GREEN +
+         * " Sparta", ChatColor.GRAY + "(" + ChatColor.of("#E6E6FA") + "-951, 1344" +
+         * ChatColor.GRAY + ") " + ChatColor.WHITE + "10" + ChatColor.DARK_RED + "❤",
+         * "", ChatColor.of("#FF69B4") + "➟Tiempo: " + ChatColor.WHITE + "00:00:00", "",
+         * ChatColor.of("#E6E6FA") + "noobsters.net");
+         */
+
+        e.setLines(list.toArray(new String[] {}));
     }
 
     /*

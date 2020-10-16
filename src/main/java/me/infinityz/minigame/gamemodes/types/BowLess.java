@@ -5,7 +5,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ItemSpawnEvent;
-import org.bukkit.event.inventory.CraftItemEvent;
+import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import me.infinityz.minigame.UHC;
@@ -39,10 +39,11 @@ public class BowLess extends IGamemode implements Listener {
     }
 
     @EventHandler
-    public void onCraft(CraftItemEvent e) {
-        if (e.getCurrentItem().getType().equals(Material.BOW))
-            e.setCancelled(true);
-            e.getWhoClicked().sendMessage(ChatColor.RED + "Bows are disabled.");
+    public void onCraft(PrepareItemCraftEvent e) {
+        var recipe = e.getRecipe();
+        if(recipe != null && recipe.getResult().getType() == Material.BOW){
+            e.getInventory().setResult(null);
+        }
 
     }
 
