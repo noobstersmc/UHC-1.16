@@ -117,8 +117,12 @@ public class GameLoop extends BukkitRunnable {
             // BORDER TIME
             Bukkit.broadcastMessage(HAVELOCK_BLUE + "The world will shrink to 100 blocks in the next "
                     + (instance.getGame().getBorderCenterTime() / 60) + " minutes at a speed of 1 block per second!");
-            Bukkit.broadcastMessage(SHAMROCK_GREEN
+                    
+            if(instance.getGame().isNether()){
+                Bukkit.broadcastMessage(SHAMROCK_GREEN
                     + "Players in the nether will be randomly teleported to the overworld once the border reaches 500 blocks.");
+            }
+
             Bukkit.getOnlinePlayers()
                     .forEach(all -> all.playSound(all.getLocation(), Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO, 1, 1));
             Bukkit.getScheduler().runTask(instance, () -> Bukkit.getWorlds().forEach(worlds -> {
