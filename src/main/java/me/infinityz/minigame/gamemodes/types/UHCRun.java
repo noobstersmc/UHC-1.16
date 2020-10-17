@@ -14,12 +14,15 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.ItemSpawnEvent;
+import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
+import fr.mrmicky.fastinv.ItemBuilder;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.events.GameStartedEvent;
 import me.infinityz.minigame.gamemodes.IGamemode;
@@ -113,10 +116,10 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
     }
 
     private void giveRunEffects(Player player) {
-        player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0.11);
-        player.getAttribute(Attribute.GENERIC_LUCK).setBaseValue(20.0);
-        player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 10000 * 20, 4, false, false ,false));
+        player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0.12);
+        player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 10000 * 20, 100, false, false ,false));
         player.addPotionEffect(new PotionEffect(PotionEffectType.HERO_OF_THE_VILLAGE, 10000* 20, 4, false, false ,false));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.LUCK, 10000* 20, 100, false, false ,false));
 
     }
 
@@ -124,36 +127,34 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
     public void extraXp(BlockBreakEvent e){
         var loc = e.getBlock().getLocation();
         if(e.getBlock().getType().toString().contains("ORE")){
-            loc.getWorld().spawn(loc, ExperienceOrb.class).setExperience(4);
+            loc.getWorld().spawn(loc, ExperienceOrb.class).setExperience(3);
         }
     }
 
     @EventHandler
-    public void arrowGravel(BlockBreakEvent e){
-        var loc = e.getBlock().getLocation();
-        var rand = random.nextInt(4);
-        if(e.getBlock().getType().equals("GRAVEL")){
-            if (rand + 1 <= 2) {
-                dropCenter(new ItemStack(Material.IRON_INGOT, (rand)), loc);
-
+    public void onItemSpawn(ItemSpawnEvent e) {
+        var stack = e.getEntity().getItemStack();
+        var type = stack.getType();
+        if (type == Material.GRAVEL) {
+            if(random.nextBoolean()){
+                stack.setType(Material.ARROW);
             }
-            loc.getWorld().spawn(loc, ExperienceOrb.class).setExperience(4);
         }
     }
 
-    Location dropCenter(ItemStack itemStack, Location location) {
-        Location centeredLocation = new Location(location.getWorld(), location.getBlockX() + 0.5,
-                location.getBlockY() + 0.5, location.getBlockZ() + 0.5);
-        Item item = location.getWorld().dropItem(centeredLocation, itemStack);
-        item.setVelocity(new Vector(0.0, 0.1, 0.0));
-        return centeredLocation;
+    @EventHandler
+    public void onCraft(PrepareItemCraftEvent e) {
+        var recipe = e.getRecipe();
+        if(recipe != null && recipe.getResult().getType() == Material.BOOK){
+            e.getInventory().setResult(new ItemBuilder(Material.BOOK).amount(3).build());
+        }
+
     }
+
+    
 
     // starting min players
 
     // scoreboard custom lobby
-
-    // generacion custom mas ores en todas las capas y estructuras del nether en
-    // over
 
 }

@@ -224,7 +224,7 @@ public class UHCLatam extends IGamemode implements Listener {
         } else if (e.getSecond() == instance.getGame().getBorderTime()) {
             Bukkit.getOnlinePlayers().forEach(players -> {
                 players.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(40.0);
-                players.addPotionEffect(new PotionEffect(PotionEffectType.HEAL, 1, 4));
+                players.setHealth(players.getHealth()+20.0);
             });
         }
 

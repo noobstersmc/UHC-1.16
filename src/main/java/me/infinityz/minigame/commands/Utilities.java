@@ -49,9 +49,11 @@ public @RequiredArgsConstructor class Utilities extends BaseCommand {
         Bukkit.dispatchCommand(sender, "chunky world world");
         Bukkit.dispatchCommand(sender, "chunky radius " + instance.getChunkManager().getBorder());
         Bukkit.dispatchCommand(sender, "chunky start");
-        Bukkit.dispatchCommand(sender, "chunky world world_nether");
-        Bukkit.dispatchCommand(sender, "chunky radius " + instance.getChunkManager().getBorder());
-        Bukkit.dispatchCommand(sender, "chunky start");
+        if(instance.getGame().isNether()){
+            Bukkit.dispatchCommand(sender, "chunky world world_nether");
+            Bukkit.dispatchCommand(sender, "chunky radius " + instance.getChunkManager().getBorder());
+            Bukkit.dispatchCommand(sender, "chunky start");
+        }
     }
 
     @CommandPermission("admin.perm")
