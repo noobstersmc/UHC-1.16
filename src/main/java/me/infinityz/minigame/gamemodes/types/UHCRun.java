@@ -140,6 +140,10 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
                 stack.setType(Material.ARROW);
             }
         }
+        if(type == Material.WHITE_WOOL){
+            stack.setAmount(4);
+            stack.setType(Material.STRING);
+        }
     }
 
     @EventHandler
