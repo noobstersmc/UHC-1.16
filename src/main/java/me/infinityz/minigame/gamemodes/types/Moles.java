@@ -44,20 +44,21 @@ public class Moles extends IGamemode implements Listener {
      * last team standing.
      */
 
-     /**
-      * Moles:
-
-      /moles preset AleIV
-      pre elegir moles y que los randomize basado en los pre elegidos y en team size -1
-
-      bool moles announce teams/no se anuncian
-
-      se anuncian al morir/no se anuncian
-
-      */
+    /**
+     * Moles:
+     * 
+     * /moles preset AleIV pre elegir moles y que los randomize basado en los pre
+     * elegidos y en team size -1
+     * 
+     * bool moles announce teams/no se anuncian
+     * 
+     * se anuncian al morir/no se anuncian
+     * 
+     */
 
     private UHC instance;
     private @Getter THashSet<Team> molesSet = new THashSet<>();
+    private @Getter THashSet<UUID> molesPredefined = new THashSet<>();
     private final Random r = new Random();
     private final MolesCommand command;
     private boolean announceMoles = true;
@@ -83,12 +84,13 @@ public class Moles extends IGamemode implements Listener {
         if (playerTeam != null) {
             if (isMole != null) {
                 isMole.sendTeamMessage(ChatColor.RED + "[MoleChat] " + e.getOfflinePlayer().getName() + " has died");
-                if(announceMoles)
+                if (announceMoles)
                     playerTeam.sendTeamMessage(ChatColor.RED + "" + e.getOfflinePlayer().getName() + " was the mole!");
-                
+
             } else {
-                if(announceMoles)
-                    playerTeam.sendTeamMessage(ChatColor.RED + "" + e.getOfflinePlayer().getName() + " was not the mole.");
+                if (announceMoles)
+                    playerTeam.sendTeamMessage(
+                            ChatColor.RED + "" + e.getOfflinePlayer().getName() + " was not the mole.");
             }
 
         }
@@ -100,7 +102,8 @@ public class Moles extends IGamemode implements Listener {
             var alivePlayers = instance.getPlayerManager().getUhcPlayerMap().values().stream()
                     .filter(UHCPlayer::isAlive).collect(Collectors.toList());
             var playersNoTeam = alivePlayers.stream()
-                    .filter(all -> instance.getTeamManger().getPlayerTeam(all.getUUID()) == null).collect(Collectors.toList());
+                    .filter(all -> instance.getTeamManger().getPlayerTeam(all.getUUID()) == null)
+                    .collect(Collectors.toList());
 
             if (moles.isEmpty()) {
                 if (aliveTeams.size() + playersNoTeam.size() == 1) {
@@ -124,7 +127,7 @@ public class Moles extends IGamemode implements Listener {
                     }
                 }
                 if ((aliveTeams.size() + playersNoTeam.size()) <= 0 && moles.size() == 1) {
-                    //Moles win
+                    // Moles win
 
                 }
             }
@@ -233,6 +236,106 @@ public class Moles extends IGamemode implements Listener {
             moles.forEach(all -> sender.sendMessage(" - " + all.getName()));
         }
 
+        @Subcommand("add moles")
+        @CommandCompletion("@uhcPlayers")
+        @CommandPermission("uhc.moles.add")
+        public void addMole(CommandSender sender, @Flags("other") OfflinePlayer target,
+                @Optional OfflinePlayer... others) {
+            if (others != null) {
+                for (var m : others) {
+                    if (m != null && addToMoles(m.getUniqueId())) {
+                        sender.sendMessage("Added " + m.getName() + " to moles");
+                    } else {
+
+                        sender.sendMessage("Coudln't add " + m.getName() + " to moles");
+                    }
+                }
+            }
+            if (addToMoles(target.getUniqueId())) {
+                sender.sendMessage("Added " + target.getName() + " to moles");
+
+            } else {
+                sender.sendMessage("Coudln't add " + target.getName() + " to moles");
+            }
+
+        }
+
+        @Subcommand("remove moles")
+        @CommandCompletion("@uhcPlayers")
+        @CommandPermission("uhc.moles.remove")
+        public void removeMoles(CommandSender sender, @Flags("other") OfflinePlayer target){
+            if(target != null && molesPredefined.contains(target.getUniqueId())){
+                molesPredefined.remove(target.getUniqueId());
+                sender.sendMessage("Removed " + target.getName());
+            }else{
+                sender.sendMessage("Couldn't remove that player.");
+            }
+        }
+        @Subcommand("clear moles list")
+        @CommandPermission("uhc.moles.list")
+        public void clearMolesList(CommandSender sender){
+            molesPredefined.clear();
+            sender.sendMessage("Clear Moles list.");
+        }
+
+        @Subcommand("list moles list")
+        @CommandPermission("uhc.moles.listMoles")
+        public void listMolesList(CommandSender sender){
+            sender.sendMessage("Moles in list: ");
+            molesPredefined.forEach(all -> {
+                sender.sendMessage(" - "+Bukkit.getOfflinePlayer(all).getName());
+            });
+        }
+
+        private boolean addToMoles(UUID uuid) {
+            if (molesPredefined.contains(uuid)) {
+                return false;
+            }
+
+            return molesPredefined.add(uuid);
+        }
+
+        
+
+        @CommandAlias("choose")
+        @CommandPermission("uhc.moles.choose")
+        public void chooseFromList(CommandSender sender){
+            var possibleMoles = getMolesPredefined();
+            var size = instance.getTeamManger().getTeamSize() - 1;
+            var iter = possibleMoles.iterator();
+            int count = 0;
+
+            while(iter.hasNext()){
+                var mole = iter.next();
+                
+                var team = new Team(mole);
+                team.setTeamDisplayName("M" + count++);
+                var player = Bukkit.getPlayer(mole);
+                if(player != null && player.isOnline()){
+                    
+                giveMoleTag(player, team);
+
+                }
+                molesSet.add(team);
+                
+                for (int i = 0; i < size; i++) {
+                    if(iter.hasNext()){
+                        var nextMole = iter.next();
+                        team.addMember(nextMole);
+                        var molePlayer = Bukkit.getPlayer(mole);
+                        if(molePlayer != null && molePlayer.isOnline()){
+                        giveMoleTag(molePlayer, team);
+                        }
+                        
+                    }
+                    
+                }
+                team.sendTeamMessage("Your mole mates are: ");
+                team.getOfflinePlayersStream().forEach(c -> team.sendTeamMessage(c.getName()));
+            }
+
+        }
+
         @Subcommand("win")
         @CommandAlias("win")
         @CommandPermission("uhc.moles.win")
@@ -286,10 +389,10 @@ public class Moles extends IGamemode implements Listener {
             } else {
                 announceMoles = !announceMoles;
             }
-    
+
             sender.sendMessage(ChatColor.of("#2be49c")
                     + (announceMoles ? "Mole Team Announce Enabled." : "Mole Team Announce Disabled."));
-    
+
         }
 
         @Subcommand("chat")
