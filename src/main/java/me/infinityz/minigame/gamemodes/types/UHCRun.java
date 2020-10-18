@@ -4,11 +4,10 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.WorldBorder;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.ExperienceOrb;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -17,21 +16,24 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.util.Vector;
 
 import fr.mrmicky.fastinv.ItemBuilder;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.events.GameStartedEvent;
+import me.infinityz.minigame.events.ScoreboardUpdateEvent;
+import me.infinityz.minigame.game.Game;
 import me.infinityz.minigame.gamemodes.IGamemode;
 import me.infinityz.minigame.gamemodes.interfaces.ScenarioPack;
+import me.infinityz.minigame.tasks.GameLoop;
+import net.md_5.bungee.api.ChatColor;
 
 public class UHCRun extends IGamemode implements ScenarioPack, Listener {
     private ArrayList<IGamemode> gamemodes = new ArrayList<>();
     private UHC instance;
     private Random random = new Random();
+    private WorldBorder worldBorder = Bukkit.getWorlds().get(0).getWorldBorder();
 
     public UHCRun(UHC instance) {
         super("UHC Run", "An accelerated UHC Experience.");
@@ -82,6 +84,11 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
         instance.getListenerManager().registerListener(this);
         setEnabled(true);
 
+        var coloredTitle = ChatColor.of("#FFC400") + "" + ChatColor.BOLD + "UHC RUN";
+        
+        Game.setScoreboardTitle(coloredTitle);
+
+        instance.getScoreboardManager().getFastboardMap().values().forEach(all -> all.updateTitle(coloredTitle));
         return true;
     }
 
@@ -99,6 +106,44 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
         setEnabled(false);
         return true;
     }
+
+    
+    /*
+     * Scoreboard Interceptor starts
+     */
+
+    @EventHandler(priority = EventPriority.LOW)
+    public void onInterceptUpate(ScoreboardUpdateEvent e) {
+        e.setCancelled(true);
+    }
+    /*
+     * UHC RUN MODIFICATIONS
+     * 
+     * 
+     */
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onModifyScoreboard(ScoreboardUpdateEvent e) {
+        e.setCancelled(false);
+        var player = e.getScoreboard().getPlayer();
+
+        var uhcPlayer = instance.getPlayerManager().getPlayer(player.getUniqueId());
+
+        e.setLinesArray(ChatColor.of("#20A127") + "Time: " + ChatColor.WHITE + GameLoop.timeConvert(instance.getGame().getGameTime()), 
+        "",
+        ChatColor.of("#20A127") + "Kills: " + ChatColor.WHITE + (uhcPlayer != null ? uhcPlayer.getKills() : 0),
+        "",
+        ChatColor.of("#20A127") + "Players: " + ChatColor.WHITE + instance.getPlayerManager().getAlivePlayers(),
+        ChatColor.of("#20A127") + "Border: " + ChatColor.WHITE + ((int) worldBorder.getSize() / 2), 
+        "",
+        ChatColor.WHITE + "noobsters.net");
+
+        
+    }
+
+    /*
+     * Scoreboard Interceptor ends
+     */
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {

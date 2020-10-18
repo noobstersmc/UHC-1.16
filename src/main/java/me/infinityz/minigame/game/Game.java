@@ -21,7 +21,7 @@ public class Game {
     /* Static data */
     private static @Getter @Setter BossBar bossbar;
     private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    private static @Getter @Setter String scoreboardTitle = ChatColor.BOLD + "UHC";
+    private static @Getter @Setter String scoreboardTitle = ChatColor.of("#A1060E") + "" + ChatColor.BOLD + "UHC";
     private static @Getter @Setter String tablistHeader = ChatColor.of("#A40A0A") + "" + ChatColor.BOLD
             + "\nNOOBSTERS\n";
     /* Game data */

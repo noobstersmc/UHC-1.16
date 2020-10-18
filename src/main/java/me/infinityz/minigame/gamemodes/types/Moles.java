@@ -8,7 +8,6 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
@@ -22,6 +21,7 @@ import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Flags;
+import co.aikar.commands.annotation.Optional;
 import co.aikar.commands.annotation.Subcommand;
 import gnu.trove.set.hash.THashSet;
 import lombok.Getter;
@@ -33,6 +33,7 @@ import me.infinityz.minigame.listeners.IngameListeners;
 import me.infinityz.minigame.players.UHCPlayer;
 import me.infinityz.minigame.scoreboard.objects.FastBoard;
 import me.infinityz.minigame.teams.objects.Team;
+import net.md_5.bungee.api.ChatColor;
 
 public class Moles extends IGamemode implements Listener {
     /**
@@ -43,10 +44,23 @@ public class Moles extends IGamemode implements Listener {
      * last team standing.
      */
 
+     /**
+      * Moles:
+
+      /moles preset AleIV
+      pre elegir moles y que los randomize basado en los pre elegidos y en team size -1
+
+      bool moles announce teams/no se anuncian
+
+      se anuncian al morir/no se anuncian
+
+      */
+
     private UHC instance;
     private @Getter THashSet<Team> molesSet = new THashSet<>();
     private final Random r = new Random();
     private final MolesCommand command;
+    private boolean announceMoles = true;
 
     public Moles(UHC instance) {
         super("Moles", "One member of you team is secretly plotting against you. \nFind out how it is or die.");
@@ -69,9 +83,12 @@ public class Moles extends IGamemode implements Listener {
         if (playerTeam != null) {
             if (isMole != null) {
                 isMole.sendTeamMessage(ChatColor.RED + "[MoleChat] " + e.getOfflinePlayer().getName() + " has died");
-                playerTeam.sendTeamMessage(ChatColor.RED + "" + e.getOfflinePlayer().getName() + " was the mole!");
+                if(announceMoles)
+                    playerTeam.sendTeamMessage(ChatColor.RED + "" + e.getOfflinePlayer().getName() + " was the mole!");
+                
             } else {
-                playerTeam.sendTeamMessage(ChatColor.RED + "" + e.getOfflinePlayer().getName() + " was not the mole.");
+                if(announceMoles)
+                    playerTeam.sendTeamMessage(ChatColor.RED + "" + e.getOfflinePlayer().getName() + " was not the mole.");
             }
 
         }
@@ -259,6 +276,20 @@ public class Moles extends IGamemode implements Listener {
 
                 });
             }
+        }
+
+        @CommandAlias("announce")
+        @CommandPermission("uhc.moles.announce")
+        public void onCommand(CommandSender sender, @Optional Boolean bool) {
+            if (bool != null) {
+                announceMoles = bool;
+            } else {
+                announceMoles = !announceMoles;
+            }
+    
+            sender.sendMessage(ChatColor.of("#2be49c")
+                    + (announceMoles ? "Mole Team Announce Enabled." : "Mole Team Announce Disabled."));
+    
         }
 
         @Subcommand("chat")

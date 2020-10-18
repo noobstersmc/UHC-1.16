@@ -31,15 +31,15 @@ public class IngameScoreboard extends IScoreboard {
         }
         var team = instance.getTeamManger().getPlayerTeam(player.getUniqueId());
         this.updateLines(
-                ChatColor.GRAY + "Time: " + ChatColor.WHITE + timeConvert(instance.getGame().getGameTime()), 
+                ChatColor.of("#AB4A7C") + "Time: " + ChatColor.WHITE + timeConvert(instance.getGame().getGameTime()), 
                 "",
-                ChatColor.GRAY + "Kills: " + ChatColor.WHITE + (uhcPlayer != null ? uhcPlayer.getKills() : 0),
-                ChatColor.GRAY + "Team Kills: " + ChatColor.WHITE + (team != null ? team.getTeamKills() : 0), 
+                ChatColor.of("#AB4A7C") + "Kills: " + ChatColor.WHITE + (uhcPlayer != null ? uhcPlayer.getKills() : 0),
+                ChatColor.of("#AB4A7C") + "Team Kills: " + ChatColor.WHITE + (team != null ? team.getTeamKills() : 0), 
                 "",
-                ChatColor.GRAY + "Players: " + ChatColor.WHITE + instance.getPlayerManager().getAlivePlayers(),
-                ChatColor.GRAY + "Border: " + ChatColor.WHITE + ((int) worldBorder.getSize() / 2), 
+                ChatColor.of("#AB4A7C") + "Players: " + ChatColor.WHITE + instance.getPlayerManager().getAlivePlayers(),
+                ChatColor.of("#AB4A7C") + "Border: " + ChatColor.WHITE + ((int) worldBorder.getSize() / 2), 
                 "",
-                ChatColor.WHITE + "noobsters.net");
+                ChatColor.of("#AB4A7C") + "noobsters.net");
     }
 
     public void buildScoreboardSolo(Player player) {
@@ -47,12 +47,12 @@ public class IngameScoreboard extends IScoreboard {
             uhcPlayer = instance.getPlayerManager().getPlayer(player.getUniqueId());
         }
         this.updateLines(
-                ChatColor.GRAY + "Time: " + ChatColor.WHITE + timeConvert(instance.getGame().getGameTime()), 
+                ChatColor.of("#AB4A7C")+ "Time: " + ChatColor.WHITE + timeConvert(instance.getGame().getGameTime()), 
                 "",
-                ChatColor.GRAY + "Kills: " + ChatColor.WHITE + (uhcPlayer != null ? uhcPlayer.getKills() : 0),
+                ChatColor.of("#AB4A7C") + "Kills: " + ChatColor.WHITE + (uhcPlayer != null ? uhcPlayer.getKills() : 0),
                 "",
-                ChatColor.GRAY + "Players: " + ChatColor.WHITE + instance.getPlayerManager().getAlivePlayers(),
-                ChatColor.GRAY + "Border: " + ChatColor.WHITE + ((int) worldBorder.getSize() / 2), 
+                ChatColor.of("#AB4A7C") + "Players: " + ChatColor.WHITE + instance.getPlayerManager().getAlivePlayers(),
+                ChatColor.of("#AB4A7C") + "Border: " + ChatColor.WHITE + ((int) worldBorder.getSize() / 2), 
                 "",
                 ChatColor.WHITE + "noobsters.net");
     }

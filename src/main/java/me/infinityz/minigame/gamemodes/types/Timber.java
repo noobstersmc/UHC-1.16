@@ -1,8 +1,10 @@
 package me.infinityz.minigame.gamemodes.types;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -38,46 +40,50 @@ public class Timber extends IGamemode implements Listener {
         return true;
     }
 
-    private boolean isLog(Material material){
-        return (
-                material.equals(Material.ACACIA_LOG) ||
-                        material.equals(Material.BIRCH_LOG) ||
-                        material.equals(Material.DARK_OAK_LOG) ||
-                        material.equals(Material.JUNGLE_LOG) ||
-                        material.equals(Material.OAK_LOG) ||
-                        material.equals(Material.SPRUCE_LOG)
-        );
+    private boolean isLog(Material material) {
+        return material.toString().toLowerCase().endsWith("_log");
     }
 
-    @EventHandler
+    private boolean isLeaves(Material material) {
+        return material.toString().toLowerCase().endsWith("_leaves");
+    }
+
+    @EventHandler(ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent e) {
         Block block = e.getBlock();
 
+        System.out.println(e.getEventName());
+        
         if (isLog(block.getType())) {
-            breakTree(block);
+            breakTree(block, e.getPlayer());
         }
     }
+    @EventHandler(ignoreCancelled = false)
+    public void onBreakByTimber(BlockBreakEvent e){
+        System.out.println("Timber");
+    }
 
-
-    private void breakTree(Block block) {
+    private void breakTree(Block block, Player player) {
         var item = new ItemStack(Material.AIR);
         var i = 0;
-        if (isLog(block.getType())){
+        if (isLog(block.getType())) {
             block.breakNaturally(item, true);
+            var cancelled = new BlockBreakEvent(block, player);
+            cancelled.setCancelled(true);
+            Bukkit.getPluginManager().callEvent(cancelled); 
             i = 2;
-        }else {
+        } else {
             i--;
         }
-        if (i > 0){
+        if (i > 0) {
             for (BlockFace face : BlockFace.values()) {
-                if (face.equals(BlockFace.DOWN) || face.equals(BlockFace.UP) || face.equals(BlockFace.NORTH) ||
-                        face.equals(BlockFace.EAST) || face.equals(BlockFace.SOUTH) || face.equals(BlockFace.WEST)) {
-                    UHC.newChain().delay(3).sync(() -> breakTree(block.getRelative(face))).sync(TaskChain::abort).execute();
+                if (face.equals(BlockFace.DOWN) || face.equals(BlockFace.UP) || face.equals(BlockFace.NORTH)
+                        || face.equals(BlockFace.EAST) || face.equals(BlockFace.SOUTH) || face.equals(BlockFace.WEST)) {
+                    UHC.newChain().delay(3).sync(() -> breakTree(block.getRelative(face), player)).sync(TaskChain::abort)
+                            .execute();
                 }
             }
         }
     }
-
-
 
 }

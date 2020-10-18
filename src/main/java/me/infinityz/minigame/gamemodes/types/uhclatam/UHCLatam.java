@@ -70,7 +70,7 @@ public class UHCLatam extends IGamemode implements Listener {
 
         });
 
-        Game.setScoreboardTitle(ChatColor.of("#E6E6FA") + "🗡 " + ChatColor.of("#2ac7d5") + "" + ChatColor.BOLD
+        Game.setScoreboardTitle(ChatColor.of("#E6E6FA") + "🗡 " + ChatColor.of("#77DBD6") + "" + ChatColor.BOLD
                 + "UHC Latam T2 " + ChatColor.of("#E6E6FA") + "☠");
 
         advancement.add();
@@ -118,12 +118,12 @@ public class UHCLatam extends IGamemode implements Listener {
         var list = new ArrayList<String>();
         var player = e.getScoreboard().getPlayer();
 
-        list.add(ChatColor.of("#66CDAA") + "➟Equipo: ");
-        list.add("");
 
         var team = instance.getTeamManger().getPlayerTeam(player.getUniqueId());
         // https://papermc.io/javadocs/paper/1.16/org/bukkit/event/inventory/PrepareItemCraftEvent.html
         if (team != null) {
+            list.add(ChatColor.of("#66CDAA") + "➟Equipo: ");
+            list.add("");
             for (var members : team.getMembers()) {
                 if (members != null
                         && members.getMostSignificantBits() != player.getUniqueId().getMostSignificantBits()) {
