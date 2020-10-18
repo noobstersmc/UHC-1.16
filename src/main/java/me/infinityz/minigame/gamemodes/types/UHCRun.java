@@ -75,7 +75,7 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
         instance.getGame().setNether(false);
         instance.getGame().setBorderSize(1000);
         instance.getGame().setPvpTime(1200);
-        instance.getGame().setBorderTime(1500);
+        instance.getGame().setBorderTime(1200);
         instance.getGame().setBorderCenterTime(600);
         instance.getGame().setBorderCenter(100);
 
@@ -110,7 +110,7 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
         Bukkit.getOnlinePlayers().forEach(this::giveRunEffects);
         instance.getGame().setBorderSize(1000);
         instance.getGame().setPvpTime(1200);
-        instance.getGame().setBorderTime(1500);
+        instance.getGame().setBorderTime(1200);
         instance.getGame().setBorderCenterTime(600);
         instance.getGame().setBorderCenter(100);
     }
@@ -140,7 +140,7 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
                 stack.setType(Material.ARROW);
             }
         }
-        if(type == Material.WHITE_WOOL){
+        if(type.toString().contains("WOOL")){
             stack.setAmount(4);
             stack.setType(Material.STRING);
         }
