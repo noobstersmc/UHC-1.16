@@ -3,16 +3,19 @@ package me.infinityz.minigame.gamemodes.types;
 import java.util.ArrayList;
 import java.util.Random;
 
+import org.apache.commons.lang.ObjectUtils.Null;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.WorldBorder;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -189,6 +192,12 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
             stack.setAmount(4);
             stack.setType(Material.STRING);
         }
+        if(type.toString().contains("SEEDS")){
+            stack.setType(Material.SUGAR_CANE);
+        }
+        if(type.toString().contains("RABBIT_HIDE")){
+            stack.setType(Material.LEATHER);
+        }
     }
 
     @EventHandler
@@ -198,6 +207,14 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
             e.getInventory().setResult(new ItemBuilder(Material.BOOK).amount(3).build());
         }
 
+    }
+
+    @EventHandler
+    public void onMobs(EntityDeathEvent e){
+        var type = e.getEntity().getType();
+        if(type == EntityType.COW || type == EntityType.SHEEP || type == EntityType.PIG)
+            e.getDrops().add(new ItemBuilder(Material.LEATHER).amount(1).build());
+       
     }
 
     
