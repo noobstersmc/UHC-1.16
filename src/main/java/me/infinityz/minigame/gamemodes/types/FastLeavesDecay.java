@@ -1,23 +1,23 @@
 package me.infinityz.minigame.gamemodes.types;
 
-import org.bukkit.event.Listener;
+import org.bukkit.Bukkit;
+import org.bukkit.GameRule;
+import org.bukkit.World;
 
-import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.gamemodes.IGamemode;
 
-public class FastLeavesDecay extends IGamemode implements Listener {
-    private UHC instance;
+public class FastLeavesDecay extends IGamemode {
 
-    public FastLeavesDecay(UHC instance) {
+    public FastLeavesDecay() {
         super("FastLeavesDecay", "Leaves decay faster.");
-        this.instance = instance;
     }
 
     @Override
     public boolean enableScenario() {
         if (isEnabled())
             return false;
-        instance.getListenerManager().registerListener(this);
+        Bukkit.getWorlds().forEach(this::changeTickSpeed);
+
         setEnabled(true);
         return true;
     }
@@ -26,13 +26,18 @@ public class FastLeavesDecay extends IGamemode implements Listener {
     public boolean disableScenario() {
         if (!isEnabled())
             return false;
-        instance.getListenerManager().unregisterListener(this);
+
+        Bukkit.getWorlds().forEach(this::defaultTickSpeed);
         setEnabled(false);
         return true;
     }
 
-    public void onLeaveDecay(){
+    void changeTickSpeed(World world) {
+        world.setGameRule(GameRule.RANDOM_TICK_SPEED, 150);
+    }
 
+    void defaultTickSpeed(World world) {
+        world.setGameRule(GameRule.RANDOM_TICK_SPEED, 3);
     }
 
 }

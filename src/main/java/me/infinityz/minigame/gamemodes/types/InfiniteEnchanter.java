@@ -6,12 +6,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.event.player.PlayerExpChangeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerLevelChangeEvent;
 import org.bukkit.inventory.EnchantingInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -24,7 +23,7 @@ import me.infinityz.minigame.gamemodes.IGamemode;
 public class InfiniteEnchanter extends IGamemode implements Listener {
     private UHC instance;
     private final ItemStack lapis = new ItemBuilder(Material.LAPIS_LAZULI).amount(64).build();
-    
+
     public InfiniteEnchanter(UHC instance) {
         super("InfiniteEnchanter", "Unlimited enchanted resources.");
         this.instance = instance;
@@ -60,7 +59,7 @@ public class InfiniteEnchanter extends IGamemode implements Listener {
                 players.setLevel(100);
             });
         }
-  
+
     }
 
     @EventHandler
@@ -97,21 +96,13 @@ public class InfiniteEnchanter extends IGamemode implements Listener {
     }
 
     @EventHandler
-    public void onAnvil(PlayerExpChangeEvent e){
-        e.getPlayer().setLevel(100);
+    public void onExpChange(PlayerLevelChangeEvent e) {
+        Bukkit.getScheduler().runTaskLater(instance, () -> e.getPlayer().setLevel(100), 0);
     }
-
 
     @EventHandler
-    public void onJoin(PlayerJoinEvent e){
+    public void onJoin(PlayerJoinEvent e) {
         e.getPlayer().setLevel(100);
     }
-
-    @EventHandler 
-    public void onEnchant(EnchantItemEvent e){
-        e.getEnchanter().setLevel(100);
-    }
-
-    
 
 }

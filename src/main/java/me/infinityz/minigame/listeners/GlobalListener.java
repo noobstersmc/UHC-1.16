@@ -58,29 +58,29 @@ public class GlobalListener implements Listener {
         return e != null && e.getType().toString().contains("_AXE");
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onShoot(EntityDamageByEntityEvent e) {
-        if (e.getFinalDamage() <= 0.0)
-            return;
-        if (e.getDamager() instanceof Arrow) {
-            if (((Arrow) e.getDamager()).getShooter() instanceof Player) {
-                var shooter = (Player) ((Arrow) e.getDamager()).getShooter();
-                var victim = (Player) e.getEntity();
-                if (victim.getUniqueId().getMostSignificantBits() == shooter.getUniqueId().getMostSignificantBits()) {
-                    return;
-                }
-                var health = victim.getHealth() + victim.getAbsorptionAmount() - e.getFinalDamage();
-                var hearts = Math.round(health) / 2.0D;
 
-                if (health <= 0.0) {
-                    shooter.sendMessage(ChatColor.GOLD + "🏹 " + victim.getDisplayName() + ChatColor.GRAY + " has been "
-                            + ChatColor.WHITE + "eliminated" + ChatColor.DARK_RED + "☠");
-                    return;
-                }
-                shooter.sendMessage(ChatColor.GOLD + "🏹 " + victim.getDisplayName() + ChatColor.GRAY + " is at "
-                        + ChatColor.WHITE + String.format("%.1f", hearts) + ChatColor.DARK_RED + "❤");
-            }
-        }
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    public void onArrow(EntityDamageByEntityEvent e) {
+        if (!(e.getDamager() instanceof Arrow))
+            return;
+        if (!(((Arrow) e.getDamager()).getShooter() instanceof Player))
+            return;
+        if (!(e.getEntity() instanceof Player))
+            return;
+
+        Player p = (Player) e.getEntity();
+
+        if (p.getHealth() - e.getFinalDamage() <= 0.0D || p.isBlocking())
+            return;
+
+        Player shooter = ((Player) ((Arrow) e.getDamager()).getShooter());
+
+        if (shooter == p)
+            return;
+
+        shooter.sendMessage(ChatColor.GOLD + "🏹 " + p.getDisplayName() + ChatColor.GRAY + " is at " + ChatColor.WHITE
+                + (((int) (p.getHealth() - e.getFinalDamage())) / 2.0D) + ChatColor.DARK_RED + "❤");
+
     }
 
     @EventHandler
@@ -133,7 +133,6 @@ public class GlobalListener implements Listener {
                 e.setCancelled(true);
         }
     }
-
 
     /**
      * Shield feature

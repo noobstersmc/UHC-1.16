@@ -18,6 +18,7 @@ import me.infinityz.minigame.gamemodes.types.BowLess;
 import me.infinityz.minigame.gamemodes.types.Cutclean;
 import me.infinityz.minigame.gamemodes.types.DebugMode;
 import me.infinityz.minigame.gamemodes.types.DoubleOres;
+import me.infinityz.minigame.gamemodes.types.FastLeavesDecay;
 import me.infinityz.minigame.gamemodes.types.FireLess;
 import me.infinityz.minigame.gamemodes.types.GoToHell;
 import me.infinityz.minigame.gamemodes.types.GoneFishing;
@@ -81,7 +82,8 @@ public class GamemodeManager {
         registerGamemode(new GoneFishing(instance));
         registerGamemode(new BloodDiamonds(instance));
         registerGamemode(new AdvancementHunter(instance));
-        registerGamemode(new Radar(instance));
+        //registerGamemode(new Radar(instance));
+        registerGamemode(new FastLeavesDecay());
         // Scenarios pack
         registerGamemode(new UHCRun(instance));
 

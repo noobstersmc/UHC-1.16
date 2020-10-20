@@ -45,6 +45,7 @@ import co.aikar.taskchain.TaskChainFactory;
 import fr.mrmicky.fastinv.FastInvManager;
 import lombok.Getter;
 import lombok.Setter;
+import me.infinityz.minigame.border.BorderManager;
 import me.infinityz.minigame.chat.ChatManager;
 import me.infinityz.minigame.chunks.ChunksManager;
 import me.infinityz.minigame.commands.ConfigCommand;
@@ -83,6 +84,7 @@ public class UHC extends JavaPlugin {
     private @Getter GamemodeManager gamemodeManager;
     private @Getter ChatManager chatManager;
     private @Getter @Setter Game game;
+    private @Getter BorderManager borderManager;
     private @Getter EditSession session;
     private @Getter CommunicatorPlugin communicator;
     private @Getter Gson gson = new Gson();
@@ -127,6 +129,7 @@ public class UHC extends JavaPlugin {
         chunkManager = new ChunksManager(this);
         gamemodeManager = new GamemodeManager(this);
         chatManager = new ChatManager(this);
+        borderManager = new BorderManager(this);
         /* Hook with Condor Communicator */
         CommunicatorPlugin.addRoute("/uhc/config", (req, res) -> getGame().toString());
         /* Initiliaze the game data */

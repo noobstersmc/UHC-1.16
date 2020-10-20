@@ -3,11 +3,11 @@ package me.infinityz.minigame.gamemodes.types;
 import java.util.ArrayList;
 import java.util.Random;
 
-import org.apache.commons.lang.ObjectUtils.Null;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.WorldBorder;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
@@ -19,14 +19,14 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import fr.mrmicky.fastinv.ItemBuilder;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.events.GameStartedEvent;
 import me.infinityz.minigame.events.ScoreboardUpdateEvent;
-import me.infinityz.minigame.game.Game;
 import me.infinityz.minigame.gamemodes.IGamemode;
 import me.infinityz.minigame.gamemodes.interfaces.ScenarioPack;
 import me.infinityz.minigame.tasks.GameLoop;
@@ -46,10 +46,9 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
             gamemodes.add(manager.getScenario(Cutclean.class));
             gamemodes.add(manager.getScenario(HasteyBoys.class));
             gamemodes.add(manager.getScenario(Timber.class));
-            gamemodes.add(manager.getScenario(LuckyLeaves.class));
+            gamemodes.add(manager.getScenario(FastLeavesDecay.class));
 
         }, 5L);
-        // Fast leaves decay
 
     }
 
@@ -78,7 +77,6 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
         });
 
         instance.getGame().setNether(false);
-        instance.getGame().setBorderSize(1000);
         instance.getGame().setPvpTime(1200);
         instance.getGame().setBorderTime(1200);
         instance.getGame().setBorderCenterTime(600);
@@ -88,10 +86,9 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
         setEnabled(true);
 
         var coloredTitle = ChatColor.of("#FFC400") + "" + ChatColor.BOLD + "UHC RUN";
-        
-        Game.setScoreboardTitle(coloredTitle);
 
-        instance.getScoreboardManager().getFastboardMap().values().forEach(all -> all.updateTitle(coloredTitle));
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "bordersize 1000");
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "uhc title " + coloredTitle);
         return true;
     }
 
@@ -104,13 +101,24 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
             scenarios.disableScenario();
         });
 
+        var coloredTitle = ChatColor.of("#A1060E") + "" + ChatColor.BOLD + "UHC";
+
+        instance.getGame().setNether(true);
+        instance.getGame().setPvpTime(1200);
+
+        instance.getGame().setBorderTime(3600);
+        instance.getGame().setBorderCenterTime(1800);
+        instance.getGame().setBorderCenter(200);
+
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "bordersize 3000");
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "uhc title " + coloredTitle);
+
         instance.getListenerManager().unregisterListener(this);
 
         setEnabled(false);
         return true;
     }
 
-    
     /*
      * Scoreboard Interceptor starts
      */
@@ -132,16 +140,16 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
 
         var uhcPlayer = instance.getPlayerManager().getPlayer(player.getUniqueId());
 
-        e.setLinesArray(ChatColor.of("#20A127") + "Time: " + ChatColor.WHITE + GameLoop.timeConvert(instance.getGame().getGameTime()), 
-        "",
-        ChatColor.of("#20A127") + "Kills: " + ChatColor.WHITE + (uhcPlayer != null ? uhcPlayer.getKills() : 0),
-        "",
-        ChatColor.of("#20A127") + "Players: " + ChatColor.WHITE + instance.getPlayerManager().getAlivePlayers(),
-        ChatColor.of("#20A127") + "Border: " + ChatColor.WHITE + ((int) worldBorder.getSize() / 2), 
-        "",
-        ChatColor.WHITE + "noobsters.net");
+        e.setLinesArray(
+                ChatColor.of("#20A127") + "Time: " + ChatColor.WHITE
+                        + GameLoop.timeConvert(instance.getGame().getGameTime()),
+                "",
+                ChatColor.of("#20A127") + "Kills: " + ChatColor.WHITE + (uhcPlayer != null ? uhcPlayer.getKills() : 0),
+                "",
+                ChatColor.of("#20A127") + "Players: " + ChatColor.WHITE + instance.getPlayerManager().getAlivePlayers(),
+                ChatColor.of("#20A127") + "Border: " + ChatColor.WHITE + ((int) worldBorder.getSize() / 2), "",
+                ChatColor.WHITE + "noobsters.net");
 
-        
     }
 
     /*
@@ -165,17 +173,43 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
 
     private void giveRunEffects(Player player) {
         player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0.12);
-        player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 10000 * 20, 100, false, false ,false));
-        player.addPotionEffect(new PotionEffect(PotionEffectType.HERO_OF_THE_VILLAGE, 10000* 20, 4, false, false ,false));
-        player.addPotionEffect(new PotionEffect(PotionEffectType.LUCK, 10000* 20, 100, false, false ,false));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 10000 * 20, 100, false, false, false));
+        player.addPotionEffect(
+                new PotionEffect(PotionEffectType.HERO_OF_THE_VILLAGE, 10000 * 20, 4, false, false, false));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.LUCK, 10000 * 20, 100, false, false, false));
 
     }
 
     @EventHandler
-    public void extraXp(BlockBreakEvent e){
+    public void onOtherCraft(PrepareItemCraftEvent e) {
+        var result = e.getInventory().getResult();
+        if (result == null || result.getType() == Material.AIR) {
+            return;
+        }
+        var re = result.getType().toString();
+        if (re.contains("WOODEN") && !re.contains("SWORD")) {
+            result.setType(Material.matchMaterial(re.replace("WOODEN", "STONE")));
+            ItemMeta meta = result.getItemMeta();
+            meta.addEnchant(Enchantment.DIG_SPEED, 3, false);
+            meta.addEnchant(Enchantment.DURABILITY, 3, false);
+            result.setItemMeta(meta);
+        }else if(re.equalsIgnoreCase("book")){
+            result.setAmount(3);
+        }
+
+    }
+
+    @EventHandler
+    public void extraXp(BlockBreakEvent e) {
         var loc = e.getBlock().getLocation();
-        if(e.getBlock().getType().toString().contains("ORE")){
+        if (e.getBlock().getType().toString().contains("ORE")) {
             loc.getWorld().spawn(loc, ExperienceOrb.class).setExperience(3);
+        }
+        if (random.nextInt(5) == 0) {
+            var block = e.getBlock().getType();
+            if (block == Material.GRASS || block == Material.TALL_GRASS || block == Material.SEAGRASS) {
+                e.getBlock().setType(Material.SUGAR_CANE);
+            }
         }
     }
 
@@ -183,41 +217,26 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
     public void onItemSpawn(ItemSpawnEvent e) {
         var stack = e.getEntity().getItemStack();
         var type = stack.getType();
-        if (type == Material.GRAVEL) {
-            if(random.nextBoolean()){
-                stack.setType(Material.ARROW);
-            }
-        }
-        if(type.toString().contains("WOOL")){
+        if (type == Material.GRAVEL && random.nextBoolean()) {
+            stack.setType(Material.ARROW);
+        } else if (type.toString().contains("WOOL")) {
             stack.setAmount(4);
             stack.setType(Material.STRING);
-        }
-        if(type.toString().contains("SEEDS")){
+        } else if (type.toString().contains("RABBIT_HIDE")) {
+            stack.setType(Material.LEATHER);
+        } else if (type.toString().contains("GRASS") && random.nextInt(5) == 0) {
             stack.setType(Material.SUGAR_CANE);
         }
-        if(type.toString().contains("RABBIT_HIDE")){
-            stack.setType(Material.LEATHER);
-        }
     }
 
-    @EventHandler
-    public void onCraft(PrepareItemCraftEvent e) {
-        var recipe = e.getRecipe();
-        if(recipe != null && recipe.getResult().getType() == Material.BOOK){
-            e.getInventory().setResult(new ItemBuilder(Material.BOOK).amount(3).build());
-        }
-
-    }
 
     @EventHandler
-    public void onMobs(EntityDeathEvent e){
+    public void onMobs(EntityDeathEvent e) {
         var type = e.getEntity().getType();
-        if(type == EntityType.COW || type == EntityType.SHEEP || type == EntityType.PIG)
-            e.getDrops().add(new ItemBuilder(Material.LEATHER).amount(1).build());
-       
-    }
+        if (type == EntityType.COW || type == EntityType.SHEEP || type == EntityType.PIG)
+            e.getDrops().add(new ItemStack(Material.LEATHER));
 
-    
+    }
 
     // starting min players
 

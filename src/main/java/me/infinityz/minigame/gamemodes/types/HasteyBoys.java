@@ -90,7 +90,7 @@ public class HasteyBoys extends IGamemode implements Listener {
     boolean isTool(Material material) {
         var materialName = material.toString();
         return material != null && materialName.contains("AXE") || materialName.contains("SHOVEL")
-                || materialName.contains("HOE");
+                || materialName.contains("HOE") || materialName.contains("SHEARS");
     }
 
 }

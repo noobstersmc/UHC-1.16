@@ -44,23 +44,14 @@ public class Timber extends IGamemode implements Listener {
         return material.toString().toLowerCase().endsWith("_log");
     }
 
-    private boolean isLeaves(Material material) {
-        return material.toString().toLowerCase().endsWith("_leaves");
-    }
 
     @EventHandler(ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent e) {
         Block block = e.getBlock();
-
-        System.out.println(e.getEventName());
         
         if (isLog(block.getType())) {
             breakTree(block, e.getPlayer());
         }
-    }
-    @EventHandler(ignoreCancelled = false)
-    public void onBreakByTimber(BlockBreakEvent e){
-        System.out.println("Timber");
     }
 
     private void breakTree(Block block, Player player) {

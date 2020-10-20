@@ -19,6 +19,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.event.world.PortalCreateEvent.CreateReason;
@@ -38,7 +39,6 @@ public class ConfigListener implements Listener {
     public ConfigListener(UHC instance) {
         this.instance = instance;
     }
-
 
     @EventHandler
     public void onPortal(PlayerPortalEvent e) {
@@ -69,6 +69,7 @@ public class ConfigListener implements Listener {
             }
         }
     }
+
     /**
      * APPLE RATE
      */
@@ -176,6 +177,9 @@ public class ConfigListener implements Listener {
      * BED NERF
      */
 
+    private static String FULL_MESSAGE = ChatColor.translateAlternateColorCodes('&',
+            "&fServer is full! \n Get a reserved slot on &anoobsters.buycraft.net");
+
     @EventHandler
     public void nerfBedExplosion(PlayerBedEnterEvent e) {
         if (e.getBed().getWorld().getEnvironment() == Environment.NETHER) {
@@ -187,6 +191,27 @@ public class ConfigListener implements Listener {
 
     }
 
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void slotLimit(PlayerLoginEvent e) {
+        final var player = e.getPlayer();
+        if (!shoudLogin(player))
+            e.disallow(org.bukkit.event.player.PlayerLoginEvent.Result.KICK_FULL, FULL_MESSAGE);
 
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void slotLimit(PlayerJoinEvent e) {
+        final var player = e.getPlayer();
+        if (!shoudLogin(player))
+            player.kickPlayer(FULL_MESSAGE);
+
+    }
+
+    private boolean shoudLogin(final Player player) {
+        final var online = Bukkit.getOnlinePlayers().size();
+        final var maxSlots = instance.getGame().getUhcslots();
+
+        return online <= maxSlots || player.hasPermission("reserved.slot");
+    }
 
 }

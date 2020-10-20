@@ -184,7 +184,7 @@ public class GameLoop extends BukkitRunnable {
     }
 
     private void borderDistanceActionBar(final Player player, final WorldBorder worldBorder, final int border) {
-        if (border != 2000 && border != 100) {
+        if (instance.getBorderManager().isBorderMoving(player.getWorld())) {
             String distanceText = "";
             var playerLOC = player.getLocation().clone();
             double borderSize = worldBorder.getSize() / 2;

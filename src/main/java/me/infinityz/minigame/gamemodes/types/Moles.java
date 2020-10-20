@@ -159,9 +159,13 @@ public class Moles extends IGamemode implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         var player = e.getPlayer();
-        var mole = isMole(player.getUniqueId());
+        g(player);
+    }
+
+    void g(Player p) {
+        var mole = isMole(p.getUniqueId());
         if (mole != null) {
-            giveMoleTag(player, mole);
+            giveMoleTag(p, mole);
         }
     }
 
@@ -237,20 +241,9 @@ public class Moles extends IGamemode implements Listener {
         }
 
         @Subcommand("add moles")
-        @CommandCompletion("@uhcPlayers")
+        @CommandCompletion("@onlineplayers")
         @CommandPermission("uhc.moles.add")
-        public void addMole(CommandSender sender, @Flags("other") OfflinePlayer target,
-                @Optional OfflinePlayer... others) {
-            if (others != null) {
-                for (var m : others) {
-                    if (m != null && addToMoles(m.getUniqueId())) {
-                        sender.sendMessage("Added " + m.getName() + " to moles");
-                    } else {
-
-                        sender.sendMessage("Coudln't add " + m.getName() + " to moles");
-                    }
-                }
-            }
+        public void addMole(CommandSender sender, @Flags("other") OfflinePlayer target) {
             if (addToMoles(target.getUniqueId())) {
                 sender.sendMessage("Added " + target.getName() + " to moles");
 
@@ -261,29 +254,30 @@ public class Moles extends IGamemode implements Listener {
         }
 
         @Subcommand("remove moles")
-        @CommandCompletion("@uhcPlayers")
+        @CommandCompletion("@onlineplayers")
         @CommandPermission("uhc.moles.remove")
-        public void removeMoles(CommandSender sender, @Flags("other") OfflinePlayer target){
-            if(target != null && molesPredefined.contains(target.getUniqueId())){
+        public void removeMoles(CommandSender sender, @Flags("other") OfflinePlayer target) {
+            if (target != null && molesPredefined.contains(target.getUniqueId())) {
                 molesPredefined.remove(target.getUniqueId());
                 sender.sendMessage("Removed " + target.getName());
-            }else{
+            } else {
                 sender.sendMessage("Couldn't remove that player.");
             }
         }
+
         @Subcommand("clear moles list")
         @CommandPermission("uhc.moles.list")
-        public void clearMolesList(CommandSender sender){
+        public void clearMolesList(CommandSender sender) {
             molesPredefined.clear();
             sender.sendMessage("Clear Moles list.");
         }
 
         @Subcommand("list moles list")
         @CommandPermission("uhc.moles.listMoles")
-        public void listMolesList(CommandSender sender){
+        public void listMolesList(CommandSender sender) {
             sender.sendMessage("Moles in list: ");
             molesPredefined.forEach(all -> {
-                sender.sendMessage(" - "+Bukkit.getOfflinePlayer(all).getName());
+                sender.sendMessage(" - " + Bukkit.getOfflinePlayer(all).getName());
             });
         }
 
@@ -295,44 +289,55 @@ public class Moles extends IGamemode implements Listener {
             return molesPredefined.add(uuid);
         }
 
-        
-
         @CommandAlias("choose")
         @CommandPermission("uhc.moles.choose")
-        public void chooseFromList(CommandSender sender){
+        public void chooseFromList(CommandSender sender) {
             var possibleMoles = getMolesPredefined();
             var size = instance.getTeamManger().getTeamSize() - 1;
             var iter = possibleMoles.iterator();
             int count = 0;
 
-            while(iter.hasNext()){
+            while (iter.hasNext()) {
                 var mole = iter.next();
-                
+
                 var team = new Team(mole);
                 team.setTeamDisplayName("M" + count++);
+                team.setTeamPrefix("☠ ");
+                team.setTeamColorIndex(4);
                 var player = Bukkit.getPlayer(mole);
-                if(player != null && player.isOnline()){
-                    
-                giveMoleTag(player, team);
+                if (player != null && player.isOnline()) {
+
+                    giveMoleTag(player, team);
 
                 }
                 molesSet.add(team);
-                
-                for (int i = 0; i < size; i++) {
-                    if(iter.hasNext()){
+
+                for (int i = 1; i <= size; i++) {
+                    if (iter.hasNext()) {
+                        i++;
                         var nextMole = iter.next();
                         team.addMember(nextMole);
                         var molePlayer = Bukkit.getPlayer(mole);
-                        if(molePlayer != null && molePlayer.isOnline()){
-                        giveMoleTag(molePlayer, team);
+                        if (molePlayer != null && molePlayer.isOnline()) {
+                            giveMoleTag(molePlayer, team);
                         }
-                        
+
                     }
-                    
+
                 }
-                team.sendTeamMessage("Your mole mates are: ");
+                team.sendTeamMessage(ChatColor.DARK_RED + "Your mole team is: ");
                 team.getOfflinePlayersStream().forEach(c -> team.sendTeamMessage(c.getName()));
             }
+            Bukkit.getOnlinePlayers().forEach(all -> {
+
+                try {
+                    FastBoard.removeTeam(all, "001Mole");
+                } catch (ReflectiveOperationException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                g(all);
+            });
 
         }
 
@@ -407,6 +412,16 @@ public class Moles extends IGamemode implements Listener {
             } else {
                 player.sendMessage(ChatColor.RED + "You are not the mole.");
             }
+
+        }
+
+        @Subcommand("listall")
+        @CommandPermission("uhc.moles.listall")
+        public void moleListall(Player player) {
+            player.sendMessage("The moles are: ");
+            molesSet.forEach(all -> {
+                player.sendMessage("Moles " + all.getIdentifier() + all.getListOfMembers().toString());
+            });
 
         }
 
