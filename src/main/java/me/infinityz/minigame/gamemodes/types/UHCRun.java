@@ -47,6 +47,7 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
             gamemodes.add(manager.getScenario(HasteyBoys.class));
             gamemodes.add(manager.getScenario(Timber.class));
             gamemodes.add(manager.getScenario(FastLeavesDecay.class));
+            gamemodes.add(manager.getScenario(LuckyLeaves.class));
 
         }, 5L);
 
