@@ -1,8 +1,12 @@
 package me.infinityz.minigame.gamemodes.types;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
@@ -41,22 +45,36 @@ public class BackPack extends IGamemode implements Listener {
         return true;
     }
 
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onPlayerDeath(PlayerDeathEvent e) {
+        //TODO: Check potential bug if team inventory and timebomb are enabled. Team inventory might required more than two chests on timebomb.
+        var team = instance.getTeamManger().getPlayerTeam(e.getEntity().getUniqueId());
+        if (team.getAliveMembers(instance).isEmpty()) {
+            team.getTeamInventory().forEach(all -> {
+                if (all != null && all.getType() != Material.AIR)
+                    e.getDrops().add(all);
+            });
+            team.destroyTeamInventory();
+        }
+
+    }
+
     @Conditions("ingame")
     @CommandAlias("backpack||bp||ti||teaminventory")
     public class backpack extends BaseCommand {
 
         @Default
         public void openBackPack(Player player) {
-            if(isEnabled()){
+            if (isEnabled()) {
                 var team = instance.getTeamManger().getPlayerTeam(player.getUniqueId());
                 if (team == null) {
-                team = instance.getTeamManger().getTeamCommand().createTeam(player, "");
-                team.createTeamInventory();
-                }else if(team.getTeamInventory() == null){
-                team.createTeamInventory();
+                    team = instance.getTeamManger().getTeamCommand().createTeam(player, "");
+                    team.createTeamInventory();
+                } else if (team.getTeamInventory() == null) {
+                    team.createTeamInventory();
                 }
                 player.openInventory(team.getTeamInventory());
-            } else{
+            } else {
                 player.sendMessage(ChatColor.RED + "Backpack scenario is not enabled.");
             }
         }
