@@ -50,6 +50,9 @@ public class BackPack extends IGamemode implements Listener {
         //TODO: Check potential bug if team inventory and timebomb are enabled. Team inventory might required more than two chests on timebomb.
         var team = instance.getTeamManger().getPlayerTeam(e.getEntity().getUniqueId());
         if (team.getAliveMembers(instance).isEmpty()) {
+            if(team.getTeamInventory() == null){
+                return;
+            }
             team.getTeamInventory().forEach(all -> {
                 if (all != null && all.getType() != Material.AIR)
                     e.getDrops().add(all);

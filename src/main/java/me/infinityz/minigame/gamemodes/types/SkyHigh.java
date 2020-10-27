@@ -48,6 +48,8 @@ public class SkyHigh extends IGamemode implements Listener {
 
     @EventHandler//condition damage
     public void onStart(GameTickEvent e) {
+        if(e.getSecond() == instance.getGame().getBorderTime())
+            damage = true;
         if (damage && e.getSecond() % 5 == 0) {
             Bukkit.getScheduler().runTask(instance, ()->{
                 Bukkit.getOnlinePlayers().forEach(players -> {

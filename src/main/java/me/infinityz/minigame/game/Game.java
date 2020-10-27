@@ -30,20 +30,26 @@ public class Game {
     private int gameTime = 0;
     private boolean pvp = false;
     private boolean globalMute = false;
+    private boolean hasSomeoneWon = false;
+    private int uhcslots = 40;
+    /* Game config */
+    private boolean privateGame = false;
     private boolean nether = true;
     private boolean end = false;
-    private boolean hasSomeoneWon = false;
-    private int uhcslots = 60;
-    /* Game config */
-    private int borderTime = 3600;
-    private int pvpTime = 1200;
-    private int healTime = 120;
-    private int borderCenterTime = 1500;
-    private int borderSize = 3000;
-    private int borderCenter = 200;
     private boolean strengthNerf = true;
     private boolean criticalNerf = true;
+    private boolean bedsNerf = true;
     private double applerate = 0.80;
+    private int maxDisconnectTime = -1;
+    /* program */
+    private int borderSize = 3000;
+    private int borderCenter = 200;
+    private int borderTime = 3600;
+    private int borderCenterTime = 1500;
+    private int pvpTime = 1200;
+    private int healTime = 120;
+    private int permaDay = -1;
+    /* Other */
     String scenarios;
     Stage gameStage;
     double currentBorder;

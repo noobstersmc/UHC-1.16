@@ -234,9 +234,10 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
     @EventHandler
     public void onMobs(EntityDeathEvent e) {
         var type = e.getEntity().getType();
-        if (type == EntityType.COW || type == EntityType.SHEEP || type == EntityType.PIG)
+        if (type == EntityType.COW || type == EntityType.SHEEP || type == EntityType.PIG || type == EntityType.HORSE)
             e.getDrops().add(new ItemStack(Material.LEATHER));
-
+        if (type == EntityType.CHICKEN)
+            e.getDrops().add(3, new ItemStack(Material.ARROW));
     }
 
     // starting min players

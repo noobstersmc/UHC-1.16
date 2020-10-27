@@ -1,8 +1,11 @@
 package me.infinityz.minigame.tasks;
 
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
 import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.World;
 import org.bukkit.WorldBorder;
 import org.bukkit.boss.BarColor;
@@ -13,6 +16,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import gnu.trove.map.hash.THashMap;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import me.infinityz.minigame.UHC;
@@ -30,6 +34,7 @@ public class GameLoop extends BukkitRunnable {
     private boolean borderShrink = false;
     private final World mainWorld = Bukkit.getWorlds().get(0);
     private @NonNull UHC instance;
+    private THashMap<UUID, Long> borderTeleportMap = new THashMap<>();
     public static final ChatColor HAVELOCK_BLUE = ChatColor.of("#4788d9");
     public static final ChatColor SHAMROCK_GREEN = ChatColor.of("#2be49c");
 
@@ -40,10 +45,9 @@ public class GameLoop extends BukkitRunnable {
         instance.getGame().setGameTime(time);
         Bukkit.getPluginManager().callEvent(new GameTickEvent(time, true));
 
-
         var worldBorder = mainWorld.getWorldBorder();
 
-        if(!instance.getGamemodeManager().isScenarioEnable(GoToHell.class)){
+        if (!instance.getGamemodeManager().isScenarioEnable(GoToHell.class)) {
             if (!borderShrink && worldBorder.getSize() <= 1000) {
                 borderShrink = true;
                 Bukkit.getScheduler().runTask(instance, () -> {
@@ -82,10 +86,10 @@ public class GameLoop extends BukkitRunnable {
                     .forEach(all -> all.playSound(all.getLocation(), Sound.BLOCK_NOTE_BLOCK_BIT, 1, 1));
             Bukkit.broadcastMessage(HAVELOCK_BLUE + "5 minutes left for Final Heal.");
             triggered = true;
-        } 
-         if (time == game.getHealTime()) {
+        }
+        if (time == game.getHealTime()) {
             // TODO: FINAL HEAL
-            Bukkit.getScheduler().runTask(instance, ()->{
+            Bukkit.getScheduler().runTask(instance, () -> {
                 Bukkit.getOnlinePlayers().forEach(all -> {
                     all.addPotionEffect(new PotionEffect(PotionEffectType.HEAL, 1, 20));
                     all.setFoodLevel(20);
@@ -95,16 +99,16 @@ public class GameLoop extends BukkitRunnable {
             Bukkit.broadcastMessage(SHAMROCK_GREEN + "Final heal!");
             triggered = true;
 
-        } 
-         if (time == game.getPvpTime() - 300) {
+        }
+        if (time == game.getPvpTime() - 300) {
             // AVISO 5 MINS LEFT FOR PVP
             Bukkit.getOnlinePlayers()
                     .forEach(all -> all.playSound(all.getLocation(), Sound.BLOCK_NOTE_BLOCK_BIT, 1, 1));
             Bukkit.broadcastMessage(HAVELOCK_BLUE + "PvP will be enabled in 5 minutes.");
             triggered = true;
 
-        } 
-         if (time == game.getPvpTime()) {
+        }
+        if (time == game.getPvpTime()) {
             // TODO: PVP ON
             Bukkit.getOnlinePlayers()
                     .forEach(all -> all.playSound(all.getLocation(), Sound.BLOCK_END_PORTAL_SPAWN, 1, 1.9F));
@@ -112,25 +116,26 @@ public class GameLoop extends BukkitRunnable {
             Bukkit.broadcastMessage(SHAMROCK_GREEN + "PvP has been enabled.");
             triggered = true;
 
-        } 
-         if (time == game.getBorderTime()) {
+        }
+        if (time == game.getBorderTime()) {
             // BORDER TIME
             Bukkit.broadcastMessage(HAVELOCK_BLUE + "The world will shrink to 100 blocks in the next "
                     + (instance.getGame().getBorderCenterTime() / 60) + " minutes at a speed of 1 block per second!");
-                    
-            if(instance.getGame().isNether()){
+
+            if (instance.getGame().isNether()) {
                 Bukkit.broadcastMessage(SHAMROCK_GREEN
-                    + "Players in the nether will be randomly teleported to the overworld once the border reaches 500 blocks.");
+                        + "Players in the nether will be randomly teleported to the overworld once the border reaches 500 blocks.");
             }
 
             Bukkit.getOnlinePlayers()
                     .forEach(all -> all.playSound(all.getLocation(), Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO, 1, 1));
             Bukkit.getScheduler().runTask(instance, () -> Bukkit.getWorlds().forEach(worlds -> {
-                worlds.getWorldBorder().setSize(instance.getGame().getBorderCenter(), instance.getGame().getBorderCenterTime());
+                worlds.getWorldBorder().setSize(instance.getGame().getBorderCenter(),
+                        instance.getGame().getBorderCenterTime());
             }));
             triggered = true;
-        } 
-         if ((time % 600) == 0 && !triggered) {
+        }
+        if ((time % 1200) == 0 && !triggered) {
             sendPromo();
         }
     }
@@ -183,8 +188,14 @@ public class GameLoop extends BukkitRunnable {
                 });
     }
 
+    private boolean isMoving(int time) {
+        var border = instance.getGame().getBorderTime();
+        var finalborder = border + instance.getGame().getBorderCenterTime();
+        return time >= border && time <= finalborder;
+    }
+
     private void borderDistanceActionBar(final Player player, final WorldBorder worldBorder, final int border) {
-        if (instance.getBorderManager().isBorderMoving(player.getWorld())) {
+        if (isMoving(instance.getGame().getGameTime())) {
             String distanceText = "";
             var playerLOC = player.getLocation().clone();
             double borderSize = worldBorder.getSize() / 2;
@@ -225,6 +236,29 @@ public class GameLoop extends BukkitRunnable {
                 .filter(players -> !players.getWorld().getWorldBorder().isInside(players.getLocation()))
                 .forEach(outsideBorderPlayer -> Bukkit.getScheduler().runTask(instance, () -> {
                     outsideBorderPlayer.damage(1);
+                    var time = borderTeleportMap.get(outsideBorderPlayer.getUniqueId());
+                    if (time == null || (System.currentTimeMillis() - time) >= 60_000) {
+                        var playerLOC = outsideBorderPlayer.getLocation().clone();
+                        double borderSize = playerLOC.getWorld().getWorldBorder().getSize() / 2;
+
+                        double absoluteX = Math.abs(playerLOC.getX());
+                        double absoluteZ = Math.abs(playerLOC.getZ());
+                        double distanceX = borderSize - absoluteX;
+                        double distanceZ = borderSize - absoluteZ;
+
+                        double distanceFromBorder = Math.min(Math.abs(distanceX), Math.abs(distanceZ));
+                        if (distanceFromBorder >= 10) {
+                            var newLoc = outsideBorderPlayer.getWorld().getHighestBlockAt(playerLOC).getLocation()
+                                    .add(0.0, 1.5, 0.0);
+                            outsideBorderPlayer.teleportAsync(newLoc);
+                            outsideBorderPlayer.sendMessage(
+                                    ChatColor.of("#1fbd90") + "The gods have decided to give you a seconds chance.");
+                            outsideBorderPlayer.playSound(newLoc, Sound.ENTITY_ENDERMAN_TELEPORT, SoundCategory.VOICE,
+                                    1.0f, 0.5f);
+                            borderTeleportMap.put(outsideBorderPlayer.getUniqueId(), System.currentTimeMillis());
+                        }
+
+                    }
                     outsideBorderPlayer
                             .setLastDamageCause(new EntityDamageEvent(outsideBorderPlayer, DamageCause.CUSTOM, 1));
                 }));

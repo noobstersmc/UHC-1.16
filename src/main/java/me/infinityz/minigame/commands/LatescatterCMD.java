@@ -43,8 +43,8 @@ public class LatescatterCMD extends BaseCommand {
         if(instance.getGamemodeManager().isScenarioEnable(GoneFishing.class)){
             var item = new ItemStack(Material.FISHING_ROD);
             var meta = item.getItemMeta();
-            meta.addEnchant(Enchantment.LURE, 69420, true);
-            meta.addEnchant(Enchantment.LUCK, 69420, true);
+            meta.addEnchant(Enchantment.LURE, 666, true);
+            meta.addEnchant(Enchantment.LUCK, 666, true);
             meta.addEnchant(Enchantment.VANISHING_CURSE, 1, false);
             meta.setUnbreakable(true);
             item.setItemMeta(meta);
@@ -60,7 +60,7 @@ public class LatescatterCMD extends BaseCommand {
         }
         
         if(instance.getGamemodeManager().isScenarioEnable(AdvancementHunter.class)){
-            player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(2.0);
+            player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(10.0);
         }   
     }
 

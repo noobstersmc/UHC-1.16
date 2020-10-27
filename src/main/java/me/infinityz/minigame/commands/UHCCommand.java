@@ -10,7 +10,6 @@ import com.destroystokyo.paper.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.World;
@@ -402,10 +401,5 @@ public class UHCCommand extends BaseCommand {
         sender.sendMessage("New host = " + sender.getName());
     }
 
-    @Subcommand("isBorderMoving?")
-    @CommandPermission("staff.perm")
-    public void isBorderMoving(Player sender) {
-        Bukkit.broadcastMessage(instance.getBorderManager().isBorderMoving(sender.getWorld()) + " moving");
-    }
 
 }

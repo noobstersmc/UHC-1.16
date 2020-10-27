@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import org.bukkit.Material;
+import org.bukkit.block.BlockFace;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -11,6 +12,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionData;
+import org.bukkit.potion.PotionType;
 
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.gamemodes.IGamemode;
@@ -21,13 +25,12 @@ public class FlorPoderosa extends IGamemode implements Listener {
     private Random random = new Random();
 
     public FlorPoderosa(UHC instance) {
-        super("Flor Poderosa", "Las flores dropean cosas poderosas.");
+        super("FlowerPower", "Las flores dropean cosas poderosas.");
         this.instance = instance;
 
         for (var materials : Material.values()) {
             var mString = materials.toString();
-            if (!materials.isItem() || mString.contains("LEGACY") || mString.contains("COMMAND")
-                    || mString.contains("AIR"))
+            if (!materials.isItem() || mString.contains("LEGACY") || isBanned(materials))
                 continue;
             possibleDrops.add(materials);
         }
@@ -56,18 +59,130 @@ public class FlorPoderosa extends IGamemode implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onBlockBreak(BlockBreakEvent e) {
         // Test for and find if block broken was a flower
-        //Call getRandomDropWithBooks to get the drop
+        // Call getRandomDropWithBooks to get the drop
+        switch (e.getBlock().getType()) {
+            case ROSE_BUSH:
+            case LILAC:
+            case PEONY:
+            case SUNFLOWER: {
+                var relative = e.getBlock().getRelative(BlockFace.DOWN);
+                if (relative.getType() == e.getBlock().getType()) {
+                    relative.setType(Material.AIR);
+                }
+            }
+            case DANDELION:
+            case POPPY:
+            case BLUE_ORCHID:
+            case ALLIUM:
+            case AZURE_BLUET:
+            case RED_TULIP:
+            case ORANGE_TULIP:
+            case WHITE_TULIP:
+            case PINK_TULIP:
+            case OXEYE_DAISY:
+            case CORNFLOWER:
+            case LILY_OF_THE_VALLEY:
+            case WITHER_ROSE:
+            case DEAD_BUSH: {
+                e.getBlock().setType(Material.AIR);
+                var item = e.getBlock().getLocation().getWorld().dropItemNaturally(e.getBlock().getLocation(),
+                        getRandomDropWithMeta());
+                //item.setTicksLived();
+                
+                break;
+            }
+            default:
+                break;
+        }
 
     }
 
-    private ItemStack getRandomDropWithBooks() {
+    private boolean isFlower(Material material) {
+        switch (material) {
+            case DANDELION:
+            case POPPY:
+            case BLUE_ORCHID:
+            case ALLIUM:
+            case AZURE_BLUET:
+            case RED_TULIP:
+            case ORANGE_TULIP:
+            case WHITE_TULIP:
+            case PINK_TULIP:
+            case OXEYE_DAISY:
+            case CORNFLOWER:
+            case LILY_OF_THE_VALLEY:
+            case WITHER_ROSE:
+            case DEAD_BUSH:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    private boolean isBanned(Material material) {
+        if (isFlower(material) || isDoubleFlower(material))
+            return true;
+        switch (material) {
+            case STRUCTURE_BLOCK:
+            case JIGSAW:
+            case DEBUG_STICK:
+            case SPAWNER:
+            case BARRIER:
+            case COMMAND_BLOCK:
+            case COMMAND_BLOCK_MINECART:
+            case CHAIN_COMMAND_BLOCK:
+            case BEDROCK:
+            case STRUCTURE_VOID:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    private boolean isDoubleFlower(Material material) {
+        switch (material) {
+            case ROSE_BUSH:
+            case LILAC:
+            case PEONY:
+            case SUNFLOWER:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    private ItemStack getRandomDropWithMeta() {
         var randomDrop = getRandomDrop();
-        if (randomDrop.getType() == Material.ENCHANTED_BOOK) {
-            var meta = (EnchantmentStorageMeta) randomDrop.getItemMeta();
+        var meta = randomDrop.getItemMeta();
+
+        if (meta instanceof EnchantmentStorageMeta) {
+            var enchMeta = (EnchantmentStorageMeta) meta;
             var enchant = getRandomEnchant();
-            meta.addStoredEnchant(enchant, random.nextInt(enchant.getMaxLevel()), true);
+            enchMeta.addStoredEnchant(enchant, random.nextInt(enchant.getMaxLevel()), true);
+            randomDrop.setItemMeta(enchMeta);
+        } else if (meta instanceof PotionMeta) {
+            var potMeta = (PotionMeta) meta;
+            potMeta.setBasePotionData(getRandomPotData());
+            randomDrop.setItemMeta(potMeta);
         }
         return randomDrop;
+    }
+
+    private PotionData getRandomPotData() {
+        var bool = random.nextBoolean();
+        var potType = getRandomPotionType();
+        if (potType.isExtendable() && bool) {
+            return new PotionData(potType, bool, false);
+        } else if (potType.isUpgradeable() && bool) {
+            return new PotionData(potType, false, bool);
+        } else if (potType.isExtendable() && potType.isUpgradeable()) {
+            return new PotionData(potType, bool, random.nextBoolean());
+        }
+        return new PotionData(potType, false, false);
+    }
+
+    private PotionType getRandomPotionType() {
+        return PotionType.values()[random.nextInt(PotionType.values().length)];
     }
 
     private Enchantment getRandomEnchant() {
@@ -76,7 +191,8 @@ public class FlorPoderosa extends IGamemode implements Listener {
 
     private ItemStack getRandomDrop() {
         var randomMaterial = possibleDrops.get(random.nextInt(possibleDrops.size()));
-        return new ItemStack(randomMaterial, random.nextInt(randomMaterial.getMaxStackSize()) + 1);
+        return new ItemStack(randomMaterial,
+                random.nextInt(randomMaterial.getMaxStackSize() >= 16 ? 16 : randomMaterial.getMaxStackSize()) + 1);
     }
 
 }

@@ -1,6 +1,7 @@
 package me.infinityz.minigame.commands;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameRule;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -58,6 +59,16 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
     public String getGameType() {
         final int teamSize = instance.getTeamManger().getTeamSize();
         return teamSize > 1 ? "Teams of " + teamSize : "FFA";
+    }
+
+    @CommandPermission("uhc.config.advancements")
+    @Subcommand("advancements")
+    @CommandAlias("advancements")
+    public void announceAdvancements(CommandSender sender, Boolean bool) {
+        Bukkit.getWorlds().forEach(it -> {
+            it.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, bool);
+        });
+        sender.sendMessage("Advancements " + bool);
     }
 
     @CommandPermission("uhc.config.pvp")

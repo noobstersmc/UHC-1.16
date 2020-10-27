@@ -50,15 +50,19 @@ public class GoToHell extends IGamemode implements Listener {
 
     @EventHandler // condition damage
     public void onStart(GameTickEvent e) {
-        Bukkit.getScheduler().runTask(instance, ()->{
+        if(e.getSecond() == instance.getGame().getBorderTime())
+            damage = true;
         if (damage && e.getSecond() % 5 == 0) {
+        Bukkit.getScheduler().runTask(instance, ()->{
+        
             Bukkit.getOnlinePlayers().forEach(players -> {
                 if (players.getGameMode() == GameMode.SURVIVAL
                         && players.getWorld().getEnvironment() != Environment.NETHER)
                     players.damage(2);
             });
-        }
+        
         });
+        }
 
     }
 

@@ -26,6 +26,8 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.SkullMeta;
 
 import co.aikar.taskchain.TaskChain;
 import lombok.Getter;
@@ -40,6 +42,7 @@ import me.infinityz.minigame.events.TeamWinEvent;
 import me.infinityz.minigame.events.UHCPlayerDequalificationEvent;
 import me.infinityz.minigame.game.Game;
 import me.infinityz.minigame.gamemodes.types.SkyHigh;
+import me.infinityz.minigame.gamemodes.types.TiempoBomba;
 import me.infinityz.minigame.players.PositionObject;
 import me.infinityz.minigame.players.UHCPlayer;
 import me.infinityz.minigame.scoreboard.IScoreboard;
@@ -215,6 +218,17 @@ public class IngameListeners implements Listener {
     @EventHandler
     public void onDeathHead(PlayerDeathEvent e) {
         final Player p = e.getEntity();
+        if(instance.getGamemodeManager().isScenarioEnable(TiempoBomba.class)){
+            var stack = new ItemStack(Material.PLAYER_HEAD);
+            var meta = stack.getItemMeta();
+            if(meta instanceof SkullMeta){
+                var skullMeta = (SkullMeta)meta;
+                skullMeta.setOwningPlayer(Bukkit.getOfflinePlayer(p.getUniqueId()));
+                stack.setItemMeta(skullMeta);
+            }
+            e.getDrops().add(stack);
+            return;
+        }
 
         p.getLocation().getBlock().setType(getRandomFence());
 

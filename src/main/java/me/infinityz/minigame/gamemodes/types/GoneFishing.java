@@ -43,8 +43,8 @@ public class GoneFishing extends IGamemode implements Listener {
             Bukkit.getOnlinePlayers().forEach(players -> {
                 var item = new ItemStack(Material.FISHING_ROD);
                 var meta = item.getItemMeta();
-                meta.addEnchant(Enchantment.LURE, 200, false);
-                meta.addEnchant(Enchantment.LUCK, 200, false);
+                meta.addEnchant(Enchantment.LURE, 666, true);
+                meta.addEnchant(Enchantment.LUCK, 666, true);
                 meta.addEnchant(Enchantment.VANISHING_CURSE, 1, false);
                 meta.setUnbreakable(true);
                 item.setItemMeta(meta);

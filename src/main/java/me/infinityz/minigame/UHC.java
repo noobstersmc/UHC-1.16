@@ -156,7 +156,7 @@ public class UHC extends JavaPlugin {
                 .map(BukkitWorker::getThread).forEach(Thread::interrupt);
         getServer().getScheduler().cancelTasks(this);
         gamemodeManager.getEnabledGamemodes().forEach(IGamemode::disableScenario);
-        commandManager.unregisterCommands();
+        //commandManager.unregisterCommands();
         craftingManager.purgeRecipes();
     }
 
