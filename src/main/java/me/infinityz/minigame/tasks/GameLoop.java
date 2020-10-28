@@ -238,14 +238,15 @@ public class GameLoop extends BukkitRunnable {
                     outsideBorderPlayer.damage(1);
                     var time = borderTeleportMap.get(outsideBorderPlayer.getUniqueId());
                     if (time == null || (System.currentTimeMillis() - time) >= 60_000) {
-                        var playerLOC = outsideBorderPlayer.getLocation().clone();
-                        double borderSize = playerLOC.getWorld().getWorldBorder().getSize() / 2;
+                        var playerPos = outsideBorderPlayer.getLocation().clone();
+                        var borderCenterPos = playerPos.getWorld().getWorldBorder().getCenter().clone();
+                        //Normalize the Y coordinate
+                        borderCenterPos.setY(playerPos.getY());
+                        var distanceToCenterSquared = Math.abs(playerPos.distanceSquared(borderCenterPos));
+                        var distanceToCenter = Math.abs(playerPos.distance(borderCenterPos));
+                        Bukkit.broadcastMessage(String.format("Distance squared = %.2f\nDistance = %.2f", distanceToCenterSquared, distanceToCenter));
 
-                        double absoluteX = Math.abs(playerLOC.getX());
-                        double absoluteZ = Math.abs(playerLOC.getZ());
-                        double distanceX = borderSize - absoluteX;
-                        double distanceZ = borderSize - absoluteZ;
-
+                        /*
                         double distanceFromBorder = Math.min(Math.abs(distanceX), Math.abs(distanceZ));
                         if (distanceFromBorder >= 10) {
                             var newLoc = outsideBorderPlayer.getWorld().getHighestBlockAt(playerLOC).getLocation()
@@ -256,7 +257,7 @@ public class GameLoop extends BukkitRunnable {
                             outsideBorderPlayer.playSound(newLoc, Sound.ENTITY_ENDERMAN_TELEPORT, SoundCategory.VOICE,
                                     1.0f, 0.5f);
                             borderTeleportMap.put(outsideBorderPlayer.getUniqueId(), System.currentTimeMillis());
-                        }
+                        }*/
 
                     }
                     outsideBorderPlayer

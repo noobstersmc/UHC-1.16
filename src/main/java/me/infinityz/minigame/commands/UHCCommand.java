@@ -13,9 +13,11 @@ import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.World;
+import org.bukkit.WorldBorder;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.BannerMeta;
+import org.bukkit.scheduler.BukkitTask;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
@@ -28,6 +30,7 @@ import co.aikar.commands.annotation.Optional;
 import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.annotation.Syntax;
 import co.aikar.taskchain.TaskChain;
+import lombok.Data;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import me.infinityz.minigame.UHC;
@@ -401,5 +404,68 @@ public class UHCCommand extends BaseCommand {
         sender.sendMessage("New host = " + sender.getName());
     }
 
+    @Data
+    public class Rectangle {
+        double minX;
+        double maxX;
+        double minZ;
+        double maxZ;
+
+        public Rectangle(WorldBorder border) {
+            double size = border.getSize();
+            double sizeHalved = size / 2;
+            double originX = border.getCenter().getX();
+            double originZ = border.getCenter().getZ();
+
+            this.minX = originX - sizeHalved;
+            this.maxX = originX + sizeHalved;
+            this.minZ = originZ - sizeHalved;
+            this.maxZ = originZ + sizeHalved;
+        }
+
+        public double distance(Location point) {
+            var dX = Math.max(minX - point.getX(), point.getX() - maxX);
+            dX = Math.max(dX, 0);
+            var dZ = Math.max(minZ - point.getX(), point.getX() - maxZ);
+            dZ = Math.max(dZ, 0);
+            //Hypothenuse
+            var distance = Math.sqrt(dX * dX + dZ * dZ);
+            //No hypothenuse, calculate distance to nearest point
+            if (distance == 0) {
+                distance = Math.min(
+                        Math.min(point.getX() - minX, maxX - point.getX()),
+                        Math.min(point.getZ() - minZ, maxZ - point.getZ())
+                        );
+            }
+            return distance;
+        }
+
+    }
+
+    @Subcommand("distance")
+    @CommandPermission("staff.perm")
+    public void calcualteD(Player sender) {
+        final BukkitTask task = Bukkit.getScheduler().runTaskTimerAsynchronously(instance, () -> {
+            if (sender.isOnline()) {
+
+                var start = System.nanoTime();
+                var playerPos = sender.getLocation().clone();
+                var border = playerPos.getWorld().getWorldBorder();
+                var distanceToBorder = 0.0;
+                for (int i = 0; i < 1_000; i++) {
+                    distanceToBorder = Math.abs(new Rectangle(border).distance(playerPos));
+                }
+
+                sender.sendTitle(Title.builder().fadeIn(0).fadeOut(0).stay(40)
+                        .title((border.isInside(playerPos) ? ChatColor.GREEN + "IN" : ChatColor.RED + "OUT"))
+                        .subtitle(String.format("Distance = %.2f T=%d" + "μs", distanceToBorder,
+                                ((System.nanoTime() - start) / 1_000)))
+                        .build());
+
+            }
+
+        }, 0L, 2L);
+
+    }
 
 }
