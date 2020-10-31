@@ -178,7 +178,7 @@ public class GameLoop extends BukkitRunnable {
         instance.getPlayerManager().getUhcPlayerMap().values().parallelStream().filter(UHCPlayer::isAlive)
                 .forEach(all -> {
                     var of = Bukkit.getOfflinePlayer(all.getUUID());
-                    if (!of.isOnline() && (System.currentTimeMillis() - of.getLastSeen() > 600_000)) {
+                    if (!of.isOnline() && (System.currentTimeMillis() - of.getLastSeen() > (instance.getGame().getMaxDisconnectTime()*1000L))) {
                         Bukkit.getPluginManager()
                                 .callEvent(new UHCPlayerDequalificationEvent(all, DQReason.OFFLINE_DQ));
                         all.setDead(true);

@@ -40,7 +40,7 @@ public class Game {
     private boolean criticalNerf = true;
     private boolean bedsNerf = true;
     private double applerate = 0.80;
-    private int maxDisconnectTime = -1;
+    private int maxDisconnectTime = 600;
     /* program */
     private int borderSize = 3000;
     private int borderCenter = 200;
@@ -48,7 +48,6 @@ public class Game {
     private int borderCenterTime = 1500;
     private int pvpTime = 1200;
     private int healTime = 120;
-    private int permaDay = -1;
     /* Other */
     String scenarios;
     Stage gameStage;

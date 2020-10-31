@@ -61,6 +61,30 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
         return teamSize > 1 ? "Teams of " + teamSize : "FFA";
     }
 
+    @CommandPermission("uhc.config.privategame")
+    @Subcommand("privategame")
+    @CommandAlias("privategame")
+    public void gamePrivate(CommandSender sender, Boolean bool) {
+        instance.getGame().setPrivateGame(bool);
+        sender.sendMessage("Private Game changed to " + bool);
+    }
+
+    @CommandPermission("uhc.config.maxdisconnect")
+    @Subcommand("maxdisconnect")
+    @CommandAlias("maxdisconnect")
+    public void changeMaxDisconectTime(CommandSender sender, Integer newMaxDisconnectTime) {
+        instance.getGame().setMaxDisconnectTime(newMaxDisconnectTime*60);
+        sender.sendMessage("Max Disconnect time changed to " + newMaxDisconnectTime + " minutes.");
+    }
+
+    @CommandPermission("uhc.config.bedsnerf")
+    @Subcommand("beds nerf")
+    @CommandAlias("beds-nerf")
+    public void changeBedsNerf(CommandSender sender, Boolean bool) {
+        instance.getGame().setBedsNerf(bool);
+        sender.sendMessage("BedsNerf changed to " + bool);
+    }
+
     @CommandPermission("uhc.config.advancements")
     @Subcommand("advancements")
     @CommandAlias("advancements")
@@ -68,7 +92,7 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
         Bukkit.getWorlds().forEach(it -> {
             it.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, bool);
         });
-        sender.sendMessage("Advancements " + bool);
+        sender.sendMessage("Show Advancements changed to " + bool);
     }
 
     @CommandPermission("uhc.config.pvp")

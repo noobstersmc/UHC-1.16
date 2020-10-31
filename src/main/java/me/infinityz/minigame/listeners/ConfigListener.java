@@ -182,7 +182,7 @@ public class ConfigListener implements Listener {
 
     @EventHandler
     public void nerfBedExplosion(PlayerBedEnterEvent e) {
-        if (e.getBed().getWorld().getEnvironment() == Environment.NETHER) {
+        if (instance.getGame().isBedsNerf() && e.getBed().getWorld().getEnvironment() == Environment.NETHER) {
             e.setCancelled(true);
             e.setUseBed(Result.DENY);
             e.getBed().setType(Material.AIR);
