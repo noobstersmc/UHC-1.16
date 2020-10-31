@@ -3,7 +3,9 @@ package me.infinityz.minigame.tasks;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.GameRule;
+import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.World;
@@ -178,7 +180,8 @@ public class GameLoop extends BukkitRunnable {
         instance.getPlayerManager().getUhcPlayerMap().values().parallelStream().filter(UHCPlayer::isAlive)
                 .forEach(all -> {
                     var of = Bukkit.getOfflinePlayer(all.getUUID());
-                    if (!of.isOnline() && (System.currentTimeMillis() - of.getLastSeen() > (instance.getGame().getMaxDisconnectTime()*1000L))) {
+                    if (!of.isOnline() && (System.currentTimeMillis()
+                            - of.getLastSeen() > (instance.getGame().getMaxDisconnectTime() * 1000L))) {
                         Bukkit.getPluginManager()
                                 .callEvent(new UHCPlayerDequalificationEvent(all, DQReason.OFFLINE_DQ));
                         all.setDead(true);
@@ -231,33 +234,50 @@ public class GameLoop extends BukkitRunnable {
                 + "Twitter! twitter.com/NoobstersMC");
     }
 
+    // Fast algo to calculate distance to nearest border point or absolute
+    // maxima/minima
+    public static double distanceToNearestPoint(final WorldBorder border, final Location point) {
+        double size = border.getSize();
+        double sizeHalved = size / 2;
+        double originX = border.getCenter().getX();
+        double originZ = border.getCenter().getZ();
+        // Obtain the edges of worldborder (Cuboid)
+        double minX = originX - sizeHalved;
+        double maxX = originX + sizeHalved;
+        double minZ = originZ - sizeHalved;
+        double maxZ = originZ + sizeHalved;
+        // Calculate delta on distance
+        var dX = Math.max(minX - point.getX(), point.getX() - maxX);
+        dX = Math.max(dX, 0);
+        var dZ = Math.max(minZ - point.getX(), point.getX() - maxZ);
+        dZ = Math.max(dZ, 0);
+        // Hypothenuse
+        var distance = Math.sqrt(dX * dX + dZ * dZ);
+        // Distance = 0 = No hypothenuse, calculate distance to nearest point
+        return distance == 0 ? Math.min(Math.min(point.getX() - minX, maxX - point.getX()),
+                Math.min(point.getZ() - minZ, maxZ - point.getZ())) : distance;
+    }
+
     private void performBorderDamage() {
         Bukkit.getOnlinePlayers().stream()
-                .filter(players -> !players.getWorld().getWorldBorder().isInside(players.getLocation()))
+                .filter(players -> players.getGameMode() == GameMode.SURVIVAL
+                        && !players.getWorld().getWorldBorder().isInside(players.getLocation()))
                 .forEach(outsideBorderPlayer -> Bukkit.getScheduler().runTask(instance, () -> {
                     outsideBorderPlayer.damage(1);
                     var time = borderTeleportMap.get(outsideBorderPlayer.getUniqueId());
                     if (time == null || (System.currentTimeMillis() - time) >= 60_000) {
-                        var playerPos = outsideBorderPlayer.getLocation().clone();
-                        var borderCenterPos = playerPos.getWorld().getWorldBorder().getCenter().clone();
-                        //Normalize the Y coordinate
-                        borderCenterPos.setY(playerPos.getY());
-                        var distanceToCenterSquared = Math.abs(playerPos.distanceSquared(borderCenterPos));
-                        var distanceToCenter = Math.abs(playerPos.distance(borderCenterPos));
-                        Bukkit.broadcastMessage(String.format("Distance squared = %.2f\nDistance = %.2f", distanceToCenterSquared, distanceToCenter));
-
-                        /*
-                        double distanceFromBorder = Math.min(Math.abs(distanceX), Math.abs(distanceZ));
-                        if (distanceFromBorder >= 10) {
-                            var newLoc = outsideBorderPlayer.getWorld().getHighestBlockAt(playerLOC).getLocation()
-                                    .add(0.0, 1.5, 0.0);
+                        var border = outsideBorderPlayer.getWorld().getWorldBorder();
+                        var loc = outsideBorderPlayer.getLocation();
+                        var distance = Math.abs(distanceToNearestPoint(border, loc));
+                        if (distance >= 10) {
+                            var newLoc = loc.toHighestLocation().add(0.0, 1.5, 0.0);
                             outsideBorderPlayer.teleportAsync(newLoc);
                             outsideBorderPlayer.sendMessage(
                                     ChatColor.of("#1fbd90") + "The gods have decided to give you a seconds chance.");
                             outsideBorderPlayer.playSound(newLoc, Sound.ENTITY_ENDERMAN_TELEPORT, SoundCategory.VOICE,
                                     1.0f, 0.5f);
                             borderTeleportMap.put(outsideBorderPlayer.getUniqueId(), System.currentTimeMillis());
-                        }*/
+                        }
 
                     }
                     outsideBorderPlayer

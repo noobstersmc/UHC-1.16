@@ -428,43 +428,15 @@ public class UHCCommand extends BaseCommand {
             dX = Math.max(dX, 0);
             var dZ = Math.max(minZ - point.getX(), point.getX() - maxZ);
             dZ = Math.max(dZ, 0);
-            //Hypothenuse
+            // Hypothenuse
             var distance = Math.sqrt(dX * dX + dZ * dZ);
-            //No hypothenuse, calculate distance to nearest point
+            // No hypothenuse, calculate distance to nearest point
             if (distance == 0) {
-                distance = Math.min(
-                        Math.min(point.getX() - minX, maxX - point.getX()),
-                        Math.min(point.getZ() - minZ, maxZ - point.getZ())
-                        );
+                distance = Math.min(Math.min(point.getX() - minX, maxX - point.getX()),
+                        Math.min(point.getZ() - minZ, maxZ - point.getZ()));
             }
             return distance;
         }
-
-    }
-
-    @Subcommand("distance")
-    @CommandPermission("staff.perm")
-    public void calcualteD(Player sender) {
-        final BukkitTask task = Bukkit.getScheduler().runTaskTimerAsynchronously(instance, () -> {
-            if (sender.isOnline()) {
-
-                var start = System.nanoTime();
-                var playerPos = sender.getLocation().clone();
-                var border = playerPos.getWorld().getWorldBorder();
-                var distanceToBorder = 0.0;
-                for (int i = 0; i < 1_000; i++) {
-                    distanceToBorder = Math.abs(new Rectangle(border).distance(playerPos));
-                }
-
-                sender.sendTitle(Title.builder().fadeIn(0).fadeOut(0).stay(40)
-                        .title((border.isInside(playerPos) ? ChatColor.GREEN + "IN" : ChatColor.RED + "OUT"))
-                        .subtitle(String.format("Distance = %.2f T=%d" + "μs", distanceToBorder,
-                                ((System.nanoTime() - start) / 1_000)))
-                        .build());
-
-            }
-
-        }, 0L, 2L);
 
     }
 
