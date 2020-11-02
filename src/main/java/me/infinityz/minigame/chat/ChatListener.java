@@ -32,7 +32,7 @@ public class ChatListener implements Listener {
         var player = e.getPlayer();
         var msg = e.getMessage();
 
-        //Edge cases start
+        // Edge cases start
         if (msg.startsWith("!")) {
             e.setMessage(msg.replaceFirst("!", ""));
             if (player.getGameMode() == GameMode.SPECTATOR && !player.hasPermission("uhc.chat.spec")) {
@@ -45,19 +45,18 @@ public class ChatListener implements Listener {
             sendSpecMessage(player, msg);
             e.setCancelled(true);
             return;
-        }
-        else if(msg.startsWith("#") && player.hasPermission("uhc.chat.staff")){
+        } else if (msg.startsWith("#") && player.hasPermission("uhc.chat.staff")) {
             e.setMessage(msg.replaceFirst("#", ""));
             sendStaffChat(player, msg);
             e.setCancelled(true);
             return;
         }
-        //Edge cases end
+        // Edge cases end
 
         var chatManager = instance.getChatManager();
         var defaultChannel = chatManager.getDefaultOrNull(player);
 
-        //Redirect base on defaultChannel
+        // Redirect base on defaultChannel
         if (defaultChannel != null && defaultChannel.equalsIgnoreCase("team")) {
             e.setCancelled(true);
             if (instance.getTeamManger().isTeams()) {
@@ -73,12 +72,12 @@ public class ChatListener implements Listener {
                 chatManager.getDefaultChat().put(player.getUniqueId(), null);
             }
             return;
-        }
-        else if(defaultChannel != null && defaultChannel.equals("staff")){
-            if(player.hasPermission("uhc.chat.staff")){
+        } else if (defaultChannel != null && defaultChannel.equals("staff")) {
+            if (player.hasPermission("uhc.chat.staff")) {
                 sendStaffChat(player, msg);
-            }else{
-                player.sendMessage(ChatColor.RED + "You shouldn't be able to use staff chat, changing back to default.");
+            } else {
+                player.sendMessage(
+                        ChatColor.RED + "You shouldn't be able to use staff chat, changing back to default.");
                 chatManager.getDefaultChat().put(player.getUniqueId(), null);
             }
             e.setCancelled(true);
@@ -94,14 +93,16 @@ public class ChatListener implements Listener {
     void sendSpecMessage(Player sender, String message) {
         var msg = ChatColor.GRAY + "[SPEC] " + colorize(
                 replacedFormat(format.replace("{name}", sender.getName()).replace("{message}", message), sender));
+        var win = instance.getGame().isHasSomeoneWon();
         Bukkit.getOnlinePlayers().forEach(all -> {
-            if (all.getGameMode() == GameMode.SPECTATOR || all.hasPermission("uhc.chat.spec")) {
+            if (win || (all.getGameMode() == GameMode.SPECTATOR || all.hasPermission("uhc.chat.spec"))) {
                 all.sendMessage(msg);
             }
         });
         Bukkit.getLogger().info(msg);
 
     }
+
     void sendStaffChat(Player sender, String message) {
         var msg = ChatColor.BLUE + "[STAFF] " + colorize(
                 replacedFormat(format.replace("{name}", sender.getName()).replace("{message}", message), sender));
