@@ -43,8 +43,7 @@ public class ConfigListener implements Listener {
 
     @EventHandler
     public void onItemSpawn(ItemSpawnEvent e) {
-        if(!
-        instance.getGame().isTearsNerf()) return;
+        if(!instance.getGame().isTearsNerf()) return;
         var stack = e.getEntity().getItemStack();
         var type = stack.getType();
         if (type == Material.GHAST_TEAR) {
