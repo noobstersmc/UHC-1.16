@@ -17,7 +17,6 @@ import org.bukkit.WorldBorder;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.BannerMeta;
-import org.bukkit.scheduler.BukkitTask;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
@@ -30,13 +29,16 @@ import co.aikar.commands.annotation.Optional;
 import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.annotation.Syntax;
 import co.aikar.taskchain.TaskChain;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.chunks.ChunkLoadTask;
 import me.infinityz.minigame.chunks.ChunksManager;
 import me.infinityz.minigame.events.NetherDisabledEvent;
+import me.infinityz.minigame.events.PlayerJoinedLateEvent;
 import me.infinityz.minigame.game.Game;
 import me.infinityz.minigame.game.border.FortniteBorder;
 import me.infinityz.minigame.players.PositionObject;
@@ -87,6 +89,35 @@ public class UHCCommand extends BaseCommand {
         chain.delay(20).sync(TaskChain::abort).execute();
     }
 
+    @Data
+    @AllArgsConstructor(staticName = "of")
+    private static class ReviveArgs {
+        boolean withItems = false;
+        boolean withLocation = false;
+
+        public static ReviveArgs from(UHCPlayer uhcPlayer, String[] args) {
+            var reviveArgs = of(false, false);
+            if (args == null || args.length == 0)
+                return reviveArgs;
+
+            for (var arg : args) {
+                var lowerArg = arg.toLowerCase();
+                if (lowerArg.startsWith("--i") || lowerArg.startsWith("-inv"))
+                    reviveArgs.setWithItems(true);
+                else if (lowerArg.startsWith("--l") || lowerArg.startsWith("-loc"))
+                    reviveArgs.setWithLocation(true);
+            }
+
+            if (reviveArgs.isWithItems() && uhcPlayer.getLastKnownInventory() == null)
+                reviveArgs.setWithItems(false);
+
+            if (reviveArgs.isWithLocation() && uhcPlayer.getLastKnownPosition() == null)
+                reviveArgs.setWithLocation(false);
+
+            return reviveArgs;
+        }
+    }
+
     @CommandPermission("staff.perm")
     @Conditions("ingame")
     @CommandAlias("respawn")
@@ -96,36 +127,23 @@ public class UHCCommand extends BaseCommand {
     public void onLateScatter(CommandSender sender, @Conditions("dead") @Flags("other") UHCPlayer uhcPlayer,
             @Optional String[] args) {
 
-        uhcPlayer.setAlive(true);
-        sender.sendMessage(ChatColor.of("#7ab83c") + "The player has been scattered into the world");
-        Location teleportLocation = null;
         var world = Bukkit.getWorlds().get(0);
-        var target = Bukkit.getPlayer(uhcPlayer.getUUID());
+        var target = uhcPlayer.getPlayer();
+        var reviveArgs = ReviveArgs.from(uhcPlayer, args);
 
-        if (args != null && args.length > 0) {
-            if (Arrays.stream(args)
-                    .anyMatch(all -> all.equalsIgnoreCase("--i") || all.toLowerCase().contains("-inv"))) {
-                target.getInventory().setContents(uhcPlayer.getLastKnownInventory());
-            }
-            if (Arrays.stream(args)
-                    .anyMatch(all -> all.equalsIgnoreCase("--l") || all.toLowerCase().contains("-loc"))) {
-                teleportLocation = uhcPlayer.getLastKnownPosition().toLocation();
+        Bukkit.getPluginManager().callEvent(PlayerJoinedLateEvent.of(target));
 
-                if (teleportLocation == null || !world.getWorldBorder().isInside(teleportLocation))
-                    teleportLocation = ChunksManager.findScatterLocation(world,
-                            (int) world.getWorldBorder().getSize() / 2);
-            } else {
-                teleportLocation = ChunksManager.findScatterLocation(world, (int) world.getWorldBorder().getSize() / 2);
+        target.teleportAsync(reviveArgs.isWithLocation() ? uhcPlayer.getLastKnownPosition().toLocation()
+                : ChunksManager.findLateScatterLocation(world))
+                .thenAccept(result -> target.sendMessage("You've been scattered into the world by an admin"));
 
-            }
+        uhcPlayer.setAlive(true);
 
-        } else {
-            teleportLocation = ChunksManager.findScatterLocation(world, (int) world.getWorldBorder().getSize() / 2);
+        if (reviveArgs.isWithItems())
+            target.getInventory().setContents(uhcPlayer.getLastKnownInventory());
 
-        }
-
-        target.teleport(teleportLocation);
         target.setGameMode(GameMode.SURVIVAL);
+        sender.sendMessage(ChatColor.of("#7ab83c") + "The player has been scattered into the world");
     }
 
     @CommandPermission("staff.perm")

@@ -166,6 +166,7 @@ public class ArmorListener implements Listener{
 		System.out.println("Type: " + event.getType().name());*/
 	}
 
+	@SuppressWarnings("all")
 	@EventHandler
 	public void itemBreakEvent(PlayerItemBreakEvent e){
 		ArmorType type = ArmorType.matchType(e.getBrokenItem());

@@ -25,6 +25,7 @@ public class Condition {
 
 
     //BEGIN UTIL
+	@SuppressWarnings("all")
     private static JsonObject convertItemToJSON(ItemStack item) {
         JsonObject itemJSON = new JsonObject();
         itemJSON.addProperty("item", "minecraft:" + item.getType().name().toLowerCase());

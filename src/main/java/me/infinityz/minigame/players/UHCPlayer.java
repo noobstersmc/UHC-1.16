@@ -5,7 +5,9 @@ import java.util.UUID;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import lombok.Getter;
@@ -46,6 +48,10 @@ public class UHCPlayer {
     }
     public void setLastKnownPositionFromLoc(Location loc) {
         setLastKnownPosition(PositionObject.getPositionFromWorld(loc));
+    }
+
+    public Player getPlayer(){
+        return Bukkit.getPlayer(UUID);
     }
 
 }

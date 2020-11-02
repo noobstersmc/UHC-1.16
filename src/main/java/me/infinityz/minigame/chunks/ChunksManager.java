@@ -39,8 +39,8 @@ public class ChunksManager {
                         + pendingChunkLoadTasks.size() + " locations...", "staff.perm");
             } else {
                 var needed = neededLocations();
-                var message = needed > 0 ? ChatColor.RED + "Not ready to start. "
-                        + needed + " location needed to start."
+                var message = needed > 0
+                        ? ChatColor.RED + "Not ready to start. " + needed + " location needed to start."
                         : ChatColor.GREEN + "Ready to start.";
                 notifyOnActionbar(message, "staff.pern");
 
@@ -129,6 +129,10 @@ public class ChunksManager {
         // A location object is returned once we reach this step, next step is to
         // validate the location from others.
         return centerLocation(loc);
+    }
+
+    public static Location findLateScatterLocation(final World world) {
+        return findScatterLocation(world, (int) (world.getWorldBorder().getSize() / 2));
     }
 
     public static Location centerLocation(final Location loc) {

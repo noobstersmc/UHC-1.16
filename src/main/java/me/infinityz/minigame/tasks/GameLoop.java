@@ -264,25 +264,30 @@ public class GameLoop extends BukkitRunnable {
                         && !players.getWorld().getWorldBorder().isInside(players.getLocation()))
                 .forEach(outsideBorderPlayer -> Bukkit.getScheduler().runTask(instance, () -> {
                     outsideBorderPlayer.damage(1);
-                    var time = borderTeleportMap.get(outsideBorderPlayer.getUniqueId());
-                    if (time == null || (System.currentTimeMillis() - time) >= 60_000) {
-                        var border = outsideBorderPlayer.getWorld().getWorldBorder();
-                        var loc = outsideBorderPlayer.getLocation();
-                        var distance = Math.abs(distanceToNearestPoint(border, loc));
-                        if (distance >= 10) {
-                            var newLoc = loc.toHighestLocation().add(0.0, 1.5, 0.0);
-                            outsideBorderPlayer.teleportAsync(newLoc);
-                            outsideBorderPlayer.sendMessage(
-                                    ChatColor.of("#1fbd90") + "The gods have decided to give you a seconds chance.");
-                            outsideBorderPlayer.playSound(newLoc, Sound.ENTITY_ENDERMAN_TELEPORT, SoundCategory.VOICE,
-                                    1.0f, 0.5f);
-                            borderTeleportMap.put(outsideBorderPlayer.getUniqueId(), System.currentTimeMillis());
-                        }
 
-                    }
+                    handleBorderRescue(outsideBorderPlayer);
+
                     outsideBorderPlayer
                             .setLastDamageCause(new EntityDamageEvent(outsideBorderPlayer, DamageCause.CUSTOM, 1));
                 }));
+    }
+
+    public void handleBorderRescue(Player player) {
+        var time = borderTeleportMap.getOrDefault(player.getUniqueId(), 0L);
+        var diff = time > 0L ? System.currentTimeMillis() - time : 60_000L;
+
+        if (diff >= 60_000) {
+            var border = player.getWorld().getWorldBorder();
+            var loc = player.getLocation();
+            var distance = Math.abs(distanceToNearestPoint(border, loc));
+            if (distance >= 10) {
+                var newLoc = loc.getWorld().getHighestBlockAt(loc).getLocation().add(0.0, 1.5, 0.0);
+                player.teleportAsync(newLoc);
+                player.sendMessage(ChatColor.of("#1fbd90") + "The gods have decided to give you a seconds chance.");
+                player.playSound(newLoc, Sound.ENTITY_ENDERMAN_TELEPORT, SoundCategory.VOICE, 1.0f, 0.5f);
+                borderTeleportMap.put(player.getUniqueId(), System.currentTimeMillis());
+            }
+        }
     }
 
     public static String timeConvert(int t) {

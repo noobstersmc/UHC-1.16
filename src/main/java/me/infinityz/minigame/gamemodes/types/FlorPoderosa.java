@@ -85,10 +85,9 @@ public class FlorPoderosa extends IGamemode implements Listener {
             case WITHER_ROSE:
             case DEAD_BUSH: {
                 e.getBlock().setType(Material.AIR);
-                var item = e.getBlock().getLocation().getWorld().dropItemNaturally(e.getBlock().getLocation(),
+                e.getBlock().getLocation().getWorld().dropItemNaturally(e.getBlock().getLocation(),
                         getRandomDropWithMeta());
-                //item.setTicksLived();
-                
+
                 break;
             }
             default:

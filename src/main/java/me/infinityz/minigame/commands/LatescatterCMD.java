@@ -15,6 +15,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.chunks.ChunksManager;
+import me.infinityz.minigame.events.PlayerJoinedLateEvent;
 import me.infinityz.minigame.gamemodes.types.AdvancementHunter;
 import me.infinityz.minigame.gamemodes.types.GoneFishing;
 import me.infinityz.minigame.gamemodes.types.InfiniteEnchanter;
@@ -29,19 +30,28 @@ public class LatescatterCMD extends BaseCommand {
     private @NonNull UHC instance;
 
     @Default
-    @Conditions("ingame|time:max=1200")
+    @Conditions("ingame")
     public void lateScatter(@Conditions("hasNotDied|spec") UHCPlayer uhcPlayer) {
-        var player = Bukkit.getPlayer(uhcPlayer.getUUID());
+        if (instance.getGame().getGameTime() >= 1200) {
+            // If greater than minute 20, change to variable or differntial.
+            return;
+        }
+        var player = uhcPlayer.getPlayer();
+        var world = Bukkit.getWorlds().get(0);
+        var worldBorderSizeHaved = (int) world.getWorldBorder().getSize() / 2;
+
+        player.sendMessage((ChatColor.of("#7ab83c") + "Loading a location..."));
+        player.setGameMode(GameMode.SURVIVAL);
+
+        player.teleportAsync(ChunksManager.findScatterLocation(world, worldBorderSizeHaved))
+                .thenAccept(result -> player
+                        .sendMessage((ChatColor.of("#7ab83c") + (result ? "You have been scattered into the world."
+                                : "Coudn't scatter your, ask for help."))));
 
         uhcPlayer.setAlive(true);
+        Bukkit.getPluginManager().callEvent(PlayerJoinedLateEvent.of(player));
 
-        player.sendMessage((ChatColor.of("#7ab83c") + "You have been scattered into the world."));
-
-        player.teleport(ChunksManager.findScatterLocation(Bukkit.getWorlds().get(0),
-                (int) Bukkit.getWorlds().get(0).getWorldBorder().getSize() / 2));
-        player.setGameMode(GameMode.SURVIVAL);
-        
-        if(instance.getGamemodeManager().isScenarioEnable(GoneFishing.class)){
+        if (instance.getGamemodeManager().isScenarioEnable(GoneFishing.class)) {
             var item = new ItemStack(Material.FISHING_ROD);
             var meta = item.getItemMeta();
             meta.addEnchant(Enchantment.LURE, 666, true);
@@ -51,20 +61,20 @@ public class LatescatterCMD extends BaseCommand {
             item.setItemMeta(meta);
             player.getInventory().addItem(item);
         }
-        
-        if(instance.getGamemodeManager().isScenarioEnable(InfiniteEnchanter.class)){
+
+        if (instance.getGamemodeManager().isScenarioEnable(InfiniteEnchanter.class)) {
             player.getInventory().addItem(new ItemStack(Material.BOOK, 32));
             player.getInventory().addItem(new ItemStack(Material.BOOKSHELF, 32));
             player.getInventory().addItem(new ItemStack(Material.ANVIL, 8));
             player.getInventory().addItem(new ItemStack(Material.ENCHANTING_TABLE, 8));
             player.setLevel(100);
         }
-        
-        if(instance.getGamemodeManager().isScenarioEnable(AdvancementHunter.class)){
+
+        if (instance.getGamemodeManager().isScenarioEnable(AdvancementHunter.class)) {
             player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(10.0);
         }
 
-        if(instance.getGamemodeManager().isScenarioEnable(NineSlots.class)){
+        if (instance.getGamemodeManager().isScenarioEnable(NineSlots.class)) {
             instance.getGamemodeManager().getScenario(NineSlots.class).fillInventory(player);
         }
     }
