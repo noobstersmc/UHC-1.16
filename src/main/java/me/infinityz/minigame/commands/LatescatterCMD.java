@@ -18,6 +18,7 @@ import me.infinityz.minigame.chunks.ChunksManager;
 import me.infinityz.minigame.gamemodes.types.AdvancementHunter;
 import me.infinityz.minigame.gamemodes.types.GoneFishing;
 import me.infinityz.minigame.gamemodes.types.InfiniteEnchanter;
+import me.infinityz.minigame.gamemodes.types.NineSlots;
 import me.infinityz.minigame.players.UHCPlayer;
 import net.md_5.bungee.api.ChatColor;
 
@@ -61,7 +62,11 @@ public class LatescatterCMD extends BaseCommand {
         
         if(instance.getGamemodeManager().isScenarioEnable(AdvancementHunter.class)){
             player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(10.0);
-        }   
+        }
+
+        if(instance.getGamemodeManager().isScenarioEnable(NineSlots.class)){
+            instance.getGamemodeManager().getScenario(NineSlots.class).fillInventory(player);
+        }
     }
 
 }

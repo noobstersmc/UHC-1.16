@@ -39,6 +39,7 @@ public class Game {
     private boolean strengthNerf = true;
     private boolean criticalNerf = true;
     private boolean bedsNerf = true;
+    private boolean tearsNerf = false;
     private double applerate = 0.80;
     private int maxDisconnectTime = 600;
     /* program */

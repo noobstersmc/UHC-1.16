@@ -133,6 +133,7 @@ public class FlorPoderosa extends IGamemode implements Listener {
             case CHAIN_COMMAND_BLOCK:
             case BEDROCK:
             case STRUCTURE_VOID:
+            case REPEATING_COMMAND_BLOCK:
                 return true;
             default:
                 return false;
@@ -192,7 +193,7 @@ public class FlorPoderosa extends IGamemode implements Listener {
     private ItemStack getRandomDrop() {
         var randomMaterial = possibleDrops.get(random.nextInt(possibleDrops.size()));
         return new ItemStack(randomMaterial,
-                random.nextInt(randomMaterial.getMaxStackSize() >= 16 ? 16 : randomMaterial.getMaxStackSize()) + 1);
+                random.nextInt(randomMaterial.getMaxStackSize() >= 8 ? 8 : randomMaterial.getMaxStackSize()) + 1);
     }
 
 }

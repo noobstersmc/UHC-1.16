@@ -237,7 +237,7 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
         if (type == EntityType.COW || type == EntityType.SHEEP || type == EntityType.PIG || type == EntityType.HORSE)
             e.getDrops().add(new ItemStack(Material.LEATHER));
         if (type == EntityType.CHICKEN)
-            e.getDrops().add(3, new ItemStack(Material.ARROW));
+            e.getDrops().add(new ItemStack(Material.ARROW, 3));
     }
 
     // starting min players

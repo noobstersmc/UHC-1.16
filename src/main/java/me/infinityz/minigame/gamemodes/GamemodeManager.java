@@ -37,8 +37,11 @@ import me.infinityz.minigame.gamemodes.types.SwordLess;
 import me.infinityz.minigame.gamemodes.types.TiempoBomba;
 import me.infinityz.minigame.gamemodes.types.Timber;
 import me.infinityz.minigame.gamemodes.types.TripleOres;
+import me.infinityz.minigame.gamemodes.types.DoubleGold;
 import me.infinityz.minigame.gamemodes.types.UHCRun;
 import me.infinityz.minigame.gamemodes.types.UnDamaxe;
+import me.infinityz.minigame.gamemodes.types.NineSlots;
+import me.infinityz.minigame.gamemodes.types.ThunderKill;
 import me.infinityz.minigame.gamemodes.types.Totems.Totems;
 import me.infinityz.minigame.gamemodes.types.erespawn.EnderRespawn;
 import me.infinityz.minigame.gamemodes.types.uhclatam.UHCLatam;
@@ -52,6 +55,7 @@ public class GamemodeManager {
     UHC instance;
     private @Getter THashSet<IGamemode> gamemodesList = new THashSet<>();
     private @Getter @Setter int extraOreAmount = 0;
+    private @Getter @Setter int extraGold = 0;
 
     public GamemodeManager(UHC instance) {
         this.instance = instance;
@@ -89,6 +93,10 @@ public class GamemodeManager {
         registerGamemode(new TiempoBomba(instance));
         registerGamemode(new NoLimpiar(instance));
         registerGamemode(new FastLeavesDecay());
+        registerGamemode(new NineSlots(instance));
+        registerGamemode(new DoubleGold(instance));
+        registerGamemode(new ThunderKill(instance));
+        
         // Scenarios pack
         registerGamemode(new UHCRun(instance));
 

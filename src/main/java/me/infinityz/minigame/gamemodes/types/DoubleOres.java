@@ -35,7 +35,8 @@ public class DoubleOres extends IGamemode implements Listener{
 
     @Override
     public boolean enableScenario() {
-        if(isEnabled() || instance.getGamemodeManager().isScenarioEnable(TripleOres.class)){
+        if(isEnabled() || instance.getGamemodeManager().isScenarioEnable(TripleOres.class)
+        || instance.getGamemodeManager().isScenarioEnable(DoubleGold.class)){
             return false;
         }
         instance.getListenerManager().registerListener(this);

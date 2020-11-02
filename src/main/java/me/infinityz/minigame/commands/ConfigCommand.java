@@ -61,6 +61,14 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
         return teamSize > 1 ? "Teams of " + teamSize : "FFA";
     }
 
+    @CommandPermission("uhc.config.tearsnerf")
+    @Subcommand("tearsnerf")
+    @CommandAlias("tearsnerf")
+    public void tearsNerf(CommandSender sender, Boolean bool) {
+        instance.getGame().setTearsNerf(bool);
+        sender.sendMessage("Tears Nerf has been set to " + bool);
+    }
+
     @CommandPermission("uhc.config.privategame")
     @Subcommand("privategame")
     @CommandAlias("privategame")

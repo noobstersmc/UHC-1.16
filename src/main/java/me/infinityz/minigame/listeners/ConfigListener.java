@@ -16,6 +16,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -38,6 +39,17 @@ public class ConfigListener implements Listener {
 
     public ConfigListener(UHC instance) {
         this.instance = instance;
+    }
+
+    @EventHandler
+    public void onItemSpawn(ItemSpawnEvent e) {
+        if(!
+        instance.getGame().isTearsNerf()) return;
+        var stack = e.getEntity().getItemStack();
+        var type = stack.getType();
+        if (type == Material.GHAST_TEAR) {
+            stack.setType(Material.GOLD_INGOT);
+        }
     }
 
     @EventHandler

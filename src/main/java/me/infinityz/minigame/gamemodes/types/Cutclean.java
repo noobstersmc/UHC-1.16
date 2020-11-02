@@ -57,6 +57,7 @@ public class Cutclean extends IGamemode implements Listener{
         final var player = e.getPlayer();
         final var itemInHand = player.getInventory().getItemInMainHand();
         var extras = instance.getGamemodeManager().getExtraOreAmount();
+        var extraGold = instance.getGamemodeManager().getExtraGold();
 
         if (itemInHand.getType() == Material.AIR || itemInHand.containsEnchantment(Enchantment.SILK_TOUCH))
             return;
@@ -86,7 +87,7 @@ public class Cutclean extends IGamemode implements Listener{
 
                     e.setExpToDrop(fortune);
 
-                    dropCenter(new ItemStack(Material.GOLD_INGOT, (fortune+extras)), block.getLocation());
+                    dropCenter(new ItemStack(Material.GOLD_INGOT, (fortune+extras+extraGold)), block.getLocation());
                 }
                 break;
             }
