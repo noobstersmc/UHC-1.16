@@ -142,13 +142,13 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
         var uhcPlayer = instance.getPlayerManager().getPlayer(player.getUniqueId());
 
         e.setLinesArray(
-                ChatColor.of("#20A127") + "Time: " + ChatColor.WHITE
+                ChatColor.YELLOW + "Time: " + ChatColor.WHITE
                         + GameLoop.timeConvert(instance.getGame().getGameTime()),
                 "",
-                ChatColor.of("#20A127") + "Kills: " + ChatColor.WHITE + (uhcPlayer != null ? uhcPlayer.getKills() : 0),
+                ChatColor.YELLOW + "Kills: " + ChatColor.WHITE + (uhcPlayer != null ? uhcPlayer.getKills() : 0),
                 "",
-                ChatColor.of("#20A127") + "Players: " + ChatColor.WHITE + instance.getPlayerManager().getAlivePlayers(),
-                ChatColor.of("#20A127") + "Border: " + ChatColor.WHITE + ((int) worldBorder.getSize() / 2), "",
+                ChatColor.YELLOW + "Players: " + ChatColor.WHITE + instance.getPlayerManager().getAlivePlayers(),
+                ChatColor.YELLOW + "Border: " + ChatColor.WHITE + ((int) worldBorder.getSize() / 2), "",
                 ChatColor.WHITE + "noobsters.net");
 
     }

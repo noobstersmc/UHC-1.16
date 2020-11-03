@@ -122,9 +122,9 @@ public class GameLoop extends BukkitRunnable {
         if (time == game.getBorderTime()) {
             // BORDER TIME
             Bukkit.broadcastMessage(HAVELOCK_BLUE + "The world will shrink to 100 blocks in the next "
-                    + (instance.getGame().getBorderCenterTime() / 60) + " minutes at a speed of 1 block per second!");
+                    + (game.getBorderCenterTime() / 60) + " minutes at a speed of 1 block per second!");
 
-            if (instance.getGame().isNether()) {
+            if (game.isNether()) {
                 Bukkit.broadcastMessage(SHAMROCK_GREEN
                         + "Players in the nether will be randomly teleported to the overworld once the border reaches 500 blocks.");
             }
@@ -132,10 +132,15 @@ public class GameLoop extends BukkitRunnable {
             Bukkit.getOnlinePlayers()
                     .forEach(all -> all.playSound(all.getLocation(), Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO, 1, 1));
             Bukkit.getScheduler().runTask(instance, () -> Bukkit.getWorlds().forEach(worlds -> {
-                worlds.getWorldBorder().setSize(instance.getGame().getBorderCenter(),
-                        instance.getGame().getBorderCenterTime());
+                worlds.getWorldBorder().setSize(game.getBorderCenter(),
+                        game.getBorderCenterTime());
             }));
             triggered = true;
+        }
+        if(time == game.getBorderCenterTime()+game.getBorderTime()+300){
+            Bukkit.getScheduler().runTask(instance, () -> Bukkit.getWorlds().forEach(worlds -> {
+                worlds.getWorldBorder().setSize(50 , 60 );
+            }));
         }
         if ((time % 1200) == 0 && !triggered) {
             sendPromo();
