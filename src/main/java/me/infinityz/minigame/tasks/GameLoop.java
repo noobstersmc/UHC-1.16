@@ -283,7 +283,7 @@ public class GameLoop extends BukkitRunnable {
             if (distance >= 10) {
                 var newLoc = loc.getWorld().getHighestBlockAt(loc).getLocation().add(0.0, 1.5, 0.0);
                 player.teleportAsync(newLoc);
-                player.sendMessage(ChatColor.of("#1fbd90") + "The gods have decided to give you a seconds chance.");
+                player.sendMessage(ChatColor.of("#1fbd90") + "The gods have decided to give you a second chance.");
                 player.playSound(newLoc, Sound.ENTITY_ENDERMAN_TELEPORT, SoundCategory.VOICE, 1.0f, 0.5f);
                 borderTeleportMap.put(player.getUniqueId(), System.currentTimeMillis());
             }
