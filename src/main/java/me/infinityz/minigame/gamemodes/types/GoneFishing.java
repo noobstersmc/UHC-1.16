@@ -9,14 +9,23 @@ import org.bukkit.inventory.ItemStack;
 
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.events.GameTickEvent;
+import me.infinityz.minigame.events.PlayerJoinedLateEvent;
 import me.infinityz.minigame.gamemodes.IGamemode;
 
 public class GoneFishing extends IGamemode implements Listener {
     private UHC instance;
+    ItemStack item = new ItemStack(Material.FISHING_ROD);
 
     public GoneFishing(UHC instance) {
         super("GoneFishing", "Go fishing.");
         this.instance = instance;
+
+        var meta = item.getItemMeta();
+        meta.addEnchant(Enchantment.LURE, 666, true);
+        meta.addEnchant(Enchantment.LUCK, 666, true);
+        meta.addEnchant(Enchantment.VANISHING_CURSE, 1, false);
+        meta.setUnbreakable(true);
+        item.setItemMeta(meta);
     }
 
     @Override
@@ -41,17 +50,15 @@ public class GoneFishing extends IGamemode implements Listener {
     public void onStart(GameTickEvent e) {
         if (e.getSecond() == 1) {
             Bukkit.getOnlinePlayers().forEach(players -> {
-                var item = new ItemStack(Material.FISHING_ROD);
-                var meta = item.getItemMeta();
-                meta.addEnchant(Enchantment.LURE, 666, true);
-                meta.addEnchant(Enchantment.LUCK, 666, true);
-                meta.addEnchant(Enchantment.VANISHING_CURSE, 1, false);
-                meta.setUnbreakable(true);
-                item.setItemMeta(meta);
                 players.getInventory().addItem(item);
             });
         }
   
+    }
+
+    @EventHandler
+    public void onPlayerJoinLate(PlayerJoinedLateEvent e){
+        e.getPlayer().getInventory().addItem(item);
     }
 
 

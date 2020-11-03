@@ -18,6 +18,7 @@ import org.bukkit.inventory.ItemStack;
 import fr.mrmicky.fastinv.ItemBuilder;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.events.GameTickEvent;
+import me.infinityz.minigame.events.PlayerJoinedLateEvent;
 import me.infinityz.minigame.gamemodes.IGamemode;
 
 public class InfiniteEnchanter extends IGamemode implements Listener {
@@ -25,7 +26,7 @@ public class InfiniteEnchanter extends IGamemode implements Listener {
     private final ItemStack lapis = new ItemBuilder(Material.LAPIS_LAZULI).amount(64).build();
 
     public InfiniteEnchanter(UHC instance) {
-        super("InfiniteEnchanter", "Unlimited enchanted resources.");
+        super("Infinite Enchanter", "Unlimited enchanted resources.");
         this.instance = instance;
 
     }
@@ -103,6 +104,16 @@ public class InfiniteEnchanter extends IGamemode implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         e.getPlayer().setLevel(100);
+    }
+
+    @EventHandler
+    public void onJoinLate(PlayerJoinedLateEvent e){
+        var player = e.getPlayer();
+        player.getInventory().addItem(new ItemStack(Material.BOOK, 32));
+        player.getInventory().addItem(new ItemStack(Material.BOOKSHELF, 32));
+        player.getInventory().addItem(new ItemStack(Material.ANVIL, 8));
+        player.getInventory().addItem(new ItemStack(Material.ENCHANTING_TABLE, 8));
+        player.setLevel(100);
     }
 
 }

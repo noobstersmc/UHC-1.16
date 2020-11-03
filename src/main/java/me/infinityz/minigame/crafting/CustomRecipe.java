@@ -3,9 +3,13 @@ package me.infinityz.minigame.crafting;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.Recipe;
 
+import lombok.Getter;
+import lombok.Setter;
+
 public abstract class CustomRecipe {
     NamespacedKey namespacedKey;
     Recipe recipe;
+    private @Getter @Setter boolean enabled = false;
 
     public CustomRecipe(NamespacedKey namespacedKey, Recipe recipe){
         this.namespacedKey = namespacedKey;
@@ -26,5 +30,6 @@ public abstract class CustomRecipe {
     public void setRecipe(Recipe recipe) {
         this.recipe = recipe;
     }
+
     
 }

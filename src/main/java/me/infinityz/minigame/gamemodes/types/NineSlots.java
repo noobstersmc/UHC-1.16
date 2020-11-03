@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.events.GameTickEvent;
+import me.infinityz.minigame.events.PlayerJoinedLateEvent;
 import me.infinityz.minigame.gamemodes.IGamemode;
 import net.md_5.bungee.api.ChatColor;
 
@@ -83,6 +84,10 @@ public class NineSlots extends IGamemode implements Listener {
         for (int i = 9; i <= 35; i++) {
             player.getInventory().setItem(i, fillItem);
         }
+    }
+
+    public void onPlayerJoinLate(PlayerJoinedLateEvent e){
+        fillInventory(e.getPlayer());
     }
 
 

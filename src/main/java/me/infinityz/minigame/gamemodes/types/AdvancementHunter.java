@@ -8,6 +8,7 @@ import org.bukkit.event.player.PlayerAdvancementDoneEvent;
 
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.events.GameTickEvent;
+import me.infinityz.minigame.events.PlayerJoinedLateEvent;
 import me.infinityz.minigame.gamemodes.IGamemode;
 
 public class AdvancementHunter extends IGamemode implements Listener {
@@ -56,6 +57,11 @@ public class AdvancementHunter extends IGamemode implements Listener {
             });
         }
 
+    }
+
+    @EventHandler
+    public void onJoinLate(PlayerJoinedLateEvent e){
+        e.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(10.0);
     }
 
 }

@@ -33,7 +33,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import lombok.val;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.chunks.ChunkLoadTask;
 import me.infinityz.minigame.chunks.ChunksManager;
