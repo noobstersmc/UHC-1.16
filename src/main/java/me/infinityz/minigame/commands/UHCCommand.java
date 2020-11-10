@@ -279,6 +279,17 @@ public class UHCCommand extends BaseCommand {
         instance.getScoreboardManager().getFastboardMap().values().forEach(all -> all.updateTitle(coloredTitle));
     }
 
+    @CommandPermission("uhc.scoreboard.change")
+    @Subcommand("colors")
+    @CommandCompletion("@chatcolors @players")
+    @Syntax("<color> - New color hex")
+    public void changeScoreboardColor(CommandSender sender, final String newColor) {
+
+        sender.sendMessage("Changing scoreboard colors to: " + newColor);
+        Game.setScoreColors(ChatColor.of(newColor)+ "");
+        
+    }
+
     @CommandPermission("uhc.tab.change")
     @Subcommand("header")
     @CommandCompletion("@chatcolors @players")

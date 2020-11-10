@@ -121,12 +121,12 @@ public class GameLoop extends BukkitRunnable {
         }
         if (time == game.getBorderTime()) {
             // BORDER TIME
-            Bukkit.broadcastMessage(HAVELOCK_BLUE + "The world will shrink to 100 blocks in the next "
+            Bukkit.broadcastMessage(HAVELOCK_BLUE + "The border has started to move to 100 blocks in the next "
                     + (game.getBorderCenterTime() / 60) + " minutes at a speed of 1 block per second!");
 
             if (game.isNether()) {
                 Bukkit.broadcastMessage(SHAMROCK_GREEN
-                        + "Players in the nether will be randomly teleported to the overworld once the border reaches 500 blocks.");
+                        + "Players in nether will be randomly teleported to the overworld once the border reaches 500 blocks.");
             }
 
             Bukkit.getOnlinePlayers()
@@ -138,6 +138,7 @@ public class GameLoop extends BukkitRunnable {
             triggered = true;
         }
         if(time == game.getBorderCenterTime()+game.getBorderTime()+300){
+            //ULTIMO BORDE 50
             Bukkit.getScheduler().runTask(instance, () -> Bukkit.getWorlds().forEach(worlds -> {
                 worlds.getWorldBorder().setSize(50 , 60 );
             }));
@@ -154,7 +155,7 @@ public class GameLoop extends BukkitRunnable {
         if (time < game.getHealTime()) {
             bossBar.setColor(BarColor.GREEN);
             var differential = game.getHealTime() - time;
-            bossBar.setTitle("Final heal in: " + timeFormat(differential));
+            bossBar.setTitle("Heal in: " + timeFormat(differential));
             percent = (double) time / game.getHealTime();
 
         } else if (time < game.getPvpTime()) {
@@ -169,7 +170,7 @@ public class GameLoop extends BukkitRunnable {
             }
             bossBar.setColor(BarColor.BLUE);
             var differential = game.getBorderTime() - time;
-            bossBar.setTitle("Border Shrink in: " + timeFormat(differential));
+            bossBar.setTitle("Border in: " + timeFormat(differential));
             percent = (double) time / game.getBorderTime();
 
         } else {

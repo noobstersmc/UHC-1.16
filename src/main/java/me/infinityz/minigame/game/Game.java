@@ -21,9 +21,10 @@ public class Game {
     /* Static data */
     private static @Getter @Setter BossBar bossbar;
     private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    private static @Getter @Setter String scoreboardTitle = ChatColor.of("#A1060E") + "" + ChatColor.BOLD + "UHC";
+    private static @Getter @Setter String scoreboardTitle = ChatColor.of("#A40A0A") + "" + ChatColor.BOLD + "UHC";
     private static @Getter @Setter String tablistHeader = ChatColor.of("#A40A0A") + "" + ChatColor.BOLD
             + "\nNOOBSTERS\n";
+    private static @Getter @Setter String scoreColors = ChatColor.of("#AB4A7C") + "";
     /* Game data */
     private UUID gameID = UUID.randomUUID();
     private long startTime;
@@ -31,6 +32,7 @@ public class Game {
     private boolean pvp = false;
     private boolean globalMute = false;
     private boolean hasSomeoneWon = false;
+    private boolean deathmatch = false;
     private int uhcslots = 40;
     /* Game config */
     private boolean privateGame = false;

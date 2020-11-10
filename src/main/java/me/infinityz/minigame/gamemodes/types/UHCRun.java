@@ -87,9 +87,11 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
         setEnabled(true);
 
         var coloredTitle = ChatColor.of("#FFC400") + "" + ChatColor.BOLD + "UHC RUN";
+        var scoreColors = ChatColor.of("#f5d800");
 
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "bordersize 1000");
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "uhc title " + coloredTitle);
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "uhc colors " + scoreColors);
         return true;
     }
 
@@ -103,6 +105,7 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
         });
 
         var coloredTitle = ChatColor.of("#A1060E") + "" + ChatColor.BOLD + "UHC";
+        var scoreColors = ChatColor.of("#f5d800");
 
         instance.getGame().setNether(true);
         instance.getGame().setPvpTime(1200);
@@ -111,8 +114,10 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
         instance.getGame().setBorderCenterTime(1800);
         instance.getGame().setBorderCenter(200);
 
+        
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "bordersize 3000");
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "uhc title " + coloredTitle);
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "uhc colors " + scoreColors);
 
         instance.getListenerManager().unregisterListener(this);
 
@@ -122,17 +127,17 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
 
     /*
      * Scoreboard Interceptor starts
-     */
+     
 
     @EventHandler(priority = EventPriority.LOW)
     public void onInterceptUpate(ScoreboardUpdateEvent e) {
         e.setCancelled(true);
     }
-    /*
+    
      * UHC RUN MODIFICATIONS
      * 
      * 
-     */
+     
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onModifyScoreboard(ScoreboardUpdateEvent e) {
@@ -152,7 +157,7 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
                 ChatColor.WHITE + "noobsters.net");
 
     }
-
+    */
     /*
      * Scoreboard Interceptor ends
      */

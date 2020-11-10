@@ -69,6 +69,14 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
         sender.sendMessage("Tears Nerf has been set to " + bool);
     }
 
+    @CommandPermission("uhc.config.deathmatch")
+    @Subcommand("deathmatch")
+    @CommandAlias("deathmatch")
+    public void deathmatch(CommandSender sender, Boolean bool) {
+        instance.getGame().setDeathmatch(bool);;
+        sender.sendMessage("DeathMatch has been set to " + bool);
+    }
+
     @CommandPermission("uhc.config.privategame")
     @Subcommand("privategame")
     @CommandAlias("privategame")
