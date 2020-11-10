@@ -281,8 +281,6 @@ public class UHCCommand extends BaseCommand {
 
     @CommandPermission("uhc.scoreboard.change")
     @Subcommand("colors")
-    @CommandCompletion("@chatcolors @players")
-    @Syntax("<color> - New color hex")
     public void changeScoreboardColor(CommandSender sender, final String newColor) {
 
         sender.sendMessage("Changing scoreboard colors to: " + newColor);

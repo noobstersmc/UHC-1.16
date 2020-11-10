@@ -7,18 +7,17 @@ import me.infinityz.minigame.game.Game;
 import net.md_5.bungee.api.ChatColor;
 
 public class ScatterScoreboard extends IScoreboard {
-    private String color = Game.getScoreColors();
     
     public ScatterScoreboard(Player player) {
         super(player);
         this.updateTitle(Game.getScoreboardTitle());
-        this.updateLines(color + "Players: " + ChatColor.WHITE + Bukkit.getOnlinePlayers().size(),
+        this.updateLines(Game.getScoreColors() + "Players: " + ChatColor.WHITE + Bukkit.getOnlinePlayers().size(),
                 ChatColor.WHITE + "noobsters.net");
     }
 
     @Override
     public void update(String... schema) {
-        this.updateLines(color + " Scatter Players: " + ChatColor.WHITE + Bukkit.getOnlinePlayers().size(),
+        this.updateLines(Game.getScoreColors() + " Scatter Players: " + ChatColor.WHITE + Bukkit.getOnlinePlayers().size(),
                 ChatColor.WHITE + "noobsters.net");
     }
 

@@ -87,11 +87,10 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
         setEnabled(true);
 
         var coloredTitle = ChatColor.of("#FFC400") + "" + ChatColor.BOLD + "UHC RUN";
-        var scoreColors = ChatColor.of("#f5d800");
 
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "bordersize 1000");
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "uhc title " + coloredTitle);
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "uhc colors " + scoreColors);
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "uhc colors #FFFF55");
         return true;
     }
 
@@ -104,8 +103,7 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
             scenarios.disableScenario();
         });
 
-        var coloredTitle = ChatColor.of("#A1060E") + "" + ChatColor.BOLD + "UHC";
-        var scoreColors = ChatColor.of("#f5d800");
+        var coloredTitle = ChatColor.of("#A40A0A") + "" + ChatColor.BOLD + "UHC";
 
         instance.getGame().setNether(true);
         instance.getGame().setPvpTime(1200);
@@ -117,7 +115,7 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
         
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "bordersize 3000");
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "uhc title " + coloredTitle);
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "uhc colors " + scoreColors);
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "uhc colors #AB4A7C");
 
         instance.getListenerManager().unregisterListener(this);
 
@@ -244,9 +242,5 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
         if (type == EntityType.CHICKEN)
             e.getDrops().add(new ItemStack(Material.ARROW, 3));
     }
-
-    // starting min players
-
-    // scoreboard custom lobby
 
 }

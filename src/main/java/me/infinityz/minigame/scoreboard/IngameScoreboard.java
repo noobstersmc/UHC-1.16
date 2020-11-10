@@ -13,7 +13,6 @@ public class IngameScoreboard extends IScoreboard {
     private UHC instance;
     private UHCPlayer uhcPlayer;
     private WorldBorder worldBorder = Bukkit.getWorlds().get(0).getWorldBorder();
-    private String color = Game.getScoreColors();
 
     public IngameScoreboard(Player player, UHC instance) {
         super(player);
@@ -32,15 +31,15 @@ public class IngameScoreboard extends IScoreboard {
         }
         var team = instance.getTeamManger().getPlayerTeam(player.getUniqueId());
         this.updateLines(
-                color + "Time: " + ChatColor.WHITE + timeConvert(instance.getGame().getGameTime()), 
+                Game.getScoreColors() + "Time: " + ChatColor.WHITE + timeConvert(instance.getGame().getGameTime()), 
                 "",
-                color + "Kills: " + ChatColor.WHITE + (uhcPlayer != null ? uhcPlayer.getKills() : 0),
-                color + "Team Kills: " + ChatColor.WHITE + (team != null ? team.getTeamKills() : 0), 
+                Game.getScoreColors() + "Kills: " + ChatColor.WHITE + (uhcPlayer != null ? uhcPlayer.getKills() : 0),
+                Game.getScoreColors() + "Team Kills: " + ChatColor.WHITE + (team != null ? team.getTeamKills() : 0), 
                 "",
-                color + "Players: " + ChatColor.WHITE + instance.getPlayerManager().getAlivePlayers(),
-                color + "Border: " + ChatColor.WHITE + ((int) worldBorder.getSize() / 2), 
+                Game.getScoreColors() + "Players: " + ChatColor.WHITE + instance.getPlayerManager().getAlivePlayers(),
+                Game.getScoreColors() + "Border: " + ChatColor.WHITE + ((int) worldBorder.getSize() / 2), 
                 "",
-                color + "noobsters.net");
+                ChatColor.WHITE + "noobsters.net");
     }
 
     public void buildScoreboardSolo(Player player) {
@@ -48,14 +47,14 @@ public class IngameScoreboard extends IScoreboard {
             uhcPlayer = instance.getPlayerManager().getPlayer(player.getUniqueId());
         }
         this.updateLines(
-                color + "Time: " + ChatColor.WHITE + timeConvert(instance.getGame().getGameTime()), 
+                Game.getScoreColors() + "Time: " + ChatColor.WHITE + timeConvert(instance.getGame().getGameTime()), 
                 "",
-                color + "Kills: " + ChatColor.WHITE + (uhcPlayer != null ? uhcPlayer.getKills() : 0),
+                Game.getScoreColors() + "Kills: " + ChatColor.WHITE + (uhcPlayer != null ? uhcPlayer.getKills() : 0),
                 "",
-                color + "Players: " + ChatColor.WHITE + instance.getPlayerManager().getAlivePlayers(),
-                color + "Border: " + ChatColor.WHITE + ((int) worldBorder.getSize() / 2), 
+                Game.getScoreColors() + "Players: " + ChatColor.WHITE + instance.getPlayerManager().getAlivePlayers(),
+                Game.getScoreColors() + "Border: " + ChatColor.WHITE + ((int) worldBorder.getSize() / 2), 
                 "",
-                color + "noobsters.net");
+                ChatColor.WHITE + "noobsters.net");
     }
 
     @Override
