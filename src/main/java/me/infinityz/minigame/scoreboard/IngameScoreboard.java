@@ -13,7 +13,7 @@ public class IngameScoreboard extends IScoreboard {
     private UHC instance;
     private UHCPlayer uhcPlayer;
     private WorldBorder worldBorder = Bukkit.getWorlds().get(0).getWorldBorder();
-    private String color = instance.getGame().getScoreColors();
+    private String color = Game.getScoreColors();
 
     public IngameScoreboard(Player player, UHC instance) {
         super(player);
