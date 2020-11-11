@@ -69,7 +69,6 @@ import me.infinityz.minigame.players.PlayerManager;
 import me.infinityz.minigame.scoreboard.ScoreboardManager;
 import me.infinityz.minigame.teams.TeamManager;
 import net.md_5.bungee.api.ChatColor;
-import us.jcedeno.condor.communicator.CommunicatorPlugin;
 
 public class UHC extends JavaPlugin {
 
@@ -86,7 +85,6 @@ public class UHC extends JavaPlugin {
     private @Getter @Setter Game game;
     private @Getter BorderManager borderManager;
     private @Getter EditSession session;
-    private @Getter CommunicatorPlugin communicator;
     private @Getter Gson gson = new Gson();
     private static @Getter UHC instance;
     private static @Setter TaskChainFactory taskChainFactory;
@@ -130,8 +128,6 @@ public class UHC extends JavaPlugin {
         gamemodeManager = new GamemodeManager(this);
         chatManager = new ChatManager(this);
         borderManager = new BorderManager(this);
-        /* Hook with Condor Communicator */
-        CommunicatorPlugin.addRoute("/uhc/config", (req, res) -> getGame().toString());
         /* Initiliaze the game data */
         game = new Game();
 

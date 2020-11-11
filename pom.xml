@@ -41,12 +41,6 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-    <groupId>us.jcedeno</groupId>
-    <artifactId>Condor-Communicator</artifactId>
-    <version>0.1</version>
-    <scope>provided</scope>
-    </dependency>
-    <dependency>
       <groupId>co.aikar</groupId>
       <artifactId>acf-paper</artifactId>
       <version>0.5.0-SNAPSHOT</version>
