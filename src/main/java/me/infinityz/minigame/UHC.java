@@ -58,6 +58,7 @@ import me.infinityz.minigame.commands.PVP;
 import me.infinityz.minigame.commands.StartCommand;
 import me.infinityz.minigame.commands.UHCCommand;
 import me.infinityz.minigame.commands.Utilities;
+import me.infinityz.minigame.condor.CondorManager;
 import me.infinityz.minigame.crafting.CraftingManager;
 import me.infinityz.minigame.enums.Stage;
 import me.infinityz.minigame.game.Game;
@@ -72,6 +73,7 @@ import net.md_5.bungee.api.ChatColor;
 
 public class UHC extends JavaPlugin {
 
+    private @Getter Gson gson = new Gson();
     private @Getter @Setter Stage gameStage;
     private @Getter ScoreboardManager scoreboardManager;
     private @Getter PaperCommandManager commandManager;
@@ -85,7 +87,8 @@ public class UHC extends JavaPlugin {
     private @Getter @Setter Game game;
     private @Getter BorderManager borderManager;
     private @Getter EditSession session;
-    private @Getter Gson gson = new Gson();
+    private @Getter CondorManager condorManager;
+    /* Statics */
     private static @Getter UHC instance;
     private static @Setter TaskChainFactory taskChainFactory;
 
@@ -128,6 +131,7 @@ public class UHC extends JavaPlugin {
         gamemodeManager = new GamemodeManager(this);
         chatManager = new ChatManager(this);
         borderManager = new BorderManager(this);
+        condorManager = new CondorManager(this);
         /* Initiliaze the game data */
         game = new Game();
 
@@ -152,7 +156,7 @@ public class UHC extends JavaPlugin {
                 .map(BukkitWorker::getThread).forEach(Thread::interrupt);
         getServer().getScheduler().cancelTasks(this);
         gamemodeManager.getEnabledGamemodes().forEach(IGamemode::disableScenario);
-        //commandManager.unregisterCommands();
+        // commandManager.unregisterCommands();
         craftingManager.purgeRecipes();
     }
 
@@ -248,7 +252,6 @@ public class UHC extends JavaPlugin {
     public static <T> TaskChain<T> newSharedChain(String name) {
         return taskChainFactory.newSharedChain(name);
     }
-    
 
     public void changeSeed(String seed) {
         Properties properties = new Properties();
