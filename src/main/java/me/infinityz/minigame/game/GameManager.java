@@ -10,7 +10,7 @@ public class GameManager {
     public GameManager(UHC instance) {
         this.instance = instance;
     }
-    public void sendData(String id){
+    public void sendData(){
         instance.getCondorManager().writeExpirableData(game.getGameID(), game.toString(), 10);
     }
 
