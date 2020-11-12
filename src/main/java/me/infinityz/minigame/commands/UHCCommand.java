@@ -287,6 +287,11 @@ public class UHCCommand extends BaseCommand {
         Game.setScoreColors(ChatColor.of(newColor)+ "");
         
     }
+    @CommandPermission("uhc.scoreboard.change")
+    @Subcommand("selector")
+    public void getSelector(CommandSender sender, String input) {
+        
+    }
 
     @CommandPermission("uhc.tab.change")
     @Subcommand("header")
