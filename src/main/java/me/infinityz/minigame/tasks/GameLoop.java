@@ -137,12 +137,28 @@ public class GameLoop extends BukkitRunnable {
             }));
             triggered = true;
         }
+
+        if(time == game.getBorderCenterTime()+game.getBorderTime()+600){
+            //PENULTIMO BORDE 100
+            instance.getGame().setAntiMining(true);
+        }
+
         if(time == game.getBorderCenterTime()+game.getBorderTime()+300){
             //ULTIMO BORDE 50
             Bukkit.getScheduler().runTask(instance, () -> Bukkit.getWorlds().forEach(worlds -> {
                 worlds.getWorldBorder().setSize(50 , 60 );
             }));
         }
+
+        if(time == game.getBorderCenterTime()+game.getBorderTime()+600){
+            //DEATHMATCH
+            instance.getGame().setDeathMatch(true);
+            Bukkit.broadcastMessage(ChatColor.of("#d40c42") + "Death Match has started.");
+            Bukkit.getScheduler().runTask(instance, () -> Bukkit.getOnlinePlayers().forEach(players -> {
+                players.playSound(players.getLocation(), Sound.ENTITY_WITHER_DEATH, 1.0f, 0.5f);
+            }));
+        }
+
         if ((time % 1200) == 0 && !triggered) {
             sendPromo();
         }

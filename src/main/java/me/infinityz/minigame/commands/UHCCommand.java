@@ -15,6 +15,7 @@ import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.WorldBorder;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.BannerMeta;
 
@@ -280,11 +281,31 @@ public class UHCCommand extends BaseCommand {
     }
 
     @CommandPermission("uhc.scoreboard.change")
-    @Subcommand("colors")
-    public void changeScoreboardColor(CommandSender sender, final String newColor) {
+    @Subcommand("score")
+    public void changeScoreboardColor(CommandSender sender, final String score) {
+        var newTittle = "";
+        switch(score){
+            case "UHC":{
+                newTittle = ChatColor.of("#A40A0A") + "" + ChatColor.BOLD + "UHC";
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "game title " + newTittle);
+                Game.setScoreColors(ChatColor.of("#AB4A7C") + "");
+            }break;
+            case "RUN":{
+                newTittle = ChatColor.of("#e0b400") + "" + ChatColor.BOLD + "UHC RUN";
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "game title " + newTittle);
+                Game.setScoreColors(ChatColor.of("#FFFF55") + "");
+            }break;
+            case "CLOROX": {
+                newTittle = ChatColor.of("#0cc7d4") + "" + ChatColor.BOLD + "UHC CLOROX";
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "game title " + newTittle);
+                Game.setScoreColors(ChatColor.of("#0ca2d4") + "");
+            }break;
+            default: {
 
-        sender.sendMessage("Changing scoreboard colors to: " + newColor);
-        Game.setScoreColors(ChatColor.of(newColor)+ "");
+            }break;
+            
+        }
+        sender.sendMessage("Changing scoreboard design to " + score);
         
     }
     @CommandPermission("uhc.scoreboard.change")

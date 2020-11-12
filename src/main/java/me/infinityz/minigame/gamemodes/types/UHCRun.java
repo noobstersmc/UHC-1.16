@@ -5,7 +5,6 @@ import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.WorldBorder;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
@@ -26,17 +25,15 @@ import org.bukkit.potion.PotionEffectType;
 
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.events.GameStartedEvent;
-import me.infinityz.minigame.events.ScoreboardUpdateEvent;
+import me.infinityz.minigame.game.Game;
 import me.infinityz.minigame.gamemodes.IGamemode;
 import me.infinityz.minigame.gamemodes.interfaces.ScenarioPack;
-import me.infinityz.minigame.tasks.GameLoop;
 import net.md_5.bungee.api.ChatColor;
 
 public class UHCRun extends IGamemode implements ScenarioPack, Listener {
     private ArrayList<IGamemode> gamemodes = new ArrayList<>();
     private UHC instance;
     private Random random = new Random();
-    private WorldBorder worldBorder = Bukkit.getWorlds().get(0).getWorldBorder();
 
     public UHCRun(UHC instance) {
         super("UHC Run", "An accelerated UHC Experience.");
@@ -86,11 +83,8 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
         instance.getListenerManager().registerListener(this);
         setEnabled(true);
 
-        var coloredTitle = ChatColor.of("#FFC400") + "" + ChatColor.BOLD + "UHC RUN";
-
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "bordersize 1000");
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "uhc title " + coloredTitle);
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "uhc colors #FFFF55");
+        Game.setScoreboardTitle(ChatColor.of("#e0b400") + "" + ChatColor.BOLD + "UHC RUN");
+        Game.setScoreColors(ChatColor.of("#FFFF55") + "");
         return true;
     }
 
@@ -103,8 +97,6 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
             scenarios.disableScenario();
         });
 
-        var coloredTitle = ChatColor.of("#A40A0A") + "" + ChatColor.BOLD + "UHC";
-
         instance.getGame().setNether(true);
         instance.getGame().setPvpTime(1200);
 
@@ -114,8 +106,8 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
 
         
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "bordersize 3000");
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "uhc title " + coloredTitle);
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "uhc colors #AB4A7C");
+        Game.setScoreboardTitle(ChatColor.of("#A40A0A") + "" + ChatColor.BOLD + "UHC");
+        Game.setScoreColors(ChatColor.of("#AB4A7C") + "");
 
         instance.getListenerManager().unregisterListener(this);
 
