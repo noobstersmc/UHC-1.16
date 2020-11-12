@@ -3,6 +3,7 @@ package me.infinityz.minigame.listeners;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.World.Environment;
@@ -13,6 +14,7 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -26,6 +28,7 @@ import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.chunks.ChunksManager;
 import me.infinityz.minigame.enums.Stage;
 import me.infinityz.minigame.events.GameStartedEvent;
+import me.infinityz.minigame.events.GameTickEvent;
 import me.infinityz.minigame.events.NetherDisabledEvent;
 import me.infinityz.minigame.events.TeleportationCompletedEvent;
 import me.infinityz.minigame.game.Game;
@@ -83,10 +86,52 @@ public class GlobalListener implements Listener {
 
     }
 
+    //DEATHMATCH
+    
+    @EventHandler
+    public void onDeathMatch(GameTickEvent e) {
+        if (instance.getGame().isDeathMatch() && e.getSecond() % 5 == 0) {
+            Bukkit.getScheduler().runTask(instance, ()->{
+                Bukkit.getOnlinePlayers().forEach(players -> {
+                    if (players.getGameMode() == GameMode.SURVIVAL)
+                            players.setHealth(players.getHealth()-1);
+                            players.damage(1);
+                });
+            });
+        }
+  
+    }
+
+    @EventHandler
+    public void onAntiMining(GameTickEvent e) {
+        if (instance.getGame().isAntiMining()) {
+            Bukkit.getScheduler().runTask(instance, ()->{
+                Bukkit.getOnlinePlayers().forEach(players -> {
+                    if (players.getGameMode() == GameMode.SURVIVAL 
+                        && players.getWorld().getEnvironment() != Environment.NETHER
+                        && players.getLocation().getY() < 55)
+                            players.sendActionBar(ChatColor.YELLOW + "⚠ You must be on surface at meetup.");
+                });
+            });
+        }
+  
+    }
+
+    @EventHandler
+    public void onAntiMiningMine(BlockBreakEvent e){
+        if(instance.getGame().isAntiMining()){
+            var player = e.getPlayer().getLocation().getY();
+            var block = e.getBlock().getLocation().getY();
+            if(e.getPlayer().getWorld().getEnvironment() != Environment.NETHER && 
+                player < 50 && player > block){
+                e.setCancelled(true);
+                e.getPlayer().sendMessage(ChatColor.RED + "Mining is not allowed at meetup.");
+            }
+        }
+    }
+
     @EventHandler
     public void joinMessage(PlayerJoinEvent e) {
-        e.getPlayer().sendMessage(ChatColor.BLUE + "Discord! discord.noobsters.net\n" + ChatColor.AQUA
-                + "Twitter! twitter.com/NoobstersMC\n" + ChatColor.GOLD + "Donations! noobsters.buycraft.net");
         e.setJoinMessage("");
         var footer = GameLoop.HAVELOCK_BLUE + "\nJoin Our UHC Community!\n" + GameLoop.SHAMROCK_GREEN
                 + "discord.noobsters.net\n" + ChatColor.AQUA + "twitter.com/NoobstersMC\n";
@@ -109,7 +154,7 @@ public class GlobalListener implements Listener {
         Bukkit.getOnlinePlayers().stream().filter(player -> player.getWorld().getEnvironment() == Environment.NETHER)
                 .forEach(netherPlayer -> netherPlayer.teleportAsync(
                         ChunksManager.centerLocation(ChunksManager.findScatterLocation(worldToTeleport, radius))));
-        // Mensaje para todos. Algo mas?
+        // Mensaje para todos. 
         Bukkit.broadcastMessage(ChatColor.of("#2be49c") + "The Nether has been disabled.");
 
     }

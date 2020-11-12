@@ -73,8 +73,16 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
     @Subcommand("deathmatch")
     @CommandAlias("deathmatch")
     public void deathmatch(CommandSender sender, Boolean bool) {
-        instance.getGame().setDeathmatch(bool);;
+        instance.getGame().setDeathMatch(bool);
         sender.sendMessage("DeathMatch has been set to " + bool);
+    }
+
+    @CommandPermission("uhc.config.antimining")
+    @Subcommand("antimining")
+    @CommandAlias("antimining")
+    public void antimining(CommandSender sender, Boolean bool) {
+        instance.getGame().setAntiMining(bool);
+        sender.sendMessage("AntiMining has been set to " + bool);
     }
 
     @CommandPermission("uhc.config.privategame")

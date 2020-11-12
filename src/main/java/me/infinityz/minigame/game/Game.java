@@ -32,7 +32,8 @@ public class Game {
     private boolean pvp = false;
     private boolean globalMute = false;
     private boolean hasSomeoneWon = false;
-    private boolean deathmatch = false;
+    private boolean deathMatch = false;
+    private boolean antiMining = false;
     private int uhcslots = 40;
     /* Game config */
     private boolean privateGame = false;

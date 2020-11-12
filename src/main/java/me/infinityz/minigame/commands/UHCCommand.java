@@ -280,11 +280,27 @@ public class UHCCommand extends BaseCommand {
     }
 
     @CommandPermission("uhc.scoreboard.change")
-    @Subcommand("colors")
-    public void changeScoreboardColor(CommandSender sender, final String newColor) {
+    @Subcommand("score")
+    public void changeScoreboardColor(CommandSender sender, final String score) {
+        switch(score){
+            case "UHC":{
+                Game.setScoreboardTitle(ChatColor.of("#A40A0A") + "" + ChatColor.BOLD + "UHC");
+                Game.setScoreColors(ChatColor.of("#AB4A7C") + "");
+            }break;
+            case "RUN":{
+                Game.setScoreboardTitle(ChatColor.of("#e0b400") + "" + ChatColor.BOLD + "UHC RUN");
+                Game.setScoreColors(ChatColor.of("#FFFF55") + "");
+            }break;
+            case "CLOROX": {
+                Game.setScoreboardTitle(ChatColor.of("#0cc7d4") + "" + ChatColor.BOLD + "UHC CLOROX");
+                Game.setScoreColors(ChatColor.of("#0ca2d4") + "");
+            }break;
+            default: {
 
-        sender.sendMessage("Changing scoreboard colors to: " + newColor);
-        Game.setScoreColors(ChatColor.of(newColor)+ "");
+            }break;
+            
+        }
+        sender.sendMessage("Changing scoreboard design to " + score);
         
     }
 
