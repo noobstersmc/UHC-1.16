@@ -21,7 +21,7 @@ public class CondorManager {
     public CompletableFuture<String> writeExpirableData(String ID, String data, int expiration) {
         return CompletableFuture.supplyAsync(() -> {
             var serverID = "servers:uhc:" + ID;
-            return jedis.setex(serverID, 60, data);
+            return jedis.setex(serverID, expiration, data);
         });
     }
 
