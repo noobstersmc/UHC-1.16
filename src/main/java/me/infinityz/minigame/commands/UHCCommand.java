@@ -15,7 +15,6 @@ import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.WorldBorder;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.BannerMeta;
 
