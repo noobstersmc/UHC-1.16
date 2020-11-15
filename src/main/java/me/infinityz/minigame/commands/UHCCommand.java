@@ -291,14 +291,19 @@ public class UHCCommand extends BaseCommand {
                 Game.setScoreColors(ChatColor.of("#AB4A7C") + "");
             }break;
             case "RUN":{
-                newTittle = ChatColor.of("#e0b400") + "" + ChatColor.BOLD + "UHC RUN";
+                newTittle = ChatColor.GOLD + "" + ChatColor.BOLD + "UHC RUN";
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "game title " + newTittle);
                 Game.setScoreColors(ChatColor.of("#FFFF55") + "");
             }break;
             case "CLOROX": {
-                newTittle = ChatColor.of("#0cc7d4") + "" + ChatColor.BOLD + "UHC CLOROX";
+                newTittle = ChatColor.of("#29f4ff") + "" + ChatColor.BOLD + "UHC CLOROX";
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "game title " + newTittle);
                 Game.setScoreColors(ChatColor.of("#0ca2d4") + "");
+            }break;
+            case "GAMES": {
+                newTittle = ChatColor.of("#e672f8") + "" + ChatColor.BOLD + "Community UHC";
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "game title " + newTittle);
+                Game.setScoreColors(ChatColor.of("#c44faf") + "");
             }break;
             default: {
 

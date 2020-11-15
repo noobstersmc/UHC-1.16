@@ -93,9 +93,11 @@ public class GlobalListener implements Listener {
         if (instance.getGame().isDeathMatch() && e.getSecond() % 5 == 0) {
             Bukkit.getScheduler().runTask(instance, ()->{
                 Bukkit.getOnlinePlayers().forEach(players -> {
-                    if (players.getGameMode() == GameMode.SURVIVAL)
-                            players.setHealth(players.getHealth()-1);
-                            players.damage(1);
+                    if (players.getGameMode() == GameMode.SURVIVAL){
+                        if(players.getHealth() > 2)
+                            players.setHealth(players.getHealth()-2);
+                        players.damage(2);
+                    }
                 });
             });
         }

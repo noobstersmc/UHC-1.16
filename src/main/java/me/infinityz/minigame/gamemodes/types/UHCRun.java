@@ -83,8 +83,9 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
         instance.getListenerManager().registerListener(this);
         setEnabled(true);
 
-        Game.setScoreboardTitle(ChatColor.of("#e0b400") + "" + ChatColor.BOLD + "UHC RUN");
-        Game.setScoreColors(ChatColor.of("#FFFF55") + "");
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "bordersize 1000");
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "game score RUN");
+
         return true;
     }
 
@@ -106,8 +107,7 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
 
         
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "bordersize 3000");
-        Game.setScoreboardTitle(ChatColor.of("#A40A0A") + "" + ChatColor.BOLD + "UHC");
-        Game.setScoreColors(ChatColor.of("#AB4A7C") + "");
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "game score UHC");
 
         instance.getListenerManager().unregisterListener(this);
 

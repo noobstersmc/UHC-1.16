@@ -80,14 +80,12 @@ public class GameLoop extends BukkitRunnable {
     private void timedEvent(int time) {
 
         var game = instance.getGame();
-        var triggered = false;
 
         if (time == game.getHealTime() - 300) {
             // AVISO 5MIN LEFT FOR FINAL HEAL
             Bukkit.getOnlinePlayers()
                     .forEach(all -> all.playSound(all.getLocation(), Sound.BLOCK_NOTE_BLOCK_BIT, 1, 1));
             Bukkit.broadcastMessage(HAVELOCK_BLUE + "5 minutes left for Final Heal.");
-            triggered = true;
         }
         if (time == game.getHealTime()) {
             // TODO: FINAL HEAL
@@ -99,7 +97,6 @@ public class GameLoop extends BukkitRunnable {
                 });
             });
             Bukkit.broadcastMessage(SHAMROCK_GREEN + "Final heal!");
-            triggered = true;
 
         }
         if (time == game.getPvpTime() - 300) {
@@ -107,7 +104,6 @@ public class GameLoop extends BukkitRunnable {
             Bukkit.getOnlinePlayers()
                     .forEach(all -> all.playSound(all.getLocation(), Sound.BLOCK_NOTE_BLOCK_BIT, 1, 1));
             Bukkit.broadcastMessage(HAVELOCK_BLUE + "PvP will be enabled in 5 minutes.");
-            triggered = true;
 
         }
         if (time == game.getPvpTime()) {
@@ -116,7 +112,6 @@ public class GameLoop extends BukkitRunnable {
                     .forEach(all -> all.playSound(all.getLocation(), Sound.BLOCK_END_PORTAL_SPAWN, 1, 1.9F));
             instance.getGame().setPvp(true);
             Bukkit.broadcastMessage(SHAMROCK_GREEN + "PvP has been enabled.");
-            triggered = true;
 
         }
         if (time == game.getBorderTime()) {
@@ -135,10 +130,9 @@ public class GameLoop extends BukkitRunnable {
                 worlds.getWorldBorder().setSize(game.getBorderCenter(),
                         game.getBorderCenterTime());
             }));
-            triggered = true;
         }
 
-        if(time == game.getBorderCenterTime()+game.getBorderTime()+600){
+        if(time == game.getBorderCenterTime()+game.getBorderTime()){
             //PENULTIMO BORDE 100
             instance.getGame().setAntiMining(true);
         }
@@ -157,10 +151,6 @@ public class GameLoop extends BukkitRunnable {
             Bukkit.getScheduler().runTask(instance, () -> Bukkit.getOnlinePlayers().forEach(players -> {
                 players.playSound(players.getLocation(), Sound.ENTITY_WITHER_DEATH, 1.0f, 0.5f);
             }));
-        }
-
-        if ((time % 1200) == 0 && !triggered) {
-            sendPromo();
         }
     }
 
