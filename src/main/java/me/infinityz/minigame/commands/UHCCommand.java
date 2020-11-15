@@ -15,7 +15,6 @@ import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.WorldBorder;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.BannerMeta;
 
@@ -311,6 +310,11 @@ public class UHCCommand extends BaseCommand {
             
         }
         sender.sendMessage("Changing scoreboard design to " + score);
+        
+    }
+    @CommandPermission("uhc.scoreboard.change")
+    @Subcommand("selector")
+    public void getSelector(CommandSender sender, String input) {
         
     }
 

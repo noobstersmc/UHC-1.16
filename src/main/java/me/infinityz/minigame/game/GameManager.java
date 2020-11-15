@@ -10,6 +10,9 @@ public class GameManager {
     public GameManager(UHC instance) {
         this.instance = instance;
     }
+    public void sendData(){
+        instance.getCondorManager().writeExpirableData(game.getGameID(), game.toString(), 10);
+    }
 
     public boolean setGame(Game game) {
         if (this.game != null)//Don't allow it to be overwritten

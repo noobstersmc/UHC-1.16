@@ -34,17 +34,19 @@
   </repositories>
 
   <dependencies>
+    <!-- Added Jedis to interact with redis data-->
+    <dependency>
+      <groupId>redis.clients</groupId>
+      <artifactId>jedis</artifactId>
+      <version>3.3.0</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
     <dependency>
       <groupId>jars.me.infinityz</groupId>
       <artifactId>Paper</artifactId>
       <version>1.16.1</version>
       <scope>provided</scope>
-    </dependency>
-    <dependency>
-    <groupId>us.jcedeno</groupId>
-    <artifactId>Condor-Communicator</artifactId>
-    <version>0.1</version>
-    <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>co.aikar</groupId>
@@ -94,10 +96,10 @@
       <scope>compile</scope>
     </dependency>
     <dependency>
-        <groupId>net.milkbowl.vault</groupId>
-        <artifactId>VaultAPI</artifactId>
-        <version>1.7</version>
-        <scope>provided</scope>
+      <groupId>net.milkbowl.vault</groupId>
+      <artifactId>VaultAPI</artifactId>
+      <version>1.7</version>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
 
@@ -134,7 +136,7 @@
           <source>11</source>
           <target>11</target>
           <compilerArgs>
-              <arg>-parameters</arg>
+            <arg>-parameters</arg>
           </compilerArgs>
         </configuration>
       </plugin>

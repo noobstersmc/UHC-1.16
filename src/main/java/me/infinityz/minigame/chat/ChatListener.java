@@ -102,7 +102,7 @@ public class ChatListener implements Listener {
         Bukkit.getLogger().info(msg);
 
     }
-
+    
     void sendStaffChat(Player sender, String message) {
         var msg = ChatColor.BLUE + "[STAFF] " + colorize(
                 replacedFormat(format.replace("{name}", sender.getName()).replace("{message}", message), sender));
