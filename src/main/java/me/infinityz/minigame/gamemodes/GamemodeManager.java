@@ -11,7 +11,6 @@ import lombok.Setter;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.gamemodes.types.AdvancementHunter;
 import me.infinityz.minigame.gamemodes.types.BackPack;
-import me.infinityz.minigame.gamemodes.types.Baguettes;
 import me.infinityz.minigame.gamemodes.types.BloodDiamonds;
 import me.infinityz.minigame.gamemodes.types.BloodHunter;
 import me.infinityz.minigame.gamemodes.types.BowLess;
@@ -37,6 +36,7 @@ import me.infinityz.minigame.gamemodes.types.SwordLess;
 import me.infinityz.minigame.gamemodes.types.TiempoBomba;
 import me.infinityz.minigame.gamemodes.types.Timber;
 import me.infinityz.minigame.gamemodes.types.TripleOres;
+import me.infinityz.minigame.gamemodes.types.UHCMeetup;
 import me.infinityz.minigame.gamemodes.types.DoubleGold;
 import me.infinityz.minigame.gamemodes.types.UHCRun;
 import me.infinityz.minigame.gamemodes.types.UnDamaxe;
@@ -72,7 +72,6 @@ public class GamemodeManager {
         registerGamemode(new FireLess(instance));
         registerGamemode(new NoFall(instance));
         registerGamemode(new DebugMode(instance));
-        registerGamemode(new Baguettes(instance));
         registerGamemode(new HasteyBoys(instance));
         registerGamemode(new Limits(instance));
         registerGamemode(new LuckyLeaves(instance));
@@ -97,8 +96,12 @@ public class GamemodeManager {
         registerGamemode(new DoubleGold(instance));
         registerGamemode(new ThunderKill(instance));
         
+        
         // Scenarios pack
         registerGamemode(new UHCRun(instance));
+
+        // Gamemode
+        registerGamemode(new UHCMeetup(instance));
 
         instance.getCommandManager().getCommandCompletions().registerAsyncCompletion("scenarios",
                 c -> gamemodesList.stream().map(IGamemode::getName).collect(Collectors.toList()));

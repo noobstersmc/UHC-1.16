@@ -43,6 +43,7 @@ import me.infinityz.minigame.events.UHCPlayerDequalificationEvent;
 import me.infinityz.minigame.game.Game;
 import me.infinityz.minigame.gamemodes.types.SkyHigh;
 import me.infinityz.minigame.gamemodes.types.TiempoBomba;
+import me.infinityz.minigame.gamemodes.types.UHCMeetup;
 import me.infinityz.minigame.players.PositionObject;
 import me.infinityz.minigame.players.UHCPlayer;
 import me.infinityz.minigame.scoreboard.IScoreboard;
@@ -174,11 +175,12 @@ public class IngameListeners implements Listener {
             p.setGameMode(GameMode.SPECTATOR);
             uhcP = instance.getPlayerManager().addCreateUHCPlayer(p.getUniqueId(), false);
             uhcP.setAlive(false);
-            if (time < 1800) {
+            if (!instance.getGamemodeManager().isScenarioEnable(UHCMeetup.class) && time < instance.getGame().getPvpTime())
                 p.sendMessage(ChatColor.of("#2be49c") + "The UHC has already started, to play use /play");
-            }
-        } else if (!uhcP.isDead() && !uhcP.isAlive() && time < 1800) {
-            p.sendMessage(ChatColor.of("#2be49c") + "The UHC has already started, to play use /play");
+            
+        } else if (!uhcP.isDead() && !uhcP.isAlive()) {
+            if (!instance.getGamemodeManager().isScenarioEnable(UHCMeetup.class) && time < instance.getGame().getPvpTime())
+                p.sendMessage(ChatColor.of("#2be49c") + "The UHC has already started, to play use /play");
             uhcP.setAlive(false);
             p.setGameMode(GameMode.SPECTATOR);
         } else if (uhcP.isDead() && !uhcP.isAlive()) {

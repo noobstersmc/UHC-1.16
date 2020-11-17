@@ -41,8 +41,8 @@ public class TeamManager {
             .expireAfterWrite(10, TimeUnit.SECONDS).build(entry -> new TeamInvite(null, null, null));
     private @Getter @Setter int teamSize = 1;
     private @Getter @Setter boolean teamManagement = false;
-    private @Getter @Setter boolean broacastColor = false;
-    private @Getter @Setter boolean showPrefix = false;
+    private @Getter @Setter boolean broacastColor = true;
+    private @Getter @Setter boolean showPrefix = true;
     private @Getter TeamCMD teamCommand;
 
     public TeamManager(final UHC instance) {

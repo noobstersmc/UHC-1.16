@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.chunks.ChunksManager;
 import me.infinityz.minigame.events.PlayerJoinedLateEvent;
+import me.infinityz.minigame.gamemodes.types.UHCMeetup;
 import me.infinityz.minigame.players.UHCPlayer;
 import net.md_5.bungee.api.ChatColor;
 
@@ -24,11 +25,20 @@ public class LatescatterCMD extends BaseCommand {
     @Default
     @Conditions("ingame")
     public void lateScatter(@Conditions("hasNotDied|spec") UHCPlayer uhcPlayer) {
-        if (instance.getGame().getGameTime() >= 1200) {
-            // If greater than minute 20, change to variable or differntial.
-            return;
-        }
         var player = uhcPlayer.getPlayer();
+        //UHC MEETUP LATESCATTER DISABLED
+
+        if (instance.getGamemodeManager().isScenarioEnable(UHCMeetup.class)) 
+        player.sendMessage(ChatColor.RED + "LateScatter is disabled in UHC Meetup.");
+
+        //LATESCATTER ONLY AVAILABLE IN NO PVP TIME
+        else if(instance.getGame().getGameTime() >= instance.getGame().getPvpTime()){
+            player.sendMessage(ChatColor.RED + 
+            "LateScatter time is up. (Max time " + instance.getGame().getPvpTime()/60 + " minutes in)");
+            return;
+            
+        }else{
+
         var world = Bukkit.getWorlds().get(0);
         var worldBorderSizeHaved = (int) world.getWorldBorder().getSize() / 2;
 
@@ -38,11 +48,11 @@ public class LatescatterCMD extends BaseCommand {
         player.teleportAsync(ChunksManager.findScatterLocation(world, worldBorderSizeHaved))
                 .thenAccept(result -> player
                         .sendMessage((ChatColor.of("#7ab83c") + (result ? "You have been scattered into the world."
-                                : "Coudn't scatter your, ask for help."))));
+                                : "Coudn't scatter you, ask for help."))));
 
         uhcPlayer.setAlive(true);
         Bukkit.getPluginManager().callEvent(PlayerJoinedLateEvent.of(player));
-
+        }
     }
 
 }

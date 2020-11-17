@@ -9,8 +9,12 @@ import org.bukkit.Sound;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Banner;
 import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Egg;
+import org.bukkit.entity.FishHook;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
+import org.bukkit.entity.Snowball;
+import org.bukkit.entity.Trident;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -64,19 +68,23 @@ public class GlobalListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onArrow(EntityDamageByEntityEvent e) {
-        if (!(e.getDamager() instanceof Arrow))
+        var damager = e.getDamager();
+        if (damager instanceof Trident || damager instanceof Egg || damager instanceof FishHook
+                || damager instanceof Snowball || !(damager instanceof Projectile))
             return;
-        if (!(((Arrow) e.getDamager()).getShooter() instanceof Player))
+
+        if (!(((Projectile) e.getDamager()).getShooter() instanceof Player))
             return;
         if (!(e.getEntity() instanceof Player))
             return;
 
+        Player shooter = ((Player) ((Projectile) e.getDamager()).getShooter());
+        
         Player p = (Player) e.getEntity();
 
         if (p.getHealth() - e.getFinalDamage() <= 0.0D || p.isBlocking())
             return;
 
-        Player shooter = ((Player) ((Arrow) e.getDamager()).getShooter());
 
         if (shooter == p)
             return;
@@ -90,7 +98,8 @@ public class GlobalListener implements Listener {
     
     @EventHandler
     public void onDeathMatch(GameTickEvent e) {
-        if (instance.getGame().isDeathMatch() && e.getSecond() % 5 == 0) {
+        if (!instance.getGame().isHasSomeoneWon() 
+        && instance.getGame().isDeathMatch() && e.getSecond() % 5 == 0) {
             Bukkit.getScheduler().runTask(instance, ()->{
                 Bukkit.getOnlinePlayers().forEach(players -> {
                     if (players.getGameMode() == GameMode.SURVIVAL){
@@ -125,7 +134,7 @@ public class GlobalListener implements Listener {
             var player = e.getPlayer().getLocation().getY();
             var block = e.getBlock().getLocation().getY();
             if(e.getPlayer().getWorld().getEnvironment() != Environment.NETHER && 
-                player < 50 && player > block){
+                player < 55 && player > block){
                 e.setCancelled(true);
                 e.getPlayer().sendMessage(ChatColor.RED + "Mining is not allowed at meetup.");
             }

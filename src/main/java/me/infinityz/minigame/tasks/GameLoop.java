@@ -165,7 +165,7 @@ public class GameLoop extends BukkitRunnable {
             percent = (double) time / game.getHealTime();
 
         } else if (time < game.getPvpTime()) {
-            bossBar.setColor(BarColor.YELLOW);
+            bossBar.setColor(BarColor.RED);
             var differential = game.getPvpTime() - time;
             bossBar.setTitle("PvP in: " + timeFormat(differential));
             percent = (double) time / game.getPvpTime();
@@ -199,7 +199,6 @@ public class GameLoop extends BukkitRunnable {
                         all.setDead(true);
                         all.setAlive(false);
                     }
-
                 });
     }
 

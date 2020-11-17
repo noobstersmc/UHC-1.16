@@ -25,10 +25,8 @@ import org.bukkit.potion.PotionEffectType;
 
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.events.GameStartedEvent;
-import me.infinityz.minigame.game.Game;
 import me.infinityz.minigame.gamemodes.IGamemode;
 import me.infinityz.minigame.gamemodes.interfaces.ScenarioPack;
-import net.md_5.bungee.api.ChatColor;
 
 public class UHCRun extends IGamemode implements ScenarioPack, Listener {
     private ArrayList<IGamemode> gamemodes = new ArrayList<>();
@@ -74,14 +72,14 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
             scenarios.enableScenario();
         });
 
+        instance.getListenerManager().registerListener(this);
+        setEnabled(true);
+
         instance.getGame().setNether(false);
         instance.getGame().setPvpTime(1200);
         instance.getGame().setBorderTime(1200);
         instance.getGame().setBorderCenterTime(600);
         instance.getGame().setBorderCenter(100);
-
-        instance.getListenerManager().registerListener(this);
-        setEnabled(true);
 
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "bordersize 1000");
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "game score RUN");
@@ -115,43 +113,6 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
         return true;
     }
 
-    /*
-     * Scoreboard Interceptor starts
-     
-
-    @EventHandler(priority = EventPriority.LOW)
-    public void onInterceptUpate(ScoreboardUpdateEvent e) {
-        e.setCancelled(true);
-    }
-    
-     * UHC RUN MODIFICATIONS
-     * 
-     * 
-     
-
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onModifyScoreboard(ScoreboardUpdateEvent e) {
-        e.setCancelled(false);
-        var player = e.getScoreboard().getPlayer();
-
-        var uhcPlayer = instance.getPlayerManager().getPlayer(player.getUniqueId());
-
-        e.setLinesArray(
-                ChatColor.YELLOW + "Time: " + ChatColor.WHITE
-                        + GameLoop.timeConvert(instance.getGame().getGameTime()),
-                "",
-                ChatColor.YELLOW + "Kills: " + ChatColor.WHITE + (uhcPlayer != null ? uhcPlayer.getKills() : 0),
-                "",
-                ChatColor.YELLOW + "Players: " + ChatColor.WHITE + instance.getPlayerManager().getAlivePlayers(),
-                ChatColor.YELLOW + "Border: " + ChatColor.WHITE + ((int) worldBorder.getSize() / 2), "",
-                ChatColor.WHITE + "noobsters.net");
-
-    }
-    */
-    /*
-     * Scoreboard Interceptor ends
-     */
-
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         giveRunEffects(e.getPlayer());
@@ -171,7 +132,7 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
         player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0.12);
         player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 10000 * 20, 100, false, false, false));
         player.addPotionEffect(
-                new PotionEffect(PotionEffectType.HERO_OF_THE_VILLAGE, 10000 * 20, 4, false, false, false));
+                new PotionEffect(PotionEffectType.HERO_OF_THE_VILLAGE, 10000 * 20, 100, false, false, false));
         player.addPotionEffect(new PotionEffect(PotionEffectType.LUCK, 10000 * 20, 100, false, false, false));
 
     }
