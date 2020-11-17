@@ -81,4 +81,5 @@ public @RequiredArgsConstructor class Utilities extends BaseCommand {
         Bukkit.dispatchCommand(sender, "fill -1 70 1 1 70 -1 minecraft:end_portal");
         Bukkit.dispatchCommand(sender, "playsound minecraft:block.end_portal.spawn ambient @a 0 0 0 11111111");
     }
+
 }

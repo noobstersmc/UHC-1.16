@@ -189,7 +189,7 @@ public class ConfigListener implements Listener {
      */
 
     private static String FULL_MESSAGE = ChatColor.translateAlternateColorCodes('&',
-            "&fServer is full! \n &aUpgrade your rank on &6noobsters.buycraft.net");
+            "&fServer is full! \n &aUpgrade your rank at &6noobsters.buycraft.net");
 
     @EventHandler
     public void nerfBedExplosion(PlayerBedEnterEvent e) {

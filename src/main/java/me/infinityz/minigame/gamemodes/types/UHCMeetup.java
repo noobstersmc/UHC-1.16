@@ -5,6 +5,7 @@ import java.util.Random;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.WorldBorder;
+import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
@@ -22,6 +23,10 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionType;
 
+import co.aikar.commands.BaseCommand;
+import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.Conditions;
+import co.aikar.commands.annotation.Default;
 import fr.mrmicky.fastinv.ItemBuilder;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.events.GameTickEvent;
@@ -40,6 +45,7 @@ public class UHCMeetup extends IGamemode implements Listener {
     public UHCMeetup(UHC instance) {
         super("UHC Meetup", "An UHC Meetup as a gamemode.");
         this.instance = instance;
+        instance.getCommandManager().registerCommand(new reroll());
 
     }
 
@@ -49,7 +55,7 @@ public class UHCMeetup extends IGamemode implements Listener {
             return false;
         instance.getListenerManager().registerListener(this);
 
-        var newTittle = ChatColor.of("#56e817") + "" + ChatColor.BOLD + "UHC Meetup";
+        var newTittle = ChatColor.of("#2cc39b") + "" + ChatColor.BOLD + "UHC Meetup";
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "game title " + newTittle);
         Game.setScoreColors(ChatColor.of("#2cc36b") + "");
 
@@ -95,11 +101,37 @@ public class UHCMeetup extends IGamemode implements Listener {
         return true;
     }
 
+    @Conditions("ingame")
+    @CommandAlias("reroll||rl")
+    public class reroll extends BaseCommand {
+
+        @Default
+        public void openBackPack(Player sender) {
+            if(!instance.getGamemodeManager().isScenarioEnable(UHCMeetup.class))
+                sender.sendMessage(ChatColor.RED + "Command disabled.");
+
+            else if(instance.getGame().getGameTime() > instance.getGame().getPvpTime())
+                sender.sendMessage(ChatColor.RED + "ReRoll command available only at the start of the game.");
+
+            else if(!sender.hasPermission("reroll.cmd"))
+                sender.sendMessage(ChatColor.RED + "ReRoll command available only for special users. \n &aUpgrade your rank at &6noobsters.buycraft.net");
+
+            else{
+                sender.getInventory().clear();
+                sender.setExp(0.0f);
+                sender.setLevel(0);
+                equip(sender);
+            }
+        }
+
+    }
+
     @EventHandler
     public void onStart(GameTickEvent e) {
         if (e.getSecond() == 0) {
             Bukkit.getOnlinePlayers().forEach(players -> {
                 equip(players);
+                players.sendMessage(ChatColor.of("#c3752c") + "Use /reroll to reload your kit!");
             });
         }
     }
