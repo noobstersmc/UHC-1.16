@@ -55,16 +55,16 @@ public class UHCMeetup extends IGamemode implements Listener {
             return false;
         instance.getListenerManager().registerListener(this);
 
-        var newTittle = ChatColor.of("#2cc39b") + "" + ChatColor.BOLD + "UHC Meetup";
+        var newTittle = ChatColor.of("#01fedc") + "" + ChatColor.BOLD + "UHC Meetup";
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "game title " + newTittle);
         Game.setScoreColors(ChatColor.of("#2cc36b") + "");
 
         instance.getGame().setNether(false);
         instance.getGame().setHealTime(-1);
         instance.getGame().setPvpTime(20);
-        instance.getGame().setBorderTime(480);
+        instance.getGame().setBorderTime(360);
         instance.getGame().setFinalBorderGrace(120);
-        instance.getGame().setBorderCenterTime(60);
+        instance.getGame().setBorderCenterTime(120);
         instance.getGame().setBorderCenter(200);
         instance.getGame().setDMgrace(300);
         instance.getGame().setAntiMining(true);
@@ -168,7 +168,7 @@ public class UHCMeetup extends IGamemode implements Listener {
         inv.addItem(new ItemStack(Material.IRON_INGOT, randomLevel(10)));
         inv.addItem(new ItemStack(Material.GOLD_INGOT, randomLevel(10)));
         inv.addItem(new ItemStack(Material.BOOK, randomLevel(3)));
-        inv.addItem(new ItemStack(Material.ARROW, randomLevel(24)));
+        inv.addItem(new ItemStack(Material.ARROW, randomLevel(12)+12));
         inv.addItem(new ItemStack(Material.COBBLESTONE, 64));
         inv.addItem(new ItemStack(Material.ENCHANTING_TABLE));
         inv.addItem(new ItemStack(Material.LAVA_BUCKET));
@@ -246,7 +246,7 @@ public class UHCMeetup extends IGamemode implements Listener {
                 special = new ItemStack(Material.ENDER_PEARL);
             }break;
             case 2:{
-                special = new ItemStack(Material.COBWEB, randomLevel(16));
+                special = new ItemStack(Material.COBWEB, randomLevel(4)+4);
             }break;
             case 3:{
                 special = new ItemBuilder(Material.TRIDENT).enchant(Enchantment.LOYALTY, 2).enchant(Enchantment.IMPALING, 2).build();
@@ -255,10 +255,10 @@ public class UHCMeetup extends IGamemode implements Listener {
                 special = new ItemBuilder(Material.CROSSBOW).enchant(Enchantment.PIERCING, 2).build();
             }break;
             case 5:{
-                special = new ItemStack(Material.SPECTRAL_ARROW, randomLevel(12));
+                special = new ItemStack(Material.SPECTRAL_ARROW, randomLevel(6)+6);
             }break;
             case 6:{
-                special = PotionItemStack(Material.SPLASH_POTION, PotionType.INSTANT_DAMAGE, true, true);
+                special = PotionItemStack(Material.SPLASH_POTION, PotionType.INSTANT_DAMAGE, false, true);
             }break;
             case 7:{
                 special = PotionItemStack(Material.POTION, PotionType.SPEED, false, false);
@@ -298,11 +298,10 @@ public class UHCMeetup extends IGamemode implements Listener {
         var uhcPlayer = instance.getPlayerManager().getPlayer(player.getUniqueId());
 
         e.setLinesArray(
+                ChatColor.of("#2cc36b") + "Kills: " + ChatColor.WHITE + (uhcPlayer != null ? uhcPlayer.getKills() : 0),
                 "",
-                ChatColor.of("#2cc36b") + "Your kills: " + ChatColor.WHITE + (uhcPlayer != null ? uhcPlayer.getKills() : 0),
-                "",
-                ChatColor.of("#2cc36b") + "Players alive: " + ChatColor.WHITE + instance.getPlayerManager().getAlivePlayers(),
-                ChatColor.of("#2cc36b") + "Current border: " + ChatColor.WHITE + ((int) worldBorder.getSize() / 2), 
+                ChatColor.of("#2cc36b") + "Players: " + ChatColor.WHITE + instance.getPlayerManager().getAlivePlayers(),
+                ChatColor.of("#2cc36b") + "Border: " + ChatColor.WHITE + ((int) worldBorder.getSize() / 2), 
                 "",
                 ChatColor.WHITE + "noobsters.net");
 
@@ -348,15 +347,15 @@ public class UHCMeetup extends IGamemode implements Listener {
                 
             }break;
             case 2:{
-                
+             
             inv.setHelmet(new ItemBuilder(Material.DIAMOND_HELMET).enchant(Enchantment.PROTECTION_ENVIRONMENTAL).build());
             inv.setChestplate(new ItemBuilder(Material.IRON_CHESTPLATE).enchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2).build());
             inv.setLeggings(new ItemBuilder(Material.DIAMOND_LEGGINGS).enchant(Enchantment.PROTECTION_ENVIRONMENTAL).build());
             inv.setBoots(new ItemBuilder(Material.IRON_BOOTS).enchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2).build());
-                    
+      
             }break;
             case 3:{
-                
+              
             inv.setHelmet(new ItemBuilder(Material.IRON_HELMET).enchant(Enchantment.PROTECTION_PROJECTILE, 2).build());
             inv.setChestplate(new ItemBuilder(Material.DIAMOND_CHESTPLATE).enchant(Enchantment.PROTECTION_ENVIRONMENTAL).build());
             inv.setLeggings(new ItemBuilder(Material.IRON_LEGGINGS).enchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2).build());
@@ -364,7 +363,7 @@ public class UHCMeetup extends IGamemode implements Listener {
                     
             }break;
             case 4:{
-                
+             
             inv.setHelmet(new ItemBuilder(Material.DIAMOND_HELMET).enchant(Enchantment.PROTECTION_ENVIRONMENTAL, 3).build());
             inv.setChestplate(new ItemBuilder(Material.NETHERITE_CHESTPLATE).enchant(Enchantment.PROTECTION_ENVIRONMENTAL).build());
             inv.setLeggings(new ItemBuilder(Material.IRON_LEGGINGS).enchant(Enchantment.PROTECTION_PROJECTILE).build());
@@ -372,15 +371,15 @@ public class UHCMeetup extends IGamemode implements Listener {
                         
             }break;
             case 5:{
-                
+              
             inv.setHelmet(new ItemBuilder(Material.IRON_HELMET).enchant(Enchantment.PROTECTION_PROJECTILE, 2).build());
             inv.setChestplate(new ItemBuilder(Material.DIAMOND_CHESTPLATE).enchant(Enchantment.PROTECTION_ENVIRONMENTAL).build());
             inv.setLeggings(new ItemBuilder(Material.IRON_LEGGINGS).enchant(Enchantment.PROTECTION_PROJECTILE, 2).build());
             inv.setBoots(new ItemBuilder(Material.DIAMOND_BOOTS).enchant(Enchantment.PROTECTION_ENVIRONMENTAL, 3).build());
-                            
+                
             }break;
             case 6:{
-                
+               
             inv.setHelmet(new ItemBuilder(Material.IRON_HELMET).enchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2).build());
             inv.setChestplate(new ItemBuilder(Material.IRON_CHESTPLATE).enchant(Enchantment.PROTECTION_PROJECTILE, 2).build());
             inv.setLeggings(new ItemBuilder(Material.DIAMOND_LEGGINGS).enchant(Enchantment.PROTECTION_ENVIRONMENTAL, 3).build());
@@ -388,7 +387,7 @@ public class UHCMeetup extends IGamemode implements Listener {
                                 
             }break;
             case 7:{
-                
+              
             inv.setHelmet(new ItemBuilder(Material.IRON_HELMET).enchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2).build());
             inv.setChestplate(new ItemBuilder(Material.DIAMOND_CHESTPLATE).enchant(Enchantment.PROTECTION_ENVIRONMENTAL, 3).build());
             inv.setLeggings(new ItemBuilder(Material.NETHERITE_LEGGINGS).enchant(Enchantment.PROTECTION_ENVIRONMENTAL).build());
@@ -396,7 +395,7 @@ public class UHCMeetup extends IGamemode implements Listener {
                                     
             }break;
             case 8:{
-                
+              
             inv.setHelmet(new ItemBuilder(Material.DIAMOND_HELMET).enchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2).build());
             inv.setChestplate(new ItemBuilder(Material.IRON_CHESTPLATE).enchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2).build());
             inv.setLeggings(new ItemBuilder(Material.IRON_LEGGINGS).enchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2).build());
@@ -404,7 +403,7 @@ public class UHCMeetup extends IGamemode implements Listener {
                                         
             }break;
             case 9:{
-                
+               
             inv.setHelmet(new ItemBuilder(Material.IRON_HELMET).enchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2).build());
             inv.setChestplate(new ItemBuilder(Material.DIAMOND_CHESTPLATE).enchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2).build());
             inv.setLeggings(new ItemBuilder(Material.DIAMOND_LEGGINGS).enchant(Enchantment.PROTECTION_ENVIRONMENTAL).build());
@@ -420,7 +419,7 @@ public class UHCMeetup extends IGamemode implements Listener {
                                                 
             }break;
             case 11:{
-                
+               
             inv.setHelmet(new ItemBuilder(Material.DIAMOND_HELMET).enchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2).build());
             inv.setChestplate(new ItemBuilder(Material.IRON_CHESTPLATE).enchant(Enchantment.PROTECTION_PROJECTILE).build());
             inv.setLeggings(new ItemBuilder(Material.NETHERITE_LEGGINGS).enchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2).build());
@@ -428,15 +427,15 @@ public class UHCMeetup extends IGamemode implements Listener {
                                                 
             }break;
             case 12:{
-                
+              
             inv.setHelmet(new ItemBuilder(Material.IRON_HELMET).enchant(Enchantment.PROTECTION_PROJECTILE, 2).build());
             inv.setChestplate(new ItemBuilder(Material.DIAMOND_CHESTPLATE).enchant(Enchantment.PROTECTION_ENVIRONMENTAL).build());
             inv.setLeggings(new ItemBuilder(Material.IRON_LEGGINGS).enchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2).build());
-            inv.setBoots(new ItemBuilder(Material.DIAMOND_BOOTS).enchant(Enchantment.PROTECTION_ENVIRONMENTAL).build());
+            inv.setBoots(new ItemBuilder(Material.DIAMOND_BOOTS).enchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2).build());
                                                     
             }break;
             default:{
-                                
+     
             inv.setHelmet(new ItemBuilder(Material.IRON_HELMET).enchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2).build());
             inv.setChestplate(new ItemBuilder(Material.NETHERITE_CHESTPLATE).enchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2).build());
             inv.setLeggings(new ItemBuilder(Material.IRON_LEGGINGS).enchant(Enchantment.PROTECTION_PROJECTILE, 2).build());

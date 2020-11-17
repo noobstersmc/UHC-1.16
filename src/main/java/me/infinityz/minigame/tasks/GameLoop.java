@@ -88,7 +88,7 @@ public class GameLoop extends BukkitRunnable {
             Bukkit.broadcastMessage(HAVELOCK_BLUE + "5 minutes left for Final Heal.");
         }
         if (time == game.getHealTime()) {
-            // TODO: FINAL HEAL
+            // FINAL HEAL
             Bukkit.getScheduler().runTask(instance, () -> {
                 Bukkit.getOnlinePlayers().forEach(all -> {
                     all.addPotionEffect(new PotionEffect(PotionEffectType.HEAL, 1, 20));
@@ -107,7 +107,7 @@ public class GameLoop extends BukkitRunnable {
 
         }
         if (time == game.getPvpTime()) {
-            // TODO: PVP ON
+            // PVP ON
             Bukkit.getOnlinePlayers()
                     .forEach(all -> all.playSound(all.getLocation(), Sound.BLOCK_END_PORTAL_SPAWN, 1, 1.9F));
             instance.getGame().setPvp(true);
@@ -150,6 +150,8 @@ public class GameLoop extends BukkitRunnable {
             Bukkit.broadcastMessage(ChatColor.of("#d40c42") + "Death Match has started.");
             Bukkit.getScheduler().runTask(instance, () -> Bukkit.getOnlinePlayers().forEach(players -> {
                 players.playSound(players.getLocation(), Sound.ENTITY_WITHER_DEATH, 1.0f, 0.5f);
+                if(players.getGameMode() == GameMode.SURVIVAL)
+                    players.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 10000, 0, true));
             }));
         }
     }
