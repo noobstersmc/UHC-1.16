@@ -37,7 +37,7 @@ public class Game {
     private boolean hasSomeoneWon = false;
     private boolean deathMatch = false;
     private boolean antiMining = false;
-    private int uhcslots = 40;
+    private int uhcslots = 60;
     /* Game config */
     private boolean privateGame = false;
     private boolean nether = true;
@@ -55,6 +55,8 @@ public class Game {
     private int borderCenterTime = 1500;
     private int pvpTime = 1200;
     private int healTime = 120;
+    private int DMgrace = 600;
+    private int finalBorderGrace = 300;
     /* Other */
     String scenarios;
     Stage gameStage;

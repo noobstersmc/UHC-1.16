@@ -116,7 +116,7 @@ public class GameLoop extends BukkitRunnable {
         }
         if (time == game.getBorderTime()) {
             // BORDER TIME
-            Bukkit.broadcastMessage(HAVELOCK_BLUE + "The border has started to move to 100 blocks in the next "
+            Bukkit.broadcastMessage(HAVELOCK_BLUE + "The border has been started to move to the center of the map in the next "
                     + (game.getBorderCenterTime() / 60) + " minutes at a speed of 1 block per second!");
 
             if (game.isNether()) {
@@ -137,14 +137,14 @@ public class GameLoop extends BukkitRunnable {
             instance.getGame().setAntiMining(true);
         }
 
-        if(time == game.getBorderCenterTime()+game.getBorderTime()+300){
+        if(time == game.getBorderCenterTime()+game.getBorderTime()+game.getFinalBorderGrace()){
             //ULTIMO BORDE 50
             Bukkit.getScheduler().runTask(instance, () -> Bukkit.getWorlds().forEach(worlds -> {
-                worlds.getWorldBorder().setSize(50 , 60 );
+                worlds.getWorldBorder().setSize(50 , 60);
             }));
         }
 
-        if(time == game.getBorderCenterTime()+game.getBorderTime()+600){
+        if(time == game.getBorderCenterTime()+game.getBorderTime()+game.getFinalBorderGrace()+game.getDMgrace()){
             //DEATHMATCH
             instance.getGame().setDeathMatch(true);
             Bukkit.broadcastMessage(ChatColor.of("#d40c42") + "Death Match has started.");
