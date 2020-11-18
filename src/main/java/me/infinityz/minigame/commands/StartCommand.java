@@ -56,6 +56,12 @@ public class StartCommand extends BaseCommand {
     @CommandPermission("staff.perm")
     @Default
     public void newScatter(CommandSender sender) {
+
+        if(instance.getGamemodeManager().isScenarioEnable(UHCMeetup.class)){
+            meetupStart();
+            return;
+        }
+
         var locs = instance.getChunkManager().getLocations();
         var tasks = instance.getChunkManager().neededLocations();
         if (locs == null || locs.isEmpty()) {
@@ -89,11 +95,11 @@ public class StartCommand extends BaseCommand {
 
         instance.setGameStage(Stage.SCATTER);
         if (instance.getTeamManger().isTeamManagement()) {
-            Bukkit.dispatchCommand(sender, "team man false");
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "team man false");
         }
 
         if (instance.getTeamManger().getTeamSize() > 1) {
-            Bukkit.dispatchCommand(sender, "team random");
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "team random");
         }
         instance.getChunkManager().getAutoChunkScheduler().cancel();
         Bukkit.broadcastMessage(ChatColor.of("#2be49c") + "Starting the teleportation task...");
@@ -172,15 +178,7 @@ public class StartCommand extends BaseCommand {
 
     }
 
-    public static void main(String[] args) {
-
-    }
-
-    @CommandPermission("staff.perm")
-    @Subcommand("meetup")
-    @CommandAlias("meetup")
-    @Default
-    public void scatterNoLoad(CommandSender sender) {
+    public void meetupStart() {
 
         instance.getGamemodeManager().getScenario(UHCMeetup.class).cancelWaitingForPlayers();
         var count = 10;
@@ -194,11 +192,11 @@ public class StartCommand extends BaseCommand {
         chain.sync(() -> {
 
             if (instance.getTeamManger().isTeamManagement()) {
-                Bukkit.dispatchCommand(sender, "team man false");
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "team man false");
             }
     
             if (instance.getTeamManger().getTeamSize() > 1) {
-                Bukkit.dispatchCommand(sender, "team random");
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "team random");
             }
     
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "scoreboard objectives setdisplay list health_name");

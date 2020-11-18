@@ -36,7 +36,6 @@ public class ChunksManager {
         autoChunkScheduler = Bukkit.getScheduler().runTaskTimerAsynchronously(instance, () -> {
             if (!pendingChunkLoadTasks.isEmpty()) {
                 iterate(pendingChunkLoadTasks.iterator());
-                if(!instance.getGamemodeManager().isScenarioEnable(UHCMeetup.class))
                     notifyOnActionbar(ChatColor.GOLD + "Not ready to start, currently loading "
                             + pendingChunkLoadTasks.size() + " locations...", "staff.perm");
             } else {
@@ -44,7 +43,6 @@ public class ChunksManager {
                 var message = needed > 0
                         ? ChatColor.RED + "Not ready to start. " + needed + " location needed to start."
                         : ChatColor.GREEN + "Ready to start.";
-                if(!instance.getGamemodeManager().isScenarioEnable(UHCMeetup.class))
                     notifyOnActionbar(message, "staff.pern");
 
             }
@@ -98,6 +96,7 @@ public class ChunksManager {
     }
 
     private void notifyOnActionbar(final String message, final String perm) {
+        if(!instance.getGamemodeManager().isScenarioEnable(UHCMeetup.class))
         Bukkit.getOnlinePlayers().stream().filter(p -> p.hasPermission(perm))
                 .forEach(staff -> staff.sendActionBar(message));
     }

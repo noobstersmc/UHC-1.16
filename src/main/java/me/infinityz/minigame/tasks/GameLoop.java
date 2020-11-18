@@ -81,6 +81,7 @@ public class GameLoop extends BukkitRunnable {
 
         var game = instance.getGame();
 
+
         if (time == game.getHealTime() - 300) {
             // AVISO 5MIN LEFT FOR FINAL HEAL
             Bukkit.getOnlinePlayers()
@@ -144,7 +145,7 @@ public class GameLoop extends BukkitRunnable {
             }));
         }
 
-        if(time == game.getBorderCenterTime()+game.getBorderTime()+game.getFinalBorderGrace()+game.getDMgrace()){
+        if(time == game.getBorderCenterTime()+game.getBorderTime()+game.getFinalBorderGrace()+game.getDMgrace() && !game.isHasSomeoneWon()){
             //DEATHMATCH
             instance.getGame().setDeathMatch(true);
             Bukkit.broadcastMessage(ChatColor.of("#d40c42") + "Death Match has started.");
@@ -235,7 +236,7 @@ public class GameLoop extends BukkitRunnable {
 
                 var distance = (isNegative ? "-" : "") + String.format("%.1f", distanceFromBorder);
 
-                distanceText = distanceText + "You are " + distance + " blocks away from the border";
+                distanceText = distanceText + "You are " + distance + " blocks away from the border.";
                 player.sendActionBar(distanceText);
 
             }

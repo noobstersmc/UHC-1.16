@@ -168,18 +168,11 @@ public class GamemodeManager {
     }
 
     public String getFirstEnabledScenario() {
-        var sb = "";
-        var enabledScenario = getEnabledGamemodes();
-        var iter = enabledScenario.iterator();
-        
-        enabledScenario.remove(getScenario(UHCMeetup.class));
-        if (iter.hasNext()){
-            //while (iter.hasNext())
-            sb = iter.next().getName().toString();
-        }else
-            sb = "Vanilla";
-
-        return sb;
+        for (var gm : gamemodesList) {
+            if (gm.isEnabled() && gm.getClass() != UHCMeetup.class)
+                return gm.getName();
+        }
+        return "Vanilla";
     }
 
     public BaseComponent[] getScenariosWithDescription() {

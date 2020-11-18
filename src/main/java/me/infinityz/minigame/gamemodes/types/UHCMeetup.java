@@ -2,6 +2,8 @@ package me.infinityz.minigame.gamemodes.types;
 
 import java.util.Random;
 
+import com.destroystokyo.paper.event.player.PlayerAdvancementCriterionGrantEvent;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.WorldBorder;
@@ -16,6 +18,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.player.PlayerAdvancementDoneEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -51,6 +54,7 @@ public class UHCMeetup extends IGamemode implements Listener {
     private WorldBorder worldBorder = Bukkit.getWorlds().get(0).getWorldBorder();
     private final ItemStack lapis = new ItemBuilder(Material.LAPIS_LAZULI).amount(64).build();
     private @Getter BukkitTask waitingForPlayers;
+    private Integer amo = 0;
 
     public UHCMeetup(UHC instance) {
         super("UHC Meetup", "An UHC Meetup as a gamemode.");
@@ -74,7 +78,7 @@ public class UHCMeetup extends IGamemode implements Listener {
 
         instance.getGame().setNether(false);
         instance.getGame().setHealTime(-1);
-        instance.getGame().setPvpTime(20);
+        instance.getGame().setPvpTime(10);
         instance.getGame().setBorderTime(360);
         instance.getGame().setFinalBorderGrace(120);
         instance.getGame().setBorderCenterTime(120);
@@ -116,6 +120,8 @@ public class UHCMeetup extends IGamemode implements Listener {
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "game score UHC");
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "gamerule doMobSpawning true ");
 
+        cancelWaitingForPlayers();
+
         setEnabled(false);
         return true;
     }
@@ -148,7 +154,7 @@ public class UHCMeetup extends IGamemode implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
-        if(!instance.getGameStage().equals(Stage.LOBBY)) return;
+        if(!instance.getGameStage().equals(Stage.LOBBY) || e.getPlayer().hasPlayedBefore()) return;
         var player = e.getPlayer();
         var world = Bukkit.getWorlds().get(0);
         var worldBorderSizeHaved = (int) world.getWorldBorder().getSize() / 2;
@@ -168,6 +174,11 @@ public class UHCMeetup extends IGamemode implements Listener {
         if(fromX != toX || fromZ != toZ)
             e.setCancelled(true);
         
+    }
+
+    @EventHandler
+    public void DisableAdvancements(PlayerAdvancementCriterionGrantEvent e){
+        e.setCancelled(true);
     }
 
     @EventHandler
@@ -266,7 +277,7 @@ public class UHCMeetup extends IGamemode implements Listener {
         //SWORDS
         if(random.nextInt(20) == 0) inv.setItem(0, new ItemBuilder(Material.IRON_SWORD).enchant(Enchantment.DAMAGE_ALL, 2).enchant(Enchantment.FIRE_ASPECT).build());
         else if(random.nextBoolean()) inv.setItem(0, new ItemBuilder(Material.DIAMOND_SWORD).enchant(Enchantment.DAMAGE_ALL, randomLevel(3)).build());
-        else inv.setItem(0, new ItemBuilder(Material.IRON_SWORD).enchant(Enchantment.DAMAGE_ALL, randomLevel(4)).build());
+        else inv.setItem(0, new ItemBuilder(Material.IRON_SWORD).enchant(Enchantment.DAMAGE_ALL, randomLevel(3)+1).build());
 
         //BOW
         if(random.nextInt(20) == 0)inv.setItem(1, new ItemBuilder(Material.BOW).enchant(Enchantment.ARROW_KNOCKBACK, 1).build());
@@ -285,7 +296,7 @@ public class UHCMeetup extends IGamemode implements Listener {
                 inv.addItem(new ItemStack(Material.PUFFERFISH_BUCKET));
             }break;
             case 2:{
-                inv.addItem(new ItemStack(Material.NETHERITE_INGOT, randomLevel(2)));
+                inv.addItem(new ItemStack(Material.NETHERITE_INGOT, 1));
                 inv.addItem(new ItemStack(Material.SMITHING_TABLE));
             }break;
             case 3:{
@@ -399,7 +410,8 @@ public class UHCMeetup extends IGamemode implements Listener {
 
     public void armor(Player player){
         final var inv = player.getInventory();
-        switch(random.nextInt(12)){
+        if(amo > 12) amo = 0;
+        switch(amo){
             case 1:{
                 
             inv.setHelmet(new ItemBuilder(Material.DIAMOND_HELMET).enchant(Enchantment.PROTECTION_ENVIRONMENTAL).build());
@@ -505,6 +517,7 @@ public class UHCMeetup extends IGamemode implements Listener {
                   
             }break;
         }
+        amo ++;
     }
 }
 
