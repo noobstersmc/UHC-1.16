@@ -8,7 +8,6 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Banner;
-import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Egg;
 import org.bukkit.entity.FishHook;
 import org.bukkit.entity.Player;
@@ -257,7 +256,7 @@ public class GlobalListener implements Listener {
             bar.addPlayer(players);
         });
         Bukkit.broadcastMessage(GameLoop.SHAMROCK_GREEN + "UHC has started!");
-        // TODO: Add No fall damage for first hit
+
         new AntiFallDamage(instance, Bukkit.getOnlinePlayers().stream()
                 .map(p -> p.getUniqueId().getMostSignificantBits()).collect(Collectors.toList()));
     }

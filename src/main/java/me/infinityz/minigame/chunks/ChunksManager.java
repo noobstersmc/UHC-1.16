@@ -18,6 +18,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import me.infinityz.minigame.UHC;
+import me.infinityz.minigame.gamemodes.types.UHCMeetup;
 import net.md_5.bungee.api.ChatColor;
 
 public class ChunksManager {
@@ -35,17 +36,20 @@ public class ChunksManager {
         autoChunkScheduler = Bukkit.getScheduler().runTaskTimerAsynchronously(instance, () -> {
             if (!pendingChunkLoadTasks.isEmpty()) {
                 iterate(pendingChunkLoadTasks.iterator());
-                notifyOnActionbar(ChatColor.GOLD + "Not ready to start, currently loading "
-                        + pendingChunkLoadTasks.size() + " locations...", "staff.perm");
+                if(!instance.getGamemodeManager().isScenarioEnable(UHCMeetup.class))
+                    notifyOnActionbar(ChatColor.GOLD + "Not ready to start, currently loading "
+                            + pendingChunkLoadTasks.size() + " locations...", "staff.perm");
             } else {
                 var needed = neededLocations();
                 var message = needed > 0
                         ? ChatColor.RED + "Not ready to start. " + needed + " location needed to start."
                         : ChatColor.GREEN + "Ready to start.";
-                notifyOnActionbar(message, "staff.pern");
+                if(!instance.getGamemodeManager().isScenarioEnable(UHCMeetup.class))
+                    notifyOnActionbar(message, "staff.pern");
 
             }
         }, 5L, 20L);
+        
     }
 
     public int getBorder() {

@@ -147,7 +147,7 @@ public class GamemodeManager {
     }
 
     //
-
+    
     public String getEnabledGamemodesToString() {
         var sb = new StringBuilder();
         var enabledScenarios = getEnabledGamemodes();
@@ -165,6 +165,21 @@ public class GamemodeManager {
             sb.append("Vanilla+");
 
         return sb.toString();
+    }
+
+    public String getFirstEnabledScenario() {
+        var sb = "";
+        var enabledScenario = getEnabledGamemodes();
+        var iter = enabledScenario.iterator();
+        
+        enabledScenario.remove(getScenario(UHCMeetup.class));
+        if (iter.hasNext()){
+            //while (iter.hasNext())
+            sb = iter.next().getName().toString();
+        }else
+            sb = "Vanilla";
+
+        return sb;
     }
 
     public BaseComponent[] getScenariosWithDescription() {

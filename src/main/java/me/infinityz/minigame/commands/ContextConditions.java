@@ -79,6 +79,7 @@ public class ContextConditions {
                 throw new ConditionFailedException(("Max value must be " + c.getConfigValue("max", 3)));
             }
         });
+
         instance.getCommandManager().getCommandConditions().addCondition("lobby", (context) -> {
             if (instance.getGameStage() != Stage.LOBBY)
                 throw new ConditionFailedException(("You must be in lobby game stage to do this"));

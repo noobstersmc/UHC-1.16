@@ -5,30 +5,38 @@ import java.util.Random;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.WorldBorder;
-import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.EnchantingInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionType;
+import org.bukkit.scheduler.BukkitTask;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Conditions;
 import co.aikar.commands.annotation.Default;
 import fr.mrmicky.fastinv.ItemBuilder;
+import lombok.Getter;
 import me.infinityz.minigame.UHC;
+import me.infinityz.minigame.chunks.ChunksManager;
+import me.infinityz.minigame.enums.Stage;
 import me.infinityz.minigame.events.GameTickEvent;
 import me.infinityz.minigame.events.PlayerJoinedLateEvent;
 import me.infinityz.minigame.events.ScoreboardUpdateEvent;
@@ -36,17 +44,22 @@ import me.infinityz.minigame.game.Game;
 import me.infinityz.minigame.gamemodes.IGamemode;
 import net.md_5.bungee.api.ChatColor;
 
+
 public class UHCMeetup extends IGamemode implements Listener {
     private UHC instance;
     private Random random = new Random();
     private WorldBorder worldBorder = Bukkit.getWorlds().get(0).getWorldBorder();
     private final ItemStack lapis = new ItemBuilder(Material.LAPIS_LAZULI).amount(64).build();
+    private @Getter BukkitTask waitingForPlayers;
 
     public UHCMeetup(UHC instance) {
         super("UHC Meetup", "An UHC Meetup as a gamemode.");
         this.instance = instance;
         instance.getCommandManager().registerCommand(new reroll());
+    }
 
+    public void cancelWaitingForPlayers(){
+        waitingForPlayers.cancel();
     }
 
     @Override
@@ -55,7 +68,7 @@ public class UHCMeetup extends IGamemode implements Listener {
             return false;
         instance.getListenerManager().registerListener(this);
 
-        var newTittle = ChatColor.of("#01fedc") + "" + ChatColor.BOLD + "UHC Meetup";
+        var newTittle = ChatColor.GREEN + "" + ChatColor.BOLD + "UHC Meetup";
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "game title " + newTittle);
         Game.setScoreColors(ChatColor.of("#2cc36b") + "");
 
@@ -71,8 +84,14 @@ public class UHCMeetup extends IGamemode implements Listener {
 
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "bordersize 300");
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "gamerule doMobSpawning false ");
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "chat oi");
         
-
+        waitingForPlayers = Bukkit.getScheduler().runTaskTimerAsynchronously(instance, () -> {
+            Bukkit.getOnlinePlayers().forEach(players -> {
+                if(instance.getGameStage().equals(Stage.LOBBY) && isEnabled()) 
+                    players.sendActionBar(ChatColor.GREEN + "Waiting for players...");
+            });
+        }, 5L, 20L);
 
         setEnabled(true);
         return true;
@@ -107,14 +126,15 @@ public class UHCMeetup extends IGamemode implements Listener {
 
         @Default
         public void openBackPack(Player sender) {
-            if(!instance.getGamemodeManager().isScenarioEnable(UHCMeetup.class))
+            if(!isEnabled())
                 sender.sendMessage(ChatColor.RED + "Command disabled.");
 
             else if(instance.getGame().getGameTime() > instance.getGame().getPvpTime())
                 sender.sendMessage(ChatColor.RED + "ReRoll command available only at the start of the game.");
 
             else if(!sender.hasPermission("reroll.cmd"))
-                sender.sendMessage(ChatColor.RED + "ReRoll command available only for special users. \n &aUpgrade your rank at &6noobsters.buycraft.net");
+                sender.sendMessage(ChatColor.RED + "ReRoll command available only for special users. \n " 
+                + ChatColor.GREEN + "Upgrade your rank at "+ ChatColor.GOLD + "noobsters.buycraft.net");
 
             else{
                 sender.getInventory().clear();
@@ -124,6 +144,35 @@ public class UHCMeetup extends IGamemode implements Listener {
             }
         }
 
+    }
+
+    @EventHandler
+    public void onJoin(PlayerJoinEvent e) {
+        if(!instance.getGameStage().equals(Stage.LOBBY)) return;
+        var player = e.getPlayer();
+        var world = Bukkit.getWorlds().get(0);
+        var worldBorderSizeHaved = (int) world.getWorldBorder().getSize() / 2;
+        player.teleportAsync(ChunksManager.findScatterLocation(world, worldBorderSizeHaved))
+                .thenAccept(result -> player
+                        .sendMessage((ChatColor.of("#7ab83c") + (result ? "You have been scattered into the world."
+                                : "Coudn't scatter you, ask for help."))));     
+    }
+
+    @EventHandler
+    public void onLobbyMove(PlayerMoveEvent e){
+        if(!instance.getGameStage().equals(Stage.LOBBY)) return;
+        var fromX = e.getFrom().getX();
+        var fromZ = e.getFrom().getZ();
+        var toX = e.getTo().getX();
+        var toZ = e.getTo().getZ();
+        if(fromX != toX || fromZ != toZ)
+            e.setCancelled(true);
+        
+    }
+
+    @EventHandler
+    public void onDrop(PlayerDropItemEvent e){
+        if(!instance.getGame().isPvp()) e.setCancelled(true);
     }
 
     @EventHandler
@@ -145,6 +194,7 @@ public class UHCMeetup extends IGamemode implements Listener {
         player.setLevel(randomLevel(12));
         weaponItems(player);
         permaItems(player);
+        misc(player);
         armor(player);
     }
 
@@ -152,6 +202,18 @@ public class UHCMeetup extends IGamemode implements Listener {
     public void onDeath(PlayerDeathEvent e){
         var loc = e.getEntity().getPlayer().getLocation();
         loc.getWorld().spawn(loc, ExperienceOrb.class).setExperience(10);
+    }
+
+    @EventHandler
+    public void onQuit(PlayerQuitEvent e) {
+        final var player = e.getPlayer();
+        if (player.getLastDamageCause() instanceof EntityDamageByEntityEvent) {
+            var lastDamage = (EntityDamageByEntityEvent) player.getLastDamageCause();
+            var damager = lastDamage.getEntity();
+            player.damage(1000, damager);
+        } else {
+            player.damage(1000);
+        }
     }
 
     public void permaItems(Player player){
@@ -209,7 +271,7 @@ public class UHCMeetup extends IGamemode implements Listener {
         //BOW
         if(random.nextInt(20) == 0)inv.setItem(1, new ItemBuilder(Material.BOW).enchant(Enchantment.ARROW_KNOCKBACK, 1).build());
         else if(random.nextInt(20) == 0) inv.setItem(1, new ItemBuilder(Material.BOW).enchant(Enchantment.ARROW_FIRE, 1).build());
-        else inv.setItem(1, new ItemBuilder(Material.BOW).enchant(Enchantment.ARROW_DAMAGE, randomLevel(3)).build());
+        else inv.setItem(1, new ItemBuilder(Material.BOW).enchant(Enchantment.ARROW_DAMAGE, randomLevel(2)).build());
         
         //AXES
         if(random.nextBoolean()) inv.setItem(2, new ItemStack(Material.DIAMOND_AXE));
@@ -218,19 +280,17 @@ public class UHCMeetup extends IGamemode implements Listener {
 
     public void misc(Player player){
         final var inv = player.getInventory();
-        switch(random.nextInt(4)){
+        switch(random.nextInt(3)){
             case 1:{
                 inv.addItem(new ItemStack(Material.PUFFERFISH_BUCKET));
             }break;
             case 2:{
-                inv.addItem(new ItemStack(Material.NETHERITE_SCRAP, randomLevel(3)));
+                inv.addItem(new ItemStack(Material.NETHERITE_INGOT, randomLevel(2)));
+                inv.addItem(new ItemStack(Material.SMITHING_TABLE));
             }break;
             case 3:{
                 inv.addItem(new ItemStack(Material.TNT, randomLevel(5)));
                 inv.addItem(new ItemStack(Material.FLINT_AND_STEEL));
-            }break;
-            case 4:{
-                inv.addItem(new ItemStack(Material.MILK_BUCKET));
             }break;
             default:{
                 inv.addItem(new ItemStack(Material.GRINDSTONE));
@@ -298,9 +358,11 @@ public class UHCMeetup extends IGamemode implements Listener {
         var uhcPlayer = instance.getPlayerManager().getPlayer(player.getUniqueId());
 
         e.setLinesArray(
-                ChatColor.of("#2cc36b") + "Kills: " + ChatColor.WHITE + (uhcPlayer != null ? uhcPlayer.getKills() : 0),
+                ChatColor.of("#2cc36b") + "Your Kills: " + ChatColor.WHITE + (uhcPlayer != null ? uhcPlayer.getKills() : 0),
                 "",
-                ChatColor.of("#2cc36b") + "Players: " + ChatColor.WHITE + instance.getPlayerManager().getAlivePlayers(),
+                ChatColor.of("#2cc36b") + "Players Left: " + ChatColor.WHITE + instance.getPlayerManager().getAlivePlayers(),
+                ChatColor.of("#2cc36b") + "Gamemode: " + ChatColor.WHITE + instance.getGamemodeManager().getFirstEnabledScenario(),
+                "",
                 ChatColor.of("#2cc36b") + "Border: " + ChatColor.WHITE + ((int) worldBorder.getSize() / 2), 
                 "",
                 ChatColor.WHITE + "noobsters.net");
@@ -340,7 +402,7 @@ public class UHCMeetup extends IGamemode implements Listener {
         switch(random.nextInt(12)){
             case 1:{
                 
-            inv.setHelmet(new ItemBuilder(Material.NETHERITE_HELMET).enchant(Enchantment.PROTECTION_ENVIRONMENTAL).build());
+            inv.setHelmet(new ItemBuilder(Material.DIAMOND_HELMET).enchant(Enchantment.PROTECTION_ENVIRONMENTAL).build());
             inv.setChestplate(new ItemBuilder(Material.IRON_CHESTPLATE).enchant(Enchantment.PROTECTION_PROJECTILE, 2).build());
             inv.setLeggings(new ItemBuilder(Material.DIAMOND_LEGGINGS).enchant(Enchantment.PROTECTION_ENVIRONMENTAL).build());
             inv.setBoots(new ItemBuilder(Material.IRON_BOOTS).enchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2).build());
@@ -365,7 +427,7 @@ public class UHCMeetup extends IGamemode implements Listener {
             case 4:{
              
             inv.setHelmet(new ItemBuilder(Material.DIAMOND_HELMET).enchant(Enchantment.PROTECTION_ENVIRONMENTAL, 3).build());
-            inv.setChestplate(new ItemBuilder(Material.NETHERITE_CHESTPLATE).enchant(Enchantment.PROTECTION_ENVIRONMENTAL).build());
+            inv.setChestplate(new ItemBuilder(Material.DIAMOND_CHESTPLATE).enchant(Enchantment.PROTECTION_ENVIRONMENTAL).build());
             inv.setLeggings(new ItemBuilder(Material.IRON_LEGGINGS).enchant(Enchantment.PROTECTION_PROJECTILE).build());
             inv.setBoots(new ItemBuilder(Material.IRON_BOOTS).enchant(Enchantment.PROTECTION_PROJECTILE, 2).build());
                         
@@ -390,7 +452,7 @@ public class UHCMeetup extends IGamemode implements Listener {
               
             inv.setHelmet(new ItemBuilder(Material.IRON_HELMET).enchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2).build());
             inv.setChestplate(new ItemBuilder(Material.DIAMOND_CHESTPLATE).enchant(Enchantment.PROTECTION_ENVIRONMENTAL, 3).build());
-            inv.setLeggings(new ItemBuilder(Material.NETHERITE_LEGGINGS).enchant(Enchantment.PROTECTION_ENVIRONMENTAL).build());
+            inv.setLeggings(new ItemBuilder(Material.DIAMOND_LEGGINGS).enchant(Enchantment.PROTECTION_ENVIRONMENTAL).build());
             inv.setBoots(new ItemBuilder(Material.IRON_BOOTS).enchant(Enchantment.PROTECTION_PROJECTILE, 2).build());
                                     
             }break;
@@ -399,7 +461,7 @@ public class UHCMeetup extends IGamemode implements Listener {
             inv.setHelmet(new ItemBuilder(Material.DIAMOND_HELMET).enchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2).build());
             inv.setChestplate(new ItemBuilder(Material.IRON_CHESTPLATE).enchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2).build());
             inv.setLeggings(new ItemBuilder(Material.IRON_LEGGINGS).enchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2).build());
-            inv.setBoots(new ItemBuilder(Material.NETHERITE_BOOTS).enchant(Enchantment.PROTECTION_ENVIRONMENTAL).build());
+            inv.setBoots(new ItemBuilder(Material.DIAMOND_BOOTS).enchant(Enchantment.PROTECTION_ENVIRONMENTAL).build());
                                         
             }break;
             case 9:{
@@ -422,7 +484,7 @@ public class UHCMeetup extends IGamemode implements Listener {
                
             inv.setHelmet(new ItemBuilder(Material.DIAMOND_HELMET).enchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2).build());
             inv.setChestplate(new ItemBuilder(Material.IRON_CHESTPLATE).enchant(Enchantment.PROTECTION_PROJECTILE).build());
-            inv.setLeggings(new ItemBuilder(Material.NETHERITE_LEGGINGS).enchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2).build());
+            inv.setLeggings(new ItemBuilder(Material.DIAMOND_LEGGINGS).enchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2).build());
             inv.setBoots(new ItemBuilder(Material.IRON_BOOTS).enchant(Enchantment.PROTECTION_PROJECTILE, 2).build());
                                                 
             }break;
@@ -437,7 +499,7 @@ public class UHCMeetup extends IGamemode implements Listener {
             default:{
      
             inv.setHelmet(new ItemBuilder(Material.IRON_HELMET).enchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2).build());
-            inv.setChestplate(new ItemBuilder(Material.NETHERITE_CHESTPLATE).enchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2).build());
+            inv.setChestplate(new ItemBuilder(Material.DIAMOND_CHESTPLATE).enchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2).build());
             inv.setLeggings(new ItemBuilder(Material.IRON_LEGGINGS).enchant(Enchantment.PROTECTION_PROJECTILE, 2).build());
             inv.setBoots(new ItemBuilder(Material.DIAMOND_BOOTS).enchant(Enchantment.PROTECTION_ENVIRONMENTAL).build());
                   

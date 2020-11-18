@@ -116,7 +116,7 @@ public class GameLoop extends BukkitRunnable {
         }
         if (time == game.getBorderTime()) {
             // BORDER TIME
-            Bukkit.broadcastMessage(HAVELOCK_BLUE + "The border has been started to move to the center of the map in the next "
+            Bukkit.broadcastMessage(HAVELOCK_BLUE + "The border has started to move to the center of the map in the next "
                     + (game.getBorderCenterTime() / 60) + " minutes at a speed of 1 block per second!");
 
             if (game.isNether()) {
@@ -240,11 +240,6 @@ public class GameLoop extends BukkitRunnable {
 
             }
         }
-    }
-
-    private void sendPromo() {
-        Bukkit.broadcastMessage(ChatColor.BLUE + "Discord! discord.noobsters.net\n" + ChatColor.AQUA
-                + "Twitter! twitter.com/NoobstersMC");
     }
 
     // Fast algo to calculate distance to nearest border point or absolute

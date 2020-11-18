@@ -96,7 +96,7 @@ public class IngameListeners implements Listener {
 
     @EventHandler
     public void onGameTick(GameTickEvent e) {
-        if(e.getSecond() == 10){
+        if(e.getSecond() == 5){
             Bukkit.getScheduler().runTask(instance, ()->{
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "chat oi");
             });

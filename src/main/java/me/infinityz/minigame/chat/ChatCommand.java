@@ -53,6 +53,7 @@ public class ChatCommand extends BaseCommand {
         } catch (Exception e) {
         }
     }
+
     @CommandPermission("world.oi")
     @Subcommand("hun")
     public void s(Player sender) {

@@ -29,6 +29,7 @@ import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.chunks.ChunkLoadTask;
 import me.infinityz.minigame.enums.Stage;
 import me.infinityz.minigame.events.TeleportationCompletedEvent;
+import me.infinityz.minigame.gamemodes.types.UHCMeetup;
 import me.infinityz.minigame.scoreboard.ScatterScoreboard;
 import me.infinityz.minigame.tasks.TeleportTemporalTask;
 import net.md_5.bungee.api.ChatColor;
@@ -149,7 +150,7 @@ public class StartCommand extends BaseCommand {
         instance.getChunkManager().getAutoChunkScheduler().cancel();
 
         Bukkit.getWorlds().forEach(it -> {
-            it.getWorldBorder().setSize(4000);
+            it.getWorldBorder().setSize(instance.getGame().getBorderSize());
             it.setDifficulty(Difficulty.HARD);
             it.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, true);
             it.setTime(0);
@@ -168,6 +169,75 @@ public class StartCommand extends BaseCommand {
             teleportEvent.setStartDelayTicks(delayTicks);
         }
         Bukkit.getPluginManager().callEvent(teleportEvent);
+
+    }
+
+    public static void main(String[] args) {
+
+    }
+
+    @CommandPermission("staff.perm")
+    @Subcommand("meetup")
+    @CommandAlias("meetup")
+    @Default
+    public void scatterNoLoad(CommandSender sender) {
+
+        instance.getGamemodeManager().getScenario(UHCMeetup.class).cancelWaitingForPlayers();
+        var count = 10;
+        var chain = UHC.newChain().sync(() -> countDown(10));
+
+        while (count-- > 1) {
+            final var current = count;
+            chain.delay(20).sync(() -> countDown(current));
+        }
+
+        chain.sync(() -> {
+
+            if (instance.getTeamManger().isTeamManagement()) {
+                Bukkit.dispatchCommand(sender, "team man false");
+            }
+    
+            if (instance.getTeamManger().getTeamSize() > 1) {
+                Bukkit.dispatchCommand(sender, "team random");
+            }
+    
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "scoreboard objectives setdisplay list health_name");
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "whitelist add @a");
+    
+            instance.getChunkManager().getAutoChunkScheduler().cancel();
+    
+            Bukkit.getWorlds().forEach(it -> {
+                it.getWorldBorder().setSize(instance.getGame().getBorderSize());
+                it.setDifficulty(Difficulty.HARD);
+                it.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, true);
+                it.setTime(0);
+            });
+    
+            instance.getScoreboardManager().purgeScoreboards();
+    
+            instance.getListenerManager().unregisterListener(instance.getListenerManager().getLobby());
+    
+            Bukkit.getOnlinePlayers().forEach(players -> {
+    
+                players.setStatistic(Statistic.TIME_SINCE_REST, 0);
+                players.getInventory().clear();
+                players.setExp(0.0f);
+                players.setFoodLevel(26);
+                players.setTotalExperience(0);
+                players.setLevel(0);
+                players.removePotionEffect(PotionEffectType.NIGHT_VISION);
+                players.setGameMode(GameMode.SURVIVAL);
+                players.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
+            });
+    
+            Bukkit.getOnlinePlayers().stream().filter(it -> it.getGameMode() != GameMode.SPECTATOR)
+                    .forEach(players -> instance.getPlayerManager().addCreateUHCPlayer(players.getUniqueId(), true));
+            Bukkit.getOnlinePlayers().forEach(all -> all.removePotionEffect(PotionEffectType.NIGHT_VISION));
+    
+            var teleportEvent = new TeleportationCompletedEvent();
+            Bukkit.getPluginManager().callEvent(teleportEvent);
+
+        }).sync(TaskChain::abort).execute();
 
     }
 
