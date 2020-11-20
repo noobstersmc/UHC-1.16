@@ -18,8 +18,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
@@ -64,7 +66,6 @@ public class GlobalListener implements Listener {
         return e != null && e.getType().toString().contains("_AXE");
     }
 
-
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onArrow(EntityDamageByEntityEvent e) {
         var damager = e.getDamager();
@@ -78,12 +79,11 @@ public class GlobalListener implements Listener {
             return;
 
         Player shooter = ((Player) ((Projectile) e.getDamager()).getShooter());
-        
+
         Player p = (Player) e.getEntity();
 
         if (p.getHealth() - e.getFinalDamage() <= 0.0D || p.isBlocking())
             return;
-
 
         if (shooter == p)
             return;
@@ -93,47 +93,45 @@ public class GlobalListener implements Listener {
 
     }
 
-    //DEATHMATCH
-    
+    // DEATHMATCH
+
     @EventHandler
     public void onDeathMatch(GameTickEvent e) {
-        if (!instance.getGame().isHasSomeoneWon() 
-        && instance.getGame().isDeathMatch() && e.getSecond() % 5 == 0) {
-            Bukkit.getScheduler().runTask(instance, ()->{
+        if (!instance.getGame().isHasSomeoneWon() && instance.getGame().isDeathMatch() && e.getSecond() % 5 == 0) {
+            Bukkit.getScheduler().runTask(instance, () -> {
                 Bukkit.getOnlinePlayers().forEach(players -> {
-                    if (players.getGameMode() == GameMode.SURVIVAL){
-                        if(players.getHealth() > 2)
-                            players.setHealth(players.getHealth()-2);
+                    if (players.getGameMode() == GameMode.SURVIVAL) {
+                        if (players.getHealth() > 2)
+                            players.setHealth(players.getHealth() - 2);
                         players.damage(2);
                     }
                 });
             });
         }
-  
+
     }
 
     @EventHandler
     public void onAntiMining(GameTickEvent e) {
         if (instance.getGame().isAntiMining()) {
-            Bukkit.getScheduler().runTask(instance, ()->{
+            Bukkit.getScheduler().runTask(instance, () -> {
                 Bukkit.getOnlinePlayers().forEach(players -> {
-                    if (players.getGameMode() == GameMode.SURVIVAL 
-                        && players.getWorld().getEnvironment() != Environment.NETHER
-                        && players.getLocation().getY() < 55)
-                            players.sendActionBar(ChatColor.YELLOW + "⚠ You must be on surface at meetup.");
+                    if (players.getGameMode() == GameMode.SURVIVAL
+                            && players.getWorld().getEnvironment() != Environment.NETHER
+                            && players.getLocation().getY() < 55)
+                        players.sendActionBar(ChatColor.YELLOW + "⚠ You must be on surface at meetup.");
                 });
             });
         }
-  
+
     }
 
     @EventHandler
-    public void onAntiMiningMine(BlockBreakEvent e){
-        if(instance.getGame().isAntiMining()){
+    public void onAntiMiningMine(BlockBreakEvent e) {
+        if (instance.getGame().isAntiMining()) {
             var player = e.getPlayer().getLocation().getY();
             var block = e.getBlock().getLocation().getY();
-            if(e.getPlayer().getWorld().getEnvironment() != Environment.NETHER && 
-                player < 55 && player > block){
+            if (e.getPlayer().getWorld().getEnvironment() != Environment.NETHER && player < 55 && player > block) {
                 e.setCancelled(true);
                 e.getPlayer().sendMessage(ChatColor.RED + "Mining is not allowed at meetup.");
             }
@@ -164,7 +162,7 @@ public class GlobalListener implements Listener {
         Bukkit.getOnlinePlayers().stream().filter(player -> player.getWorld().getEnvironment() == Environment.NETHER)
                 .forEach(netherPlayer -> netherPlayer.teleportAsync(
                         ChunksManager.centerLocation(ChunksManager.findScatterLocation(worldToTeleport, radius))));
-        // Mensaje para todos. 
+        // Mensaje para todos.
         Bukkit.broadcastMessage(ChatColor.of("#2be49c") + "The Nether has been disabled.");
 
     }
@@ -184,8 +182,86 @@ public class GlobalListener implements Listener {
                     p2 = (Player) proj.getShooter();
                 }
             }
-            if (p2 != null && !instance.getGame().isPvp())
+            if (p2 != null && !instance.getGame().isPvp() && !instance.getGameStage().equals(Stage.LOBBY)) {
+                p2.sendMessage(ChatColor.RED + "PvP is currently disabled.");
                 e.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onHold(PlayerInteractEvent e) {
+        if (instance.getGame().isPvp())
+            return;
+        final var player = e.getPlayer();
+        final var item = player.getInventory().getItemInMainHand();
+        if (item.getType().toString().contains("SPAWN")) {
+            e.setCancelled(true);
+            player.sendMessage(ChatColor.RED + "iPvP is currently disabled.");
+        }
+    }
+    
+    @EventHandler
+    public void onInteract(PlayerInteractEvent e) {
+        if (instance.getGame().isPvp())
+            return;
+        final var players = e.getPlayer().getLocation().getNearbyPlayers(5);
+        if (players.isEmpty())
+            return;
+
+        var player = e.getPlayer();
+        final var item = player.getInventory().getItemInMainHand().getType();
+        if (item.equals(Material.FLINT_AND_STEEL) || item.equals(Material.LAVA_BUCKET)
+                || item.equals(Material.FIRE_CHARGE)) {
+            var playerTeam = instance.getTeamManger().getPlayerTeam(player.getUniqueId());
+            
+            var shouldBeCancelled = players.stream().filter(p -> !(playerTeam != null && playerTeam.isMember(p.getUniqueId()))).findAny().isPresent();
+            if(shouldBeCancelled){
+                e.setCancelled(true);
+                player.sendMessage(ChatColor.RED + "iPvP is currently disabled.");
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPlace(BlockPlaceEvent e) {
+        if (instance.getGame().isPvp())
+            return;
+        var players = e.getPlayer().getLocation().getNearbyPlayers(5);
+        if (players.isEmpty())
+            return;
+
+        var block = e.getBlock().getType();
+        if (block.equals(Material.SAND) || block.equals(Material.GRAVEL) || block.toString().contains("POWDER")
+                || block.toString().contains("CAMPFIRE")) {
+            var player = e.getPlayer();
+            var playerTeam = instance.getTeamManger().getPlayerTeam(player.getUniqueId());
+
+            var shouldBeCancelled = players.stream().filter(p -> !(playerTeam != null && playerTeam.isMember(p.getUniqueId()))).findAny().isPresent();
+            if(shouldBeCancelled){
+                e.setCancelled(true);
+                player.sendMessage(ChatColor.RED + "iPvP is currently disabled.");
+            }
+        }
+    }
+
+    @EventHandler
+    public void onBreak(BlockBreakEvent e) {
+        if (instance.getGame().isPvp())
+            return;
+        final var players = e.getPlayer().getLocation().getNearbyPlayers(5);
+        if (players.isEmpty())
+            return;
+        var block = e.getBlock().getType();
+        if (block.equals(Material.FURNACE) || block.equals(Material.ANVIL) || block.toString().contains("TABLE")) {
+            var player = e.getPlayer();
+            var playerTeam = instance.getTeamManger().getPlayerTeam(player.getUniqueId());
+
+            var shouldBeCancelled = players.stream().filter(p -> !(playerTeam != null && playerTeam.isMember(p.getUniqueId()))).findAny().isPresent();
+            if(shouldBeCancelled){
+                e.setCancelled(true);
+                player.sendMessage(ChatColor.RED + "iPvP is currently disabled.");
+            }
         }
     }
 
@@ -252,13 +328,14 @@ public class GlobalListener implements Listener {
             players.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 15, 20));
             players.setFoodLevel(26);
             players.playSound(players.getLocation(), Sound.ENTITY_RAVAGER_CELEBRATE, 1, 1);
-
+            Bukkit.dispatchCommand(players, "config");
             bar.addPlayer(players);
         });
         Bukkit.broadcastMessage(GameLoop.SHAMROCK_GREEN + "UHC has started!");
 
         new AntiFallDamage(instance, Bukkit.getOnlinePlayers().stream()
                 .map(p -> p.getUniqueId().getMostSignificantBits()).collect(Collectors.toList()));
+
     }
 
 }

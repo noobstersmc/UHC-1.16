@@ -33,7 +33,7 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
         var color4 = ChatColor.of("#BCBCBC");
         if (sender instanceof Player) {
             var player = (Player) sender;
-            sender.sendMessage(color4 + "---------------------------------\n" + color3 + "        Noobsters\n" + color4
+            sender.sendMessage(color4
                     + "---------------------------------\n" + color + "Config: " + ChatColor.WHITE + "UHC "
                     + getGameType() + "\n");
             player.sendMessage(new ComponentBuilder("Scenarios: ").color(color)

@@ -18,7 +18,6 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.event.player.PlayerAdvancementDoneEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -26,6 +25,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.EnchantingInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionType;
@@ -40,6 +40,7 @@ import lombok.Getter;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.chunks.ChunksManager;
 import me.infinityz.minigame.enums.Stage;
+import me.infinityz.minigame.events.GameStartedEvent;
 import me.infinityz.minigame.events.GameTickEvent;
 import me.infinityz.minigame.events.PlayerJoinedLateEvent;
 import me.infinityz.minigame.events.ScoreboardUpdateEvent;
@@ -187,13 +188,12 @@ public class UHCMeetup extends IGamemode implements Listener {
     }
 
     @EventHandler
-    public void onStart(GameTickEvent e) {
-        if (e.getSecond() == 0) {
-            Bukkit.getOnlinePlayers().forEach(players -> {
-                equip(players);
-                players.sendMessage(ChatColor.of("#c3752c") + "Use /reroll to reload your kit!");
-            });
-        }
+    public void onStart(GameStartedEvent e) {
+        Bukkit.getOnlinePlayers().forEach(players -> {
+        equip(players);
+        players.sendMessage(ChatColor.of("#c3752c") + "Use /reroll to reload your kit!");
+        });
+        
     }
 
     @EventHandler
@@ -212,7 +212,13 @@ public class UHCMeetup extends IGamemode implements Listener {
     @EventHandler
     public void onDeath(PlayerDeathEvent e){
         var loc = e.getEntity().getPlayer().getLocation();
-        loc.getWorld().spawn(loc, ExperienceOrb.class).setExperience(10);
+        loc.getWorld().spawn(loc, ExperienceOrb.class).setExperience(12);
+
+        ItemStack goldenHead = new ItemStack(Material.GOLDEN_APPLE);
+        ItemMeta im = goldenHead.getItemMeta();
+        im.setDisplayName(ChatColor.GOLD + "Golden Head");
+        goldenHead.setItemMeta(im);
+        e.getDrops().add(goldenHead);
     }
 
     @EventHandler

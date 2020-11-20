@@ -41,6 +41,7 @@ import me.infinityz.minigame.events.ScoreboardUpdateEvent;
 import me.infinityz.minigame.events.TeamWinEvent;
 import me.infinityz.minigame.events.UHCPlayerDequalificationEvent;
 import me.infinityz.minigame.game.Game;
+import me.infinityz.minigame.gamemodes.types.GoldenRetreiver;
 import me.infinityz.minigame.gamemodes.types.SkyHigh;
 import me.infinityz.minigame.gamemodes.types.TiempoBomba;
 import me.infinityz.minigame.gamemodes.types.UHCMeetup;
@@ -226,7 +227,9 @@ public class IngameListeners implements Listener {
     @EventHandler
     public void onDeathHead(PlayerDeathEvent e) {
         final Player p = e.getEntity();
-        if(instance.getGamemodeManager().isScenarioEnable(TiempoBomba.class)){
+        if(instance.getGamemodeManager().isScenarioEnable(GoldenRetreiver.class)) return;
+        if(instance.getGamemodeManager().isScenarioEnable(TiempoBomba.class) 
+            && !instance.getGamemodeManager().isScenarioEnable(GoldenRetreiver.class)){
             var stack = new ItemStack(Material.PLAYER_HEAD);
             var meta = stack.getItemMeta();
             if(meta instanceof SkullMeta){
@@ -253,10 +256,10 @@ public class IngameListeners implements Listener {
         
         Bukkit.getScheduler().runTaskAsynchronously(instance, this::calculateWin);
 
-        Bukkit.getScheduler().runTask(instance, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
+        /*Bukkit.getScheduler().runTask(instance, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
                 "whitelist remove " + e.getOfflinePlayer().getName())
 
-        );
+        );*/
         if (e.getReason() == DQReason.OFFLINE_DQ) {
             Bukkit.broadcastMessage(e.getOfflinePlayer().getName() + " has abandoned the game");
         }
