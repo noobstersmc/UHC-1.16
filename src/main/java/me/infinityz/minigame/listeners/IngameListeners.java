@@ -227,7 +227,9 @@ public class IngameListeners implements Listener {
     @EventHandler
     public void onDeathHead(PlayerDeathEvent e) {
         final Player p = e.getEntity();
-        if(instance.getGamemodeManager().isScenarioEnable(GoldenRetreiver.class)) return;
+        if(instance.getGamemodeManager().isScenarioEnable(GoldenRetreiver.class)
+            || instance.getGamemodeManager().isScenarioEnable(UHCMeetup.class)) return;
+
         if(instance.getGamemodeManager().isScenarioEnable(TiempoBomba.class) 
             && !instance.getGamemodeManager().isScenarioEnable(GoldenRetreiver.class)){
             var stack = new ItemStack(Material.PLAYER_HEAD);

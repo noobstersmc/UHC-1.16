@@ -41,7 +41,6 @@ import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.chunks.ChunksManager;
 import me.infinityz.minigame.enums.Stage;
 import me.infinityz.minigame.events.GameStartedEvent;
-import me.infinityz.minigame.events.GameTickEvent;
 import me.infinityz.minigame.events.PlayerJoinedLateEvent;
 import me.infinityz.minigame.events.ScoreboardUpdateEvent;
 import me.infinityz.minigame.game.Game;

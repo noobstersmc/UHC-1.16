@@ -131,7 +131,6 @@ public class TiempoBomba extends IGamemode implements Listener {
                 chest.open();
                 e.getPlayer().openInventory(chest.getInventory());
             }
-            // TODO: find block underneath the hologram
 
         }
     }

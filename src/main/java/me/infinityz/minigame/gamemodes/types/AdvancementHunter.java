@@ -7,7 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerAdvancementDoneEvent;
 
 import me.infinityz.minigame.UHC;
-import me.infinityz.minigame.events.GameTickEvent;
+import me.infinityz.minigame.events.GameStartedEvent;
 import me.infinityz.minigame.events.PlayerJoinedLateEvent;
 import me.infinityz.minigame.gamemodes.IGamemode;
 
@@ -48,15 +48,12 @@ public class AdvancementHunter extends IGamemode implements Listener {
     }
 
     @EventHandler
-    public void onStart(GameTickEvent e) {
-        if (e.getSecond() == 1) {
+    public void onStart(GameStartedEvent e) {
             Bukkit.getScheduler().runTask(instance, () -> {
                 Bukkit.getOnlinePlayers()
                         .forEach(players -> players.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(10.0));
 
             });
-        }
-
     }
 
     @EventHandler

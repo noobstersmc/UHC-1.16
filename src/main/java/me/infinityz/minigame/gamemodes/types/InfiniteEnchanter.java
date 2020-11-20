@@ -17,7 +17,7 @@ import org.bukkit.inventory.ItemStack;
 
 import fr.mrmicky.fastinv.ItemBuilder;
 import me.infinityz.minigame.UHC;
-import me.infinityz.minigame.events.GameTickEvent;
+import me.infinityz.minigame.events.GameStartedEvent;
 import me.infinityz.minigame.events.PlayerJoinedLateEvent;
 import me.infinityz.minigame.gamemodes.IGamemode;
 
@@ -50,8 +50,7 @@ public class InfiniteEnchanter extends IGamemode implements Listener {
     }
 
     @EventHandler
-    public void onStart(GameTickEvent e) {
-        if (e.getSecond() == 1) {
+    public void onStart(GameStartedEvent e) {
             Bukkit.getOnlinePlayers().forEach(players -> {
                 players.getInventory().addItem(new ItemStack(Material.BOOK, 32));
                 players.getInventory().addItem(new ItemStack(Material.BOOKSHELF, 32));
@@ -59,8 +58,6 @@ public class InfiniteEnchanter extends IGamemode implements Listener {
                 players.getInventory().addItem(new ItemStack(Material.ENCHANTING_TABLE, 8));
                 players.setLevel(100);
             });
-        }
-
     }
 
     @EventHandler

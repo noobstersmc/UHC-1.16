@@ -436,14 +436,6 @@ public class UHCCommand extends BaseCommand {
 
     }
 
-    @Subcommand("dq")
-    @CommandCompletion("@uhcPlayers")
-    @CommandPermission("uhc.admin")
-    public void dq(CommandSender sender, @Flags("other") UHCPlayer target) {
-        // TODO: Implement the Dequalify command.
-
-    }
-
     @Subcommand("setHost")
     @CommandCompletion("@onlineplayers")
     @CommandPermission("uhc.admin")

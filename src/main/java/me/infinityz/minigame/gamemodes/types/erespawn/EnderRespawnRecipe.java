@@ -15,7 +15,6 @@ public class EnderRespawnRecipe extends CustomRecipe {
 
     public EnderRespawnRecipe(NamespacedKey namespacedKey, Recipe test) {
         super(namespacedKey, test);
-        // TODO Auto-generated constructor stub
 
                 final ItemStack respawnCrystal = new ItemStack(Material.END_CRYSTAL);
                 final ItemMeta im = respawnCrystal.getItemMeta();

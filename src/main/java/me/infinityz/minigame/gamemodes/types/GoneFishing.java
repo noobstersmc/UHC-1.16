@@ -8,7 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 
 import me.infinityz.minigame.UHC;
-import me.infinityz.minigame.events.GameTickEvent;
+import me.infinityz.minigame.events.GameStartedEvent;
 import me.infinityz.minigame.events.PlayerJoinedLateEvent;
 import me.infinityz.minigame.gamemodes.IGamemode;
 
@@ -47,13 +47,10 @@ public class GoneFishing extends IGamemode implements Listener {
     }
 
     @EventHandler
-    public void onStart(GameTickEvent e) {
-        if (e.getSecond() == 1) {
+    public void onStart(GameStartedEvent e) {
             Bukkit.getOnlinePlayers().forEach(players -> {
                 players.getInventory().addItem(item);
             });
-        }
-  
     }
 
     @EventHandler
