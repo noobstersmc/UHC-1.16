@@ -7,6 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 
+import fr.mrmicky.fastinv.ItemBuilder;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.events.GameStartedEvent;
 import me.infinityz.minigame.events.PlayerJoinedLateEvent;
@@ -19,13 +20,6 @@ public class GoneFishing extends IGamemode implements Listener {
     public GoneFishing(UHC instance) {
         super("GoneFishing", "Go fishing.");
         this.instance = instance;
-
-        var meta = item.getItemMeta();
-        meta.addEnchant(Enchantment.LURE, 666, true);
-        meta.addEnchant(Enchantment.LUCK, 666, true);
-        meta.addEnchant(Enchantment.VANISHING_CURSE, 1, false);
-        meta.setUnbreakable(true);
-        item.setItemMeta(meta);
     }
 
     @Override
@@ -48,13 +42,15 @@ public class GoneFishing extends IGamemode implements Listener {
 
     @EventHandler
     public void onStart(GameStartedEvent e) {
-            Bukkit.getOnlinePlayers().forEach(players -> {
-                players.getInventory().addItem(item);
-            });
+        var item = new ItemBuilder(Material.FISHING_ROD).enchant(Enchantment.LURE, 666).enchant(Enchantment.LUCK, 666).enchant(Enchantment.VANISHING_CURSE).build();
+        Bukkit.getOnlinePlayers().forEach(players -> {
+            players.getInventory().addItem(item);
+        });
     }
 
     @EventHandler
     public void onPlayerJoinLate(PlayerJoinedLateEvent e){
+        var item = new ItemBuilder(Material.FISHING_ROD).enchant(Enchantment.LURE, 666).enchant(Enchantment.LUCK, 666).enchant(Enchantment.VANISHING_CURSE).build();
         e.getPlayer().getInventory().addItem(item);
     }
 

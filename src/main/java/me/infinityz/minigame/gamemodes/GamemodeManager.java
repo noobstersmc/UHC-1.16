@@ -21,6 +21,7 @@ import me.infinityz.minigame.gamemodes.types.FastLeavesDecay;
 import me.infinityz.minigame.gamemodes.types.FireLess;
 import me.infinityz.minigame.gamemodes.types.FlorPoderosa;
 import me.infinityz.minigame.gamemodes.types.GoToHell;
+import me.infinityz.minigame.gamemodes.types.GoldenRetreiver;
 import me.infinityz.minigame.gamemodes.types.GoneFishing;
 import me.infinityz.minigame.gamemodes.types.HasteyBoys;
 import me.infinityz.minigame.gamemodes.types.InfiniteEnchanter;
@@ -40,6 +41,7 @@ import me.infinityz.minigame.gamemodes.types.UHCMeetup;
 import me.infinityz.minigame.gamemodes.types.DoubleGold;
 import me.infinityz.minigame.gamemodes.types.UHCRun;
 import me.infinityz.minigame.gamemodes.types.UnDamaxe;
+import me.infinityz.minigame.gamemodes.types.XPHunter;
 import me.infinityz.minigame.gamemodes.types.NineSlots;
 import me.infinityz.minigame.gamemodes.types.ThunderKill;
 import me.infinityz.minigame.gamemodes.types.Totems.Totems;
@@ -88,6 +90,7 @@ public class GamemodeManager {
         registerGamemode(new BloodDiamonds(instance));
         registerGamemode(new AdvancementHunter(instance));
         //registerGamemode(new Radar(instance));
+        registerGamemode(new GoldenRetreiver(instance));
         registerGamemode(new FlorPoderosa(instance));
         registerGamemode(new TiempoBomba(instance));
         registerGamemode(new NoLimpiar(instance));
@@ -95,6 +98,7 @@ public class GamemodeManager {
         registerGamemode(new NineSlots(instance));
         registerGamemode(new DoubleGold(instance));
         registerGamemode(new ThunderKill(instance));
+        //registerGamemode(new XPHunter(instance)); bugs por culpa de minecraft
         
         
         // Scenarios pack

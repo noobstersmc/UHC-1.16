@@ -9,17 +9,21 @@ import org.bukkit.Sound;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Banner;
 import org.bukkit.entity.Egg;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.FishHook;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Snowball;
 import org.bukkit.entity.Trident;
+import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -190,7 +194,7 @@ public class GlobalListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGH)
-    public void onHold(PlayerInteractEvent e) {
+    public void onHoldEgg(PlayerInteractEvent e) {
         if (instance.getGame().isPvp())
             return;
         final var player = e.getPlayer();
@@ -200,69 +204,82 @@ public class GlobalListener implements Listener {
             player.sendMessage(ChatColor.RED + "iPvP is currently disabled.");
         }
     }
-    
-    @EventHandler
-    public void onInteract(PlayerInteractEvent e) {
-        if (instance.getGame().isPvp())
-            return;
-        final var players = e.getPlayer().getLocation().getNearbyPlayers(5);
-        if (players.isEmpty())
-            return;
 
+    @EventHandler
+    public void onDamageVillager(EntityDamageByEntityEvent e){
+        if(!instance.getGame().isPvp() && e.getEntity() instanceof Villager){
+            e.setCancelled(true);
+            if(e.getDamager() instanceof Player) e.getDamager().sendMessage(ChatColor.RED + "Villagers are invincible in no-pvp period.");
+        }
+    }
+
+    @EventHandler
+    public void onDamageVillagerV2(EntityDamageEvent e){
+        if(!instance.getGame().isPvp() && e.getEntity() instanceof Villager) e.setCancelled(true);
+    }
+    
+
+    @EventHandler
+    public void onFireiPvp(PlayerInteractEvent e) {
+        if (instance.getGame().isPvp()) return;
         var player = e.getPlayer();
         final var item = player.getInventory().getItemInMainHand().getType();
+
         if (item.equals(Material.FLINT_AND_STEEL) || item.equals(Material.LAVA_BUCKET)
-                || item.equals(Material.FIRE_CHARGE)) {
-            var playerTeam = instance.getTeamManger().getPlayerTeam(player.getUniqueId());
-            
-            var shouldBeCancelled = players.stream().filter(p -> !(playerTeam != null && playerTeam.isMember(p.getUniqueId()))).findAny().isPresent();
-            if(shouldBeCancelled){
-                e.setCancelled(true);
-                player.sendMessage(ChatColor.RED + "iPvP is currently disabled.");
-            }
+            || item.equals(Material.FIRE_CHARGE)){
+
+        var players = e.getPlayer().getLocation().getNearbyPlayers(5, p -> !excludePlayers(player, p) 
+            && p.getUniqueId() != player.getUniqueId() && p.getGameMode() == GameMode.SURVIVAL);
+        if (players.isEmpty()) return;
+
+        e.setCancelled(true);
+        player.sendMessage(ChatColor.RED + "iPvP is currently disabled.");
+
         }
+        
     }
 
     @EventHandler
-    public void onPlace(BlockPlaceEvent e) {
-        if (instance.getGame().isPvp())
-            return;
-        var players = e.getPlayer().getLocation().getNearbyPlayers(5);
-        if (players.isEmpty())
-            return;
-
+    public void onPlaceiPvp(BlockPlaceEvent e) {
+        if (instance.getGame().isPvp()) return;
         var block = e.getBlock().getType();
-        if (block.equals(Material.SAND) || block.equals(Material.GRAVEL) || block.toString().contains("POWDER")
-                || block.toString().contains("CAMPFIRE")) {
-            var player = e.getPlayer();
-            var playerTeam = instance.getTeamManger().getPlayerTeam(player.getUniqueId());
+        if (block.equals(Material.SAND) || block.equals(Material.GRAVEL) || block.toString().contains("POWDER") 
+            || block.toString().contains("CAMPFIRE") || block.toString().contains("ANVIL") || block.equals(Material.MAGMA_BLOCK)){
+        var player = e.getPlayer();
 
-            var shouldBeCancelled = players.stream().filter(p -> !(playerTeam != null && playerTeam.isMember(p.getUniqueId()))).findAny().isPresent();
-            if(shouldBeCancelled){
-                e.setCancelled(true);
-                player.sendMessage(ChatColor.RED + "iPvP is currently disabled.");
-            }
+        var players = e.getBlock().getLocation().getNearbyPlayers(5, p -> !excludePlayers(player, p) 
+            && p.getUniqueId() != player.getUniqueId() && p.getGameMode() == GameMode.SURVIVAL);
+        if (players.isEmpty()) return;
+
+        e.setCancelled(true);
+        player.sendMessage(ChatColor.RED + "iPvP is currently disabled.");
+
         }
+        
     }
 
     @EventHandler
-    public void onBreak(BlockBreakEvent e) {
-        if (instance.getGame().isPvp())
-            return;
-        final var players = e.getPlayer().getLocation().getNearbyPlayers(5);
-        if (players.isEmpty())
-            return;
+    public void onBreakiPvp(BlockBreakEvent e) {
+        if (instance.getGame().isPvp()) return;
         var block = e.getBlock().getType();
-        if (block.equals(Material.FURNACE) || block.equals(Material.ANVIL) || block.toString().contains("TABLE")) {
-            var player = e.getPlayer();
-            var playerTeam = instance.getTeamManger().getPlayerTeam(player.getUniqueId());
+        if (block.equals(Material.FURNACE) || block.toString().contains("ANVIL") || block.toString().contains("TABLE")){
+        var player = e.getPlayer();
 
-            var shouldBeCancelled = players.stream().filter(p -> !(playerTeam != null && playerTeam.isMember(p.getUniqueId()))).findAny().isPresent();
-            if(shouldBeCancelled){
-                e.setCancelled(true);
-                player.sendMessage(ChatColor.RED + "iPvP is currently disabled.");
-            }
+        var players = e.getBlock().getLocation().getNearbyPlayers(5, p -> !excludePlayers(player, p) 
+            && p.getUniqueId() != player.getUniqueId() && p.getGameMode() == GameMode.SURVIVAL);
+        if (players.isEmpty()) return;
+
+        e.setCancelled(true);
+        player.sendMessage(ChatColor.RED + "iPvP is currently disabled.");
+
         }
+        
+    }
+
+    private boolean excludePlayers(Player p1, Player p2){
+        var p1Team = instance.getTeamManger().getPlayerTeam(p1.getUniqueId());
+        if(p1Team != null && p1Team.isMember(p2.getUniqueId()) && p1.getUniqueId() != p2.getUniqueId()) return true;
+        return false;
     }
 
     /**
