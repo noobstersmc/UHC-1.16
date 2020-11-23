@@ -11,25 +11,33 @@ import lombok.Setter;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.gamemodes.types.AdvancementHunter;
 import me.infinityz.minigame.gamemodes.types.BackPack;
+import me.infinityz.minigame.gamemodes.types.BattleRoyale;
 import me.infinityz.minigame.gamemodes.types.BloodDiamonds;
+import me.infinityz.minigame.gamemodes.types.BloodEnchants;
 import me.infinityz.minigame.gamemodes.types.BloodHunter;
 import me.infinityz.minigame.gamemodes.types.BowLess;
 import me.infinityz.minigame.gamemodes.types.Cutclean;
 import me.infinityz.minigame.gamemodes.types.DebugMode;
 import me.infinityz.minigame.gamemodes.types.DoubleOres;
 import me.infinityz.minigame.gamemodes.types.FastLeavesDecay;
+import me.infinityz.minigame.gamemodes.types.FastSmelting;
 import me.infinityz.minigame.gamemodes.types.FireLess;
 import me.infinityz.minigame.gamemodes.types.FlorPoderosa;
 import me.infinityz.minigame.gamemodes.types.GoToHell;
 import me.infinityz.minigame.gamemodes.types.GoldenRetreiver;
 import me.infinityz.minigame.gamemodes.types.GoneFishing;
 import me.infinityz.minigame.gamemodes.types.HasteyBoys;
+import me.infinityz.minigame.gamemodes.types.HasteyBoysPlus;
 import me.infinityz.minigame.gamemodes.types.InfiniteEnchanter;
 import me.infinityz.minigame.gamemodes.types.Limits;
 import me.infinityz.minigame.gamemodes.types.LuckyLeaves;
+import me.infinityz.minigame.gamemodes.types.MeetupDoubleLifeBar;
 import me.infinityz.minigame.gamemodes.types.Moles;
+import me.infinityz.minigame.gamemodes.types.MonstersInc;
 import me.infinityz.minigame.gamemodes.types.NoFall;
 import me.infinityz.minigame.gamemodes.types.NoLimpiar;
+import me.infinityz.minigame.gamemodes.types.PermaGlow;
+import me.infinityz.minigame.gamemodes.types.Radar;
 import me.infinityz.minigame.gamemodes.types.ShieldLess;
 import me.infinityz.minigame.gamemodes.types.SkyHigh;
 import me.infinityz.minigame.gamemodes.types.Switcheroo;
@@ -39,7 +47,9 @@ import me.infinityz.minigame.gamemodes.types.Timber;
 import me.infinityz.minigame.gamemodes.types.TripleOres;
 import me.infinityz.minigame.gamemodes.types.UHCMeetup;
 import me.infinityz.minigame.gamemodes.types.DoubleGold;
+import me.infinityz.minigame.gamemodes.types.DoubleLifeBar;
 import me.infinityz.minigame.gamemodes.types.UHCRun;
+import me.infinityz.minigame.gamemodes.types.UHCVandalico;
 import me.infinityz.minigame.gamemodes.types.UnDamaxe;
 import me.infinityz.minigame.gamemodes.types.XPHunter;
 import me.infinityz.minigame.gamemodes.types.NineSlots;
@@ -66,7 +76,6 @@ public class GamemodeManager {
         registerGamemode(new EnderRespawn(instance));
         registerGamemode(new Moles(instance));
         registerGamemode(new GoToHell(instance));
-        registerGamemode(new UHCLatam(instance));
         registerGamemode(new BowLess(instance));
         registerGamemode(new UnDamaxe(instance));
         registerGamemode(new SwordLess(instance));
@@ -78,7 +87,6 @@ public class GamemodeManager {
         registerGamemode(new Limits(instance));
         registerGamemode(new LuckyLeaves(instance));
         registerGamemode(new Timber(instance));
-        registerGamemode(new Totems(instance));
         registerGamemode(new DoubleOres(instance));
         registerGamemode(new TripleOres(instance));
         registerGamemode(new BloodHunter(instance));
@@ -98,13 +106,27 @@ public class GamemodeManager {
         registerGamemode(new NineSlots(instance));
         registerGamemode(new DoubleGold(instance));
         registerGamemode(new ThunderKill(instance));
-        //registerGamemode(new XPHunter(instance)); bugs por culpa de minecraft
-        
-        
+        registerGamemode(new XPHunter(instance));
+        registerGamemode(new FastSmelting(instance));
+        registerGamemode(new MonstersInc(instance));
+        registerGamemode(new PermaGlow(instance));
+        registerGamemode(new BloodEnchants(instance));
+        registerGamemode(new HasteyBoysPlus(instance));
+        registerGamemode(new DoubleLifeBar(instance));
+        registerGamemode(new MeetupDoubleLifeBar(instance));
+
+        //Invitados
+        registerGamemode(new UHCVandalico(instance));
+        registerGamemode(new UHCLatam(instance));
+
         // Scenarios pack
         registerGamemode(new UHCRun(instance));
 
+        //Crafts
+        registerGamemode(new Totems(instance));
+
         // Gamemode
+        registerGamemode(new BattleRoyale(instance));
         registerGamemode(new UHCMeetup(instance));
 
         instance.getCommandManager().getCommandCompletions().registerAsyncCompletion("scenarios",

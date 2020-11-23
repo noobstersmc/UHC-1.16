@@ -147,7 +147,7 @@ public class GameLoop extends BukkitRunnable {
 
         if(time == game.getBorderCenterTime()+game.getBorderTime()+game.getFinalBorderGrace()+game.getDMgrace() && !game.isHasSomeoneWon()){
             //DEATHMATCH
-            instance.getGame().setDeathMatch(true);
+            instance.getGame().setDeathMatchDamage(true);
             Bukkit.broadcastMessage(ChatColor.of("#d40c42") + "Death Match has started.");
             Bukkit.getScheduler().runTask(instance, () -> Bukkit.getOnlinePlayers().forEach(players -> {
                 players.playSound(players.getLocation(), Sound.ENTITY_WITHER_DEATH, 1.0f, 0.5f);

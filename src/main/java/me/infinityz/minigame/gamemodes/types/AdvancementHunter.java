@@ -43,7 +43,7 @@ public class AdvancementHunter extends IGamemode implements Listener {
         if (adv.startsWith("husbandry") || adv.startsWith("story") || adv.startsWith("nether") || adv.startsWith("adventure")
                 || adv.startsWith("end")) {
             var playerHealth = e.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
-            e.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(playerHealth + 1);
+            e.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(playerHealth + 2);
         }
     }
 
@@ -51,14 +51,14 @@ public class AdvancementHunter extends IGamemode implements Listener {
     public void onStart(GameStartedEvent e) {
             Bukkit.getScheduler().runTask(instance, () -> {
                 Bukkit.getOnlinePlayers()
-                        .forEach(players -> players.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(10.0));
+                        .forEach(players -> players.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(2.0));
 
             });
     }
 
     @EventHandler
     public void onJoinLate(PlayerJoinedLateEvent e){
-        e.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(10.0);
+        e.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(2.0);
     }
 
 }

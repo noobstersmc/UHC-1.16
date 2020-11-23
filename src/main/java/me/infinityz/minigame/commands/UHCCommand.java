@@ -304,6 +304,11 @@ public class UHCCommand extends BaseCommand {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "game title " + newTittle);
                 Game.setScoreColors(ChatColor.of("#c44faf") + "");
             }break;
+            case "VANDAL": {
+                newTittle = ChatColor.of("#ef9e48") + "" + ChatColor.BOLD + "UHC VANDÁLICO";
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "game title " + newTittle);
+                Game.setScoreColors(ChatColor.of("#00d0db") + "");
+            }break;
             default: {
 
             }break;

@@ -2,6 +2,8 @@ package me.infinityz.minigame.listeners;
 
 import java.util.stream.Collectors;
 
+import com.destroystokyo.paper.event.player.PlayerAdvancementCriterionGrantEvent;
+
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -9,8 +11,6 @@ import org.bukkit.Sound;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Banner;
 import org.bukkit.entity.Egg;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.FishHook;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -52,6 +52,11 @@ public class GlobalListener implements Listener {
 
     public GlobalListener(UHC instance) {
         this.instance = instance;
+    }
+
+    @EventHandler
+    public void DisableAdvancements(PlayerAdvancementCriterionGrantEvent e){
+        if(e.getPlayer().getGameMode() != GameMode.SURVIVAL) e.setCancelled(true);
     }
 
     @EventHandler
@@ -101,7 +106,8 @@ public class GlobalListener implements Listener {
 
     @EventHandler
     public void onDeathMatch(GameTickEvent e) {
-        if (!instance.getGame().isHasSomeoneWon() && instance.getGame().isDeathMatch() && e.getSecond() % 5 == 0) {
+        if (instance.getGame().isDeathMatch() && !instance.getGame().isHasSomeoneWon() 
+                && instance.getGame().isDeathMatchDamage() && e.getSecond() % 5 == 0) {
             Bukkit.getScheduler().runTask(instance, () -> {
                 Bukkit.getOnlinePlayers().forEach(players -> {
                     if (players.getGameMode() == GameMode.SURVIVAL) {
@@ -226,7 +232,7 @@ public class GlobalListener implements Listener {
         final var item = player.getInventory().getItemInMainHand().getType();
 
         if (item.equals(Material.FLINT_AND_STEEL) || item.equals(Material.LAVA_BUCKET)
-            || item.equals(Material.FIRE_CHARGE)){
+            || item.equals(Material.FIRE_CHARGE) || item.equals(Material.TNT_MINECART)){
 
         var players = e.getPlayer().getLocation().getNearbyPlayers(5, p -> !excludePlayers(player, p) 
             && p.getUniqueId() != player.getUniqueId() && p.getGameMode() == GameMode.SURVIVAL);
@@ -243,8 +249,13 @@ public class GlobalListener implements Listener {
     public void onPlaceiPvp(BlockPlaceEvent e) {
         if (instance.getGame().isPvp()) return;
         var block = e.getBlock().getType();
+        if (block.toString().contains("BED")){
+            e.setCancelled(true);
+            return;
+        }
         if (block.equals(Material.SAND) || block.equals(Material.GRAVEL) || block.toString().contains("POWDER") 
-            || block.toString().contains("CAMPFIRE") || block.toString().contains("ANVIL") || block.equals(Material.MAGMA_BLOCK)){
+            || block.toString().contains("CAMPFIRE") || block.toString().contains("ANVIL") 
+            || block.equals(Material.MAGMA_BLOCK) || block.equals(Material.CACTUS) || block.equals(Material.TNT)){
         var player = e.getPlayer();
 
         var players = e.getBlock().getLocation().getNearbyPlayers(5, p -> !excludePlayers(player, p) 

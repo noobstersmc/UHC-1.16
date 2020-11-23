@@ -8,12 +8,12 @@ import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.events.UHCPlayerDequalificationEvent;
 import me.infinityz.minigame.gamemodes.IGamemode;
 
-public class ThunderKill extends IGamemode implements Listener {
+public class PermaGlow extends IGamemode implements Listener {
     private UHC instance;
-    private boolean thunder = false;
+    private boolean glow = false;
 
-    public ThunderKill(UHC instance) {
-        super("ThunderKill", "Every time a player dies weather changes between day and storm.");
+    public PermaGlow(UHC instance) {
+        super("PermaGlow", "Every time a player dies glowing changes.");
         this.instance = instance;
     }
 
@@ -37,14 +37,12 @@ public class ThunderKill extends IGamemode implements Listener {
 
     @EventHandler
     public void onPlayerDeath(UHCPlayerDequalificationEvent e){
-        if(!thunder){
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "weather thunder");
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "time set night");
-            thunder = true;
+        if(!glow){
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "effect give @a minecraft:glowing 10000 10 true");
+            glow = true;
         } else{
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "weather clear");
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "time set day");
-            thunder = false;
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "effect clear @a minecraft:glowing");
+            glow = false;
         }
     }
 

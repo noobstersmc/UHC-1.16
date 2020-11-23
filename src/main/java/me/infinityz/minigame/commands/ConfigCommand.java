@@ -74,6 +74,7 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
     @CommandAlias("deathmatch")
     public void deathmatch(CommandSender sender, Boolean bool) {
         instance.getGame().setDeathMatch(bool);
+        instance.getGame().setDeathMatchDamage(bool);
         sender.sendMessage("DeathMatch has been set to " + bool);
     }
 
@@ -107,6 +108,14 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
     public void changeBedsNerf(CommandSender sender, Boolean bool) {
         instance.getGame().setBedsNerf(bool);
         sender.sendMessage("BedsNerf changed to " + bool);
+    }
+
+    @CommandPermission("uhc.config.bedsnerf")
+    @Subcommand("anchor nerf")
+    @CommandAlias("anchor-nerf")
+    public void changeAnchorNerf(CommandSender sender, Boolean bool) {
+        instance.getGame().setAnchorNerf(bool);
+        sender.sendMessage("AnchorNerf changed to " + bool);
     }
 
     @CommandPermission("uhc.config.advancements")
@@ -177,17 +186,6 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
 
         instance.getGame().setStrengthNerf(bool);
         sender.sendMessage("Strength has been set to: " + bool);
-    }
-
-    @CommandPermission("uhc.config.critical")
-    @Subcommand("critical nerf")
-    @CommandAlias("critical-nerf")
-    public void changeCriticalNerf(CommandSender sender, @Optional Boolean bool) {
-        if (bool == null)
-            bool = !instance.getGame().isCriticalNerf();
-
-        instance.getGame().setCriticalNerf(bool);
-        sender.sendMessage("Critical nerf has been set to: " + bool);
     }
 
     @CommandPermission("uhc.config.applerate")

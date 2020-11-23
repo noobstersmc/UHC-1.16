@@ -379,7 +379,7 @@ public class IngameListeners implements Listener {
     }
 
     public void playTeamWinEffect(Team team) {
-        instance.getGame().setDeathMatch(false);
+        instance.getGame().setDeathMatchDamage(false);
         var winnersName = team.getOfflinePlayersStream().map(OfflinePlayer::getName).collect(Collectors.toList());
         var winnersTitle = Title.builder()
                 .title(new ComponentBuilder("Victory!").bold(true).color(ChatColor.GOLD).create())
@@ -403,7 +403,7 @@ public class IngameListeners implements Listener {
     }
 
     private void playWinEffect(Player player) {
-        instance.getGame().setDeathMatch(false);
+        instance.getGame().setDeathMatchDamage(false);
         player.sendTitle(
                 Title.builder().title(new ComponentBuilder("Victory!").bold(true).color(ChatColor.GOLD).create())
                         .subtitle(ChatColor.GREEN + "Congratulations " + player.getName()).stay(6 * 20).fadeIn(10)

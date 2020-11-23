@@ -1,15 +1,16 @@
-package me.infinityz.minigame.gamemodes.types.radar;
+package me.infinityz.minigame.gamemodes.types;
 
 import java.util.Optional;
 
 import org.bukkit.Bukkit;
-import org.bukkit.NamespacedKey;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.meta.CompassMeta;
 
@@ -17,17 +18,16 @@ import gnu.trove.map.hash.THashMap;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.gamemodes.IGamemode;
 import me.infinityz.minigame.teams.objects.Team;
+import net.md_5.bungee.api.ChatColor;
 
 public class Radar extends IGamemode implements Listener {
     private UHC instance;
-    private RadarRecipe recipe;
     private THashMap<Long, Long> cooldownHashMap = new THashMap<Long, Long>();
     private double radius = 100;
 
     public Radar(UHC instance) {
-        super("Radar", "A Radar to search players can be crafted.");
+        super("Radar", "Compasses are a radar to search players.");
         this.instance = instance;
-        this.recipe = new RadarRecipe(new NamespacedKey(instance, "radar"), null);
     }
 
     @Override
@@ -35,8 +35,6 @@ public class Radar extends IGamemode implements Listener {
         if (isEnabled())
             return false;
         instance.getListenerManager().registerListener(this);
-        Bukkit.addRecipe(recipe.getRecipe());
-        Bukkit.getOnlinePlayers().forEach(all -> all.discoverRecipe(this.recipe.getNamespacedKey()));
         setEnabled(true);
         return true;
     }
@@ -46,15 +44,13 @@ public class Radar extends IGamemode implements Listener {
         if (!isEnabled())
             return false;
         instance.getListenerManager().unregisterListener(this);
-        Bukkit.removeRecipe(recipe.getNamespacedKey());
-        Bukkit.getOnlinePlayers().forEach(all -> all.undiscoverRecipe(this.recipe.getNamespacedKey()));
         setEnabled(false);
         return true;
     }
 
     @EventHandler
     public void onInteract(PlayerInteractEvent e) {
-        if (e.getAction() != Action.PHYSICAL && e.getItem().getItemMeta() instanceof CompassMeta) {
+        if (e.getAction() == Action.RIGHT_CLICK_AIR && e.getPlayer().getInventory().getItemInMainHand().getItemMeta() instanceof CompassMeta) {
             Bukkit.getScheduler().runTaskAsynchronously(instance, () -> {
                 var compass = e.getItem();
                 var compassMeta = (CompassMeta) compass.getItemMeta();
@@ -67,7 +63,7 @@ public class Radar extends IGamemode implements Listener {
                         var enemy = optionalEnemy.get();
                         compassMeta.setLodestone(enemy.getLocation());
                         var distance = player.getLocation().distanceSquared(enemy.getLocation());
-                        player.sendActionBar("Now tracking " + enemy.getName() + " distance = " + distance + "m");
+                        player.sendActionBar(ChatColor.RED + "Now tracking " + enemy.getName() + " distance = " + distance + "m");
                     }
                 }
             });
@@ -90,14 +86,14 @@ public class Radar extends IGamemode implements Listener {
     }
 
     @EventHandler
-    public void onAnvilRename(InventoryClickEvent e) {
-        var clickedInventory = e.getClickedInventory();
-        if (clickedInventory != null && clickedInventory.getType() == InventoryType.ANVIL) {
-            var itemSlot0 = e.getInventory().getItem(0);
-            if (itemSlot0.getItemMeta().getDisplayName().contains("RADAR")){
-                e.setCancelled(true);
-            }
+    public void onCraft(PrepareItemCraftEvent e) {
+        var recipe = e.getRecipe();
+        if(recipe != null && recipe.getResult().getType() == Material.COMPASS){
+            var meta = e.getInventory().getResult().getItemMeta();
+            meta.setDisplayName(ChatColor.DARK_RED + "RADAR");
+            e.getInventory().getResult().setItemMeta(meta);
         }
+
     }
 
 }

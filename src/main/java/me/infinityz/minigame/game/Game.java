@@ -35,16 +35,18 @@ public class Game {
     private boolean pvp = false;
     private boolean globalMute = false;
     private boolean hasSomeoneWon = false;
-    private boolean deathMatch = false;
+    private boolean deathMatchDamage = false;
     private boolean antiMining = false;
     private int uhcslots = 60;
     /* Game config */
+    private boolean deathMatch = true;
     private boolean privateGame = false;
     private boolean nether = true;
     private boolean end = false;
     private boolean strengthNerf = true;
     private boolean criticalNerf = true;
     private boolean bedsNerf = true;
+    private boolean anchorNerf = true;
     private boolean tearsNerf = false;
     private double applerate = 0.80;
     private int maxDisconnectTime = 600;

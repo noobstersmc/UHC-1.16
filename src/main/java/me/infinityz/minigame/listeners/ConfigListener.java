@@ -5,6 +5,8 @@ import java.util.Random;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World.Environment;
+import org.bukkit.block.Block;
+import org.bukkit.block.data.type.RespawnAnchor;
 import org.bukkit.entity.Drowned;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -36,9 +38,16 @@ import net.md_5.bungee.api.ChatColor;
 public class ConfigListener implements Listener {
 
     private UHC instance;
+    private Random random = new Random();
 
     public ConfigListener(UHC instance) {
         this.instance = instance;
+    }
+
+    public int randomN(Integer i){
+        var rand = random.nextInt(i);
+        if(rand != 0) return rand;
+        return i;
     }
 
     @EventHandler
@@ -197,10 +206,27 @@ public class ConfigListener implements Listener {
             e.setCancelled(true);
             e.setUseBed(Result.DENY);
             e.getBed().setType(Material.AIR);
-            e.getBed().getLocation().createExplosion(2.0f, true, true);
+            e.getBed().getLocation().createExplosion(3.0f, true, true);
         }
 
     }
+
+    /*
+    @EventHandler
+    public void nerfAnchorExplosion(PlayerInteractEvent e) {
+        if (instance.getGame().isAnchorNerf() && e.getPlayer().getWorld().getEnvironment() != Environment.NETHER 
+            && e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            var block = e.getClickedBlock().getType();
+            if (block != null && block.equals(Material.RESPAWN_ANCHOR)){
+                var anchor = (RespawnAnchor) e.getClickedBlock();
+                if(anchor.getCharges() > 0){
+                    e.setCancelled(true);
+                    e.getPlayer().getLocation().createExplosion(4.0f, true, true);
+                }
+            }
+        }
+
+    }*/
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void slotLimit(PlayerLoginEvent e) {
