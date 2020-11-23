@@ -6,7 +6,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Reader;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Properties;
 import java.util.logging.Level;
 
@@ -30,6 +32,7 @@ import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
+import org.bukkit.command.CommandSender;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitWorker;
@@ -62,6 +65,7 @@ import me.infinityz.minigame.condor.CondorManager;
 import me.infinityz.minigame.crafting.CraftingManager;
 import me.infinityz.minigame.enums.Stage;
 import me.infinityz.minigame.game.Game;
+import me.infinityz.minigame.game.GameData;
 import me.infinityz.minigame.gamemodes.GamemodeManager;
 import me.infinityz.minigame.gamemodes.GamemodesCMD;
 import me.infinityz.minigame.gamemodes.IGamemode;
@@ -231,6 +235,30 @@ public class UHC extends JavaPlugin {
             }
 
         }, 60L);
+
+        loadConfigFromJson(new Gson(), Bukkit.getConsoleSender());
+
+    }
+
+    void loadConfigFromJson(Gson gson, CommandSender sender) {
+        String data = Bukkit.getWorldContainer().getPath() + File.separatorChar + "data.json";
+        try {
+            Reader reader = Files.newBufferedReader(Paths.get(data));
+            var gameData = gson.fromJson(reader, GameData.class);
+            var teamSize = gameData.getTeam_size();
+            var scens = gameData.getScenarios();
+            if (teamSize > 1) {
+                Bukkit.dispatchCommand(sender, "team size " + teamSize);
+                Bukkit.dispatchCommand(sender, "team man true");
+            }
+            for (var scen : scens) {
+                Bukkit.dispatchCommand(sender, "scenario " + scen);
+            }
+
+            reader.close();
+        } catch (Exception e) {
+            // e.printStackTrace();
+        }
     }
 
     void deleteDirectory(File directoryToBeDeleted) throws IOException {

@@ -22,7 +22,7 @@ public class CondorManager {
 
     public void sendData() {
         var game = instance.getGame();
-        instance.getCondorManager().writeExpirableData(game.getGameID(), game.toString(), 10);
+        instance.getCondorManager().writeExpirableData(game.getGameID(), game.newFormatJson(), 3);
     }
 
     public CompletableFuture<String> writeExpirableData(String ID, String data, int expiration) {

@@ -11,7 +11,7 @@ public class GameManager {
         this.instance = instance;
     }
     public void sendData(){
-        instance.getCondorManager().writeExpirableData(game.getGameID(), game.toString(), 10);
+        instance.getCondorManager().writeExpirableData(game.getGameID(), game.newFormatJson(), 3);
     }
 
     public boolean setGame(Game game) {

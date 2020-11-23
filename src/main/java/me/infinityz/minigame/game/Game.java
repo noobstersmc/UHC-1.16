@@ -3,6 +3,7 @@ package me.infinityz.minigame.game;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.UUID;
 
 import com.google.gson.Gson;
@@ -17,13 +18,15 @@ import lombok.Getter;
 import lombok.Setter;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.enums.Stage;
+import me.infinityz.minigame.gamemodes.types.UHCMeetup;
+import me.infinityz.minigame.gamemodes.types.UHCRun;
 import net.md_5.bungee.api.ChatColor;
 
 @Data
 public class Game {
     /* Static data */
     private static @Getter @Setter BossBar bossbar;
-    private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    private static Gson gson = new GsonBuilder().create();
     private static @Getter @Setter String scoreboardTitle = ChatColor.of("#A40A0A") + "" + ChatColor.BOLD + "UHC";
     private static @Getter @Setter String tablistHeader = ChatColor.of("#A40A0A") + "" + ChatColor.BOLD
             + "\nNOOBSTERS\n";
@@ -66,44 +69,63 @@ public class Game {
     int playersAlive;
     int spectators;
     int playersOnline;
-    String gameType;
+    String teamSize;
     String hostname;
-    String ip = obtainPublicIP();
+    String ip = obtainPublicIP() + ":" + Bukkit.getServer().getPort();
 
     @Override
     public String toString() {
-        //Maybe move this out of here? Might cause performance penalty
+        // Maybe move this out of here? Might cause performance penalty
         var instance = UHC.getInstance();
-        //Retrieve all data
+        // Retrieve all data
         scenarios = getScenarios(instance);
         currentBorder = getCurrentBorderSize();
         gameStage = getGameStage(instance);
         spectators = getSpectators(instance);
         playersAlive = getPlayersAlive(instance);
         playersOnline = Bukkit.getOnlinePlayers().size();
-        var teamSize = instance.getTeamManger().getTeamSize();
-        gameType = teamSize > 1 ? "To" + teamSize : "FFA";
-    
-        //Return as json
+        var ts = instance.getTeamManger().getTeamSize();
+        teamSize = ts > 1 ? "To" + ts : "FFA";
+
+        // Return as json
         return gson.toJson(this);
     }
 
-    private String obtainPublicIP(){
-        String systemIpAddress = ""; 
-        try
-        { 
-            URL url_name = new URL("http://bot.whatismyipaddress.com"); 
-  
-            BufferedReader sc = 
-            new BufferedReader(new InputStreamReader(url_name.openStream())); 
-  
-            // reads system IPAddress 
-            systemIpAddress = sc.readLine().trim(); 
-        } 
-        catch (Exception e) 
-        { 
-            systemIpAddress = "Cannot Execute Properly"; 
-        } 
+    public String newFormatJson() {
+        var newData = new HashMap<String, Object>();
+        newData.put("ipv4", ip);
+        newData.put("game_id", gameID);
+        newData.put("private_game", privateGame);
+        var extra_data = new HashMap<String, Object>();
+        extra_data.put("uhc-data", toString());
+        extra_data.put("game-type", getSorter());
+        newData.put("extra_data", extra_data);
+
+        return gson.toJson(newData);
+    }
+
+    public String getSorter() {
+        var manager = UHC.getInstance().getGamemodeManager();
+        if (manager.isScenarioEnable(UHCRun.class)) {
+            return "RUN";
+        } else if (manager.isScenarioEnable(UHCMeetup.class))
+            return "MEETUP";
+
+        return "UHC";
+    }
+
+    private String obtainPublicIP() {
+        String systemIpAddress = "";
+        try {
+            URL url_name = new URL("http://bot.whatismyipaddress.com");
+
+            BufferedReader sc = new BufferedReader(new InputStreamReader(url_name.openStream()));
+
+            // reads system IPAddress
+            systemIpAddress = sc.readLine().trim();
+        } catch (Exception e) {
+            systemIpAddress = "Cannot Execute Properly";
+        }
         return systemIpAddress;
     }
 
@@ -118,7 +140,6 @@ public class Game {
     Stage getGameStage(UHC instance) {
         return instance.getGameStage();
     }
-
 
     int getSpectators(UHC instance) {
         return (int) Bukkit.getOnlinePlayers().stream().filter(p -> p.getGameMode() != GameMode.SURVIVAL).count();
