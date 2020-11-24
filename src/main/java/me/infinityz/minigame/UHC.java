@@ -6,9 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.Reader;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Properties;
 import java.util.logging.Level;
 
@@ -65,7 +63,6 @@ import me.infinityz.minigame.condor.CondorManager;
 import me.infinityz.minigame.crafting.CraftingManager;
 import me.infinityz.minigame.enums.Stage;
 import me.infinityz.minigame.game.Game;
-import me.infinityz.minigame.game.GameData;
 import me.infinityz.minigame.gamemodes.GamemodeManager;
 import me.infinityz.minigame.gamemodes.GamemodesCMD;
 import me.infinityz.minigame.gamemodes.IGamemode;
@@ -241,23 +238,22 @@ public class UHC extends JavaPlugin {
     }
 
     void loadConfigFromJson(Gson gson, CommandSender sender) {
-        String data = Bukkit.getWorldContainer().getPath() + File.separatorChar + "data.json";
+        Properties properties = new Properties();
+        File propertiesFile = new File("server.properties");
+
         try {
-            Reader reader = Files.newBufferedReader(Paths.get(data));
-            var gameData = gson.fromJson(reader, GameData.class);
-            var teamSize = gameData.getTeam_size();
-            var scens = gameData.getScenarios();
-            if (teamSize > 1) {
-                Bukkit.dispatchCommand(sender, "team size " + teamSize);
-                Bukkit.dispatchCommand(sender, "team man true");
-            }
-            for (var scen : scens) {
-                Bukkit.dispatchCommand(sender, "scenario " + scen);
+            try (InputStream is = new FileInputStream(propertiesFile)) {
+                properties.load(is);
             }
 
-            reader.close();
-        } catch (Exception e) {
-            // e.printStackTrace();
+            var condor_id = properties.getProperty("condor-id");
+            if(condor_id.length() > 1){
+                var output = getCondorManager().getJedis().get("servers:data:" + condor_id);
+                Bukkit.broadcastMessage(output);
+            }
+
+        } catch (IOException e) {
+            getLogger().log(Level.SEVERE, "An error occurred while updating the server properties", e);
         }
     }
 
