@@ -4,11 +4,13 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityShootBowEvent;
+import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.CrossbowMeta;
@@ -16,12 +18,13 @@ import org.bukkit.inventory.meta.CrossbowMeta;
 import co.aikar.taskchain.TaskChain;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.gamemodes.IGamemode;
+import net.minecraft.server.v1_16_R1.EnchantmentDurability;
 
-public class BattleRoyale extends IGamemode implements Listener {
+public class XCrossBows extends IGamemode implements Listener {
     private UHC instance;
 
-    public BattleRoyale(UHC instance) {
-        super("Battle Royale", "Battle Royale.");
+    public XCrossBows(UHC instance) {
+        super("XCrossBows", "Battle Royale.");
         this.instance = instance;
     }
 
@@ -42,21 +45,6 @@ public class BattleRoyale extends IGamemode implements Listener {
         setEnabled(false);
         return true;
     }
-    /*
-    @EventHandler
-    public void onShoot(PlayerInteractEvent e){
-        var item = e.getPlayer().getInventory().getItemInMainHand();
-        if(item.getType() == Material.CROSSBOW){
-            if(e.getAction() == Action.RIGHT_CLICK_AIR){
-                var meta = (CrossbowMeta) item.getItemMeta();
-                if(meta.getChargedProjectiles().isEmpty()) return;
-                var proyectiles = List.of(new ItemStack(Material.ARROW));
-                meta.setChargedProjectiles(proyectiles);
-
-            }
-        }
-
-    }*/
     
     @EventHandler
     public void onShoorV2(EntityShootBowEvent e ){
@@ -65,16 +53,41 @@ public class BattleRoyale extends IGamemode implements Listener {
             var player = (Player) e.getEntity();
             var ammo = new ItemStack(Material.ARROW);
             if(player.getInventory().containsAtLeast(ammo, 1)){
-                UHC.newChain().delay(2).sync(() -> {
+                Bukkit.getScheduler().runTaskLater(instance, ()->{
                     var meta = (CrossbowMeta) item.getItemMeta();
                     var proyectiles = List.of(ammo);
                     meta.setChargedProjectiles(proyectiles);
                     item.setItemMeta(meta);
-                }).sync(TaskChain::abort).execute();
+                    player.getInventory().removeItem(ammo);
+                }, 4);
+
             }
 
         }
     }
-    
+
+    @EventHandler
+    public void onArrowCraft(PrepareItemCraftEvent e) {
+        var result = e.getInventory().getResult();
+        if (result == null || result.getType() == Material.AIR) return;
+        
+        var re = result.getType();
+        if(re == Material.ARROW) result.setAmount(8);
+        
+    }
+
+    @EventHandler
+    public void onCraftShield(PrepareItemCraftEvent e) {
+        var result = e.getInventory().getResult();
+        if (result == null || result.getType() == Material.AIR) return;
+        
+        var re = result.getType();
+        if(re == Material.SHIELD){
+            var meta = result.getItemMeta();
+            meta.addEnchant(Enchantment.DURABILITY, 3, true);
+            result.setItemMeta(meta);
+        }
+        
+    }
 
 }

@@ -11,7 +11,6 @@ import lombok.Setter;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.gamemodes.types.AdvancementHunter;
 import me.infinityz.minigame.gamemodes.types.BackPack;
-import me.infinityz.minigame.gamemodes.types.BattleRoyale;
 import me.infinityz.minigame.gamemodes.types.BloodDiamonds;
 import me.infinityz.minigame.gamemodes.types.BloodEnchants;
 import me.infinityz.minigame.gamemodes.types.BloodHunter;
@@ -51,6 +50,7 @@ import me.infinityz.minigame.gamemodes.types.DoubleLifeBar;
 import me.infinityz.minigame.gamemodes.types.UHCRun;
 import me.infinityz.minigame.gamemodes.types.UHCVandalico;
 import me.infinityz.minigame.gamemodes.types.UnDamaxe;
+import me.infinityz.minigame.gamemodes.types.XCrossBows;
 import me.infinityz.minigame.gamemodes.types.XPHunter;
 import me.infinityz.minigame.gamemodes.types.NineSlots;
 import me.infinityz.minigame.gamemodes.types.ThunderKill;
@@ -114,6 +114,7 @@ public class GamemodeManager {
         registerGamemode(new HasteyBoysPlus(instance));
         registerGamemode(new DoubleLifeBar(instance));
         registerGamemode(new MeetupDoubleLifeBar(instance));
+        registerGamemode(new XCrossBows(instance));
 
         //Invitados
         registerGamemode(new UHCVandalico(instance));
@@ -126,7 +127,6 @@ public class GamemodeManager {
         registerGamemode(new Totems(instance));
 
         // Gamemode
-        registerGamemode(new BattleRoyale(instance));
         registerGamemode(new UHCMeetup(instance));
 
         instance.getCommandManager().getCommandCompletions().registerAsyncCompletion("scenarios",

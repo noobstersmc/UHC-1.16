@@ -236,7 +236,13 @@ public class UHC extends JavaPlugin {
 
         }, 60L);
 
-        loadConfigFromJson(new Gson(), Bukkit.getConsoleSender());
+        try{
+            
+            loadConfigFromJson(new Gson(), Bukkit.getConsoleSender());
+        
+        }catch (Exception e) {
+
+        }
 
     }
 
