@@ -8,9 +8,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.util.Properties;
+import java.util.UUID;
 import java.util.logging.Level;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.WorldEditException;
@@ -247,14 +250,33 @@ public class UHC extends JavaPlugin {
             }
 
             var condor_id = properties.getProperty("condor-id");
-            if(condor_id.length() > 1){
-                var output = getCondorManager().getJedis().get("servers:data:" + condor_id);
-                Bukkit.broadcastMessage(output);
+            var data_json = getCondorManager().getJedis().get("data:" + condor_id);
+            var server_data = gson.fromJson(data_json, JsonObject.class);
+            var hostname = server_data.get("host").getAsString();
+            var gametype = server_data.get("game_type").getAsString();
+            if (gametype.equalsIgnoreCase("UHC-Run")) {
+                Bukkit.dispatchCommand(sender, "scenario UHC-Run");
+            } else if (gametype.equalsIgnoreCase("UHC-Meetup")) {
+                Bukkit.dispatchCommand(sender, "scenario UHC-Meetup");
+            }
+            game.setHostname(hostname);
+            game.setGameID(UUID.fromString(condor_id));
+            //Process extra data
+            var uhc_extra_data = server_data.get("extra_data").getAsJsonObject();
+            uhc_extra_data.get("scenarios").getAsJsonArray().forEach(this::enableScenario);
+            var team_size = uhc_extra_data.get("team_size").getAsInt();
+            if(team_size > 1){
+                Bukkit.dispatchCommand(sender, "team man true");
+                Bukkit.dispatchCommand(sender, "team size " + team_size);
             }
 
         } catch (IOException e) {
-            getLogger().log(Level.SEVERE, "An error occurred while updating the server properties", e);
+            Bukkit.broadcastMessage("EXCEPTION HAS OCURRED!");
         }
+    }
+
+    private void enableScenario(JsonElement scenarioName){
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "scenario " + scenarioName.getAsString());
     }
 
     void deleteDirectory(File directoryToBeDeleted) throws IOException {
