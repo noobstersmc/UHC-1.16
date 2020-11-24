@@ -153,7 +153,7 @@ public class TeamCMD extends BaseCommand {
     }
 
     @CommandCompletion("@otherplayers")
-    @CommandPermission("uhc.team.forcejoin")
+    @CommandPermission("uhc.team.staff")
     @Subcommand("forcejoin|fj")
     @Syntax("/team forcejoin <target> <targetTeam>")
     public void forceJoin(CommandSender sender, @Flags("other") Player target,
@@ -286,7 +286,7 @@ public class TeamCMD extends BaseCommand {
         return false;
     }
 
-    @CommandPermission("uhc.team.reset")
+    @CommandPermission("uhc.team.staff")
     @Subcommand("reset|clear")
     public void teamReset(CommandSender sender) {
         instance.getTeamManger().getTeamMap().values().stream().forEach(team -> {
@@ -318,7 +318,7 @@ public class TeamCMD extends BaseCommand {
         teamChat(sender, "I'm at " + getLocation(sender.getLocation()));
     }
 
-    @CommandPermission("uhc.admin")
+    @CommandPermission("uhc.team.staff")
     @Subcommand("listall")
     public void onListAll(CommandSender sender){
         instance.getTeamManger().getTeamMap().values().forEach(team->{
@@ -462,7 +462,7 @@ public class TeamCMD extends BaseCommand {
         instance.getTeamManger().getTeamInvite().invalidate(invitor.getUniqueId().getMostSignificantBits());
     }
 
-    @CommandPermission("uhc.team.management")
+    @CommandPermission("uhc.team.staff")
     @Subcommand("man|management|manage")
     @CommandCompletion("@bool")
     @Syntax("<bool> - True or False to set the management")
@@ -503,7 +503,7 @@ public class TeamCMD extends BaseCommand {
                 + instance.getTeamManger().isShowPrefix());
     }
 
-    @CommandPermission("uhc.team.random")
+    @CommandPermission("uhc.team.staff")
     @Subcommand("random")
     public void randomizeTeams(CommandSender sender, @Optional String args) {
         // By default, it should respect current teams, and team size limit
@@ -543,7 +543,7 @@ public class TeamCMD extends BaseCommand {
 
     }
 
-    @CommandPermission("uhc.team.management")
+    @CommandPermission("uhc.team.staff")
     @CommandCompletion("@range:1-9")
     @Syntax("<number> - Team size to be set")
     @Subcommand("size|limit|lim")

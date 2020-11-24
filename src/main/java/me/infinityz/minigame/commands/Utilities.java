@@ -1,8 +1,10 @@
 package me.infinityz.minigame.commands;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
@@ -80,6 +82,28 @@ public @RequiredArgsConstructor class Utilities extends BaseCommand {
         Bukkit.broadcastMessage("");
         Bukkit.dispatchCommand(sender, "fill -1 70 1 1 70 -1 minecraft:end_portal");
         Bukkit.dispatchCommand(sender, "playsound minecraft:block.end_portal.spawn ambient @a 0 0 0 11111111");
+    }
+
+    @CommandPermission("staff.perm")
+    @Subcommand("togglespec|ts")
+    @CommandAlias("togglespec|ts")
+    public void onToggleSpec(Player sender) {
+        toggleGm(sender);
+        Bukkit.broadcastMessage(ChatColor.GRAY
+                + (sender.getGameMode() == GameMode.SPECTATOR ? "Temporal Spectator Enabled." : "Temporal Spectator Disabled."));
+
+    }
+
+    public boolean toggleGm(Player player){
+        if(player.getGameMode() == GameMode.SURVIVAL){
+            player.setGameMode(GameMode.SPECTATOR);
+            return true;
+        }  
+        else if(player.getGameMode() == GameMode.SPECTATOR){
+            player.setGameMode(GameMode.SURVIVAL);
+            return false;
+        }
+        return false;
     }
 
 }

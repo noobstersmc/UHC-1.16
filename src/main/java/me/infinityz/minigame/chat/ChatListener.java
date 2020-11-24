@@ -117,7 +117,7 @@ public class ChatListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void checkForMute(AsyncPlayerChatEvent e) {
-        if (instance.getGame().isGlobalMute() && !e.getPlayer().hasPermission("uhc.chat.global")) {
+        if (instance.getGame().isGlobalMute() && !e.getPlayer().hasPermission("staff.perm")) {
             e.setCancelled(true);
             e.getPlayer().sendMessage(ChatColor.RED + "Globalmute is Enabled.");
         }

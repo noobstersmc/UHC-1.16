@@ -61,7 +61,7 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
         return teamSize > 1 ? "Teams of " + teamSize : "FFA";
     }
 
-    @CommandPermission("uhc.config.tearsnerf")
+    @CommandPermission("uhc.config.cmd")
     @Subcommand("tearsnerf")
     @CommandAlias("tearsnerf")
     public void tearsNerf(CommandSender sender, Boolean bool) {
@@ -69,7 +69,7 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
         sender.sendMessage("Tears Nerf has been set to " + bool);
     }
 
-    @CommandPermission("uhc.config.deathmatch")
+    @CommandPermission("uhc.config.cmd")
     @Subcommand("deathmatch")
     @CommandAlias("deathmatch")
     public void deathmatch(CommandSender sender, Boolean bool) {
@@ -78,7 +78,7 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
         sender.sendMessage("DeathMatch has been set to " + bool);
     }
 
-    @CommandPermission("uhc.config.antimining")
+    @CommandPermission("uhc.config.cmd")
     @Subcommand("antimining")
     @CommandAlias("antimining")
     public void antimining(CommandSender sender, Boolean bool) {
@@ -86,7 +86,7 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
         sender.sendMessage("AntiMining has been set to " + bool);
     }
 
-    @CommandPermission("uhc.config.privategame")
+    @CommandPermission("uhc.config.cmd")
     @Subcommand("privategame")
     @CommandAlias("privategame")
     public void gamePrivate(CommandSender sender, Boolean bool) {
@@ -94,7 +94,7 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
         sender.sendMessage("Private Game changed to " + bool);
     }
 
-    @CommandPermission("uhc.config.maxdisconnect")
+    @CommandPermission("uhc.config.cmd")
     @Subcommand("maxdisconnect")
     @CommandAlias("maxdisconnect")
     public void changeMaxDisconectTime(CommandSender sender, Integer newMaxDisconnectTime) {
@@ -102,23 +102,23 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
         sender.sendMessage("Max Disconnect time changed to " + newMaxDisconnectTime + " minutes.");
     }
 
-    @CommandPermission("uhc.config.bedsnerf")
+    @CommandPermission("uhc.config.cmd")
     @Subcommand("beds nerf")
     @CommandAlias("beds-nerf")
     public void changeBedsNerf(CommandSender sender, Boolean bool) {
         instance.getGame().setBedsNerf(bool);
         sender.sendMessage("BedsNerf changed to " + bool);
     }
-
-    @CommandPermission("uhc.config.bedsnerf")
+/*
+    @CommandPermission("uhc.config.cmd")
     @Subcommand("anchor nerf")
     @CommandAlias("anchor-nerf")
     public void changeAnchorNerf(CommandSender sender, Boolean bool) {
         instance.getGame().setAnchorNerf(bool);
         sender.sendMessage("AnchorNerf changed to " + bool);
-    }
+    }*/
 
-    @CommandPermission("uhc.config.advancements")
+    @CommandPermission("uhc.config.cmd")
     @Subcommand("advancements")
     @CommandAlias("advancements")
     public void announceAdvancements(CommandSender sender, Boolean bool) {
@@ -128,7 +128,7 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
         sender.sendMessage("Show Advancements changed to " + bool);
     }
 
-    @CommandPermission("uhc.config.pvp")
+    @CommandPermission("uhc.config.cmd")
     @Subcommand("pvptime")
     @CommandAlias("pvptime")
     public void changePvpTime(CommandSender sender, Integer newPvpTime) {
@@ -136,7 +136,7 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
         sender.sendMessage("Pvp time changed to " + newPvpTime + " minutes.");
     }
 
-    @CommandPermission("uhc.config.heal")
+    @CommandPermission("uhc.config.cmd")
     @Subcommand("healtime")
     @CommandAlias("healtime")
     public void changeHealTime(CommandSender sender, Integer newHealTime) {
@@ -144,7 +144,7 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
         sender.sendMessage("Heal time changed to " + newHealTime + " minutes.");
     }
 
-    @CommandPermission("uhc.config.border")
+    @CommandPermission("uhc.config.cmd")
     @Subcommand("bordertime")
     @CommandAlias("bordertime")
     public void changeBorderTime(CommandSender sender, Integer newBorderTime) {
@@ -152,7 +152,7 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
         sender.sendMessage("Border time changed to " + newBorderTime + " minutes.");
     }
 
-    @CommandPermission("uhc.config.border")
+    @CommandPermission("uhc.config.cmd")
     @Subcommand("bordercentertime")
     @CommandAlias("bordercentertime")
     public void changeBorderCenterTime(CommandSender sender, Integer newBorderCenterTime) {
@@ -160,7 +160,7 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
         sender.sendMessage("Border center time changed to " + newBorderCenterTime + " minutes.");
     }
 
-    @CommandPermission("uhc.config.border")
+    @CommandPermission("uhc.config.cmd")
     @Subcommand("bordercenter")
     @CommandAlias("bordercenter")
     public void changeBorderCenter(CommandSender sender, Integer newBorderCenter) {
@@ -168,7 +168,7 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
         sender.sendMessage("Border center changed to " + newBorderCenter + " minutes.");
     }
 
-    @CommandPermission("uhc.config.border")
+    @CommandPermission("uhc.config.cmd")
     @Subcommand("bordersize")
     @CommandAlias("bordersize")
     public void changeBorderSize(CommandSender sender, Integer newBorderSize) {
@@ -177,7 +177,7 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
         Bukkit.getWorlds().forEach(it -> it.getWorldBorder().setSize(newBorderSize));
     }
 
-    @CommandPermission("uhc.config.strength")
+    @CommandPermission("uhc.config.cmd")
     @Subcommand("strength nerf")
     @CommandAlias("strength-nerf")
     public void changeStrengthNerf(CommandSender sender, @Optional Boolean bool) {
@@ -188,7 +188,7 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
         sender.sendMessage("Strength has been set to: " + bool);
     }
 
-    @CommandPermission("uhc.config.applerate")
+    @CommandPermission("uhc.config.cmd")
     @Subcommand("applerate")
     @CommandAlias("apple-rate")
     public void changeApplerate(CommandSender sender, Double rate) {
@@ -197,7 +197,7 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
         instance.getGame().setApplerate(rate);
     }
 
-    @CommandPermission("uhc.config.slots")
+    @CommandPermission("uhc.config.cmd")
     @Subcommand("setslots")
     @CommandAlias("slots||setslots||maxslots")
     public void changeSlots(CommandSender sender, Integer newSlots) {
