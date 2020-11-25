@@ -27,6 +27,9 @@ public class UHCVandalico extends IGamemode implements Listener {
         instance.getListenerManager().registerListener(this);
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "game score VANDAL");
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "config advancements true");
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "config privateGame true");
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "whitelist on");
+        instance.getGame().setTearsNerf(true);
 
         instance.getGame().setDeathMatch(false);
 

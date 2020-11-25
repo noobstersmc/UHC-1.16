@@ -36,7 +36,6 @@ import me.infinityz.minigame.gamemodes.types.MonstersInc;
 import me.infinityz.minigame.gamemodes.types.NoFall;
 import me.infinityz.minigame.gamemodes.types.NoLimpiar;
 import me.infinityz.minigame.gamemodes.types.PermaGlow;
-import me.infinityz.minigame.gamemodes.types.Radar;
 import me.infinityz.minigame.gamemodes.types.ShieldLess;
 import me.infinityz.minigame.gamemodes.types.SkyHigh;
 import me.infinityz.minigame.gamemodes.types.Switcheroo;
@@ -97,7 +96,6 @@ public class GamemodeManager {
         registerGamemode(new GoneFishing(instance));
         registerGamemode(new BloodDiamonds(instance));
         registerGamemode(new AdvancementHunter(instance));
-        //registerGamemode(new Radar(instance));
         registerGamemode(new GoldenRetreiver(instance));
         registerGamemode(new FlorPoderosa(instance));
         registerGamemode(new TiempoBomba(instance));

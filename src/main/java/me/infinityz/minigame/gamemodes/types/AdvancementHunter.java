@@ -3,6 +3,7 @@ package me.infinityz.minigame.gamemodes.types;
 import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerAdvancementDoneEvent;
 
@@ -44,21 +45,27 @@ public class AdvancementHunter extends IGamemode implements Listener {
                 || adv.startsWith("end")) {
             var playerHealth = e.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
             e.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(playerHealth + 2);
+            e.getPlayer().setHealth(e.getPlayer().getHealth()+2);
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void onStart(GameStartedEvent e) {
-            Bukkit.getScheduler().runTask(instance, () -> {
-                Bukkit.getOnlinePlayers()
-                        .forEach(players -> players.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(2.0));
 
-            });
+        Bukkit.getOnlinePlayers().forEach(players -> {
+
+                Bukkit.getScheduler().runTaskLater(instance, ()->{
+                    players.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(2.0);
+                }, 20);
+        });
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void onJoinLate(PlayerJoinedLateEvent e){
-        e.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(2.0);
+        var player = e.getPlayer();
+        Bukkit.getScheduler().runTaskLater(instance, ()->{
+            player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(2.0);
+        }, 20);
     }
 
 }

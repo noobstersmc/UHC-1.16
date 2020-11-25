@@ -44,18 +44,18 @@ public class XPHunter extends IGamemode implements Listener {
 
         Bukkit.getOnlinePlayers().forEach(players -> {
 
-                UHC.newChain().delay(20).sync(() -> {
+                Bukkit.getScheduler().runTaskLater(instance, ()->{
                     players.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(2.0);
-                }).sync(TaskChain::abort).execute();
+                }, 20);
         });
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onJoinLate(PlayerJoinedLateEvent e){
         var player = e.getPlayer();
-        UHC.newChain().delay(20).sync(() -> {
+        Bukkit.getScheduler().runTaskLater(instance, ()->{
             player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(2.0);
-        }).sync(TaskChain::abort).execute();
+        }, 20);
     }
 
 
@@ -65,6 +65,7 @@ public class XPHunter extends IGamemode implements Listener {
 
         if(hp > 20 || hp < 2) return;
         e.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(hp*2);
+        if(e.getPlayer().getHealth() <= 20) e.getPlayer().setHealth(e.getPlayer().getHealth()+2);
         
     }
  
