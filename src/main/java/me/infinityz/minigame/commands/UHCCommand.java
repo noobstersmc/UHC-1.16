@@ -161,15 +161,11 @@ public class UHCCommand extends BaseCommand {
         });
     }
 
-    @Subcommand("ltp")
-    @CommandPermission("PRO")
-    public void teleportTest(Player sender, Integer index) {
-        var loc = instance.getChunkManager().getLocations().get(index);
-        if (loc != null) {
-            sender.teleport(loc);
-        } else {
-            sender.sendMessage("Null index loc.");
-        }
+    @Subcommand("destroy now")
+    @CommandPermission("condor.destroy")
+    public void teleportTest(CommandSender sender) {
+        instance.getCondorManager().getJedis().publish("destroy",
+                String.format("{%s: %s}", "\"ip\"", "\"" + instance.getGame().getIp() + " \""));
 
     }
 
@@ -283,44 +279,51 @@ public class UHCCommand extends BaseCommand {
     @Subcommand("score")
     public void changeScoreboardColor(CommandSender sender, final String score) {
         var newTittle = "";
-        switch(score){
-            case "UHC":{
+        switch (score) {
+            case "UHC": {
                 newTittle = ChatColor.of("#A40A0A") + "" + ChatColor.BOLD + "UHC";
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "game title " + newTittle);
                 Game.setScoreColors(ChatColor.of("#AB4A7C") + "");
-            }break;
-            case "RUN":{
+            }
+                break;
+            case "RUN": {
                 newTittle = ChatColor.GOLD + "" + ChatColor.BOLD + "UHC RUN";
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "game title " + newTittle);
                 Game.setScoreColors(ChatColor.of("#FFFF55") + "");
-            }break;
+            }
+                break;
             case "CLOROX": {
                 newTittle = ChatColor.of("#29f4ff") + "" + ChatColor.BOLD + "UHC CLOROX";
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "game title " + newTittle);
                 Game.setScoreColors(ChatColor.of("#0ca2d4") + "");
-            }break;
+            }
+                break;
             case "GAMES": {
                 newTittle = ChatColor.of("#e672f8") + "" + ChatColor.BOLD + "Community UHC";
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "game title " + newTittle);
                 Game.setScoreColors(ChatColor.of("#c44faf") + "");
-            }break;
+            }
+                break;
             case "VANDAL": {
                 newTittle = ChatColor.of("#ef9e48") + "" + ChatColor.BOLD + "UHC VANDÁLICO";
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "game title " + newTittle);
                 Game.setScoreColors(ChatColor.of("#00d0db") + "");
-            }break;
+            }
+                break;
             default: {
 
-            }break;
-            
+            }
+                break;
+
         }
         sender.sendMessage("Changing scoreboard design to " + score);
-        
+
     }
+
     @CommandPermission("uhc.scoreboard.change")
     @Subcommand("selector")
     public void getSelector(CommandSender sender, String input) {
-        
+
     }
 
     @CommandPermission("uhc.tab.change")
