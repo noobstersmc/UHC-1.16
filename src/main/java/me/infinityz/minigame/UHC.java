@@ -236,11 +236,11 @@ public class UHC extends JavaPlugin {
 
         }, 60L);
 
-        try{
-            
+        try {
+
             loadConfigFromJson(new Gson(), Bukkit.getConsoleSender());
-        
-        }catch (Exception e) {
+
+        } catch (Exception e) {
 
         }
 
@@ -254,34 +254,33 @@ public class UHC extends JavaPlugin {
             try (InputStream is = new FileInputStream(propertiesFile)) {
                 properties.load(is);
             }
-
             var condor_id = properties.getProperty("condor-id");
             var data_json = getCondorManager().getJedis().get("data:" + condor_id);
             var server_data = gson.fromJson(data_json, JsonObject.class);
             var hostname = server_data.get("host").getAsString();
             var gametype = server_data.get("game_type").getAsString();
             if (gametype.equalsIgnoreCase("UHC-Run")) {
-                Bukkit.dispatchCommand(sender, "scenario UHC-Run");
+                Bukkit.dispatchCommand(sender, "scenario UHC Run");
             } else if (gametype.equalsIgnoreCase("UHC-Meetup")) {
-                Bukkit.dispatchCommand(sender, "scenario UHC-Meetup");
+                Bukkit.dispatchCommand(sender, "scenario UHC Meetup");
             }
             game.setHostname(hostname);
             game.setGameID(UUID.fromString(condor_id));
-            //Process extra data
+            // Process extra data
             var uhc_extra_data = server_data.get("extra_data").getAsJsonObject();
             uhc_extra_data.get("scenarios").getAsJsonArray().forEach(this::enableScenario);
             var team_size = uhc_extra_data.get("team_size").getAsInt();
-            if(team_size > 1){
+            if (team_size > 1) {
                 Bukkit.dispatchCommand(sender, "team man true");
                 Bukkit.dispatchCommand(sender, "team size " + team_size);
             }
 
-        } catch (IOException e) {
-            Bukkit.broadcastMessage("EXCEPTION HAS OCURRED!");
+        } catch (Exception e) {
+            Bukkit.broadcastMessage("This instance wasn't able to connect to condor. Please check the condor-id.");
         }
     }
 
-    private void enableScenario(JsonElement scenarioName){
+    private void enableScenario(JsonElement scenarioName) {
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "scenario " + scenarioName.getAsString());
     }
 
