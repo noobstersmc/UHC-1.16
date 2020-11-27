@@ -45,6 +45,7 @@ public class UHCVandalico extends IGamemode implements Listener {
         instance.getGame().setDeathMatch(true);
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "game score UHC");
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "config advancements false");
+        instance.getGame().setTearsNerf(false);
         setEnabled(false);
         return true;
     }

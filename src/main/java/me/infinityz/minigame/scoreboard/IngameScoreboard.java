@@ -33,10 +33,10 @@ public class IngameScoreboard extends IScoreboard {
         this.updateLines(
                 Game.getScoreColors() + "Time: " + ChatColor.WHITE + timeConvert(instance.getGame().getGameTime()), 
                 "",
-                Game.getScoreColors() + "Kills: " + ChatColor.WHITE + (uhcPlayer != null ? uhcPlayer.getKills() : 0),
+                Game.getScoreColors() + "Your Kills: " + ChatColor.WHITE + (uhcPlayer != null ? uhcPlayer.getKills() : 0),
                 Game.getScoreColors() + "Team Kills: " + ChatColor.WHITE + (team != null ? team.getTeamKills() : 0), 
                 "",
-                Game.getScoreColors() + "Players: " + ChatColor.WHITE + instance.getPlayerManager().getAlivePlayers(),
+                Game.getScoreColors() + "Players Alive: " + ChatColor.WHITE + instance.getPlayerManager().getAlivePlayers(),
                 Game.getScoreColors() + "Border: " + ChatColor.WHITE + ((int) worldBorder.getSize() / 2), 
                 "",
                 ChatColor.WHITE + "noobsters.net");
@@ -49,9 +49,9 @@ public class IngameScoreboard extends IScoreboard {
         this.updateLines(
                 Game.getScoreColors() + "Time: " + ChatColor.WHITE + timeConvert(instance.getGame().getGameTime()), 
                 "",
-                Game.getScoreColors() + "Kills: " + ChatColor.WHITE + (uhcPlayer != null ? uhcPlayer.getKills() : 0),
+                Game.getScoreColors() + "Your Kills: " + ChatColor.WHITE + (uhcPlayer != null ? uhcPlayer.getKills() : 0),
                 "",
-                Game.getScoreColors() + "Players: " + ChatColor.WHITE + instance.getPlayerManager().getAlivePlayers(),
+                Game.getScoreColors() + "Players Alive: " + ChatColor.WHITE + instance.getPlayerManager().getAlivePlayers(),
                 Game.getScoreColors() + "Border: " + ChatColor.WHITE + ((int) worldBorder.getSize() / 2), 
                 "",
                 ChatColor.WHITE + "noobsters.net");
