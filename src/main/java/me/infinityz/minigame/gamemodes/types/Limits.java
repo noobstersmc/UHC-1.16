@@ -88,15 +88,11 @@ public class Limits extends IGamemode implements Listener {
         if (result != null) {
             if (result.getType() == Material.ENCHANTED_BOOK) {
                 var bookMeta = (EnchantmentStorageMeta) result.getItemMeta();
-                if (bookMeta.getStoredEnchantLevel(Enchantment.DAMAGE_ALL) > 3
-                        || bookMeta.getStoredEnchantLevel(Enchantment.PROTECTION_ENVIRONMENTAL) > 3
-                        || bookMeta.getStoredEnchantLevel(Enchantment.ARROW_DAMAGE) > 3) {
+                if (bookMeta.getStoredEnchantLevel(Enchantment.ARROW_DAMAGE) > 3) {
                     e.setResult(null);
                 }
 
-            } else if (result.getEnchantmentLevel(Enchantment.DAMAGE_ALL) > 3
-                    || result.getEnchantmentLevel(Enchantment.PROTECTION_ENVIRONMENTAL) > 3
-                    || result.getEnchantmentLevel(Enchantment.ARROW_DAMAGE) > 3) {
+            } else if (result.getEnchantmentLevel(Enchantment.ARROW_DAMAGE) > 3) {
                 e.setResult(null);
             }
         }
@@ -108,9 +104,7 @@ public class Limits extends IGamemode implements Listener {
             if (offer == null || offer.getEnchantmentLevel() <= 3)
                 continue;
             switch (offer.getEnchantment().getKey().getKey()) {
-                case "sharpness":
                 case "power":
-                case "protection":
                     offer.setEnchantmentLevel(3);
                     break;
             }
@@ -140,9 +134,7 @@ public class Limits extends IGamemode implements Listener {
         var enchant = entry.getKey().getKey().getKey();
 
         switch (enchant) {
-            case "sharpness":
             case "power":
-            case "protection":
                 entry.setValue(3);
                 break;
         }

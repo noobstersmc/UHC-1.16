@@ -248,8 +248,9 @@ public class GlobalListener implements Listener {
     @EventHandler
     public void onPlaceiPvp(BlockPlaceEvent e) {
         if (instance.getGame().isPvp()) return;
+        var player = e.getPlayer();
         var block = e.getBlock().getType();
-        if (block.toString().contains("BED")){
+        if (player.getWorld().getEnvironment() == Environment.NETHER && block.toString().contains("BED")){
             e.setCancelled(true);
             return;
         }
