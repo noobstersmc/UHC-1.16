@@ -36,9 +36,8 @@ public class BloodHunter extends IGamemode implements Listener {
 
     @EventHandler
     public void onKill(PlayerDeathEvent e){
-        var killer = e.getEntity().getPlayer().getKiller();
-        var killerMaxHealth = killer.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
-        killer.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(killerMaxHealth+2);
+        e.getEntity().getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(
+            e.getEntity().getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue()+2);
     }
 
 }
