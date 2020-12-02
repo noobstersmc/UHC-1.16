@@ -31,6 +31,7 @@ import me.infinityz.minigame.gamemodes.types.InfiniteEnchanter;
 import me.infinityz.minigame.gamemodes.types.Limits;
 import me.infinityz.minigame.gamemodes.types.LuckyLeaves;
 import me.infinityz.minigame.gamemodes.types.MeetupDoubleLifeBar;
+import me.infinityz.minigame.gamemodes.types.MetaGame;
 import me.infinityz.minigame.gamemodes.types.Moles;
 import me.infinityz.minigame.gamemodes.types.MonstersInc;
 import me.infinityz.minigame.gamemodes.types.NoFall;
@@ -120,6 +121,7 @@ public class GamemodeManager {
 
         // Scenarios pack
         registerGamemode(new UHCRun(instance));
+        registerGamemode(new MetaGame(instance));
 
         //Crafts
         registerGamemode(new Totems(instance));
@@ -142,6 +144,11 @@ public class GamemodeManager {
         var uhcRun = getScenario(UHCRun.class);
         if (uhcRun.isEnabled()) {
             list.removeAll(uhcRun.getGamemodes());
+        }
+
+        var metaGame = getScenario(MetaGame.class);
+        if (metaGame.isEnabled()) {
+            list.removeAll(metaGame.getGamemodes());
         }
 
         gamemodesList.forEach(gamemode -> {
@@ -180,6 +187,12 @@ public class GamemodeManager {
         if (uhcRun.isEnabled()) {
             enabledScenarios.removeAll(uhcRun.getGamemodes());
         }
+
+        var metaGame = getScenario(MetaGame.class);
+        if (metaGame.isEnabled()) {
+            enabledScenarios.removeAll(metaGame.getGamemodes());
+        }
+
         var iter = enabledScenarios.iterator();
 
         if (iter.hasNext())
@@ -206,6 +219,11 @@ public class GamemodeManager {
         var uhcRun = getScenario(UHCRun.class);
         if (uhcRun.isEnabled()) {
             enabledScenarios.removeAll(uhcRun.getGamemodes());
+        }
+
+        var metaGame = getScenario(MetaGame.class);
+        if (metaGame.isEnabled()) {
+            enabledScenarios.removeAll(metaGame.getGamemodes());
         }
 
         var iter = enabledScenarios.iterator();

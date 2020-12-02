@@ -89,7 +89,7 @@ public @RequiredArgsConstructor class Utilities extends BaseCommand {
     @CommandAlias("togglespec|ts")
     public void onToggleSpec(Player sender) {
         toggleGm(sender);
-        Bukkit.broadcastMessage(ChatColor.GRAY
+        sender.sendMessage(ChatColor.GRAY
                 + (sender.getGameMode() == GameMode.SPECTATOR ? "Temporal Spectator Enabled." : "Temporal Spectator Disabled."));
 
     }

@@ -209,23 +209,6 @@ public class ConfigListener implements Listener {
 
     }
 
-    /*
-    @EventHandler
-    public void nerfAnchorExplosion(PlayerInteractEvent e) {
-        if (instance.getGame().isAnchorNerf() && e.getPlayer().getWorld().getEnvironment() != Environment.NETHER 
-            && e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            var block = e.getClickedBlock().getType();
-            if (block != null && block.equals(Material.RESPAWN_ANCHOR)){
-                var anchor = (RespawnAnchor) e.getClickedBlock();
-                if(anchor.getCharges() > 0){
-                    e.setCancelled(true);
-                    e.getPlayer().getLocation().createExplosion(4.0f, true, true);
-                }
-            }
-        }
-
-    }*/
-
     @EventHandler(priority = EventPriority.MONITOR)
     public void slotLimit(PlayerLoginEvent e) {
         final var player = e.getPlayer();

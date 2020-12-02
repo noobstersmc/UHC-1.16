@@ -283,7 +283,7 @@ public class UHCCommand extends BaseCommand {
             case "UHC": {
                 newTittle = ChatColor.of("#A40A0A") + "" + ChatColor.BOLD + "UHC";
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "game title " + newTittle);
-                Game.setScoreColors(ChatColor.of("#82abba") + "");
+                Game.setScoreColors(ChatColor.of("#c48827") + "");
             }
                 break;
             case "RUN": {

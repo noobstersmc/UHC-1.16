@@ -10,6 +10,7 @@ import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.World;
 import org.bukkit.WorldBorder;
+import org.bukkit.World.Environment;
 import org.bukkit.boss.BarColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -273,8 +274,8 @@ public class GameLoop extends BukkitRunnable {
                         && !players.getWorld().getWorldBorder().isInside(players.getLocation()))
                 .forEach(outsideBorderPlayer -> Bukkit.getScheduler().runTask(instance, () -> {
                     outsideBorderPlayer.damage(1);
-
-                    handleBorderRescue(outsideBorderPlayer);
+                    if(outsideBorderPlayer.getWorld().getEnvironment() == Environment.NORMAL)
+                        handleBorderRescue(outsideBorderPlayer);
 
                     outsideBorderPlayer
                             .setLastDamageCause(new EntityDamageEvent(outsideBorderPlayer, DamageCause.CUSTOM, 1));

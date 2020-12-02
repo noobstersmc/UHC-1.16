@@ -109,14 +109,6 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
         instance.getGame().setBedsNerf(bool);
         sender.sendMessage("BedsNerf changed to " + bool);
     }
-/*
-    @CommandPermission("uhc.config.cmd")
-    @Subcommand("anchor nerf")
-    @CommandAlias("anchor-nerf")
-    public void changeAnchorNerf(CommandSender sender, Boolean bool) {
-        instance.getGame().setAnchorNerf(bool);
-        sender.sendMessage("AnchorNerf changed to " + bool);
-    }*/
 
     @CommandPermission("uhc.config.cmd")
     @Subcommand("advancements")

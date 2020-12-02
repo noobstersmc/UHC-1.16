@@ -130,7 +130,7 @@ public class IngameListeners implements Listener {
                     Game.getScoreColors() + "Your Kills: " + ChatColor.WHITE + (uhcPlayer != null ? uhcPlayer.getKills() : 0),
                     Game.getScoreColors() + "Team Kills: " + ChatColor.WHITE + (team != null ? team.getTeamKills() : 0), 
                     "",
-                    Game.getScoreColors() + "Players Alive: " + ChatColor.WHITE + instance.getPlayerManager().getAlivePlayers(),
+                    Game.getScoreColors() + "Players Left: " + ChatColor.WHITE + instance.getPlayerManager().getAlivePlayers(),
                     Game.getScoreColors() + "Border: " + ChatColor.WHITE
                             + ((int) e.getScoreboard().getPlayer().getWorld().getWorldBorder().getSize() / 2),
                     "", 
@@ -142,7 +142,7 @@ public class IngameListeners implements Listener {
                     "",
                     Game.getScoreColors() + "Your Kills: " + ChatColor.WHITE + (uhcPlayer != null ? uhcPlayer.getKills() : 0), 
                     "",
-                    Game.getScoreColors() + "Players Alive: " + ChatColor.WHITE + instance.getPlayerManager().getAlivePlayers(),
+                    Game.getScoreColors() + "Players Left: " + ChatColor.WHITE + instance.getPlayerManager().getAlivePlayers(),
                     Game.getScoreColors() + "Border: " + ChatColor.WHITE
                             + ((int) e.getScoreboard().getPlayer().getWorld().getWorldBorder().getSize() / 2),
                     "", 

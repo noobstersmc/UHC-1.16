@@ -53,7 +53,7 @@ public class HasteyBoysPlus extends IGamemode implements Listener {
             ItemStack stack = result.clone();
             ItemMeta meta = stack.getItemMeta();
             meta.addEnchant(Enchantment.DIG_SPEED, 5, false);
-            meta.addEnchant(Enchantment.DURABILITY, 5, false);
+            meta.addEnchant(Enchantment.DURABILITY, 3, false);
             stack.setItemMeta(meta);
             e.getInventory().setResult(stack);
         }
@@ -84,7 +84,7 @@ public class HasteyBoysPlus extends IGamemode implements Listener {
             return false;
 
         var meta = stack.getItemMeta();
-        return meta.getEnchantLevel(Enchantment.DIG_SPEED) == 5 && meta.getEnchantLevel(Enchantment.DURABILITY) == 5;
+        return meta.getEnchantLevel(Enchantment.DIG_SPEED) == 5 && meta.getEnchantLevel(Enchantment.DURABILITY) == 3;
     }
 
     boolean isTool(Material material) {

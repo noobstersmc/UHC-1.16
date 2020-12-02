@@ -30,7 +30,7 @@ public class Game {
     private static @Getter @Setter String scoreboardTitle = ChatColor.of("#A40A0A") + "" + ChatColor.BOLD + "UHC";
     private static @Getter @Setter String tablistHeader = ChatColor.of("#A40A0A") + "" + ChatColor.BOLD
             + "\nNOOBSTERS\n";
-    private static @Getter @Setter String scoreColors = ChatColor.of("#82abba") + "";
+    private static @Getter @Setter String scoreColors = ChatColor.of("#c48827") + "";
     /* Game data */
     private UUID gameID = UUID.randomUUID();
     private long startTime;
