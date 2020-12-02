@@ -22,18 +22,16 @@ import me.infinityz.minigame.gamemodes.events.DispenserArmorListener;
 import net.md_5.bungee.api.ChatColor;
 
 /*
-* Protection 3 Max
 * 3/4 Diamond/Netherite Max
-* Sharp 3 Max
 * Power 3 Max
 */
-public class Limits extends IGamemode implements Listener {
+public class Baguettes extends IGamemode implements Listener {
     private ArmorListener armorListener = new ArmorListener();
     private DispenserArmorListener dispenserArmorListener = new DispenserArmorListener();
     private UHC instance;
 
-    public Limits(UHC instance) {
-        super("Limits", "Limits the gear that any given player can use or wear.");
+    public Baguettes(UHC instance) {
+        super("Baguettes", "Shadoune Rules oh yeah.");
         this.instance = instance;
     }
 
@@ -88,15 +86,11 @@ public class Limits extends IGamemode implements Listener {
         if (result != null) {
             if (result.getType() == Material.ENCHANTED_BOOK) {
                 var bookMeta = (EnchantmentStorageMeta) result.getItemMeta();
-                if (bookMeta.getStoredEnchantLevel(Enchantment.DAMAGE_ALL) > 2
-                         || bookMeta.getStoredEnchantLevel(Enchantment.PROTECTION_ENVIRONMENTAL) > 2
-                         || bookMeta.getStoredEnchantLevel(Enchantment.ARROW_DAMAGE) > 2) {
+                if (bookMeta.getStoredEnchantLevel(Enchantment.ARROW_DAMAGE) > 3) {
                     e.setResult(null);
                 }
 
-            } else if (result.getEnchantmentLevel(Enchantment.DAMAGE_ALL) > 2
-            || result.getEnchantmentLevel(Enchantment.PROTECTION_ENVIRONMENTAL) > 2
-            || result.getEnchantmentLevel(Enchantment.ARROW_DAMAGE) > 2) {
+            } else if (result.getEnchantmentLevel(Enchantment.ARROW_DAMAGE) > 3) {
                 e.setResult(null);
             }
         }
@@ -105,13 +99,11 @@ public class Limits extends IGamemode implements Listener {
     @EventHandler
     public void onPreEnchant(PrepareItemEnchantEvent e) {
         for (var offer : e.getOffers()) {
-            if (offer == null || offer.getEnchantmentLevel() <= 2)
+            if (offer == null || offer.getEnchantmentLevel() <= 3)
                 continue;
             switch (offer.getEnchantment().getKey().getKey()) {
                 case "power":
-                case "protection":
-                case "sharpness":
-                    offer.setEnchantmentLevel(2);
+                    offer.setEnchantmentLevel(3);
                     break;
             }
 
@@ -134,16 +126,14 @@ public class Limits extends IGamemode implements Listener {
     }
 
     private void nerfEnchantments(Map.Entry<Enchantment, Integer> entry) {
-        if (entry.getValue() <= 2)
+        if (entry.getValue() <= 3)
             return;
 
         var enchant = entry.getKey().getKey().getKey();
 
         switch (enchant) {
             case "power":
-                case "protection":
-                case "sharpness":
-                entry.setValue(2);
+                entry.setValue(3);
                 break;
         }
     }

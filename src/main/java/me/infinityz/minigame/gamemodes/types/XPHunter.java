@@ -5,6 +5,7 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerLevelChangeEvent;
 
 import me.infinityz.minigame.UHC;
@@ -62,10 +63,15 @@ public class XPHunter extends IGamemode implements Listener {
     public void xpChange(PlayerLevelChangeEvent e){
         var hp = e.getNewLevel();
 
-        if(hp > 20 || hp < 2) return;
+        if(hp < 2) return;
         e.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(hp*2);
-        if(e.getPlayer().getHealth() <= 20) e.getPlayer().setHealth(e.getPlayer().getHealth()+2);
+        e.getPlayer().setHealth(e.getPlayer().getHealth()+2);
         
+    }
+
+    @EventHandler(priority = EventPriority.LOW)
+    public void onDeath(PlayerDeathEvent e){
+        e.getEntity().getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(40.0);
     }
  
       
