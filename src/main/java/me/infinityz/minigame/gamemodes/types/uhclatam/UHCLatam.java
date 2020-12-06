@@ -30,6 +30,8 @@ import me.infinityz.minigame.advancements.FrameType;
 import me.infinityz.minigame.advancements.Trigger;
 import me.infinityz.minigame.advancements.Trigger.TriggerType;
 import me.infinityz.minigame.crafting.CustomRecipe;
+import me.infinityz.minigame.crafting.recipes.CarrotRecipe;
+import me.infinityz.minigame.crafting.recipes.MelonRecipe;
 import me.infinityz.minigame.events.GameTickEvent;
 import me.infinityz.minigame.events.ScoreboardUpdateEvent;
 import me.infinityz.minigame.game.Game;
@@ -88,6 +90,33 @@ public class UHCLatam extends IGamemode implements Listener {
         setEnabled(true);
         return true;
     }
+
+    /*
+     * Scoreboard Interceptor ends
+     */
+
+    @Override
+    public boolean disableScenario() {
+        if (!isEnabled())
+            return false;
+        instance.getListenerManager().unregisterListener(this);
+        advancement.remove();
+
+        Bukkit.removeRecipe(carrotRecipe.getNamespacedKey());
+        Bukkit.removeRecipe(melonRecipe.getNamespacedKey());
+
+        Bukkit.getOnlinePlayers().forEach(all -> {
+            all.undiscoverRecipe(this.carrotRecipe.getNamespacedKey());
+            all.undiscoverRecipe(this.melonRecipe.getNamespacedKey());
+
+        });
+        Bukkit.resetRecipes();
+        instance.getCraftingManager().restoreRecipes();
+        setEnabled(false);
+        return true;
+
+    }
+
 
     /*
      * Scoreboard Interceptor starts
@@ -179,32 +208,6 @@ public class UHCLatam extends IGamemode implements Listener {
          */
 
         e.setLines(list.toArray(new String[] {}));
-    }
-
-    /*
-     * Scoreboard Interceptor ends
-     */
-
-    @Override
-    public boolean disableScenario() {
-        if (!isEnabled())
-            return false;
-        instance.getListenerManager().unregisterListener(this);
-        advancement.remove();
-
-        Bukkit.removeRecipe(carrotRecipe.getNamespacedKey());
-        Bukkit.removeRecipe(melonRecipe.getNamespacedKey());
-
-        Bukkit.getOnlinePlayers().forEach(all -> {
-            all.undiscoverRecipe(this.carrotRecipe.getNamespacedKey());
-            all.undiscoverRecipe(this.melonRecipe.getNamespacedKey());
-
-        });
-        Bukkit.resetRecipes();
-        instance.getCraftingManager().restoreRecipes();
-        setEnabled(false);
-        return true;
-
     }
 
     @EventHandler

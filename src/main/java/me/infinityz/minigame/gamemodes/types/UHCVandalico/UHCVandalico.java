@@ -1,23 +1,29 @@
-package me.infinityz.minigame.gamemodes.types;
+package me.infinityz.minigame.gamemodes.types.UHCVandalico;
 
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
 import org.bukkit.WorldBorder;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import me.infinityz.minigame.UHC;
+import me.infinityz.minigame.crafting.recipes.MelonRecipe;
 import me.infinityz.minigame.events.ScoreboardUpdateEvent;
 import me.infinityz.minigame.gamemodes.IGamemode;
+import me.infinityz.minigame.gamemodes.types.UHCMeetup;
+import me.infinityz.minigame.gamemodes.types.UHCRun;
 import net.md_5.bungee.api.ChatColor;
 
 
 public class UHCVandalico extends IGamemode implements Listener {
     private UHC instance;
     private WorldBorder worldBorder = Bukkit.getWorlds().get(0).getWorldBorder();
+    private MelonRecipe melonRecipe;
 
     public UHCVandalico(UHC instance) {
         super("UHC Vandálico", "UHCs Nórdicos.");
         this.instance = instance;
+        this.melonRecipe = new MelonRecipe(new NamespacedKey(instance, "newmelonrecipe"), null);
     }
 
     @Override
@@ -25,6 +31,11 @@ public class UHCVandalico extends IGamemode implements Listener {
         if (isEnabled())
             return false;
         instance.getListenerManager().registerListener(this);
+        melonRecipe.logic();
+        Bukkit.getOnlinePlayers().forEach(all -> {
+            all.discoverRecipe(this.melonRecipe.getNamespacedKey());
+
+        });
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "game score VANDAL");
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "config advancements true");
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "config privateGame true");
@@ -42,6 +53,12 @@ public class UHCVandalico extends IGamemode implements Listener {
         if (!isEnabled())
             return false;
         instance.getListenerManager().unregisterListener(this);
+        Bukkit.removeRecipe(melonRecipe.getNamespacedKey());
+
+        Bukkit.getOnlinePlayers().forEach(all -> {
+            all.undiscoverRecipe(this.melonRecipe.getNamespacedKey());
+
+        });
         instance.getGame().setDeathMatch(true);
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "game score UHC");
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "config advancements false");
@@ -72,7 +89,7 @@ public class UHCVandalico extends IGamemode implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onModifyScoreboard(ScoreboardUpdateEvent e) {
-        if(instance.getGamemodeManager().isScenarioEnable(UHCMeetup.class) 
+        if(instance.getGamemodeManager().isScenarioEnable(UHCMeetup.class)
             || instance.getGamemodeManager().isScenarioEnable(UHCRun.class)) return;
 
         e.setCancelled(false);

@@ -6,10 +6,10 @@ import org.bukkit.World;
 
 import me.infinityz.minigame.gamemodes.IGamemode;
 
-public class FastLeavesDecay extends IGamemode {
+public class FastLeaves extends IGamemode {
 
-    public FastLeavesDecay() {
-        super("FastLeavesDecay", "Leaves decay faster.");
+    public FastLeaves() {
+        super("FastLeaves", "Leaves decay faster.");
     }
 
     @Override
