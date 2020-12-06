@@ -1,4 +1,4 @@
-package me.infinityz.minigame.gamemodes.types.uhclatam;
+package me.infinityz.minigame.gamemodes.types;
 
 import java.util.ArrayList;
 import java.util.Iterator;

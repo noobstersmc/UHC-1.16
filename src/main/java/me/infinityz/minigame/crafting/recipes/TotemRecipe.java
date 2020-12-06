@@ -1,4 +1,4 @@
-package me.infinityz.minigame.gamemodes.types.Totems;
+package me.infinityz.minigame.crafting.recipes;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;

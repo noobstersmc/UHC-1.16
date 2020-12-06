@@ -1,10 +1,11 @@
-package me.infinityz.minigame.gamemodes.types.Totems;
+package me.infinityz.minigame.gamemodes.types;
 
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.Listener;
 
 import me.infinityz.minigame.UHC;
+import me.infinityz.minigame.crafting.recipes.TotemRecipe;
 import me.infinityz.minigame.gamemodes.IGamemode;
 
 public class Totems extends IGamemode implements Listener {

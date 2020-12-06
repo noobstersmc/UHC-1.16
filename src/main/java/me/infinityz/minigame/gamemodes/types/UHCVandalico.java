@@ -1,4 +1,4 @@
-package me.infinityz.minigame.gamemodes.types.UHCVandalico;
+package me.infinityz.minigame.gamemodes.types;
 
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -10,8 +10,6 @@ import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.crafting.recipes.MelonRecipe;
 import me.infinityz.minigame.events.ScoreboardUpdateEvent;
 import me.infinityz.minigame.gamemodes.IGamemode;
-import me.infinityz.minigame.gamemodes.types.UHCMeetup;
-import me.infinityz.minigame.gamemodes.types.UHCRun;
 import net.md_5.bungee.api.ChatColor;
 
 

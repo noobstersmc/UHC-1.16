@@ -1,4 +1,4 @@
-package me.infinityz.minigame.gamemodes.types.erespawn;
+package me.infinityz.minigame.gamemodes.types;
 
 import java.util.ArrayList;
 
@@ -25,6 +25,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import co.aikar.taskchain.TaskChain;
 import me.infinityz.minigame.UHC;
+import me.infinityz.minigame.crafting.recipes.EnderRespawnRecipe;
 import me.infinityz.minigame.gamemodes.IGamemode;
 import me.infinityz.minigame.teams.objects.Team;
 
