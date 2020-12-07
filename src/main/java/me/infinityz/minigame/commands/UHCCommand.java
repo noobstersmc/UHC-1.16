@@ -310,6 +310,12 @@ public class UHCCommand extends BaseCommand {
                 Game.setScoreColors(ChatColor.of("#00d0db") + "");
             }
                 break;
+            case "TORNEOVANDALICO": {
+                newTittle = ChatColor.of("#ef9e48") + "" + ChatColor.BOLD + "TORNEO UHC VANDÁLICO";
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "game title " + newTittle);
+                Game.setScoreColors(ChatColor.of("#00d0db") + "");
+            }
+                break;
             default: {
 
             }

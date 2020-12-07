@@ -28,6 +28,7 @@ import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.crafting.recipes.EnderRespawnRecipe;
 import me.infinityz.minigame.gamemodes.IGamemode;
 import me.infinityz.minigame.teams.objects.Team;
+import net.md_5.bungee.api.ChatColor;
 
 /**
  * EnderRespawn
@@ -228,7 +229,7 @@ public class EnderRespawnLeader extends IGamemode implements Listener {
                     toRespawn.teleport(loc);
                     toRespawn.setGameMode(GameMode.SURVIVAL);
                     toRespawn.addPotionEffect(PotionEffectType.DAMAGE_RESISTANCE.createEffect(200, 10));
-                    toRespawn.sendMessage("You have been respawned!");
+                    Bukkit.broadcastMessage(ChatColor.YELLOW + "" + toRespawn.getName() + " has been reborn from the darkness!");
 
                 }).delay(10).sync(() -> {
                     loc.getWorld().strikeLightningEffect(loc.clone().set(x, y, z));

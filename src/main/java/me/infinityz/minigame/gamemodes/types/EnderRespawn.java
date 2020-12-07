@@ -81,7 +81,7 @@ public class EnderRespawn extends IGamemode implements Listener {
                 && item.getItemMeta().getDisplayName().contains("Respawn Crystal");
     }
 
-    boolean canTeamLeaderRespawn(Team team) {
+    boolean canTeamMemberRespawn(Team team) {
         if (team != null) {
             var leader = team.getTeamLeader();
             var leaderPlayer = Bukkit.getOfflinePlayer(leader);
@@ -91,22 +91,15 @@ public class EnderRespawn extends IGamemode implements Listener {
         return false;
     }
     
-    /*
-    public UHCPlayer chooseMate(Team team, Player player){
+    
+    public Player chooseMate(Team team, Player player){
         if (team != null) {
-            var iter = team.getMembersUUIDStream().iterator();
-            while (iter.hasNext()) {
-                var member = Bukkit.getOfflinePlayer(iter.next());
-                if (member.isOnline() && member.getUniqueId() != player.getUniqueId() 
-                    && instance.getPlayerManager().getAlivePlayersListNonLambda().contains(member)) {
 
-                }
-            }
-            
-            
-
+            var members = team.getPlayerStream().filter(p-> p.isOnline() && p.getUniqueId() != player.getUniqueId()
+                && !respawnedList.contains(p.getUniqueId().getMostSignificantBits()))
+            return Bukkit.getOfflinePlayer(members);
         }
-    }*/
+    }
 
     @EventHandler
     public void onEnderRespawnPlaceAttempt(PlayerInteractEvent e) {

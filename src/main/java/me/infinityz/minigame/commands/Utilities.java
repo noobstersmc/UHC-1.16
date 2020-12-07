@@ -44,7 +44,7 @@ public @RequiredArgsConstructor class Utilities extends BaseCommand {
         Bukkit.dispatchCommand(sender, "lp user " + target.getName() + " parent set vip+");
     }
 
-    @CommandPermission("admin.perm")
+    @CommandPermission("staff.perm")
     @Subcommand("worldload")
     @CommandAlias("worldload")
     public void wordLoad(CommandSender sender) {
