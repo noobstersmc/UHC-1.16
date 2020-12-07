@@ -37,7 +37,10 @@ public class BloodDiamonds extends IGamemode implements Listener {
     @EventHandler
     public void onBreak(BlockBreakEvent e){
         if(e.getBlock().getType() == Material.DIAMOND_ORE){
-            e.getPlayer().damage(1);
+        var hp = e.getPlayer().getHealth();
+            e.getPlayer().setHealth(hp-1);
+            e.getPlayer().damage(0.01);
+        
         }
     }
 

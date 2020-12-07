@@ -27,21 +27,19 @@ import co.aikar.taskchain.TaskChain;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.crafting.recipes.EnderRespawnRecipe;
 import me.infinityz.minigame.gamemodes.IGamemode;
-import me.infinityz.minigame.players.UHCPlayer;
 import me.infinityz.minigame.teams.objects.Team;
-import net.md_5.bungee.api.ChatColor;
 
 /**
  * EnderRespawn
  */
-public class EnderRespawn extends IGamemode implements Listener {
+public class EnderRespawnLeader extends IGamemode implements Listener {
     private UHC instance;
     private EnderRespawnRecipe recipe;
 
     private ArrayList<Long> respawnedList = new ArrayList<>();
 
-    public EnderRespawn(UHC instance) {
-        super("Ender Respawn", "Respawn your team with EnderCrystals.");
+    public EnderRespawnLeader(UHC instance) {
+        super("Ender Respawn", "Respawn team leader with EnderCrystal.");
         this.instance = instance;
         this.recipe = new EnderRespawnRecipe(new NamespacedKey(instance, "respawn_crystal"), null);
     }
@@ -90,23 +88,6 @@ public class EnderRespawn extends IGamemode implements Listener {
         }
         return false;
     }
-    
-    /*
-    public UHCPlayer chooseMate(Team team, Player player){
-        if (team != null) {
-            var iter = team.getMembersUUIDStream().iterator();
-            while (iter.hasNext()) {
-                var member = Bukkit.getOfflinePlayer(iter.next());
-                if (member.isOnline() && member.getUniqueId() != player.getUniqueId() 
-                    && instance.getPlayerManager().getAlivePlayersListNonLambda().contains(member)) {
-
-                }
-            }
-            
-            
-
-        }
-    }*/
 
     @EventHandler
     public void onEnderRespawnPlaceAttempt(PlayerInteractEvent e) {
@@ -118,7 +99,7 @@ public class EnderRespawn extends IGamemode implements Listener {
                     var player = e.getPlayer();
                     var team = instance.getTeamManger().getPlayerTeam(player.getUniqueId());
                     if(team == null){
-                        player.sendMessage(ChatColor.RED + "You don't have a team.");
+                        player.sendMessage("You don't have a team.");
                         e.setCancelled(true);
                         e.setUseInteractedBlock(Result.DENY);
                         e.setUseItemInHand(Result.DENY);
@@ -134,7 +115,6 @@ public class EnderRespawn extends IGamemode implements Listener {
                         }else{
                             respawnAnimation(block.getLocation(), Bukkit.getPlayer(team.getTeamLeader()));
                             respawnedList.add(team.getTeamLeader().getMostSignificantBits());
-                            player.getInventory().removeItem(recipe.getRecipe().getResult());
 
                         }
                     } else {
@@ -248,8 +228,7 @@ public class EnderRespawn extends IGamemode implements Listener {
                     toRespawn.teleport(loc);
                     toRespawn.setGameMode(GameMode.SURVIVAL);
                     toRespawn.addPotionEffect(PotionEffectType.DAMAGE_RESISTANCE.createEffect(200, 10));
-                    Bukkit.broadcastMessage(ChatColor.YELLOW + "" + toRespawn.getName() + " has been reborn from the darkness!");
-
+                    toRespawn.sendMessage("You have been respawned!");
 
                 }).delay(10).sync(() -> {
                     loc.getWorld().strikeLightningEffect(loc.clone().set(x, y, z));

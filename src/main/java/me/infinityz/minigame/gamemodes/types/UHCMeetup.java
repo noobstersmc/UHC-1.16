@@ -352,7 +352,7 @@ public class UHCMeetup extends IGamemode implements Listener {
         return special;
     }
 
-    public ItemStack PotionItemStack(Material type, PotionType potionTypeEffect, boolean extend, boolean upgraded){
+    private ItemStack PotionItemStack(Material type, PotionType potionTypeEffect, boolean extend, boolean upgraded){
         ItemStack potion = new ItemStack(type, 1);
         PotionMeta meta = (PotionMeta) potion.getItemMeta();
         meta.setBasePotionData(new PotionData(potionTypeEffect, extend, upgraded));

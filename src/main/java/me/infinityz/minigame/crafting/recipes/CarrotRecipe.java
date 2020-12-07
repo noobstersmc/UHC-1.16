@@ -11,8 +11,8 @@ package me.infinityz.minigame.crafting.recipes;
 
     public class CarrotRecipe extends CustomRecipe {
     
-        public CarrotRecipe(NamespacedKey namespacedKey, Recipe test) {
-            super(namespacedKey, test);
+        public CarrotRecipe(NamespacedKey namespacedKey, Recipe name) {
+            super(namespacedKey, name);
     
                     final ItemStack newcarrotrecipe = new ItemStack(Material.GOLDEN_CARROT);
 

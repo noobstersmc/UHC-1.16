@@ -7,11 +7,11 @@ import org.bukkit.event.player.PlayerLevelChangeEvent;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.gamemodes.IGamemode;
 
-public class BloodEnchants extends IGamemode implements Listener {
+public class BloodExperience extends IGamemode implements Listener {
     private UHC instance;
 
-    public BloodEnchants(UHC instance) {
-        super("BloodEnchants", "Enchants with a pinch of damage.");
+    public BloodExperience(UHC instance) {
+        super("BloodExperience", "Enchants & anvils with a pinch of damage.");
         this.instance = instance;
     }
 

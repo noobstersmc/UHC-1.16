@@ -11,8 +11,8 @@ import me.infinityz.minigame.crafting.CustomRecipe;
 
 public class TotemRecipe extends CustomRecipe {
 
-    public TotemRecipe(NamespacedKey namespacedKey, Recipe test) {
-        super(namespacedKey, test);
+    public TotemRecipe(NamespacedKey namespacedKey, Recipe name) {
+        super(namespacedKey, name);
 
                 final ItemStack newTotemRecipe = new ItemStack(Material.TOTEM_OF_UNDYING);
 

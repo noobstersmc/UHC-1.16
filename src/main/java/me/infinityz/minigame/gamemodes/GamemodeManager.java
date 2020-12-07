@@ -13,11 +13,12 @@ import me.infinityz.minigame.gamemodes.types.AdvancementHunter;
 import me.infinityz.minigame.gamemodes.types.BackPack;
 import me.infinityz.minigame.gamemodes.types.Baguettes;
 import me.infinityz.minigame.gamemodes.types.BloodDiamonds;
-import me.infinityz.minigame.gamemodes.types.BloodEnchants;
+import me.infinityz.minigame.gamemodes.types.BloodExperience;
 import me.infinityz.minigame.gamemodes.types.BloodHunter;
 import me.infinityz.minigame.gamemodes.types.BowLess;
 import me.infinityz.minigame.gamemodes.types.Cutclean;
 import me.infinityz.minigame.gamemodes.types.DoubleOres;
+import me.infinityz.minigame.gamemodes.types.EnderRespawn;
 import me.infinityz.minigame.gamemodes.types.FastLeaves;
 import me.infinityz.minigame.gamemodes.types.FastSmelting;
 import me.infinityz.minigame.gamemodes.types.FireLess;
@@ -53,9 +54,8 @@ import me.infinityz.minigame.gamemodes.types.XCrossBows;
 import me.infinityz.minigame.gamemodes.types.XPHunter;
 import me.infinityz.minigame.gamemodes.types.NineSlots;
 import me.infinityz.minigame.gamemodes.types.ThunderKill;
-import me.infinityz.minigame.gamemodes.types.Totems;
 import me.infinityz.minigame.gamemodes.types.UHCVandalico;
-import me.infinityz.minigame.gamemodes.types.EnderRespawn;
+import me.infinityz.minigame.gamemodes.types.EnderRespawnLeader;
 import me.infinityz.minigame.gamemodes.types.UHCLatam;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -73,6 +73,7 @@ public class GamemodeManager {
         this.instance = instance;
         // Scenarios
         registerGamemode(new Cutclean(instance));
+        registerGamemode(new EnderRespawnLeader(instance));
         registerGamemode(new EnderRespawn(instance));
         registerGamemode(new Moles(instance));
         registerGamemode(new GoToHell(instance));
@@ -108,7 +109,7 @@ public class GamemodeManager {
         registerGamemode(new FastSmelting(instance));
         registerGamemode(new MonstersInc(instance));
         registerGamemode(new PermaGlow(instance));
-        registerGamemode(new BloodEnchants(instance));
+        registerGamemode(new BloodExperience(instance));
         registerGamemode(new HasteyBoysPlus(instance));
         registerGamemode(new DoubleLifeBar(instance));
         registerGamemode(new MeetupDoubleLifeBar(instance));
@@ -122,9 +123,6 @@ public class GamemodeManager {
         // Scenarios pack
         registerGamemode(new UHCRun(instance));
         registerGamemode(new MetaGame(instance));
-
-        //Crafts
-        registerGamemode(new Totems(instance));
 
         // Gamemode
         registerGamemode(new UHCMeetup(instance));

@@ -11,8 +11,8 @@ import me.infinityz.minigame.crafting.CustomRecipe;
 
 public class MelonRecipe extends CustomRecipe {
 
-    public MelonRecipe(NamespacedKey namespacedKey, Recipe test) {
-        super(namespacedKey, test);
+    public MelonRecipe(NamespacedKey namespacedKey, Recipe name) {
+        super(namespacedKey, name);
 
                 final ItemStack newmelonrecipe = new ItemStack(Material.GLISTERING_MELON_SLICE);
 
