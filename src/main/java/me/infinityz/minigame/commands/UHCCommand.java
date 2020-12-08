@@ -56,13 +56,6 @@ public class UHCCommand extends BaseCommand {
 
     private @NonNull UHC instance;
 
-    /*
-     * var winnersTitle = Title.builder() .title(new
-     * ComponentBuilder("You Win!").bold(true).color(ChatColor.GOLD).create())
-     * .subtitle(ChatColor.GREEN + "Congratulations " +
-     * winnersName.toString()).stay(6 * 20).fadeIn(10) .fadeOut(3 * 20).build();
-     */
-
     void countDown(final int time) {
         final var title = Title.builder().title("")
                 .subtitle(new ComponentBuilder("" + time).bold(true).color(ChatColor.GREEN).create()).stay(20).fadeIn(0)
@@ -117,7 +110,7 @@ public class UHCCommand extends BaseCommand {
         }
     }
 
-    @CommandPermission("staff.perm")
+    @CommandPermission("respawn.cmd")
     @Conditions("ingame")
     @CommandAlias("respawn")
     @Subcommand("respawn|revive|reinstantiate")
@@ -456,6 +449,19 @@ public class UHCCommand extends BaseCommand {
     public void changeHost(CommandSender sender, String newHost) {
         instance.getGame().setHostname(newHost);
         sender.sendMessage("New host = " + newHost);
+
+    }
+
+    @Subcommand("autodestruction")
+    @CommandPermission("uhc.admin")
+    public void autoDestroy(CommandSender sender) {
+        if(instance.getGame().isAutoDestruction()){
+            instance.getGame().setAutoDestruction(false);
+            sender.sendMessage("Auto destruction is now OFF");
+        }else{
+            instance.getGame().setAutoDestruction(true);
+            sender.sendMessage("Auto destruction is now ON");
+        }
 
     }
 

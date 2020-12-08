@@ -30,7 +30,7 @@ public class HelpopCommand extends BaseCommand {
         player.sendMessage(sunflowerYellow + "Your message has been sent!");
 
         Bukkit.broadcast(sunflowerYellow + "[Helpop] " + ChatColor.GRAY + player.getName() + ": " + message,
-                "staff.perm");
+                "helpop.hear");
     }
 
 }

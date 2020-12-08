@@ -15,7 +15,7 @@ import me.infinityz.minigame.UHC;
 import net.md_5.bungee.api.ChatColor;
 
 @RequiredArgsConstructor
-@CommandPermission("staff.perm")
+@CommandPermission("globalmute.cmd")
 @CommandAlias("globalmute")
 public class GlobalMute extends BaseCommand {
     private @NonNull UHC instance;

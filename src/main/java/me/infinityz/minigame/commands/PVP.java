@@ -14,7 +14,7 @@ import me.infinityz.minigame.UHC;
 import net.md_5.bungee.api.ChatColor;
 
 @RequiredArgsConstructor
-@CommandPermission("staff.perm")
+@CommandPermission("pvp.toggle")
 @CommandAlias("pvp")
 public class PVP extends BaseCommand {
     private @NonNull UHC instance;

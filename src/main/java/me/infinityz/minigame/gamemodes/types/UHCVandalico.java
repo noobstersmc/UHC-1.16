@@ -1,11 +1,16 @@
 package me.infinityz.minigame.gamemodes.types;
 
+import java.util.Iterator;
+
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.WorldBorder;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.Recipe;
+
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.crafting.recipes.MelonRecipe;
 import me.infinityz.minigame.events.ScoreboardUpdateEvent;
@@ -29,19 +34,28 @@ public class UHCVandalico extends IGamemode implements Listener {
         if (isEnabled())
             return false;
         instance.getListenerManager().registerListener(this);
+
         melonRecipe.logic();
         Bukkit.getOnlinePlayers().forEach(all -> {
             all.discoverRecipe(this.melonRecipe.getNamespacedKey());
 
         });
+
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "game score VANDAL");
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "config advancements true");
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "config privateGame true");
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "whitelist on");
         instance.getGame().setTearsNerf(true);
-
+        instance.getGame().setAutoDestruction(false);
         instance.getGame().setDeathMatch(false);
 
+        Iterator<Recipe> iter = Bukkit.recipeIterator();
+
+        while (iter.hasNext()) {
+            if (iter.next().getResult().getType() == Material.GLISTERING_MELON_SLICE) {
+                iter.remove();
+            }
+        }
         setEnabled(true);
         return true;
     }
@@ -57,7 +71,9 @@ public class UHCVandalico extends IGamemode implements Listener {
             all.undiscoverRecipe(this.melonRecipe.getNamespacedKey());
 
         });
+        
         instance.getGame().setDeathMatch(true);
+        instance.getGame().setAutoDestruction(true);
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "game score UHC");
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "config advancements false");
         instance.getGame().setTearsNerf(false);

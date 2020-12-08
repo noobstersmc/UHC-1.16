@@ -42,6 +42,7 @@ public class Game {
     private boolean antiMining = false;
     private int uhcslots = 60;
     /* Game config */
+    private boolean autoDestruction = true;
     private boolean deathMatch = true;
     private boolean privateGame = false;
     private boolean nether = true;

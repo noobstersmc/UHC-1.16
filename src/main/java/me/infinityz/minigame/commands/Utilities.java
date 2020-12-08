@@ -44,7 +44,7 @@ public @RequiredArgsConstructor class Utilities extends BaseCommand {
         Bukkit.dispatchCommand(sender, "lp user " + target.getName() + " parent set vip+");
     }
 
-    @CommandPermission("staff.perm")
+    @CommandPermission("worldload.cmd")
     @Subcommand("worldload")
     @CommandAlias("worldload")
     public void wordLoad(CommandSender sender) {
@@ -56,6 +56,13 @@ public @RequiredArgsConstructor class Utilities extends BaseCommand {
             Bukkit.dispatchCommand(sender, "chunky radius " + instance.getChunkManager().getBorder());
             Bukkit.dispatchCommand(sender, "chunky start");
         }
+    }
+
+    @CommandPermission("worldstatus.cmd")
+    @Subcommand("worldstatus")
+    @CommandAlias("worldstatus")
+    public void worldload(CommandSender sender) {
+        Bukkit.dispatchCommand(sender, "chunky-hynix status");
     }
 
     @CommandPermission("admin.perm")

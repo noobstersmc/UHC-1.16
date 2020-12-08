@@ -48,8 +48,6 @@ public class CraftingManager implements Listener {
         this.instance.getCommandManager().registerCommand(new CraftingCMD());
 
         totem = new TotemRecipe(new NamespacedKey(instance, "totem"), null);
-        carrot = new CarrotRecipe(new NamespacedKey(instance, "carrot"), null);
-        melon = new MelonRecipe(new NamespacedKey(instance, "melon"), null);
         dragonBreath = new DragonBreath(new NamespacedKey(instance, "dragon_breath"), null);
 
         deleteRecipe(Material.NETHERITE_INGOT);
@@ -84,7 +82,7 @@ public class CraftingManager implements Listener {
         }
     }
 
-    @CommandPermission("uhc.recipes")
+    @CommandPermission("crafting.cmd")
     @CommandAlias("crafting")
     public class CraftingCMD extends BaseCommand {
 
@@ -100,38 +98,6 @@ public class CraftingManager implements Listener {
                 Bukkit.removeRecipe(totem.getNamespacedKey());
                 Bukkit.getOnlinePlayers().forEach(all -> all.undiscoverRecipe(totem.getNamespacedKey()));
                 sender.sendMessage("Totem Craft Disabled.");
-            }
-        }
-
-        @Subcommand("GoldenCarrot")
-        @CommandAlias("GoldenCarrot")
-        public void gCarrotCraft(CommandSender sender) {
-            if(!isInList("carrot")){
-                deleteRecipe(Material.GOLDEN_CARROT);
-                recipes.add(carrot);
-                Bukkit.addRecipe(carrot.getRecipe());
-                Bukkit.getOnlinePlayers().forEach(all -> all.discoverRecipe(carrot.getNamespacedKey()));
-                sender.sendMessage("Golden Carrot Craft Enabled.");
-            }else{
-                Bukkit.removeRecipe(carrot.getNamespacedKey());
-                Bukkit.getOnlinePlayers().forEach(all -> all.undiscoverRecipe(carrot.getNamespacedKey()));
-                sender.sendMessage("Golden Carrot Craft Disabled.");
-            }
-        }
-
-        @Subcommand("GlisteringMelon")
-        @CommandAlias("GlisteringMelon")
-        public void gMelon(CommandSender sender) {
-            if(!isInList("melon")){
-                deleteRecipe(Material.GLISTERING_MELON_SLICE);
-                recipes.add(melon);
-                Bukkit.addRecipe(melon.getRecipe());
-                Bukkit.getOnlinePlayers().forEach(all -> all.discoverRecipe(melon.getNamespacedKey()));
-                sender.sendMessage("Glistering Melon Craft Enabled.");
-            }else{
-                Bukkit.removeRecipe(melon.getNamespacedKey());
-                Bukkit.getOnlinePlayers().forEach(all -> all.undiscoverRecipe(melon.getNamespacedKey()));
-                sender.sendMessage("Glistering Melon Craft Disabled.");
             }
         }
 

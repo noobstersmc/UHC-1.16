@@ -53,7 +53,7 @@ public class StartCommand extends BaseCommand {
         });
     }
 
-    @CommandPermission("staff.perm")
+    @CommandPermission("start.cmd")
     @Default
     public void newScatter(CommandSender sender) {
 
