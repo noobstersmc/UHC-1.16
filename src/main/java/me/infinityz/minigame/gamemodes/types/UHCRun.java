@@ -36,6 +36,7 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
     public UHCRun(UHC instance) {
         super("UHC Run", "An accelerated UHC Experience.");
         this.instance = instance;
+        
         Bukkit.getScheduler().runTaskLater(instance, () -> {
             var manager = instance.getGamemodeManager();
             gamemodes.add(manager.getScenario(Cutclean.class));
@@ -45,7 +46,7 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
             gamemodes.add(manager.getScenario(LuckyLeaves.class));
             gamemodes.add(manager.getScenario(FastSmelting.class));
 
-        }, 5L);
+        }, 10);
 
     }
 

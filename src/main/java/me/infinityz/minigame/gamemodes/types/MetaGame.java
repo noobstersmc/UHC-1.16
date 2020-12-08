@@ -22,7 +22,7 @@ public class MetaGame extends IGamemode implements ScenarioPack, Listener {
             gamemodes.add(manager.getScenario(HasteyBoys.class));
             gamemodes.add(manager.getScenario(Timber.class));
 
-        }, 5L);
+        }, 10);
 
     }
 

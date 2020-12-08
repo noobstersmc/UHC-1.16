@@ -244,6 +244,10 @@ public class UHC extends JavaPlugin {
 
         }
 
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "worldload");
+
+
+
     }
 
     void loadConfigFromJson(Gson gson, CommandSender sender) {
