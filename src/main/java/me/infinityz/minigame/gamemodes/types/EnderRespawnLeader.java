@@ -9,6 +9,7 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
+import org.bukkit.World.Environment;
 import org.bukkit.entity.EnderCrystal;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Result;
@@ -40,7 +41,7 @@ public class EnderRespawnLeader extends IGamemode implements Listener {
     private ArrayList<Long> respawnedList = new ArrayList<>();
 
     public EnderRespawnLeader(UHC instance) {
-        super("Ender Respawn", "Respawn team leader with EnderCrystal.");
+        super("Ender RespawnLeader", "Respawn team leader with EnderCrystal.");
         this.instance = instance;
         this.recipe = new EnderRespawnRecipe(new NamespacedKey(instance, "respawn_crystal"), null);
     }
@@ -92,15 +93,16 @@ public class EnderRespawnLeader extends IGamemode implements Listener {
 
     @EventHandler
     public void onEnderRespawnPlaceAttempt(PlayerInteractEvent e) {
-        if (e.getAction() == Action.RIGHT_CLICK_BLOCK && instance.getTeamManger().isTeams()) {
+        var player = e.getPlayer();
+        if (e.getAction() == Action.RIGHT_CLICK_BLOCK && instance.getTeamManger().isTeams()
+            && player.getWorld().getEnvironment() == Environment.NORMAL) {
             var block = e.getClickedBlock();
             if (block.getType() != Material.AIR) {
                 var itemInHand = e.getItem();
                 if (allowEnderRespawn(itemInHand)) {
-                    var player = e.getPlayer();
                     var team = instance.getTeamManger().getPlayerTeam(player.getUniqueId());
                     if(team == null){
-                        player.sendMessage("You don't have a team.");
+                        player.sendMessage(ChatColor.RED + "You don't have a team.");
                         e.setCancelled(true);
                         e.setUseInteractedBlock(Result.DENY);
                         e.setUseItemInHand(Result.DENY);
@@ -108,14 +110,15 @@ public class EnderRespawnLeader extends IGamemode implements Listener {
                     }
                     if (canTeamLeaderRespawn(team)) {
                         var uhcPlayer = instance.getPlayerManager().getPlayer(team.getTeamLeader());
-                        if(uhcPlayer.isAlive()){
-                            player.sendMessage("Leader is still alive.");
+                        if(uhcPlayer.isAlive() || uhcPlayer.getPlayer().getWorld().getEnvironment() != Environment.NORMAL){
+                            player.sendMessage(ChatColor.RED + "Can't respawn is still alive or is not in overworld.");
                             e.setCancelled(true);
                             e.setUseInteractedBlock(Result.DENY);
                             e.setUseItemInHand(Result.DENY);
                         }else{
                             respawnAnimation(block.getLocation(), Bukkit.getPlayer(team.getTeamLeader()));
                             respawnedList.add(team.getTeamLeader().getMostSignificantBits());
+                            player.getInventory().removeItem(recipe.getRecipe().getResult());
 
                         }
                     } else {

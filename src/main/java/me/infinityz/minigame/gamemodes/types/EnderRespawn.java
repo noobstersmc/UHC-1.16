@@ -9,6 +9,7 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
+import org.bukkit.World.Environment;
 import org.bukkit.entity.EnderCrystal;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Result;
@@ -27,8 +28,6 @@ import co.aikar.taskchain.TaskChain;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.crafting.recipes.EnderRespawnRecipe;
 import me.infinityz.minigame.gamemodes.IGamemode;
-import me.infinityz.minigame.players.UHCPlayer;
-import me.infinityz.minigame.teams.objects.Team;
 import net.md_5.bungee.api.ChatColor;
 
 /**
@@ -80,35 +79,17 @@ public class EnderRespawn extends IGamemode implements Listener {
         return item != null && item.getType() == Material.END_CRYSTAL && item.hasItemMeta()
                 && item.getItemMeta().getDisplayName().contains("Respawn Crystal");
     }
-
-    boolean canTeamMemberRespawn(Team team) {
-        if (team != null) {
-            var leader = team.getTeamLeader();
-            var leaderPlayer = Bukkit.getOfflinePlayer(leader);
-            if (leaderPlayer.isOnline() && !respawnedList.contains(leader.getMostSignificantBits()))
-                return true;
-        }
-        return false;
-    }
     
-    
-    public Player chooseMate(Team team, Player player){
-        if (team != null) {
-
-            var members = team.getPlayerStream().filter(p-> p.isOnline() && p.getUniqueId() != player.getUniqueId()
-                && !respawnedList.contains(p.getUniqueId().getMostSignificantBits()))
-            return Bukkit.getOfflinePlayer(members);
-        }
-    }
 
     @EventHandler
     public void onEnderRespawnPlaceAttempt(PlayerInteractEvent e) {
-        if (e.getAction() == Action.RIGHT_CLICK_BLOCK && instance.getTeamManger().isTeams()) {
+        var player = e.getPlayer();
+        if (e.getAction() == Action.RIGHT_CLICK_BLOCK && instance.getTeamManger().isTeams() 
+            && player.getWorld().getEnvironment() == Environment.NORMAL) {
             var block = e.getClickedBlock();
             if (block.getType() != Material.AIR) {
                 var itemInHand = e.getItem();
                 if (allowEnderRespawn(itemInHand)) {
-                    var player = e.getPlayer();
                     var team = instance.getTeamManger().getPlayerTeam(player.getUniqueId());
                     if(team == null){
                         player.sendMessage(ChatColor.RED + "You don't have a team.");
@@ -117,16 +98,20 @@ public class EnderRespawn extends IGamemode implements Listener {
                         e.setUseItemInHand(Result.DENY);
                         return;                        
                     }
-                    if (canTeamLeaderRespawn(team)) {
-                        var uhcPlayer = instance.getPlayerManager().getPlayer(team.getTeamLeader());
+                    var optionalPlayer = team.getPlayerStream().filter(a -> a.getGameMode() != GameMode.SURVIVAL 
+                        && a.isOnline() && a.getWorld().getEnvironment() == Environment.NORMAL
+                        && !respawnedList.contains(a.getUniqueId().getMostSignificantBits())).findFirst();
+                    
+                    if (optionalPlayer.isPresent()) {
+                        var uhcPlayer = instance.getPlayerManager().getPlayer(optionalPlayer.get().getUniqueId());
                         if(uhcPlayer.isAlive()){
-                            player.sendMessage("Leader is still alive.");
+                            player.sendMessage(ChatColor.RED + "Member is still alive.");
                             e.setCancelled(true);
                             e.setUseInteractedBlock(Result.DENY);
                             e.setUseItemInHand(Result.DENY);
                         }else{
-                            respawnAnimation(block.getLocation(), Bukkit.getPlayer(team.getTeamLeader()));
-                            respawnedList.add(team.getTeamLeader().getMostSignificantBits());
+                            respawnAnimation(block.getLocation(), Bukkit.getPlayer(uhcPlayer.getUUID()));
+                            respawnedList.add(uhcPlayer.getUUID().getMostSignificantBits());
                             player.getInventory().removeItem(recipe.getRecipe().getResult());
 
                         }

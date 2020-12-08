@@ -43,7 +43,7 @@ public class ChunksManager {
                 var message = needed > 0
                         ? ChatColor.RED + "Not ready to start. " + needed + " location needed to start."
                         : ChatColor.GREEN + "Ready to start.";
-                    notifyOnActionbar(message, "staff.pern");
+                    notifyOnActionbar(message, "staff.perm");
 
             }
         }, 5L, 20L);
