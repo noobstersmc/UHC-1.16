@@ -12,12 +12,14 @@ import com.google.gson.GsonBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.boss.BossBar;
+import org.bukkit.entity.Player;
 
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.enums.Stage;
+import me.infinityz.minigame.game.props.DeleteRequest;
 import me.infinityz.minigame.gamemodes.types.UHCMeetup;
 import me.infinityz.minigame.gamemodes.types.UHCRun;
 import net.md_5.bungee.api.ChatColor;
@@ -90,6 +92,29 @@ public class Game {
 
         // Return as json
         return gson.toJson(this);
+    }
+
+    public void sendSelfDestroyRequest(UHC instance) {
+        var req = gson.toJson(DeleteRequest.ofGame());
+        instance.getCondorManager().getJedis().publish("destroy", req);
+        Bukkit.broadcast(req, "uhc.debug.destroy");
+    }
+
+    public void selfDestroyTimed() {
+        if (!isAutoDestruction())
+            return;
+        var instance = UHC.getInstance();
+        Bukkit.broadcast(ChatColor.GRAY + "[UHC] This game will be self destructed in 60 seconds.", "uhc.destroy.self");
+
+        Bukkit.getScheduler().runTaskLater(instance, () -> {
+            if (!instance.getGame().isAutoDestruction()) {
+                Bukkit.broadcast(ChatColor.GRAY + "[UHC] Self-destruction was cancelled.", "uhc.destroy.self");
+                return;
+            }
+            sendSelfDestroyRequest(instance);
+            Bukkit.getOnlinePlayers().forEach(e -> e.kickPlayer("Thanks for playing."));
+        }, 20 * 60L);
+
     }
 
     public String newFormatJson() {

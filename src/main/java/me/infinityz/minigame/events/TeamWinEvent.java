@@ -9,6 +9,7 @@ import org.bukkit.event.HandlerList;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import me.infinityz.minigame.UHC;
 
 public class TeamWinEvent extends Event implements Cancellable {
     /*
@@ -26,11 +27,13 @@ public class TeamWinEvent extends Event implements Cancellable {
     public TeamWinEvent(UUID uuid, boolean async) {
         super(async);
         this.teamUUID = uuid;
+        UHC.getInstance().getGame().selfDestroyTimed();
     }
 
     public TeamWinEvent(UUID uuid) {
         super(false);
         this.teamUUID = uuid;
+        UHC.getInstance().getGame().selfDestroyTimed();
     }
 
 

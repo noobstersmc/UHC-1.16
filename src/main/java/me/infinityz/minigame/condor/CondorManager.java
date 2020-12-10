@@ -25,6 +25,10 @@ public class CondorManager {
         instance.getCondorManager().writeExpirableData(game.getGameID(), game.newFormatJson(), 3);
     }
 
+    public void sendSelfDestroyRequest(){
+                
+    }
+
     public CompletableFuture<String> writeExpirableData(String ID, String data, int expiration) {
         return CompletableFuture.supplyAsync(() -> {
             var serverID = "servers:uhc:" + ID;
