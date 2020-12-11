@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
+import java.util.LinkedList;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -235,7 +236,7 @@ public class UHC extends JavaPlugin {
             }
 
         }, 60L);
-
+/*
         try {
 
             loadConfigFromJson(new Gson(), Bukkit.getConsoleSender());
@@ -243,11 +244,59 @@ public class UHC extends JavaPlugin {
         } catch (Exception e) {
 
         }
+*/
+        getCondorConfig(new Gson());
 
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "worldload");
 
+    }
 
+    private void getCondorConfig(final Gson gson) {
+        var condor_id = getCondorID();
+        // If ID exist, pull data from redis
+        if (!condor_id.isBlank()) {
+            var condor_data = getCondorManager().getJedis().get("data:" + condor_id);
+            var server_data = gson.fromJson(condor_data, JsonObject.class);
+            var scenarios_linked_list = new LinkedList<String>();
+            // Set hostname and gameID
+            var hostname = server_data.get("host").getAsString();
+            game.setHostname(hostname);
+            game.setGameID(UUID.fromString(condor_id));
+            // Set the gameType
+            scenarios_linked_list.add(server_data.get("game_type").getAsString().replace("-", " ").toLowerCase());
+            // Process extra data
+            var uhc_extra_data = server_data.get("extra_data").getAsJsonObject();
+            uhc_extra_data.get("scenarios").getAsJsonArray().forEach(e -> scenarios_linked_list.add(e.getAsString()));
+            
+            // Handle team size
+            var team_size = uhc_extra_data.get("team_size").getAsInt();
+            if (team_size > 1) {
+                getTeamManger().setTeamManagement(true);
+                getTeamManger().setTeamSize(team_size);
+            }
+            //Enable scenarios
+            scenarios_linked_list.stream().forEachOrdered(e->{
+                Bukkit.getScheduler().runTaskLater(this, ()->{
+                    enableScenario(e);
+                }, 10L);
+            });
+        }
 
+    }
+
+    private String getCondorID() {
+        var properties = new Properties();
+        var propertiesFile = new File("server.properties");
+
+        try (var is = new FileInputStream(propertiesFile)) {
+            properties.load(is);
+        } catch (Exception ignore) {
+            ignore.printStackTrace();
+        }
+
+        var condor_id = properties.getProperty("condor-id");
+
+        return condor_id != null ? condor_id : "";
     }
 
     void loadConfigFromJson(Gson gson, CommandSender sender) {
@@ -284,8 +333,12 @@ public class UHC extends JavaPlugin {
         }
     }
 
+    private void enableScenario(String scenarioName) {
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "scenario " + scenarioName);
+    }
+
     private void enableScenario(JsonElement scenarioName) {
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "scenario " + scenarioName.getAsString());
+        enableScenario(scenarioName.getAsString());
     }
 
     void deleteDirectory(File directoryToBeDeleted) throws IOException {
