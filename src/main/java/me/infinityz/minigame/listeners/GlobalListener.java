@@ -152,6 +152,11 @@ public class GlobalListener implements Listener {
     @EventHandler
     public void joinMessage(PlayerJoinEvent e) {
         var player = e.getPlayer();
+        if (!player.hasPermission("group.host")
+                && player.getName().equalsIgnoreCase(instance.getGame().getHostname())) {
+            player.addAttachment(instance).setPermission("group.host", true);
+            player.updateCommands();
+        }
         e.setJoinMessage("");
         var footer = GameLoop.HAVELOCK_BLUE + "\nJoin Our UHC Community!\n" + GameLoop.SHAMROCK_GREEN
                 + "discord.noobsters.net\n" + ChatColor.AQUA + "twitter.com/NoobstersMC\n";

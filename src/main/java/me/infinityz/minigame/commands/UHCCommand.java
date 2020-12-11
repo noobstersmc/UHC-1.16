@@ -81,6 +81,11 @@ public class UHCCommand extends BaseCommand {
         chain.delay(20).sync(TaskChain::abort).execute();
     }
 
+    @CommandAlias("refresh")
+    public void refreshCommands(Player sender){
+        sender.updateCommands();
+    }
+
     @Data
     @AllArgsConstructor(staticName = "of")
     private static class ReviveArgs {
