@@ -13,7 +13,6 @@ import java.util.UUID;
 import java.util.logging.Level;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
@@ -34,7 +33,6 @@ import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
-import org.bukkit.command.CommandSender;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitWorker;
@@ -236,22 +234,10 @@ public class UHC extends JavaPlugin {
             }
 
         }, 60L);
-/*
-        try {
-
-            loadConfigFromJson(new Gson(), Bukkit.getConsoleSender());
-
-        } catch (Exception e) {
-
-        }
-*/
-        getCondorConfig(new Gson());
-
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "worldload");
-
+        setCondorConfig(new Gson());
     }
 
-    private void getCondorConfig(final Gson gson) {
+    private void setCondorConfig(final Gson gson) {
         var condor_id = getCondorID();
         // If ID exist, pull data from redis
         if (!condor_id.isBlank()) {
@@ -263,21 +249,24 @@ public class UHC extends JavaPlugin {
             game.setHostname(hostname);
             game.setGameID(UUID.fromString(condor_id));
             // Set the gameType
-            scenarios_linked_list.add(server_data.get("game_type").getAsString().replace("-", " ").toLowerCase());
+            scenarios_linked_list
+                    .add("scenario " + server_data.get("game_type").getAsString().replace("-", " ").toLowerCase());
             // Process extra data
             var uhc_extra_data = server_data.get("extra_data").getAsJsonObject();
-            uhc_extra_data.get("scenarios").getAsJsonArray().forEach(e -> scenarios_linked_list.add(e.getAsString()));
-            
+            uhc_extra_data.get("scenarios").getAsJsonArray()
+                    .forEach(e -> scenarios_linked_list.add("scenario " + e.getAsString()));
+
             // Handle team size
             var team_size = uhc_extra_data.get("team_size").getAsInt();
             if (team_size > 1) {
                 getTeamManger().setTeamManagement(true);
                 getTeamManger().setTeamSize(team_size);
             }
-            //Enable scenarios
-            scenarios_linked_list.stream().forEachOrdered(e->{
-                Bukkit.getScheduler().runTaskLater(this, ()->{
-                    enableScenario(e);
+            scenarios_linked_list.add("worldload");
+            // Execute commands
+            scenarios_linked_list.stream().forEachOrdered(e -> {
+                Bukkit.getScheduler().runTaskLater(this, () -> {
+                    runCommand(e);
                 }, 10L);
             });
         }
@@ -299,46 +288,9 @@ public class UHC extends JavaPlugin {
         return condor_id != null ? condor_id : "";
     }
 
-    void loadConfigFromJson(Gson gson, CommandSender sender) {
-        Properties properties = new Properties();
-        File propertiesFile = new File("server.properties");
 
-        try {
-            try (InputStream is = new FileInputStream(propertiesFile)) {
-                properties.load(is);
-            }
-            var condor_id = properties.getProperty("condor-id");
-            var data_json = getCondorManager().getJedis().get("data:" + condor_id);
-            var server_data = gson.fromJson(data_json, JsonObject.class);
-            var hostname = server_data.get("host").getAsString();
-            var gametype = server_data.get("game_type").getAsString();
-            if (gametype.equalsIgnoreCase("UHC-Run")) {
-                Bukkit.dispatchCommand(sender, "scenario UHC Run");
-            } else if (gametype.equalsIgnoreCase("UHC-Meetup")) {
-                Bukkit.dispatchCommand(sender, "scenario UHC Meetup");
-            }
-            game.setHostname(hostname);
-            game.setGameID(UUID.fromString(condor_id));
-            // Process extra data
-            var uhc_extra_data = server_data.get("extra_data").getAsJsonObject();
-            uhc_extra_data.get("scenarios").getAsJsonArray().forEach(this::enableScenario);
-            var team_size = uhc_extra_data.get("team_size").getAsInt();
-            if (team_size > 1) {
-                Bukkit.dispatchCommand(sender, "team man true");
-                Bukkit.dispatchCommand(sender, "team size " + team_size);
-            }
-
-        } catch (Exception e) {
-            Bukkit.broadcastMessage("This instance wasn't able to connect to condor. Please check the condor-id.");
-        }
-    }
-
-    private void enableScenario(String scenarioName) {
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "scenario " + scenarioName);
-    }
-
-    private void enableScenario(JsonElement scenarioName) {
-        enableScenario(scenarioName.getAsString());
+    private void runCommand(String command) {
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
     }
 
     void deleteDirectory(File directoryToBeDeleted) throws IOException {
