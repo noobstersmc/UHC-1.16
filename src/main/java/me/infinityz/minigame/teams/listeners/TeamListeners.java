@@ -3,13 +3,17 @@ package me.infinityz.minigame.teams.listeners;
 import com.github.benmanes.caffeine.cache.RemovalCause;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import me.infinityz.minigame.UHC;
+import me.infinityz.minigame.enums.Stage;
 import me.infinityz.minigame.scoreboard.objects.FastBoard;
 import me.infinityz.minigame.teams.events.PlayerJoinedTeamEvent;
 import me.infinityz.minigame.teams.events.PlayerKickedFromTeamEvent;
@@ -28,6 +32,38 @@ public class TeamListeners implements Listener {
     /* Constant */
     private static final ChatColor SUSHI_GREEN = ChatColor.of("#7ab83c");
 
+    @EventHandler
+    public void friendlyFire(EntityDamageByEntityEvent e) {
+        if(instance.getTeamManger().isFriendlyFire() || e.getEntity() == e.getDamager()
+        || instance.getGameStage().equals(Stage.LOBBY)) return;
+
+        if (e.getEntity() instanceof Player) {
+
+            Player p2 = null;
+            var player = (Player) e.getEntity();
+
+            if (e.getDamager() instanceof Player) {
+                var team = instance.getTeamManger().getPlayerTeam(e.getDamager().getUniqueId());
+                if(team.isMember(player.getUniqueId())){
+                    p2 = (Player) e.getDamager();
+                }
+            } else if (e.getDamager() instanceof Projectile) {
+                Projectile proj = (Projectile) e.getDamager();
+                if (proj.getShooter() instanceof Player) {
+                    var shooter = (Player) proj.getShooter();
+                    var team = instance.getTeamManger().getPlayerTeam(shooter.getUniqueId());
+                    if(team.isMember(player.getUniqueId())){
+                        p2 = (Player) proj.getShooter();
+                    }
+                }
+            }
+            
+            if (p2 != null) {
+                e.setCancelled(true);
+            }
+        }
+    }
+    
     @EventHandler
     public void onInviteExpireEvent(TeamInviteExpireEvent e) {
         var invite = e.getInvite();

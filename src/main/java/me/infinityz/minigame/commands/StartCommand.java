@@ -94,13 +94,11 @@ public class StartCommand extends BaseCommand {
         }
 
         instance.setGameStage(Stage.SCATTER);
-        if (instance.getTeamManger().isTeamManagement()) {
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "team man false");
-        }
 
         if (instance.getTeamManger().getTeamSize() > 1) {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "team random");
         }
+        
         instance.getChunkManager().getAutoChunkScheduler().cancel();
         Bukkit.broadcastMessage(ChatColor.of("#2be49c") + "Starting the teleportation task...");
         // Start Parameters

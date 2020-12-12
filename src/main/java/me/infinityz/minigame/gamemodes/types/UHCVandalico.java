@@ -35,6 +35,14 @@ public class UHCVandalico extends IGamemode implements Listener {
             return false;
         instance.getListenerManager().registerListener(this);
 
+        Iterator<Recipe> iter = Bukkit.recipeIterator();
+
+        while (iter.hasNext()) {
+            if (iter.next().getResult().getType() == Material.GLISTERING_MELON_SLICE) {
+                iter.remove();
+            }
+        }
+        
         melonRecipe.logic();
         Bukkit.getOnlinePlayers().forEach(all -> {
             all.discoverRecipe(this.melonRecipe.getNamespacedKey());
@@ -49,13 +57,6 @@ public class UHCVandalico extends IGamemode implements Listener {
         instance.getGame().setAutoDestruction(false);
         instance.getGame().setDeathMatch(false);
 
-        Iterator<Recipe> iter = Bukkit.recipeIterator();
-
-        while (iter.hasNext()) {
-            if (iter.next().getResult().getType() == Material.GLISTERING_MELON_SLICE) {
-                iter.remove();
-            }
-        }
         setEnabled(true);
         return true;
     }

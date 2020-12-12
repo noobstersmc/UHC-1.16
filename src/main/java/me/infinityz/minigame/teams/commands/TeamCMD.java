@@ -296,6 +296,14 @@ public class TeamCMD extends BaseCommand {
         instance.getTeamManger().clearCache();
     }
 
+    @CommandPermission("uhc.team.staff")
+    @Subcommand("friendlyfire|fire")
+    public void friendlyFire(CommandSender sender) {
+        var bool = instance.getTeamManger().isFriendlyFire();
+        sender.sendMessage("Friendly Fire set to " + !bool);
+        instance.getTeamManger().setFriendlyFire(!bool);
+    }
+
     @Subcommand("chat|tc")
     @Syntax("<message> - Message to send to your team")
     @CommandAlias("tc|teamchat")

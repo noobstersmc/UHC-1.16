@@ -115,6 +115,10 @@ public class GameLoop extends BukkitRunnable {
             instance.getGame().setPvp(true);
             Bukkit.broadcastMessage(SHAMROCK_GREEN + "PvP has been enabled.");
 
+            if (instance.getTeamManger().isTeamManagement()) {
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "team man false");
+            }
+
         }
         if (time == game.getBorderTime()) {
             // BORDER TIME

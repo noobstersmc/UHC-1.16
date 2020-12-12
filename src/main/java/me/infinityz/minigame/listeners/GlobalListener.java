@@ -189,6 +189,9 @@ public class GlobalListener implements Listener {
      */
     @EventHandler
     public void onPVP(EntityDamageByEntityEvent e) {
+        if(e.getEntity() == e.getDamager() || instance.getGame().isPvp() 
+        || instance.getGameStage().equals(Stage.LOBBY)) return;
+
         if (e.getEntity() instanceof Player) {
             Player p2 = null;
             if (e.getDamager() instanceof Player) {
@@ -199,7 +202,7 @@ public class GlobalListener implements Listener {
                     p2 = (Player) proj.getShooter();
                 }
             }
-            if (p2 != null && !instance.getGame().isPvp() && !instance.getGameStage().equals(Stage.LOBBY)) {
+            if (p2 != null) {
                 p2.sendMessage(ChatColor.RED + "PvP is currently disabled.");
                 e.setCancelled(true);
             }

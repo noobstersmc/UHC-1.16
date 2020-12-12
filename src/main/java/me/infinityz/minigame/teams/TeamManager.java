@@ -43,6 +43,7 @@ public class TeamManager {
     private @Getter @Setter boolean teamManagement = false;
     private @Getter @Setter boolean broacastColor = true;
     private @Getter @Setter boolean showPrefix = true;
+    private @Getter @Setter boolean friendlyFire = true;
     private @Getter TeamCMD teamCommand;
 
     public TeamManager(final UHC instance) {
