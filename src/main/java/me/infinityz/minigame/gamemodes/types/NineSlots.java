@@ -12,7 +12,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import me.infinityz.minigame.UHC;
-import me.infinityz.minigame.events.GameTickEvent;
+import me.infinityz.minigame.events.GameStartedEvent;
 import me.infinityz.minigame.events.PlayerJoinedLateEvent;
 import me.infinityz.minigame.gamemodes.IGamemode;
 import net.md_5.bungee.api.ChatColor;
@@ -49,15 +49,12 @@ public class NineSlots extends IGamemode implements Listener {
     }
 
     @EventHandler
-    public void onStart(GameTickEvent e) {
-        if (e.getSecond() == 1) {
-            Bukkit.getScheduler().runTask(instance, () -> {
-                Bukkit.getOnlinePlayers().forEach(players->{
-                    fillInventory(players);
-                });
+    public void onStart(GameStartedEvent e) {
+        Bukkit.getScheduler().runTask(instance, () -> {
+            Bukkit.getOnlinePlayers().forEach(players->{
+                fillInventory(players);
             });
-        }
-
+        });
     }
 
     @EventHandler
@@ -89,7 +86,8 @@ public class NineSlots extends IGamemode implements Listener {
     public void onPlayerJoinLate(PlayerJoinedLateEvent e){
         Bukkit.getScheduler().runTaskLater(instance, ()->{
             fillInventory(e.getPlayer());
-        }, 10);
+
+        }, 20);
     }
 
 

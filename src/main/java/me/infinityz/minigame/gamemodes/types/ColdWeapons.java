@@ -47,9 +47,11 @@ public class ColdWeapons extends IGamemode implements Listener {
     @EventHandler
     public void onEnchantItemEvent(EnchantItemEvent e) {
         e.getEnchantsToAdd().entrySet().forEach(entry -> {
-            var enchant = entry.getKey().getKey().getKey();
-            if(enchant.contains("fire")){
-                e.setCancelled(true);
+            var enchant = entry.getKey();
+            if(enchant == Enchantment.FIRE_ASPECT){
+                e.getItem().removeEnchantment(Enchantment.FIRE_ASPECT);
+            } else if(enchant == Enchantment.ARROW_FIRE){
+                e.getItem().removeEnchantment(Enchantment.ARROW_FIRE);
             }
         });
     }
@@ -65,8 +67,8 @@ public class ColdWeapons extends IGamemode implements Listener {
                     e.setResult(null);
                 }
 
-            } else if (result.getEnchantmentLevel(Enchantment.FIRE_ASPECT) >= 1
-            || result.getEnchantmentLevel(Enchantment.ARROW_FIRE) == 1) {
+            } else if (result.containsEnchantment(Enchantment.FIRE_ASPECT) 
+                || result.containsEnchantment(Enchantment.ARROW_FIRE)) {
                 e.setResult(null);
             }
         }
@@ -75,12 +77,11 @@ public class ColdWeapons extends IGamemode implements Listener {
     @EventHandler
     public void onPreEnchant(PrepareItemEnchantEvent e) {
         for (var offer : e.getOffers()) {
-            if (offer == null || offer.getEnchantment().toString().contains("fire"))
-                continue;
-            if(offer.getEnchantment() == Enchantment.FIRE_ASPECT) {
-                offer.setEnchantment(Enchantment.DAMAGE_ALL);
-            }else if(offer.getEnchantment() == Enchantment.ARROW_FIRE){
-                offer.setEnchantment(Enchantment.ARROW_DAMAGE);
+            if(offer != null){
+                var enchant = offer.getEnchantment();
+                if(enchant == Enchantment.FIRE_ASPECT || enchant == Enchantment.ARROW_FIRE){
+                    offer.setEnchantment(Enchantment.DURABILITY);
+                }
             }
         }
     }
