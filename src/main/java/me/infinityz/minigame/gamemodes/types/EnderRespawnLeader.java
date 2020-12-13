@@ -118,7 +118,7 @@ public class EnderRespawnLeader extends IGamemode implements Listener {
                         }else{
                             respawnAnimation(block.getLocation(), Bukkit.getPlayer(team.getTeamLeader()));
                             respawnedList.add(team.getTeamLeader().getMostSignificantBits());
-                            player.getInventory().removeItem(recipe.getRecipe().getResult());
+                            player.getInventory().removeItem(itemInHand);
 
                         }
                     } else {

@@ -5,7 +5,6 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerLevelChangeEvent;
 
 import me.infinityz.minigame.UHC;
@@ -44,36 +43,36 @@ public class XPHunter extends IGamemode implements Listener {
 
         Bukkit.getOnlinePlayers().forEach(players -> {
 
-                Bukkit.getScheduler().runTaskLater(instance, ()->{
-                    players.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(2.0);
-                }, 20);
+            Bukkit.getScheduler().runTaskLater(instance, () -> {
+                players.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(2.0);
+            }, 20);
         });
     }
 
     @EventHandler(priority = EventPriority.HIGH)
-    public void onJoinLate(PlayerJoinedLateEvent e){
+    public void onJoinLate(PlayerJoinedLateEvent e) {
         var player = e.getPlayer();
-        Bukkit.getScheduler().runTaskLater(instance, ()->{
+        Bukkit.getScheduler().runTaskLater(instance, () -> {
             player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(2.0);
         }, 20);
     }
 
-
     @EventHandler
-    public void xpChange(PlayerLevelChangeEvent e){
-        var hp = e.getNewLevel();
+    public void xpChange(PlayerLevelChangeEvent e) {
+        final var player = e.getPlayer();
 
-        if(hp < 2) return;
-        e.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(hp*2);
-        e.getPlayer().setHealth(e.getPlayer().getHealth()+2);
-        
-    }
+        var diff = Math.abs(e.getOldLevel() - e.getNewLevel());
+        var playerMax = player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
 
-    @EventHandler(priority = EventPriority.LOW)
-    public void onDeath(PlayerDeathEvent e){
-        e.getEntity().getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(40.0);
+        if (e.getNewLevel() > e.getOldLevel()) {
+            player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(playerMax + (diff * 2));
+            player.setHealth(player.getHealth() + (diff * 2));
+
+        } else {
+            player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(playerMax - (diff * 2));
+            player.damage(diff * 2);
+        }
+
     }
- 
-      
 
 }

@@ -5,7 +5,6 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerAdvancementDoneEvent;
 
 import me.infinityz.minigame.UHC;
@@ -67,11 +66,6 @@ public class AdvancementHunter extends IGamemode implements Listener {
         Bukkit.getScheduler().runTaskLater(instance, ()->{
             player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(2.0);
         }, 20);
-    }
-
-    @EventHandler(priority = EventPriority.LOW)
-    public void onDeath(PlayerDeathEvent e){
-        e.getEntity().getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(40.0);
     }
 
 }

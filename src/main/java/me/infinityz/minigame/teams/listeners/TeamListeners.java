@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -32,7 +33,7 @@ public class TeamListeners implements Listener {
     /* Constant */
     private static final ChatColor SUSHI_GREEN = ChatColor.of("#7ab83c");
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW)
     public void friendlyFire(EntityDamageByEntityEvent e) {
         if(instance.getTeamManger().isFriendlyFire() || e.getEntity() == e.getDamager()
         || instance.getGameStage().equals(Stage.LOBBY)) return;

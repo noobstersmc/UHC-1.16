@@ -187,7 +187,7 @@ public class GlobalListener implements Listener {
     /**
      * PVP boolean code
      */
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void onPVP(EntityDamageByEntityEvent e) {
         if(e.getEntity() == e.getDamager() || instance.getGame().isPvp() 
         || instance.getGameStage().equals(Stage.LOBBY)) return;

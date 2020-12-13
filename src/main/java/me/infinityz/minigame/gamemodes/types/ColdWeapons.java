@@ -13,7 +13,6 @@ import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.gamemodes.IGamemode;
 
-
 public class ColdWeapons extends IGamemode implements Listener {
     private UHC instance;
 
@@ -43,14 +42,13 @@ public class ColdWeapons extends IGamemode implements Listener {
         return true;
     }
 
-
     @EventHandler
     public void onEnchantItemEvent(EnchantItemEvent e) {
         e.getEnchantsToAdd().entrySet().forEach(entry -> {
             var enchant = entry.getKey();
-            if(enchant == Enchantment.FIRE_ASPECT){
+            if (enchant == Enchantment.FIRE_ASPECT) {
                 e.getItem().removeEnchantment(Enchantment.FIRE_ASPECT);
-            } else if(enchant == Enchantment.ARROW_FIRE){
+            } else if (enchant == Enchantment.ARROW_FIRE) {
                 e.getItem().removeEnchantment(Enchantment.ARROW_FIRE);
             }
         });
@@ -62,13 +60,13 @@ public class ColdWeapons extends IGamemode implements Listener {
         if (result != null) {
             if (result.getType() == Material.ENCHANTED_BOOK) {
                 var bookMeta = (EnchantmentStorageMeta) result.getItemMeta();
-                if (bookMeta.getStoredEnchantLevel(Enchantment.FIRE_ASPECT) >= 1 
-                || bookMeta.getStoredEnchantLevel(Enchantment.ARROW_FIRE) == 1) {
+                if (bookMeta.getStoredEnchantLevel(Enchantment.FIRE_ASPECT) >= 1
+                        || bookMeta.getStoredEnchantLevel(Enchantment.ARROW_FIRE) == 1) {
                     e.setResult(null);
                 }
 
-            } else if (result.containsEnchantment(Enchantment.FIRE_ASPECT) 
-                || result.containsEnchantment(Enchantment.ARROW_FIRE)) {
+            } else if (result.containsEnchantment(Enchantment.FIRE_ASPECT)
+                    || result.containsEnchantment(Enchantment.ARROW_FIRE)) {
                 e.setResult(null);
             }
         }
@@ -76,14 +74,6 @@ public class ColdWeapons extends IGamemode implements Listener {
 
     @EventHandler
     public void onPreEnchant(PrepareItemEnchantEvent e) {
-        for (var offer : e.getOffers()) {
-            if(offer != null){
-                var enchant = offer.getEnchantment();
-                if(enchant == Enchantment.FIRE_ASPECT || enchant == Enchantment.ARROW_FIRE){
-                    offer.setEnchantment(Enchantment.DURABILITY);
-                }
-            }
-        }
     }
 
     @EventHandler
@@ -92,18 +82,18 @@ public class ColdWeapons extends IGamemode implements Listener {
             if (stack != null) {
                 if (stack.getType() == Material.ENCHANTED_BOOK) {
                     var bookMeta = (EnchantmentStorageMeta) stack.getItemMeta();
-                    bookMeta.getStoredEnchants().entrySet().forEach(entry ->{
-                        if(entry.getKey() == Enchantment.FIRE_ASPECT){
+                    bookMeta.getStoredEnchants().entrySet().forEach(entry -> {
+                        if (entry.getKey() == Enchantment.FIRE_ASPECT) {
                             stack.removeEnchantment(Enchantment.FIRE_ASPECT);
-                        }else if(entry.getKey() == Enchantment.ARROW_FIRE){
+                        } else if (entry.getKey() == Enchantment.ARROW_FIRE) {
                             stack.removeEnchantment(Enchantment.ARROW_FIRE);
                         }
                     });
                 } else if (stack.hasItemMeta()) {
-                    stack.getEnchantments().entrySet().forEach(entry ->{
-                        if(entry.getKey() == Enchantment.FIRE_ASPECT){
+                    stack.getEnchantments().entrySet().forEach(entry -> {
+                        if (entry.getKey() == Enchantment.FIRE_ASPECT) {
                             stack.removeEnchantment(Enchantment.FIRE_ASPECT);
-                        }else if(entry.getKey() == Enchantment.ARROW_FIRE){
+                        } else if (entry.getKey() == Enchantment.ARROW_FIRE) {
                             stack.removeEnchantment(Enchantment.ARROW_FIRE);
                         }
                     });

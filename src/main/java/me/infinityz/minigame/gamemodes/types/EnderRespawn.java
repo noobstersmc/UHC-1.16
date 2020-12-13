@@ -112,7 +112,7 @@ public class EnderRespawn extends IGamemode implements Listener {
                         }else{
                             respawnAnimation(block.getLocation(), Bukkit.getPlayer(uhcPlayer.getUUID()));
                             respawnedList.add(uhcPlayer.getUUID().getMostSignificantBits());
-                            player.getInventory().removeItem(recipe.getRecipe().getResult());
+                            player.getInventory().remove(itemInHand);
 
                         }
                     } else {

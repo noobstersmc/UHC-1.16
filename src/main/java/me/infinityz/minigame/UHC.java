@@ -67,7 +67,6 @@ import me.infinityz.minigame.enums.Stage;
 import me.infinityz.minigame.game.Game;
 import me.infinityz.minigame.gamemodes.GamemodeManager;
 import me.infinityz.minigame.gamemodes.GamemodesCMD;
-import me.infinityz.minigame.gamemodes.IGamemode;
 import me.infinityz.minigame.listeners.ListenerManager;
 import me.infinityz.minigame.players.PlayerManager;
 import me.infinityz.minigame.scoreboard.ScoreboardManager;
@@ -158,7 +157,7 @@ public class UHC extends JavaPlugin {
         getServer().getScheduler().getActiveWorkers().stream().filter(w -> w.getOwner() == this)
                 .map(BukkitWorker::getThread).forEach(Thread::interrupt);
         getServer().getScheduler().cancelTasks(this);
-        gamemodeManager.getEnabledGamemodes().forEach(IGamemode::disableScenario);
+        //gamemodeManager.getEnabledGamemodes().forEach(IGamemode::disableScenario);
         // commandManager.unregisterCommands();
         craftingManager.purgeRecipes();
     }

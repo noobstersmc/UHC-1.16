@@ -15,6 +15,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.World.Environment;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Skull;
@@ -66,15 +67,15 @@ public class IngameListeners implements Listener {
         if (e.getEntity().getLastDamageCause().getCause() == DamageCause.CUSTOM) {
             e.setDeathMessage("");
             var player = e.getEntity().getPlayer();
-            if(instance.getGamemodeManager().isScenarioEnable(SkyHigh.class) && 
-                player.getWorld().getWorldBorder().isInside(player.getLocation())){
-                    Bukkit.broadcastMessage(player.getName() + " was devoured by the earth");
-                    return;
+            if (instance.getGamemodeManager().isScenarioEnable(SkyHigh.class)
+                    && player.getWorld().getWorldBorder().isInside(player.getLocation())) {
+                Bukkit.broadcastMessage(player.getName() + " was devoured by the earth");
+                return;
             }
-            if(player.getWorld().getWorldBorder().isInside(player.getLocation())
-                && player.getWorld().getEnvironment() != Environment.NETHER){
-                    Bukkit.broadcastMessage(player.getName() + " was devoured by his arrogance");
-                    return;
+            if (player.getWorld().getWorldBorder().isInside(player.getLocation())
+                    && player.getWorld().getEnvironment() != Environment.NETHER) {
+                Bukkit.broadcastMessage(player.getName() + " was devoured by his arrogance");
+                return;
             }
             var deathMessageEnglish = e.getEntity().getName() + " was devoured by the border";
             var deathMessageSpanish = e.getEntity().getName() + " fue devorado por el borde";
@@ -97,8 +98,8 @@ public class IngameListeners implements Listener {
 
     @EventHandler
     public void onGameTick(GameTickEvent e) {
-        if(e.getSecond() == 5){
-            Bukkit.getScheduler().runTask(instance, ()->{
+        if (e.getSecond() == 5) {
+            Bukkit.getScheduler().runTask(instance, () -> {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "chat oi");
             });
         }
@@ -125,28 +126,30 @@ public class IngameListeners implements Listener {
         if (isTeams) {
             var team = instance.getTeamManger().getPlayerTeam(e.getScoreboard().getPlayer().getUniqueId());
             e.setLines(new String[] {
-                    Game.getScoreColors() + "Time: " + ChatColor.WHITE + timeConvert(instance.getGame().getGameTime()), 
+                    Game.getScoreColors() + "Time: " + ChatColor.WHITE + timeConvert(instance.getGame().getGameTime()),
                     "",
-                    Game.getScoreColors() + "Your Kills: " + ChatColor.WHITE + (uhcPlayer != null ? uhcPlayer.getKills() : 0),
-                    Game.getScoreColors() + "Team Kills: " + ChatColor.WHITE + (team != null ? team.getTeamKills() : 0), 
+                    Game.getScoreColors() + "Your Kills: " + ChatColor.WHITE
+                            + (uhcPlayer != null ? uhcPlayer.getKills() : 0),
+                    Game.getScoreColors() + "Team Kills: " + ChatColor.WHITE + (team != null ? team.getTeamKills() : 0),
                     "",
-                    Game.getScoreColors() + "Players Left: " + ChatColor.WHITE + instance.getPlayerManager().getAlivePlayers(),
+                    Game.getScoreColors() + "Players Left: " + ChatColor.WHITE
+                            + instance.getPlayerManager().getAlivePlayers(),
                     Game.getScoreColors() + "Border: " + ChatColor.WHITE
                             + ((int) e.getScoreboard().getPlayer().getWorld().getWorldBorder().getSize() / 2),
-                    "", 
-                    ChatColor.WHITE + "noobsters.net" });
+                    "", ChatColor.WHITE + "noobsters.net" });
 
         } else {
             e.setLines(new String[] {
-                    Game.getScoreColors() + "Time: " + ChatColor.WHITE + timeConvert(instance.getGame().getGameTime()), 
+                    Game.getScoreColors() + "Time: " + ChatColor.WHITE + timeConvert(instance.getGame().getGameTime()),
                     "",
-                    Game.getScoreColors() + "Your Kills: " + ChatColor.WHITE + (uhcPlayer != null ? uhcPlayer.getKills() : 0), 
+                    Game.getScoreColors() + "Your Kills: " + ChatColor.WHITE
+                            + (uhcPlayer != null ? uhcPlayer.getKills() : 0),
                     "",
-                    Game.getScoreColors() + "Players Left: " + ChatColor.WHITE + instance.getPlayerManager().getAlivePlayers(),
+                    Game.getScoreColors() + "Players Left: " + ChatColor.WHITE
+                            + instance.getPlayerManager().getAlivePlayers(),
                     Game.getScoreColors() + "Border: " + ChatColor.WHITE
                             + ((int) e.getScoreboard().getPlayer().getWorld().getWorldBorder().getSize() / 2),
-                    "", 
-                    ChatColor.WHITE + "noobsters.net" });
+                    "", ChatColor.WHITE + "noobsters.net" });
         }
 
     }
@@ -176,11 +179,13 @@ public class IngameListeners implements Listener {
             p.setGameMode(GameMode.SPECTATOR);
             uhcP = instance.getPlayerManager().addCreateUHCPlayer(p.getUniqueId(), false);
             uhcP.setAlive(false);
-            if (!instance.getGamemodeManager().isScenarioEnable(UHCMeetup.class) && time < instance.getGame().getPvpTime())
+            if (!instance.getGamemodeManager().isScenarioEnable(UHCMeetup.class)
+                    && time < instance.getGame().getPvpTime())
                 p.sendMessage(ChatColor.of("#2be49c") + "The UHC has already started, to play use /play");
-            
+
         } else if (!uhcP.isDead() && !uhcP.isAlive()) {
-            if (!instance.getGamemodeManager().isScenarioEnable(UHCMeetup.class) && time < instance.getGame().getPvpTime())
+            if (!instance.getGamemodeManager().isScenarioEnable(UHCMeetup.class)
+                    && time < instance.getGame().getPvpTime())
                 p.sendMessage(ChatColor.of("#2be49c") + "The UHC has already started, to play use /play");
             uhcP.setAlive(false);
             p.setGameMode(GameMode.SPECTATOR);
@@ -227,15 +232,16 @@ public class IngameListeners implements Listener {
     @EventHandler
     public void onDeathHead(PlayerDeathEvent e) {
         final Player p = e.getEntity();
-        if(instance.getGamemodeManager().isScenarioEnable(GoldenRetreiver.class)
-            || instance.getGamemodeManager().isScenarioEnable(UHCMeetup.class)) return;
+        if (instance.getGamemodeManager().isScenarioEnable(GoldenRetreiver.class)
+                || instance.getGamemodeManager().isScenarioEnable(UHCMeetup.class))
+            return;
 
-        if(instance.getGamemodeManager().isScenarioEnable(TiempoBomba.class) 
-            && !instance.getGamemodeManager().isScenarioEnable(GoldenRetreiver.class)){
+        if (instance.getGamemodeManager().isScenarioEnable(TiempoBomba.class)
+                && !instance.getGamemodeManager().isScenarioEnable(GoldenRetreiver.class)) {
             var stack = new ItemStack(Material.PLAYER_HEAD);
             var meta = stack.getItemMeta();
-            if(meta instanceof SkullMeta){
-                var skullMeta = (SkullMeta)meta;
+            if (meta instanceof SkullMeta) {
+                var skullMeta = (SkullMeta) meta;
                 skullMeta.setOwningPlayer(Bukkit.getOfflinePlayer(p.getUniqueId()));
                 stack.setItemMeta(skullMeta);
             }
@@ -248,20 +254,25 @@ public class IngameListeners implements Listener {
         Block head = p.getLocation().getBlock().getRelative(BlockFace.UP);
         head.setType(Material.PLAYER_HEAD);
 
-        Skull skull = (Skull) head.getState();
-        skull.setOwningPlayer(Bukkit.getOfflinePlayer(p.getUniqueId()));
-        skull.update();
+        if (head.getState() instanceof Skull) {
+            Skull skull = (Skull) head.getState();
+            skull.setOwningPlayer(Bukkit.getOfflinePlayer(p.getUniqueId()));
+            skull.update();
+        }
     }
 
     @EventHandler
     public void onPlayerDQ(UHCPlayerDequalificationEvent e) {
-        
+
         Bukkit.getScheduler().runTaskAsynchronously(instance, this::calculateWin);
 
-        /*Bukkit.getScheduler().runTask(instance, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
-                "whitelist remove " + e.getOfflinePlayer().getName())
-
-        );*/
+        /*
+         * Bukkit.getScheduler().runTask(instance, () ->
+         * Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "whitelist remove " +
+         * e.getOfflinePlayer().getName())
+         * 
+         * );
+         */
         if (e.getReason() == DQReason.OFFLINE_DQ) {
             Bukkit.broadcastMessage(e.getOfflinePlayer().getName() + " has abandoned the game");
         }
@@ -306,7 +317,7 @@ public class IngameListeners implements Listener {
         Player p = e.getEntity();
         // remove player from whitelist.
         p.setGameMode(GameMode.SPECTATOR);
-        p.setHealth(20.0);
+        p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
         p.getWorld().strikeLightningEffect(p.getLocation());
         p.sendTitle(Title.builder().title("")
                 .subtitle(new ComponentBuilder("YOU ARE DEAD").bold(true).color(ChatColor.DARK_RED).create()).build());
