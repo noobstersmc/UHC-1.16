@@ -194,6 +194,14 @@ public class UHCCommand extends BaseCommand {
 
     }
 
+    @Subcommand("chunkradius")
+    @CommandPermission("uhc.admin")
+    public void changeChunkLoadRadius(CommandSender sender, Integer chunkr) {
+        ChunkLoadTask.setRadius(chunkr);
+        sender.sendMessage("Chunk Radius load changed to: " + chunkr);
+
+    }
+
     @Subcommand("color")
     @CommandPermission("uhc.admin")
     public void onTeamColor(Player sender, @Optional Player target, Integer index, String str) {

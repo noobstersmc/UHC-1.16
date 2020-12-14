@@ -12,6 +12,7 @@ import org.bukkit.World;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 
 public @RequiredArgsConstructor class ChunkLoadTask implements Runnable {
@@ -21,6 +22,7 @@ public @RequiredArgsConstructor class ChunkLoadTask implements Runnable {
     private @Getter boolean isDone = false;
     private @Getter boolean isRunning = false;
     private @Getter int chunksLeft = -1;
+    private static @Getter @Setter int radius = 6;
     private int border;
     @Override
     public void run() {
@@ -62,7 +64,7 @@ public @RequiredArgsConstructor class ChunkLoadTask implements Runnable {
         }
         System.out.println("Done finding the location at " + coordinatePair.toString() + ", moving to chunk load.");
         // Once this point is reach, lots of chunks must be loaded.
-        var neighbours = ChunksManager.getNeighbouringChunks(coordinatePair.toChunkObject(), 6);
+        var neighbours = ChunksManager.getNeighbouringChunks(coordinatePair.toChunkObject(), radius);
         chunksLeft = neighbours.size();
         var iterator = neighbours.iterator();
         var semaphore = new Semaphore(50);

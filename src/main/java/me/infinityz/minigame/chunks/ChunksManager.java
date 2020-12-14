@@ -37,13 +37,13 @@ public class ChunksManager {
             if (!pendingChunkLoadTasks.isEmpty()) {
                 iterate(pendingChunkLoadTasks.iterator());
                     notifyOnActionbar(ChatColor.GOLD + "Not ready to start, currently loading "
-                            + pendingChunkLoadTasks.size() + " locations...", "staff.perm");
+                            + pendingChunkLoadTasks.size() + " locations...", "preload.locations");
             } else {
                 var needed = neededLocations();
                 var message = needed > 0
                         ? ChatColor.RED + "Not ready to start. " + needed + " location needed to start."
                         : ChatColor.GREEN + "Ready to start.";
-                    notifyOnActionbar(message, "staff.perm");
+                    notifyOnActionbar(message, "preload.locations");
 
             }
         }, 5L, 20L);

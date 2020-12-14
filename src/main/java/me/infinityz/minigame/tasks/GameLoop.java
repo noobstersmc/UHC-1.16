@@ -9,8 +9,8 @@ import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.World;
-import org.bukkit.WorldBorder;
 import org.bukkit.World.Environment;
+import org.bukkit.WorldBorder;
 import org.bukkit.boss.BarColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -44,8 +44,24 @@ public class GameLoop extends BukkitRunnable {
     // Move from
     @Override
     public void run() {
-        int time = (int) (Math.floor((System.currentTimeMillis() - instance.getGame().getStartTime()) / 1000.0));
-        instance.getGame().setGameTime(time);
+        var game = instance.getGame();
+
+        var previous_time = game.getGameTime();
+        var new_time = (int) (Math.floor((System.currentTimeMillis() - instance.getGame().getStartTime()) / 1000.0));
+        var diff = Math.min(new_time - previous_time, 5);
+
+        while (diff > 1) {
+            Bukkit.broadcast(ChatColor.GRAY + "[UHC] Latency:" + diff + "s", "uhc.performance");
+            loop(diff);
+            diff--;
+        }
+        loop(new_time);
+        // set new gametime
+        instance.getGame().setGameTime(new_time);
+    }
+
+    private void loop(int time) {
+
         Bukkit.getPluginManager().callEvent(new GameTickEvent(time, true));
 
         var worldBorder = mainWorld.getWorldBorder();
@@ -75,13 +91,11 @@ public class GameLoop extends BukkitRunnable {
 
         Bukkit.getOnlinePlayers().parallelStream()
                 .forEach(player -> borderDistanceActionBar(player, worldBorder, border));
-
     }
 
     private void timedEvent(int time) {
 
         var game = instance.getGame();
-
 
         if (time == game.getHealTime() - 300) {
             // AVISO 5MIN LEFT FOR FINAL HEAL
@@ -115,15 +129,17 @@ public class GameLoop extends BukkitRunnable {
             instance.getGame().setPvp(true);
             Bukkit.broadcastMessage(SHAMROCK_GREEN + "PvP has been enabled.");
 
-            if (instance.getTeamManger().isTeamManagement()) {
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "team man false");
-            }
+            if (instance.getTeamManger().isTeamManagement())
+                Bukkit.getScheduler().runTask(instance, () -> {
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "team man false");
+                });
 
         }
         if (time == game.getBorderTime()) {
             // BORDER TIME
-            Bukkit.broadcastMessage(HAVELOCK_BLUE + "The border has started to move to the center of the map in the next "
-                    + (game.getBorderCenterTime() / 60) + " minutes at a speed of 1 block per second!");
+            Bukkit.broadcastMessage(
+                    HAVELOCK_BLUE + "The border has started to move to the center of the map in the next "
+                            + (game.getBorderCenterTime() / 60) + " minutes at a speed of 1 block per second!");
 
             if (game.isNether()) {
                 Bukkit.broadcastMessage(SHAMROCK_GREEN
@@ -133,31 +149,32 @@ public class GameLoop extends BukkitRunnable {
             Bukkit.getOnlinePlayers()
                     .forEach(all -> all.playSound(all.getLocation(), Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO, 1, 1));
             Bukkit.getScheduler().runTask(instance, () -> Bukkit.getWorlds().forEach(worlds -> {
-                worlds.getWorldBorder().setSize(game.getBorderCenter(),
-                        game.getBorderCenterTime());
+                worlds.getWorldBorder().setSize(game.getBorderCenter(), game.getBorderCenterTime());
             }));
         }
 
-        if(time == game.getBorderCenterTime()+game.getBorderTime()){
-            //PENULTIMO BORDE 100
+        if (time == game.getBorderCenterTime() + game.getBorderTime()) {
+            // PENULTIMO BORDE 100
             instance.getGame().setAntiMining(true);
         }
 
-        if(time == game.getBorderCenterTime()+game.getBorderTime()+game.getFinalBorderGrace()){
-            //ULTIMO BORDE 50
+        if (time == game.getBorderCenterTime() + game.getBorderTime() + game.getFinalBorderGrace()) {
+            // ULTIMO BORDE 50
             Bukkit.getScheduler().runTask(instance, () -> Bukkit.getWorlds().forEach(worlds -> {
-                worlds.getWorldBorder().setSize(50 , 60);
+                worlds.getWorldBorder().setSize(50, 60);
             }));
         }
 
-        if(time == game.getBorderCenterTime()+game.getBorderTime()+game.getFinalBorderGrace()+game.getDMgrace() && !game.isHasSomeoneWon()){
-            //DEATHMATCH
-            if(!instance.getGame().isDeathMatch()) return;
+        if (time == game.getBorderCenterTime() + game.getBorderTime() + game.getFinalBorderGrace() + game.getDMgrace()
+                && !game.isHasSomeoneWon()) {
+            // DEATHMATCH
+            if (!instance.getGame().isDeathMatch())
+                return;
             instance.getGame().setDeathMatchDamage(true);
             Bukkit.broadcastMessage(ChatColor.of("#d40c42") + "Death Match has started.");
             Bukkit.getScheduler().runTask(instance, () -> Bukkit.getOnlinePlayers().forEach(players -> {
                 players.playSound(players.getLocation(), Sound.ENTITY_WITHER_DEATH, 1.0f, 0.5f);
-                if(players.getGameMode() == GameMode.SURVIVAL)
+                if (players.getGameMode() == GameMode.SURVIVAL)
                     players.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 10000, 0, true));
             }));
         }
@@ -279,7 +296,7 @@ public class GameLoop extends BukkitRunnable {
                         && !players.getWorld().getWorldBorder().isInside(players.getLocation()))
                 .forEach(outsideBorderPlayer -> Bukkit.getScheduler().runTask(instance, () -> {
                     outsideBorderPlayer.damage(1);
-                    if(outsideBorderPlayer.getWorld().getEnvironment() == Environment.NORMAL)
+                    if (outsideBorderPlayer.getWorld().getEnvironment() == Environment.NORMAL)
                         handleBorderRescue(outsideBorderPlayer);
 
                     outsideBorderPlayer

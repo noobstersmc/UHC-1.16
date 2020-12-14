@@ -42,26 +42,6 @@ public class SpectatorListener implements Listener {
     /*
      * Spectators chat
      */
-    /*
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onSpecChat(AsyncPlayerChatEvent e) {
-        var player = e.getPlayer();
-        if (player.getGameMode() == GameMode.SPECTATOR && !player.hasPermission("staff.perm")) {
-            e.getRecipients().removeIf(recipient -> !(recipient.getGameMode() == GameMode.SPECTATOR
-                    || recipient.hasPermission("staff.perm")));
-
-            e.setFormat(ChatColor.GRAY + "" + ChatColor.ITALIC + "[SPEC] " + e.getFormat());
-
-        } else if (player.hasPermission("uhc.spec.chat") && e.getMessage().startsWith("@")) {
-            e.getRecipients().removeIf(recipient -> !(recipient.getGameMode() == GameMode.SPECTATOR
-                    || recipient.hasPermission("staff.perm")));
-
-            e.setMessage(e.getMessage().replaceFirst("@", ""));
-
-            e.setFormat(ChatColor.GRAY + "" + ChatColor.ITALIC + "[SPEC] " + e.getFormat());
-
-        }
-    }*/
 
     /*
      * Spec hider from no spectators
@@ -224,11 +204,10 @@ public class SpectatorListener implements Listener {
     public void invSpecEvent(PlayerInteractAtEntityEvent e) {
         if (e.getRightClicked() == null || e.getRightClicked().getType() != EntityType.PLAYER)
             return;
-        if (!e.getPlayer().hasPermission("staff.perm") || e.getPlayer().getGameMode() != GameMode.SPECTATOR)
+        if (!e.getPlayer().hasPermission("uhc.inventory.see") || e.getPlayer().getGameMode() != GameMode.SPECTATOR)
             return;
         var player = e.getPlayer();
         var clicked = (Player) e.getRightClicked();
-        // TODO: Add a specInv manager to share inventories and not open one per viewer.
 
         var fastInv = new UpdatableInventory(5 * 9, clicked.getName() + "'s inventory'");
         fastInv.addUpdateTask(new BukkitRunnable() {
