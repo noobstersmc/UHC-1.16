@@ -64,6 +64,8 @@ public class Game {
     private int healTime = 120;
     private int DMgrace = 600;
     private int finalBorderGrace = 300;
+    private int autoStart = 14;
+    private boolean hasAutoStarted = false;
     /* Other */
     String scenarios;
     Stage gameStage;
@@ -94,6 +96,10 @@ public class Game {
     }
 
     public void sendSelfDestroyRequest(UHC instance) {
+        if (instance.getGamemodeManager().isScenarioEnable(UHCMeetup.class)) {
+            Bukkit.getScheduler().runTask(instance, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "stop"));
+            return;
+        }
         var req = gson.toJson(DeleteRequest.ofGame());
         instance.getCondorManager().getJedis().publish("destroy", req);
         Bukkit.broadcast(req, "uhc.debug.destroy");
@@ -101,16 +107,13 @@ public class Game {
 
     public void selfDestroyTimed() {
         var instance = UHC.getInstance();
-
-        if (instance.getGamemodeManager().isScenarioEnable(UHCMeetup.class)) {
-            Bukkit.getScheduler().runTask(instance, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "stop"));
-            return;
-        }
+        var delay = instance.getGamemodeManager().isScenarioEnable(UHCMeetup.class) ? 20 : 60;
 
         if (!isAutoDestruction())
             return;
 
-        Bukkit.broadcast(ChatColor.GRAY + "[UHC] This game will be self destructed in 60 seconds.", "uhc.destroy.self");
+        Bukkit.broadcast(ChatColor.GRAY + "[UHC] This game will be self destructed in " + delay + " seconds.",
+                "uhc.destroy.self");
 
         Bukkit.getScheduler().runTaskLater(instance, () -> {
             if (!instance.getGame().isAutoDestruction()) {
@@ -119,7 +122,7 @@ public class Game {
             }
             sendSelfDestroyRequest(instance);
             Bukkit.getOnlinePlayers().forEach(e -> e.kickPlayer("Thanks for playing."));
-        }, 20 * 60L);
+        }, 20 * delay);
 
     }
 

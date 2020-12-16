@@ -82,7 +82,7 @@ public class UHCCommand extends BaseCommand {
     }
 
     @CommandAlias("refresh")
-    public void refreshCommands(Player sender){
+    public void refreshCommands(Player sender) {
         sender.updateCommands();
     }
 
@@ -191,6 +191,14 @@ public class UHCCommand extends BaseCommand {
     public void onChangeSeed(CommandSender sender, @Default("") String seed) {
         instance.changeSeed(seed);
         sender.sendMessage("Attempting to change seed to: " + seed);
+
+    }
+
+    @Subcommand("autostart")
+    @CommandPermission("uhc.auto.start.players")
+    public void onAutoStartChange(CommandSender sender, @Default("Players to auto-start") Integer players) {
+        instance.getGame().setAutoStart(players);
+        sender.sendMessage("Auto start changed to " + players);
 
     }
 
@@ -468,10 +476,10 @@ public class UHCCommand extends BaseCommand {
     @Subcommand("autodestruction")
     @CommandPermission("uhc.admin")
     public void autoDestroy(CommandSender sender) {
-        if(instance.getGame().isAutoDestruction()){
+        if (instance.getGame().isAutoDestruction()) {
             instance.getGame().setAutoDestruction(false);
             sender.sendMessage("Auto destruction is now OFF");
-        }else{
+        } else {
             instance.getGame().setAutoDestruction(true);
             sender.sendMessage("Auto destruction is now ON");
         }
