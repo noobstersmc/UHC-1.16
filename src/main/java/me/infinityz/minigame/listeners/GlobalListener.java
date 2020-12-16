@@ -41,6 +41,7 @@ import me.infinityz.minigame.events.GameTickEvent;
 import me.infinityz.minigame.events.NetherDisabledEvent;
 import me.infinityz.minigame.events.TeleportationCompletedEvent;
 import me.infinityz.minigame.game.Game;
+import me.infinityz.minigame.gamemodes.types.UHCMeetup;
 import me.infinityz.minigame.scoreboard.IngameScoreboard;
 import me.infinityz.minigame.tasks.AntiFallDamage;
 import me.infinityz.minigame.tasks.GameLoop;
@@ -122,7 +123,7 @@ public class GlobalListener implements Listener {
 
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onAntiMining(GameTickEvent e) {
         if (instance.getGame().isAntiMining()) {
             Bukkit.getScheduler().runTask(instance, () -> {
@@ -374,7 +375,10 @@ public class GlobalListener implements Listener {
             players.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 15, 20));
             players.setFoodLevel(26);
             players.playSound(players.getLocation(), Sound.ENTITY_RAVAGER_CELEBRATE, 1, 1);
-            Bukkit.dispatchCommand(players, "config");
+
+            if(instance.getGamemodeManager().isScenarioEnable(UHCMeetup.class))
+                Bukkit.dispatchCommand(players, "config");
+            
             bar.addPlayer(players);
         });
         Bukkit.broadcastMessage(GameLoop.SHAMROCK_GREEN + "UHC has started!");

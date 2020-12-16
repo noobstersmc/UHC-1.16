@@ -158,7 +158,7 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
 
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void extraXp(BlockBreakEvent e) {
         var loc = e.getBlock().getLocation();
         if (e.getBlock().getType().toString().contains("ORE")) {
