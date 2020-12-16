@@ -101,13 +101,15 @@ public class Game {
 
     public void selfDestroyTimed() {
         var instance = UHC.getInstance();
-        
-        if(instance.getGamemodeManager().isScenarioEnable(UHCMeetup.class))
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "stop");
-        
+
+        if (instance.getGamemodeManager().isScenarioEnable(UHCMeetup.class)) {
+            Bukkit.getScheduler().runTask(instance, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "stop"));
+            return;
+        }
+
         if (!isAutoDestruction())
             return;
-        
+
         Bukkit.broadcast(ChatColor.GRAY + "[UHC] This game will be self destructed in 60 seconds.", "uhc.destroy.self");
 
         Bukkit.getScheduler().runTaskLater(instance, () -> {
