@@ -6,6 +6,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse.BodyHandlers;
 import java.nio.file.Files;
 import java.util.LinkedList;
 import java.util.Properties;
@@ -95,6 +99,18 @@ public class UHC extends JavaPlugin {
     private static @Setter TaskChainFactory taskChainFactory;
 
     @Override
+    public void onLoad() {
+        var client = HttpClient.newHttpClient();
+        var request = HttpRequest.newBuilder(URI.create("http://condor.jcedeno.us:420/seeds")).build();
+        try {
+            var response = client.send(request, BodyHandlers.ofString());
+            changeSeed(response.body());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public void onEnable() {
         /**
          * Initialize taskChain, fastInv, and set the game stage to loading
@@ -157,7 +173,7 @@ public class UHC extends JavaPlugin {
         getServer().getScheduler().getActiveWorkers().stream().filter(w -> w.getOwner() == this)
                 .map(BukkitWorker::getThread).forEach(Thread::interrupt);
         getServer().getScheduler().cancelTasks(this);
-        //gamemodeManager.getEnabledGamemodes().forEach(IGamemode::disableScenario);
+        // gamemodeManager.getEnabledGamemodes().forEach(IGamemode::disableScenario);
         // commandManager.unregisterCommands();
         craftingManager.purgeRecipes();
     }
@@ -191,6 +207,9 @@ public class UHC extends JavaPlugin {
     }
 
     void runStartUp() {
+
+        setCondorConfig(new Gson());
+
         try {
             Scoreboard mainScoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
             mainScoreboard.getObjectives().forEach(Objective::unregister);
@@ -233,7 +252,6 @@ public class UHC extends JavaPlugin {
             }
 
         }, 60L);
-        setCondorConfig(new Gson());
     }
 
     private void setCondorConfig(final Gson gson) {
@@ -287,7 +305,6 @@ public class UHC extends JavaPlugin {
         return condor_id != null ? condor_id : "";
     }
 
-
     private void runCommand(String command) {
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
     }
@@ -321,7 +338,7 @@ public class UHC extends JavaPlugin {
                 properties.load(is);
             }
 
-            getLogger().info("Saving max players to server.properties...");
+            getLogger().info("Level seed has been updated!");
             properties.setProperty("level-seed", seed);
 
             try (OutputStream os = new FileOutputStream(propertiesFile)) {
