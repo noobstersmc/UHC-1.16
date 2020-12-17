@@ -16,6 +16,7 @@ import me.infinityz.minigame.gamemodes.types.BloodDiamonds;
 import me.infinityz.minigame.gamemodes.types.BloodExperience;
 import me.infinityz.minigame.gamemodes.types.BloodHunter;
 import me.infinityz.minigame.gamemodes.types.BowLess;
+import me.infinityz.minigame.gamemodes.types.ColdWeapons;
 import me.infinityz.minigame.gamemodes.types.Cutclean;
 import me.infinityz.minigame.gamemodes.types.DoubleGold;
 import me.infinityz.minigame.gamemodes.types.DoubleLifeBar;
@@ -114,7 +115,7 @@ public class GamemodeManager {
         registerGamemode(new DoubleLifeBar(instance));
         registerGamemode(new MeetupDoubleLifeBar(instance));
         registerGamemode(new XCrossBows(instance));
-        //registerGamemode(new ColdWeapons(instance));
+        registerGamemode(new ColdWeapons(instance));
 
         //Invitados
         registerGamemode(new UHCVandalico(instance));

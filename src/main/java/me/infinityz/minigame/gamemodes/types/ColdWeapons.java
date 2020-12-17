@@ -1,11 +1,12 @@
 package me.infinityz.minigame.gamemodes.types;
 
+import java.util.Map;
+
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.enchantment.EnchantItemEvent;
-import org.bukkit.event.enchantment.PrepareItemEnchantEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.world.LootGenerateEvent;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
@@ -43,37 +44,27 @@ public class ColdWeapons extends IGamemode implements Listener {
     }
 
     @EventHandler
-    public void onEnchantItemEvent(EnchantItemEvent e) {
-        e.getEnchantsToAdd().entrySet().forEach(entry -> {
-            var enchant = entry.getKey();
-            if (enchant == Enchantment.FIRE_ASPECT) {
-                e.getItem().removeEnchantment(Enchantment.FIRE_ASPECT);
-            } else if (enchant == Enchantment.ARROW_FIRE) {
-                e.getItem().removeEnchantment(Enchantment.ARROW_FIRE);
-            }
-        });
-    }
+    public void onEnchant(EnchantItemEvent e) {
+        Map<Enchantment, Integer> toAdd = e.getEnchantsToAdd();
 
-    @EventHandler
-    public void prepareAnvilEvent(PrepareAnvilEvent e) {
-        var result = e.getResult();
-        if (result != null) {
-            if (result.getType() == Material.ENCHANTED_BOOK) {
-                var bookMeta = (EnchantmentStorageMeta) result.getItemMeta();
-                if (bookMeta.getStoredEnchantLevel(Enchantment.FIRE_ASPECT) >= 1
-                        || bookMeta.getStoredEnchantLevel(Enchantment.ARROW_FIRE) == 1) {
-                    e.setResult(null);
-                }
-
-            } else if (result.containsEnchantment(Enchantment.FIRE_ASPECT)
-                    || result.containsEnchantment(Enchantment.ARROW_FIRE)) {
-                e.setResult(null);
-            }
+        if(toAdd.containsKey(Enchantment.ARROW_FIRE)){
+            toAdd.remove(Enchantment.ARROW_FIRE);
+            
+        }else if(toAdd.containsKey(Enchantment.FIRE_ASPECT)){
+            toAdd.remove(Enchantment.FIRE_ASPECT);
         }
+        
     }
 
     @EventHandler
-    public void onPreEnchant(PrepareItemEnchantEvent e) {
+    public void onAnvil(PrepareAnvilEvent e) {
+        if(e.getResult().getEnchantments().containsKey(Enchantment.ARROW_FIRE)){
+            e.getResult().removeEnchantment(Enchantment.ARROW_FIRE);
+            
+        }else if(e.getResult().getEnchantments().containsKey(Enchantment.FIRE_ASPECT)){
+            e.getResult().removeEnchantment(Enchantment.FIRE_ASPECT);
+        }
+        
     }
 
     @EventHandler

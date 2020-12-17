@@ -64,7 +64,7 @@ public class Game {
     private int healTime = 120;
     private int DMgrace = 600;
     private int finalBorderGrace = 300;
-    private int autoStart = 14;
+    private int autoStart = 12;
     private boolean hasAutoStarted = false;
     /* Other */
     String scenarios;

@@ -6,6 +6,7 @@ import com.destroystokyo.paper.event.player.PlayerAdvancementCriterionGrantEvent
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.WorldBorder;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.ExperienceOrb;
@@ -35,6 +36,7 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Conditions;
 import co.aikar.commands.annotation.Default;
+import co.aikar.commands.annotation.Subcommand;
 import fr.mrmicky.fastinv.ItemBuilder;
 import lombok.Getter;
 import me.infinityz.minigame.UHC;
@@ -45,6 +47,7 @@ import me.infinityz.minigame.events.PlayerJoinedLateEvent;
 import me.infinityz.minigame.events.ScoreboardUpdateEvent;
 import me.infinityz.minigame.game.Game;
 import me.infinityz.minigame.gamemodes.IGamemode;
+import me.infinityz.minigame.tasks.GameLoop;
 import net.md_5.bungee.api.ChatColor;
 
 public class UHCMeetup extends IGamemode implements Listener {
@@ -54,11 +57,12 @@ public class UHCMeetup extends IGamemode implements Listener {
     private final ItemStack lapis = new ItemBuilder(Material.LAPIS_LAZULI).amount(64).build();
     private @Getter BukkitTask waitingForPlayers;
     private Integer amo = 0;
+    private String meetupPrefix = ChatColor.of("#2cc36b") + "[" + ChatColor.GREEN + "UHC Meetup" + ChatColor.of("#2cc36b") + "] ";
 
     public UHCMeetup(UHC instance) {
         super("UHC Meetup", "An UHC Meetup as a gamemode.");
         this.instance = instance;
-        instance.getCommandManager().registerCommand(new reroll());
+        instance.getCommandManager().registerCommand(new UHCMeetupCMD());
     }
 
     public void cancelWaitingForPlayers() {
@@ -84,9 +88,10 @@ public class UHCMeetup extends IGamemode implements Listener {
         instance.getGame().setBorderCenter(200);
         instance.getGame().setDMgrace(300);
         instance.getGame().setAntiMining(true);
+        instance.getGame().setUhcslots(40);
 
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "bordersize 300");
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "gamerule doMobSpawning false ");
+
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "chat oi");
 
         waitingForPlayers = Bukkit.getScheduler().runTaskTimerAsynchronously(instance, () -> {
@@ -117,7 +122,6 @@ public class UHCMeetup extends IGamemode implements Listener {
 
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "bordersize 3000");
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "game score UHC");
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "gamerule doMobSpawning true ");
 
         cancelWaitingForPlayers();
 
@@ -125,12 +129,18 @@ public class UHCMeetup extends IGamemode implements Listener {
         return true;
     }
 
-    @Conditions("ingame")
-    @CommandAlias("reroll||rl")
-    public class reroll extends BaseCommand {
+    @CommandAlias("uhcmeetup")
+    public class UHCMeetupCMD extends BaseCommand {
 
         @Default
-        public void openBackPack(Player sender) {
+        public void defaultCMD(Player sender) {
+            sender.sendMessage("al fondo a la derecha");
+        }
+
+        @Conditions("ingame")
+        @Subcommand("reroll||rl")
+        @CommandAlias("reroll||rl")
+        public void reroll(Player sender) {
             if (!isEnabled())
                 sender.sendMessage(ChatColor.RED + "Command disabled.");
 
@@ -149,15 +159,69 @@ public class UHCMeetup extends IGamemode implements Listener {
             }
         }
 
+        @Conditions("lobby")
+        @Subcommand("forcestart")
+        @CommandAlias("forcestart")
+        public void forceStart(Player sender) {
+            if (!isEnabled() || instance.getGame().isHasAutoStarted())
+                sender.sendMessage(ChatColor.RED + "Command disabled.");
+
+            else if (!sender.hasPermission("forcestart.cmd"))
+                sender.sendMessage(ChatColor.RED + "Force Start command available only for special users. \n "
+                        + ChatColor.GREEN + "Upgrade your rank at " + ChatColor.GOLD + "noobsters.buycraft.net");
+            else {
+                if(Bukkit.getOnlinePlayers().size() < 4){
+                    sender.sendMessage(ChatColor.RED + "You need at least 4 players to force start.");
+                }
+                instance.getGame().setHasAutoStarted(true);
+                Bukkit.getOnlinePlayers().forEach(all -> all.playSound(all.getLocation(), Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO, 1, 1));
+                Bukkit.broadcastMessage(ChatColor.of("#c3752c") + sender.getName() + " forced to start the game!");
+                Bukkit.broadcastMessage(ChatColor.of("#4788d9") + "Starting in 30 seconds!");
+
+                Bukkit.getScheduler().runTaskLater(instance, ()->{
+                Bukkit.getScheduler().runTask(instance, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "start"));
+                }, 20*20);
+
+            }
+        }
+
     }
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
+
         if (!instance.getGameStage().equals(Stage.LOBBY) || e.getPlayer().hasPlayedBefore())
             return;
+
+        if(!instance.getGame().isHasAutoStarted() && (instance.getGame().getAutoStart() - Bukkit.getOnlinePlayers().size()) == 1){
+            
+            Bukkit.broadcastMessage(meetupPrefix + ChatColor.WHITE + e.getPlayer().getName() 
+            + " joined the game. " + ChatColor.GREEN + "[" + Bukkit.getOnlinePlayers().size() + "/" 
+             + instance.getGame().getUhcslots() + "] \n" + GameLoop.SHAMROCK_GREEN + "1 player needed to start!");
+
+        }else if(!instance.getGame().isHasAutoStarted() && (instance.getGame().getAutoStart() - Bukkit.getOnlinePlayers().size()) != 0){
+
+            Bukkit.broadcastMessage(meetupPrefix + ChatColor.WHITE + e.getPlayer().getName() 
+            + " joined the game. " + ChatColor.GREEN + "[" +  Bukkit.getOnlinePlayers().size() + "/" 
+             + instance.getGame().getUhcslots() + "] \n" + GameLoop.SHAMROCK_GREEN 
+             + (instance.getGame().getAutoStart() - Bukkit.getOnlinePlayers().size()) + " players needed to start!");
+
+        }else{
+            
+            Bukkit.broadcastMessage(meetupPrefix + ChatColor.WHITE + e.getPlayer().getName()
+            + " joined the game. " + ChatColor.GREEN + "[" + Bukkit.getOnlinePlayers().size() + "/" 
+             + instance.getGame().getUhcslots() + "] ");
+        }
+
         if (!instance.getGame().isHasAutoStarted() && Bukkit.getOnlinePlayers().size() >= instance.getGame().getAutoStart()) {
+
             instance.getGame().setHasAutoStarted(true);
-            Bukkit.getScheduler().runTask(instance, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "start"));
+            Bukkit.getOnlinePlayers().forEach(all -> all.playSound(all.getLocation(), Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO, 1, 1));
+            Bukkit.broadcastMessage(GameLoop.HAVELOCK_BLUE + "Starting in 30 seconds!");
+
+            Bukkit.getScheduler().runTaskLater(instance, ()->{
+                Bukkit.getScheduler().runTask(instance, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "start"));
+            }, 20*20);
         }
         var player = e.getPlayer();
         var world = Bukkit.getWorlds().get(0);
@@ -198,6 +262,33 @@ public class UHCMeetup extends IGamemode implements Listener {
             equip(players);
             players.sendMessage(ChatColor.of("#c3752c") + "Use /reroll to reload your kit!");
         });
+
+    }
+
+    @EventHandler(priority = EventPriority.LOW)
+    public void onInterceptUpate(ScoreboardUpdateEvent e) {
+        e.setCancelled(true);
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onModifyScoreboard(ScoreboardUpdateEvent e) {
+        e.setCancelled(false);
+        var player = e.getScoreboard().getPlayer();
+
+        var uhcPlayer = instance.getPlayerManager().getPlayer(player.getUniqueId());
+
+        e.setLinesArray(
+                ChatColor.of("#2cc36b") + "Your Kills: " + ChatColor.WHITE
+                        + (uhcPlayer != null ? uhcPlayer.getKills() : 0),
+                "",
+                ChatColor.of("#2cc36b") + "Players Left: " + ChatColor.WHITE
+                        + instance.getPlayerManager().getAlivePlayers(),
+                ChatColor.of("#2cc36b") + "Gamemode: " + ChatColor.WHITE
+                        + instance.getGamemodeManager().getFirstEnabledScenario(),
+                "",
+                ChatColor.of("#2cc36b") + "Time: " + ChatColor.WHITE + GameLoop.timeConvert(instance.getGame().getGameTime()),
+                ChatColor.of("#2cc36b") + "Border: " + ChatColor.WHITE + ((int) worldBorder.getSize() / 2), "",
+                ChatColor.WHITE + "noobsters.net");
 
     }
 
@@ -295,7 +386,7 @@ public class UHCMeetup extends IGamemode implements Listener {
         inv.setItemInOffHand(new ItemStack(Material.SHIELD));
 
         // SWORDS
-        if (random.nextInt(20) == 0)
+        if (random.nextInt(20) == 0 && !instance.getGamemodeManager().isScenarioEnable(ColdWeapons.class))
             inv.setItem(0, new ItemBuilder(Material.IRON_SWORD).enchant(Enchantment.DAMAGE_ALL, 2)
                     .enchant(Enchantment.FIRE_ASPECT).build());
         else if (random.nextBoolean())
@@ -308,7 +399,7 @@ public class UHCMeetup extends IGamemode implements Listener {
         // BOW
         if (random.nextInt(20) == 0)
             inv.setItem(1, new ItemBuilder(Material.BOW).enchant(Enchantment.ARROW_KNOCKBACK, 1).build());
-        else if (random.nextInt(20) == 0)
+        else if (random.nextInt(20) == 0 && !instance.getGamemodeManager().isScenarioEnable(ColdWeapons.class))
             inv.setItem(1, new ItemBuilder(Material.BOW).enchant(Enchantment.ARROW_FIRE, 1).build());
         else
             inv.setItem(1, new ItemBuilder(Material.BOW).enchant(Enchantment.ARROW_DAMAGE, randomLevel(2)).build());
@@ -399,31 +490,6 @@ public class UHCMeetup extends IGamemode implements Listener {
         meta.setBasePotionData(new PotionData(potionTypeEffect, extend, upgraded));
         potion.setItemMeta(meta);
         return potion;
-    }
-
-    @EventHandler(priority = EventPriority.LOW)
-    public void onInterceptUpate(ScoreboardUpdateEvent e) {
-        e.setCancelled(true);
-    }
-
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onModifyScoreboard(ScoreboardUpdateEvent e) {
-        e.setCancelled(false);
-        var player = e.getScoreboard().getPlayer();
-
-        var uhcPlayer = instance.getPlayerManager().getPlayer(player.getUniqueId());
-
-        e.setLinesArray(
-                ChatColor.of("#2cc36b") + "Your Kills: " + ChatColor.WHITE
-                        + (uhcPlayer != null ? uhcPlayer.getKills() : 0),
-                "",
-                ChatColor.of("#2cc36b") + "Players Left: " + ChatColor.WHITE
-                        + instance.getPlayerManager().getAlivePlayers(),
-                ChatColor.of("#2cc36b") + "Gamemode: " + ChatColor.WHITE
-                        + instance.getGamemodeManager().getFirstEnabledScenario(),
-                "", ChatColor.of("#2cc36b") + "Border: " + ChatColor.WHITE + ((int) worldBorder.getSize() / 2), "",
-                ChatColor.WHITE + "noobsters.net");
-
     }
 
     @EventHandler

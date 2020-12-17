@@ -139,7 +139,7 @@ public class GameLoop extends BukkitRunnable {
             // BORDER TIME
             Bukkit.broadcastMessage(
                     HAVELOCK_BLUE + "The border has started to move to the center of the map in the next "
-                            + (game.getBorderCenterTime() / 60) + " minutes at a speed of 1 block per second!");
+                            + (game.getBorderCenterTime() / 60) + " minutes at speed of 1 block per second!");
 
             if (game.isNether()) {
                 Bukkit.broadcastMessage(SHAMROCK_GREEN

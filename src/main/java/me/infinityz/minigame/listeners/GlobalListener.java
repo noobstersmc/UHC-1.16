@@ -376,7 +376,7 @@ public class GlobalListener implements Listener {
             players.setFoodLevel(26);
             players.playSound(players.getLocation(), Sound.ENTITY_RAVAGER_CELEBRATE, 1, 1);
 
-            if(instance.getGamemodeManager().isScenarioEnable(UHCMeetup.class))
+            if(!instance.getGamemodeManager().isScenarioEnable(UHCMeetup.class))
                 Bukkit.dispatchCommand(players, "config");
             
             bar.addPlayer(players);

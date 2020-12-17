@@ -18,6 +18,7 @@ public class ListenerManager {
     private @Getter IngameListeners ingameListeners;
     private @Getter SpectatorListener spectatorListener;
     private @Getter ConfigListener configListener;
+    private @Getter GuestListener guestListener;
 
     public ListenerManager(UHC instance) {
         this.instance = instance;
@@ -26,6 +27,7 @@ public class ListenerManager {
         ingameListeners = new IngameListeners(instance);
         spectatorListener = new SpectatorListener(instance);
         configListener = new ConfigListener(instance);
+        guestListener = new GuestListener(instance);
 
         Bukkit.getPluginManager().registerEvents(new GlobalListener(instance), instance);
 
