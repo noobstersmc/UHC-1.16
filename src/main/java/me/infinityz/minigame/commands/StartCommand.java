@@ -108,7 +108,6 @@ public class StartCommand extends BaseCommand {
         Bukkit.broadcastMessage(ChatColor.of("#2be49c") + "Starting the teleportation task...");
         // Start Parameters
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "scoreboard objectives setdisplay list health_name");
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "whitelist add @a");
 
         chain.delay(20).sync(() -> {
 
@@ -154,7 +153,6 @@ public class StartCommand extends BaseCommand {
     public void onStartNoScatter(CommandSender sender, @Optional Integer delayTicks) {
 
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "scoreboard objectives setdisplay list health_name");
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "whitelist add @a");
 
         instance.getChunkManager().getAutoChunkScheduler().cancel();
 
@@ -203,7 +201,6 @@ public class StartCommand extends BaseCommand {
             }
 
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "scoreboard objectives setdisplay list health_name");
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "whitelist add @a");
 
             instance.getChunkManager().getAutoChunkScheduler().cancel();
 

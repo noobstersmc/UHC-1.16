@@ -84,7 +84,7 @@ public class MonstersInc extends IGamemode implements Listener {
                     }
                 } while ((goToLoc == null || goToLoc.equals(block.getLocation())) && doorLocs.size() > 1);
                 if (goToLoc != null) {
-                    player.teleport(goToLoc.clone().add(0.5, 0, 0.5));
+                    player.teleportAsync(goToLoc.clone().add(0.5, 0, 0.5));
                     player.playSound(goToLoc, Sound.ENTITY_ENDERMAN_TELEPORT, 1.0f, 0.5f);
                 }
             }

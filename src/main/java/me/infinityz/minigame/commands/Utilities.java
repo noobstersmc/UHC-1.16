@@ -101,6 +101,34 @@ public @RequiredArgsConstructor class Utilities extends BaseCommand {
 
     }
 
+    @CommandPermission("teleport.cmd")
+    @CommandCompletion("@onlineplayers")
+    @Subcommand("t")
+    @CommandAlias("t")
+    public void teleportCMD(Player sender, Player target) {
+        if(sender.getGameMode() != GameMode.SPECTATOR ){
+            sender.sendMessage(ChatColor.RED + "You must be in spectator mode.");
+            return;
+        }
+        sender.teleportAsync(target.getLocation());
+        sender.sendMessage(ChatColor.GRAY + "Teleported to " + target.getName().toString());
+
+    }
+
+    @CommandPermission("guest.cmd")
+    @CommandCompletion("@onlineplayers")
+    @Subcommand("guest")
+    @CommandAlias("guest")
+    public void guestCMD(Player sender, Player target) {
+        if (!target.hasPermission("group.guest")) {
+            sender.sendMessage(ChatColor.GREEN + target.getName().toString() + " is now guest of this UHC!");
+            target.addAttachment(instance).setPermission("group.guest", true);
+            target.updateCommands();
+        }
+    }
+
+    
+
     public boolean toggleGm(Player player){
         if(player.getGameMode() == GameMode.SURVIVAL){
             player.setGameMode(GameMode.SPECTATOR);

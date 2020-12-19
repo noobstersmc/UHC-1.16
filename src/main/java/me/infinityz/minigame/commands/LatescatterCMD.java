@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.chunks.ChunksManager;
 import me.infinityz.minigame.events.PlayerJoinedLateEvent;
+import me.infinityz.minigame.game.Game;
 import me.infinityz.minigame.gamemodes.types.UHCMeetup;
 import me.infinityz.minigame.players.UHCPlayer;
 import net.md_5.bungee.api.ChatColor;
@@ -26,10 +27,18 @@ public class LatescatterCMD extends BaseCommand {
     @Conditions("ingame")
     public void lateScatter(@Conditions("hasNotDied|spec") UHCPlayer uhcPlayer) {
         var player = uhcPlayer.getPlayer();
-        //UHC MEETUP LATESCATTER DISABLED
+        //UHC MEETUP ONLY FOR VIPS BEFORE BORDER
 
-        if (instance.getGamemodeManager().isScenarioEnable(UHCMeetup.class)) 
-        player.sendMessage(ChatColor.RED + "LateScatter is disabled in UHC Meetup.");
+        if (instance.getGamemodeManager().isScenarioEnable(UHCMeetup.class)){
+            if (!player.hasPermission("latescatter.meetup")){
+                player.sendMessage(Game.getUpToMVP());
+                return;
+            }else if(instance.getGame().getGameTime() >= instance.getGame().getBorderTime()){
+                player.sendMessage(ChatColor.RED + "LateScatter is only available before border start to move.");
+                return;
+            }
+            
+        }
 
         //LATESCATTER ONLY AVAILABLE IN NO PVP TIME
         else if(instance.getGame().getGameTime() >= instance.getGame().getPvpTime()){
@@ -37,7 +46,7 @@ public class LatescatterCMD extends BaseCommand {
             "LateScatter time is up. (Max time " + instance.getGame().getPvpTime()/60 + " minutes in)");
             return;
             
-        }else{
+        }
 
         var world = Bukkit.getWorlds().get(0);
         var worldBorderSizeHaved = (int) world.getWorldBorder().getSize() / 2;
@@ -52,7 +61,7 @@ public class LatescatterCMD extends BaseCommand {
 
         uhcPlayer.setAlive(true);
         Bukkit.getPluginManager().callEvent(PlayerJoinedLateEvent.of(player));
-        }
+        
     }
 
 }

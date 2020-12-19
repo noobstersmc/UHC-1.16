@@ -126,7 +126,7 @@ public class GamemodeManager {
         registerGamemode(new UHCRun(instance));
         registerGamemode(new MetaGame(instance));
 
-        // Gamemode
+        // mode
         registerGamemode(new UHCMeetup(instance));
 
         instance.getCommandManager().getCommandCompletions().registerAsyncCompletion("scenarios",

@@ -32,6 +32,11 @@ public class Game {
     private static @Getter @Setter String tablistHeader = ChatColor.of("#A40A0A") + "" + ChatColor.BOLD
             + "\nNOOBSTERS\n";
     private static @Getter @Setter String scoreColors = ChatColor.of("#c48827") + "";
+    private static @Getter @Setter String UpToMVP = ChatColor.RED + "This action is only available for " + ChatColor.of("#1af4c1") + "MVP" + ChatColor.RED + " and UP! \n" 
+            + ChatColor.GREEN + "Upgrade your rank at " + ChatColor.GOLD + "noobsters.buycraft.net";
+    private static @Getter @Setter String UpToVIP = ChatColor.RED + "This action is only available for " + ChatColor.of("#f4c91a") + "VIP" + ChatColor.RED + " and UP! \n" 
+            + ChatColor.GREEN + "Upgrade your rank at " + ChatColor.GOLD + "noobsters.buycraft.net";
+
     /* Game data */
     private UUID gameID = UUID.randomUUID();
     private long startTime;
@@ -120,8 +125,15 @@ public class Game {
                 Bukkit.broadcast(ChatColor.GRAY + "[UHC] Self-destruction was cancelled.", "uhc.destroy.self");
                 return;
             }
-            sendSelfDestroyRequest(instance);
-            Bukkit.getOnlinePlayers().forEach(e -> e.kickPlayer("Thanks for playing."));
+            
+            var scheduler = Bukkit.getScheduler();
+            var count = 0;
+
+            for (var p : Bukkit.getOnlinePlayers()) {
+            scheduler.runTaskLater(instance, ()->  p.kickPlayer("Thanks for playing."), count+=5);
+            }
+            scheduler.runTaskLater(instance, ()-> sendSelfDestroyRequest(instance), count +=5);
+            
         }, 20 * delay);
 
     }

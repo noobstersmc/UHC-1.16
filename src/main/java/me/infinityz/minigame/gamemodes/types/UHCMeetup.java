@@ -148,8 +148,7 @@ public class UHCMeetup extends IGamemode implements Listener {
                 sender.sendMessage(ChatColor.RED + "ReRoll command available only at the start of the game.");
 
             else if (!sender.hasPermission("reroll.cmd"))
-                sender.sendMessage(ChatColor.RED + "ReRoll command available only for special users. \n "
-                        + ChatColor.GREEN + "Upgrade your rank at " + ChatColor.GOLD + "noobsters.buycraft.net");
+                sender.sendMessage(Game.getUpToMVP());
 
             else {
                 sender.getInventory().clear();
@@ -167,8 +166,7 @@ public class UHCMeetup extends IGamemode implements Listener {
                 sender.sendMessage(ChatColor.RED + "Command disabled.");
 
             else if (!sender.hasPermission("forcestart.cmd"))
-                sender.sendMessage(ChatColor.RED + "Force Start command available only for special users. \n "
-                        + ChatColor.GREEN + "Upgrade your rank at " + ChatColor.GOLD + "noobsters.buycraft.net");
+                sender.sendMessage(Game.getUpToMVP());
             else {
                 if(Bukkit.getOnlinePlayers().size() < 4){
                     sender.sendMessage(ChatColor.RED + "You need at least 4 players to force start.");

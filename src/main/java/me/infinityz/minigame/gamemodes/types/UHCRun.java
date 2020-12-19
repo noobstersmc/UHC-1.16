@@ -5,8 +5,7 @@ import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.craftbukkit.libs.org.apache.commons.io.filefilter.TrueFileFilter;
+import org.bukkit.attribute.Attribute; 
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ExperienceOrb;

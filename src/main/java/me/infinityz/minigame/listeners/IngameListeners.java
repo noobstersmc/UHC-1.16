@@ -266,13 +266,6 @@ public class IngameListeners implements Listener {
 
         Bukkit.getScheduler().runTaskAsynchronously(instance, this::calculateWin);
 
-        /*
-         * Bukkit.getScheduler().runTask(instance, () ->
-         * Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "whitelist remove " +
-         * e.getOfflinePlayer().getName())
-         * 
-         * );
-         */
         if (e.getReason() == DQReason.OFFLINE_DQ) {
             Bukkit.broadcastMessage(e.getOfflinePlayer().getName() + " has abandoned the game");
         }
@@ -315,7 +308,7 @@ public class IngameListeners implements Listener {
     public void onDeath(PlayerDeathEvent e) {
         // 3-second timeout to get respawned in spectator mode.
         Player p = e.getEntity();
-        // remove player from whitelist.
+
         p.setGameMode(GameMode.SPECTATOR);
         p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
         p.getWorld().strikeLightningEffect(p.getLocation());
