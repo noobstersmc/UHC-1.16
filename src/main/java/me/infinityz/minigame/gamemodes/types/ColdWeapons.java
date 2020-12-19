@@ -58,10 +58,10 @@ public class ColdWeapons extends IGamemode implements Listener {
 
     @EventHandler
     public void onAnvil(PrepareAnvilEvent e) {
-        if(e.getResult().getEnchantments().containsKey(Enchantment.ARROW_FIRE)){
+        if(e.getResult() != null && e.getResult().getEnchantments().containsKey(Enchantment.ARROW_FIRE)){
             e.getResult().removeEnchantment(Enchantment.ARROW_FIRE);
             
-        }else if(e.getResult().getEnchantments().containsKey(Enchantment.FIRE_ASPECT)){
+        }else if(e.getResult() != null && e.getResult().getEnchantments().containsKey(Enchantment.FIRE_ASPECT)){
             e.getResult().removeEnchantment(Enchantment.FIRE_ASPECT);
         }
         
