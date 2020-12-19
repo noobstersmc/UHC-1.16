@@ -105,7 +105,7 @@ public @RequiredArgsConstructor class Utilities extends BaseCommand {
     @CommandCompletion("@onlineplayers")
     @Subcommand("t")
     @CommandAlias("t")
-    public void teleportCMD(Player sender, Player target) {
+    public void teleportCMD(Player sender, @Flags("other") Player target) {
         if(sender.getGameMode() != GameMode.SPECTATOR ){
             sender.sendMessage(ChatColor.RED + "You must be in spectator mode.");
             return;
@@ -119,7 +119,7 @@ public @RequiredArgsConstructor class Utilities extends BaseCommand {
     @CommandCompletion("@onlineplayers")
     @Subcommand("guest")
     @CommandAlias("guest")
-    public void guestCMD(Player sender, Player target) {
+    public void guestCMD(Player sender, @Flags("other") Player target) {
         if (!target.hasPermission("group.guest")) {
             sender.sendMessage(ChatColor.GREEN + target.getName().toString() + " is now guest of this UHC!");
             target.addAttachment(instance).setPermission("group.guest", true);
