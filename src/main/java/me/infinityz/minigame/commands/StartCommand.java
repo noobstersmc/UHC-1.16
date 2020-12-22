@@ -27,6 +27,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.chunks.ChunkLoadTask;
+import me.infinityz.minigame.chunks.ChunksManager;
 import me.infinityz.minigame.enums.Stage;
 import me.infinityz.minigame.events.TeleportationCompletedEvent;
 import me.infinityz.minigame.gamemodes.types.UHCMeetup;
@@ -191,6 +192,11 @@ public class StartCommand extends BaseCommand {
         }
 
         chain.sync(() -> {
+            
+            var world = Bukkit.getWorld("world");
+            if (world != null)
+                Bukkit.getOnlinePlayers().forEach(players -> players
+                        .teleport(ChunksManager.findScatterLocation(world, instance.getGame().getBorderSize() / 2)));
 
             if (instance.getTeamManger().isTeamManagement()) {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "team man false");
@@ -233,6 +239,8 @@ public class StartCommand extends BaseCommand {
             Bukkit.getOnlinePlayers().forEach(all -> all.removePotionEffect(PotionEffectType.NIGHT_VISION));
 
             var teleportEvent = new TeleportationCompletedEvent();
+
+
             Bukkit.getPluginManager().callEvent(teleportEvent);
 
         }).sync(TaskChain::abort).execute();

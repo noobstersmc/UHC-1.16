@@ -11,6 +11,7 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
+import co.aikar.commands.annotation.Subcommand;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.events.GameTickEvent;
 import me.infinityz.minigame.gamemodes.IGamemode;
@@ -18,7 +19,9 @@ import net.md_5.bungee.api.ChatColor;
 
 public class SkyHigh extends IGamemode implements Listener {
     private boolean damage = false;
-    private float extradamage = 0;
+    private float extradamage = 6;
+    private float exda = 0;
+    private int delay = 5;
     private UHC instance;
 
     public SkyHigh(UHC instance) {
@@ -52,14 +55,14 @@ public class SkyHigh extends IGamemode implements Listener {
         if(e.getSecond() == instance.getGame().getBorderTime())
             damage = true;
         if(e.getSecond() == instance.getGame().getBorderTime()+instance.getGame().getBorderCenterTime())
-            extradamage = 6;
-        if (damage && e.getSecond() % 5 == 0) {
+            exda = extradamage;
+        if (damage && e.getSecond() % delay == 0) {
             Bukkit.getScheduler().runTask(instance, ()->{
                 Bukkit.getOnlinePlayers().forEach(players -> {
                     if (players.getGameMode() == GameMode.SURVIVAL 
                         && players.getWorld().getEnvironment() != Environment.NETHER
                         && players.getLocation().getY() < 150)
-                            players.damage(2+extradamage);
+                            players.damage(2+exda);
                 });
             });
         }
@@ -75,6 +78,22 @@ public class SkyHigh extends IGamemode implements Listener {
             damage = !damage;
             sender.sendMessage("Damage has been switch to: " + damage);
             Bukkit.broadcastMessage(ChatColor.of("#7fe5f0") + "Go above coordinate Y=150 now. Player's that remain in surface will take a heart of damage every 5 seconds.");
+
+        }
+
+        @Subcommand("extradamage")
+        @CommandAlias("extradamage")
+        public void extraDamage(CommandSender sender, Float ed) {
+            extradamage = ed;
+            sender.sendMessage(ChatColor.GRAY + "SkyHigh Extra damage set to " + ed);
+
+        }
+
+        @Subcommand("delay")
+        @CommandAlias("delay")
+        public void delay(CommandSender sender, Integer de) {
+            delay = de;
+            sender.sendMessage(ChatColor.GRAY + "SkyHigh Delay set to " + de);
 
         }
     }

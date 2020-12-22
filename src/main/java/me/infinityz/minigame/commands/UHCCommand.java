@@ -295,9 +295,9 @@ public class UHCCommand extends BaseCommand {
         var newTittle = "";
         switch (score) {
             case "UHC": {
-                newTittle = ChatColor.of("#A40A0A") + "" + ChatColor.BOLD + "UHC";
+                newTittle = ChatColor.of("#1c70b0") + "" + ChatColor.BOLD + "UHC";
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "game title " + newTittle);
-                Game.setScoreColors(ChatColor.of("#c48827") + "");
+                Game.setScoreColors(ChatColor.of("#1c98b0") + "");
             }
                 break;
             case "RUN": {
@@ -307,7 +307,7 @@ public class UHCCommand extends BaseCommand {
             }
                 break;
             case "CLOROX": {
-                newTittle = ChatColor.of("#29f4ff") + "" + ChatColor.BOLD + "UHC CLOROX";
+                newTittle = ChatColor.of("#29f4ff") + "" + ChatColor.BOLD + "CLOROX";
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "game title " + newTittle);
                 Game.setScoreColors(ChatColor.of("#0ca2d4") + "");
             }
@@ -344,19 +344,6 @@ public class UHCCommand extends BaseCommand {
     @Subcommand("selector")
     public void getSelector(CommandSender sender, String input) {
 
-    }
-
-    @CommandPermission("uhc.tab.change")
-    @Subcommand("header")
-    @CommandCompletion("@chatcolors @players")
-    @Syntax("<header> - New header string")
-    public void changeTablistHeader(CommandSender sender, final String newHeader) {
-        var coloredHeader = ChatColor.translateAlternateColorCodes('&', newHeader).replace("\\n", "\n");
-
-        sender.sendMessage("Changing tablist header to: " + coloredHeader);
-        Game.setTablistHeader(coloredHeader);
-
-        Bukkit.getOnlinePlayers().forEach(all -> all.setPlayerListHeader(coloredHeader));
     }
 
     @CommandPermission("staff.perm")

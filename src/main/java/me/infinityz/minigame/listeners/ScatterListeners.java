@@ -1,6 +1,7 @@
 package me.infinityz.minigame.listeners;
 
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -9,6 +10,7 @@ import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import lombok.NonNull;
@@ -16,12 +18,27 @@ import lombok.RequiredArgsConstructor;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.scoreboard.IScoreboard;
 import me.infinityz.minigame.scoreboard.ScatterScoreboard;
+import net.md_5.bungee.api.ChatColor;
 
 @RequiredArgsConstructor
 public class ScatterListeners implements Listener {
     private @NonNull UHC instance;
 
     // TODO: Prohibit login during scatter to avoid errors.
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void scatterLogin(PlayerLoginEvent e) {
+        e.disallow(org.bukkit.event.player.PlayerLoginEvent.Result.KICK_FULL, ChatColor.RED + "You can't join at scatter stage, please try again later.");   
+        
+
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void slotLimit(PlayerJoinEvent e) {
+        final var player = e.getPlayer();
+        player.kickPlayer(ChatColor.RED + "You can't join at scatter stage, please try again later.");
+
+    }
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent e) {

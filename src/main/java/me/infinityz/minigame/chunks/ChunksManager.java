@@ -79,11 +79,6 @@ public class ChunksManager {
         var loadedOrLoading = locations.size() + pendingChunkLoadTasks.size();
         var list = getOnlinePlayers();
         var teamManager = instance.getTeamManger();
-        /*
-         * SI alguien tiene team, ellos y todos los miembros de ese equipo deberia ser
-         * restados de la list de jugadores en linea, pero añadidos a la lista de teams
-         * en linea para posicioens.
-         */
 
         if (teamManager.isTeams()) {
             list.removeIf(it -> teamManager.getPlayerTeam(it.getUniqueId()) != null);

@@ -28,10 +28,11 @@ public class Game {
     /* Static data */
     private static @Getter @Setter BossBar bossbar;
     private static Gson gson = new GsonBuilder().create();
-    private static @Getter @Setter String scoreboardTitle = ChatColor.of("#A40A0A") + "" + ChatColor.BOLD + "UHC";
-    private static @Getter @Setter String tablistHeader = ChatColor.of("#A40A0A") + "" + ChatColor.BOLD
-            + "\nNOOBSTERS\n";
-    private static @Getter @Setter String scoreColors = ChatColor.of("#c48827") + "";
+    private static @Getter @Setter String scoreboardTitle = ChatColor.of("#0274bb") + "" + ChatColor.BOLD + "UHC";
+    private static @Getter @Setter String tablistHeader =  ChatColor.DARK_RED + "" + ChatColor.BOLD + "NOOBSTERS\n" + ChatColor.of("#4788d9") + "\nJoin Our Community!\n" + ChatColor.of("#2be49c")
+    + "discord.noobsters.net\n" + ChatColor.AQUA + "twitter.com/NoobstersMC\n " + ChatColor.GOLD
+    + "noobsters.buycraft.net\n";
+    private static @Getter @Setter String scoreColors = ChatColor.of("#02aed4") + "";
     private static @Getter @Setter String UpToMVP = ChatColor.RED + "This action is only available for " + ChatColor.of("#1af4c1") + "MVP" + ChatColor.RED + " and UP! \n" 
             + ChatColor.GREEN + "Upgrade your rank at " + ChatColor.GOLD + "noobsters.buycraft.net";
     private static @Getter @Setter String UpToVIP = ChatColor.RED + "This action is only available for " + ChatColor.of("#f4c91a") + "VIP" + ChatColor.RED + " and UP! \n" 

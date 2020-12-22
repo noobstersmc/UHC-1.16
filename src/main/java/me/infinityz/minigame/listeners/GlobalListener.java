@@ -27,7 +27,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
@@ -160,9 +160,8 @@ public class GlobalListener implements Listener {
             player.updateCommands();
         }
         e.setJoinMessage("");
-        var footer = GameLoop.HAVELOCK_BLUE + "\nJoin Our UHC Community!\n" + GameLoop.SHAMROCK_GREEN
-                + "discord.noobsters.net\n" + ChatColor.AQUA + "twitter.com/NoobstersMC\n";
-        e.getPlayer().setPlayerListHeaderFooter(Game.getTablistHeader(), footer);
+
+        e.getPlayer().setPlayerListHeader(Game.getTablistHeader());
     }
 
     @EventHandler
@@ -184,6 +183,11 @@ public class GlobalListener implements Listener {
         // Mensaje para todos.
         Bukkit.broadcastMessage(ChatColor.of("#2be49c") + "The Nether has been disabled.");
 
+    }
+
+    @EventHandler
+    public void onPortal(PlayerPortalEvent e) {
+        if(e.getPlayer().getWorld().getName().toString() == "lobby") e.setCancelled(true);
     }
 
     /**
@@ -386,22 +390,6 @@ public class GlobalListener implements Listener {
 
         new AntiFallDamage(instance, Bukkit.getOnlinePlayers().stream()
                 .map(p -> p.getUniqueId().getMostSignificantBits()).collect(Collectors.toList()));
-
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void scatterLogin(PlayerLoginEvent e) {
-        if (instance.getGameStage() == Stage.SCATTER){
-            e.disallow(org.bukkit.event.player.PlayerLoginEvent.Result.KICK_FULL, ChatColor.RED + "You can't join at scatter time, please try again later.");   
-        }
-
-    }
-
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void slotLimit(PlayerJoinEvent e) {
-        final var player = e.getPlayer();
-        if (instance.getGameStage() == Stage.SCATTER)
-            player.kickPlayer(ChatColor.RED + "You can't join at scatter time, please try again later.");
 
     }
 

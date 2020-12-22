@@ -9,8 +9,8 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ExperienceOrb;
-import org.bukkit.entity.Hoglin;
 import org.bukkit.entity.Piglin;
+import org.bukkit.entity.PiglinBrute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -119,13 +119,13 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
     }
 
     @EventHandler
-    public void netherMobs(EntitySpawnEvent e){
-        if(e.getEntity() instanceof Piglin){
-            var piglin = (Piglin) e.getEntity();
+    public void piglinZombification(EntitySpawnEvent e) {
+        if (e.getEntity() instanceof Piglin) {
+            Piglin piglin = (Piglin) e.getEntity();
             piglin.setImmuneToZombification(true);
-        }else if(e.getEntity() instanceof Hoglin){
-            var hoglin = (Hoglin) e.getEntity();
-            hoglin.setImmuneToZombification(true);
+        } else if(e.getEntity() instanceof PiglinBrute){
+            PiglinBrute brute = (PiglinBrute) e.getEntity();
+            brute.setImmuneToZombification(true);
         }
     }
 

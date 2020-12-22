@@ -21,7 +21,6 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.EnchantingInventory;
 import org.bukkit.inventory.Inventory;
@@ -88,11 +87,9 @@ public class UHCMeetup extends IGamemode implements Listener {
         instance.getGame().setBorderCenter(200);
         instance.getGame().setDMgrace(300);
         instance.getGame().setAntiMining(true);
-        instance.getGame().setUhcslots(40);
+        instance.getGame().setUhcslots(32);
 
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "bordersize 300");
-
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "chat oi");
 
         waitingForPlayers = Bukkit.getScheduler().runTaskTimerAsynchronously(instance, () -> {
             Bukkit.getOnlinePlayers().forEach(players -> {
@@ -170,6 +167,7 @@ public class UHCMeetup extends IGamemode implements Listener {
             else {
                 if(Bukkit.getOnlinePlayers().size() < 4){
                     sender.sendMessage(ChatColor.RED + "You need at least 4 players to force start.");
+                    return;
                 }
                 instance.getGame().setHasAutoStarted(true);
                 Bukkit.getOnlinePlayers().forEach(all -> all.playSound(all.getLocation(), Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO, 1, 1));
@@ -187,9 +185,6 @@ public class UHCMeetup extends IGamemode implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
-
-        if (!instance.getGameStage().equals(Stage.LOBBY) || e.getPlayer().hasPlayedBefore())
-            return;
 
         if(!instance.getGame().isHasAutoStarted() && (instance.getGame().getAutoStart() - Bukkit.getOnlinePlayers().size()) == 1){
             
@@ -211,6 +206,9 @@ public class UHCMeetup extends IGamemode implements Listener {
              + instance.getGame().getUhcslots() + "] ");
         }
 
+        if (!instance.getGameStage().equals(Stage.LOBBY) || e.getPlayer().hasPlayedBefore())
+            return;
+
         if (!instance.getGame().isHasAutoStarted() && Bukkit.getOnlinePlayers().size() >= instance.getGame().getAutoStart()) {
 
             instance.getGame().setHasAutoStarted(true);
@@ -228,19 +226,6 @@ public class UHCMeetup extends IGamemode implements Listener {
                 .thenAccept(result -> player
                         .sendMessage((ChatColor.of("#7ab83c") + (result ? "You have been scattered into the world."
                                 : "Coudn't scatter you, ask for help."))));
-    }
-
-    @EventHandler
-    public void onLobbyMove(PlayerMoveEvent e) {
-        if (!instance.getGameStage().equals(Stage.LOBBY))
-            return;
-        var fromX = e.getFrom().getX();
-        var fromZ = e.getFrom().getZ();
-        var toX = e.getTo().getX();
-        var toZ = e.getTo().getZ();
-        if (fromX != toX || fromZ != toZ)
-            e.setCancelled(true);
-
     }
 
     @EventHandler

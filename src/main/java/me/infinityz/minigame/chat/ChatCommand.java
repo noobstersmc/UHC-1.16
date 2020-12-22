@@ -1,7 +1,5 @@
 package me.infinityz.minigame.chat;
 
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import co.aikar.commands.BaseCommand;
@@ -36,21 +34,6 @@ public class ChatCommand extends BaseCommand {
                         ChatColor.RED + "Channel " + ChatColor.WHITE + chat + ChatColor.RED + " is not enabled.");
         } else {
             sender.sendMessage(ChatColor.RED + "Channel " + ChatColor.WHITE + chat + ChatColor.RED + " doesn't exist.");
-        }
-    }
-
-    @CommandPermission("world.oi")
-    @Subcommand("oi")
-    public void oi(CommandSender sender) {
-        try {
-            instance.getSession().undo(instance.getSession());
-            Bukkit.getScheduler().runTaskLater(instance, () -> {
-            Bukkit.dispatchCommand(sender, "kill @e[type=minecraft:item]");
-            Bukkit.dispatchCommand(sender, "kill @e[type=minecraft:falling_block]");
-    
-            }, 10);
-            
-        } catch (Exception e) {
         }
     }
 

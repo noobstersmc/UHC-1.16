@@ -3,6 +3,7 @@ package me.infinityz.minigame.commands;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -36,12 +37,12 @@ public @RequiredArgsConstructor class Utilities extends BaseCommand {
     }
 
     @CommandPermission("admin.perm")
-    @Subcommand("vip+")
-    @CommandAlias("vip+")
+    @Subcommand("mvp")
+    @CommandAlias("mvp")
     @Syntax("<target> - player to change")
     @CommandCompletion("@onlineplayers")
     public void onVipPlusCommand(CommandSender sender, @Flags("other") OfflinePlayer target) {
-        Bukkit.dispatchCommand(sender, "lp user " + target.getName() + " parent set vip+");
+        Bukkit.dispatchCommand(sender, "lp user " + target.getName() + " parent set mvp");
     }
 
     @CommandPermission("worldload.cmd")
@@ -113,6 +114,15 @@ public @RequiredArgsConstructor class Utilities extends BaseCommand {
         sender.teleportAsync(target.getLocation());
         sender.sendMessage(ChatColor.GRAY + "Teleported to " + target.getName().toString());
 
+    }
+
+    @CommandPermission("tpworld.cmd")
+    @Subcommand("tpworld")
+    @CommandAlias("tpworld")
+    @CommandCompletion("@worlds")
+    public void tpWorld(Player player, World world) {
+        player.teleport(world.getSpawnLocation());
+        player.sendMessage("Teleported to world " + world);
     }
 
     @CommandPermission("guest.cmd")

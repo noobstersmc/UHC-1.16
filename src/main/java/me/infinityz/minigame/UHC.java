@@ -18,23 +18,13 @@ import java.util.logging.Level;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.sk89q.worldedit.EditSession;
-import com.sk89q.worldedit.WorldEdit;
-import com.sk89q.worldedit.WorldEditException;
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldedit.extent.clipboard.Clipboard;
-import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
-import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats;
-import com.sk89q.worldedit.extent.clipboard.io.ClipboardReader;
-import com.sk89q.worldedit.function.operation.Operation;
-import com.sk89q.worldedit.function.operation.Operations;
-import com.sk89q.worldedit.math.BlockVector3;
-import com.sk89q.worldedit.session.ClipboardHolder;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
-import org.bukkit.Location;
+
 import org.bukkit.NamespacedKey;
+import org.bukkit.WorldCreator;
+import org.bukkit.World.Environment;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -78,7 +68,7 @@ import me.infinityz.minigame.teams.TeamManager;
 import net.md_5.bungee.api.ChatColor;
 
 public class UHC extends JavaPlugin {
-
+    
     private @Getter Gson gson = new Gson();
     private @Getter @Setter Stage gameStage;
     private @Getter ScoreboardManager scoreboardManager;
@@ -92,7 +82,6 @@ public class UHC extends JavaPlugin {
     private @Getter ChatManager chatManager;
     private @Getter @Setter Game game;
     private @Getter BorderManager borderManager;
-    private @Getter EditSession session;
     private @Getter CondorManager condorManager;
     /* Statics */
     private static @Getter UHC instance;
@@ -112,9 +101,15 @@ public class UHC extends JavaPlugin {
 
     @Override
     public void onEnable() {
+
+        //LOBBY
+        WorldCreator lobby = new WorldCreator("lobby");
+        lobby.environment(Environment.NORMAL);
+        lobby.createWorld();
         /**
          * Initialize taskChain, fastInv, and set the game stage to loading
          */
+        
         setTaskChainFactory(BukkitTaskChainFactory.create(this));
         FastInvManager.register(this);
         gameStage = Stage.LOADING;
@@ -178,34 +173,6 @@ public class UHC extends JavaPlugin {
         craftingManager.purgeRecipes();
     }
 
-    private void pasteSchematic(File file, Location loc) {
-        try {
-            ClipboardFormat format = ClipboardFormats.findByFile(file);
-            ClipboardReader reader = format.getReader(new FileInputStream(file));
-            Clipboard clipboard = reader.read();
-            com.sk89q.worldedit.world.World adaptedWorld = BukkitAdapter.adapt(loc.getWorld());
-
-            session = WorldEdit.getInstance().getEditSessionFactory().getEditSession(adaptedWorld, -1);
-
-            // Saves our operation and builds the paste - ready to be completed.
-            Operation operation = new ClipboardHolder(clipboard).createPaste(session).to(BlockVector3.at(0, 140, 0))
-                    .ignoreAirBlocks(true).build();
-
-            try { // This simply completes our paste and then cleans up.
-                Operations.complete(operation);
-                session.flushSession();
-
-            } catch (WorldEditException e) { // If worldedit generated an exception it will go here
-                Bukkit.broadcastMessage(ChatColor.RED + "OOPS! Something went wrong, please contact an administrator");
-                e.printStackTrace();
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
     void runStartUp() {
 
         setCondorConfig(new Gson());
@@ -230,28 +197,14 @@ public class UHC extends JavaPlugin {
             it.setGameRule(GameRule.DO_WEATHER_CYCLE, false);
             it.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
             it.setGameRule(GameRule.SPECTATORS_GENERATE_CHUNKS, false);
+            it.setGameRule(GameRule.SEND_COMMAND_FEEDBACK, false);
             it.setSpawnLocation(0, it.getHighestBlockAt(0, 0).getZ() + 10, 0);
             it.getWorldBorder().setCenter(0, 0);
             it.getWorldBorder().setSize(game.getBorderSize());
             it.getWorldBorder().setDamageBuffer(0.0);
             it.getWorldBorder().setDamageAmount(0.0);
         });
-        Bukkit.getScheduler().runTaskLater(this, () -> {
-            var antiDoublePaste = new File(Bukkit.getWorldContainer().getPath() + File.separatorChar + "seed"
-                    + File.separatorChar + Bukkit.getWorlds().get(0).getSeed() + ".json");
-            if (!antiDoublePaste.exists()) {
-                getLogger().info("Pasting a lobby in the world...");
-                try {
-                    antiDoublePaste.mkdirs();
-                    antiDoublePaste.createNewFile();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                pasteSchematic(new File(Bukkit.getWorldContainer().getPath() + File.separatorChar + "lobby.schem"),
-                        Bukkit.getWorlds().get(0).getSpawnLocation());
-            }
 
-        }, 60L);
     }
 
     private void setCondorConfig(final Gson gson) {
