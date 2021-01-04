@@ -18,7 +18,7 @@ public class GuestListener implements Listener {
     public void joinRank(PlayerJoinEvent e) {
         var player = e.getPlayer();
 
-        if (player.hasPermission("group.vandal") && !player.hasPermission("group.vandalhost") && !player.hasPermission("group.admin")
+        if (player.hasPermission("group.vandal") && !player.hasPermission("group.vandalhost")
                 && player.getName().equalsIgnoreCase(instance.getGame().getHostname())) {
             if (!player.hasPlayedBefore()) Bukkit.dispatchCommand(e.getPlayer(), "scenario UHC Vandálico");
             player.addAttachment(instance).setPermission("group.vandalhost", true);

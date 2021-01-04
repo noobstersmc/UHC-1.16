@@ -38,26 +38,37 @@ public class CraftingManager implements Listener {
     UHC instance;
     private @Getter List<CustomRecipe> recipes = new ArrayList<>();
     TotemRecipe totem;
-    CarrotRecipe carrot;
-    MelonRecipe melon;
+    CarrotRecipe goldCarrot;
+    MelonRecipe goldMelon;
     DragonBreath dragonBreath;
+    SimpleNetherite simpleNetherite; //netherite of 2
+    NetheriteRecipe netheriteRecipe; //netherite of 4
 
 
     public CraftingManager(UHC instance) {
         this.instance = instance;
         this.instance.getCommandManager().registerCommand(new CraftingCMD());
 
+        deleteRecipe(Material.GLISTERING_MELON_SLICE);
+        deleteRecipe(Material.GOLDEN_CARROT);
+        
+        //opcionales
         totem = new TotemRecipe(new NamespacedKey(instance, "totem"), null);
         dragonBreath = new DragonBreath(new NamespacedKey(instance, "dragon_breath"), null);
 
-        deleteRecipe(Material.NETHERITE_INGOT);
+        //default
+        goldCarrot = new CarrotRecipe(new NamespacedKey(instance, "carrot"), null);
+        goldCarrot.logic();
+        goldMelon = new MelonRecipe(new NamespacedKey(instance, "melon"), null);
+        goldMelon.logic();
 
         this.recipes.add(new GoldenHead(new NamespacedKey(instance, "ghead")));
-        this.recipes.add(new SimpleNetherite(new NamespacedKey(instance, "netherite_simple")));
-        this.recipes.add(new NetheriteRecipe(new NamespacedKey(instance, "netherite_multiple")));
+        this.recipes.add(goldMelon);
+        this.recipes.add(goldCarrot);
+
     }
 
-    private boolean isInList(String name){
+    private boolean isRegisted(String name){
         var iter = recipes.iterator();
 
             while (iter.hasNext()) {
@@ -70,6 +81,7 @@ public class CraftingManager implements Listener {
         return false;
     }
 
+    //deleting recipe before adding something with same result
     private void deleteRecipe(Material material){
         Iterator<Recipe> iter = Bukkit.recipeIterator();
 
@@ -82,6 +94,7 @@ public class CraftingManager implements Listener {
         }
     }
 
+    //TODO: hacer sistema autocompletando con una lista
     @CommandPermission("crafting.cmd")
     @CommandAlias("crafting")
     public class CraftingCMD extends BaseCommand {
@@ -89,7 +102,7 @@ public class CraftingManager implements Listener {
         @Subcommand("Totem")
         @CommandAlias("Totem")
         public void totemCraft(CommandSender sender) {
-            if(!isInList("totem")){
+            if(!isRegisted("totem")){
                 recipes.add(totem);
                 Bukkit.addRecipe(totem.getRecipe());
                 Bukkit.getOnlinePlayers().forEach(all -> all.discoverRecipe(totem.getNamespacedKey()));
@@ -104,7 +117,7 @@ public class CraftingManager implements Listener {
         @Subcommand("DragonBreath")
         @CommandAlias("DragonBreath")
         public void dragonBreath(CommandSender sender) {
-            if(!isInList("melon")){
+            if(!isRegisted("dragon_breath")){
                 recipes.add(dragonBreath);
                 Bukkit.addRecipe(dragonBreath.getRecipe());
                 Bukkit.getOnlinePlayers().forEach(all -> all.discoverRecipe(dragonBreath.getNamespacedKey()));

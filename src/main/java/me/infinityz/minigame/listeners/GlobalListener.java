@@ -174,7 +174,7 @@ public class GlobalListener implements Listener {
      */
     @EventHandler
     public void onNetherDisabled(NetherDisabledEvent e) {
-        var worldToTeleport = Bukkit.getWorlds().get(0);
+        var worldToTeleport = Bukkit.getWorld("world");
         var radius = (int) worldToTeleport.getWorldBorder().getSize() / 2;
         // Teleport all players currently in the nether to the overworld.
         Bukkit.getOnlinePlayers().stream().filter(player -> player.getWorld().getEnvironment() == Environment.NETHER)

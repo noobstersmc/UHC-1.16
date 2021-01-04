@@ -16,7 +16,6 @@ import org.bukkit.World;
 import org.bukkit.WorldBorder;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.meta.BannerMeta;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
@@ -124,7 +123,7 @@ public class UHCCommand extends BaseCommand {
     public void onLateScatter(CommandSender sender, @Conditions("dead") @Flags("other") UHCPlayer uhcPlayer,
             @Optional String[] args) {
 
-        var world = Bukkit.getWorlds().get(0);
+        var world = Bukkit.getWorld("world");
         var target = uhcPlayer.getPlayer();
         var reviveArgs = ReviveArgs.from(uhcPlayer, args);
 
@@ -157,33 +156,6 @@ public class UHCCommand extends BaseCommand {
                 }
             }
         });
-    }
-
-    @Subcommand("destroy now")
-    @CommandPermission("condor.destroy")
-    public void teleportTest(CommandSender sender) {
-        instance.getCondorManager().getJedis().publish("destroy",
-                String.format("{%s: %s}", "\"ip\"", "\"" + instance.getGame().getIp() + " \""));
-
-    }
-
-    @Subcommand("ocs")
-    @CommandPermission("UHC.CRACK")
-    public void openChunkSystem(Player player) {
-        var mainHandItem = player.getInventory().getItemInMainHand();
-        if (mainHandItem != null) {
-            if (mainHandItem.getItemMeta() instanceof BannerMeta) {
-                var bannerMeta = (BannerMeta) mainHandItem.getItemMeta();
-                var team = instance.getTeamManger().getPlayerTeam(player.getUniqueId());
-                if (team != null) {
-                    team.setTeamShieldPattern(bannerMeta.getPatterns());
-                    team.sendTeamMessage("Team banner has been changed.");
-                }
-
-            }
-
-        }
-
     }
 
     @Subcommand("seed")
@@ -295,21 +267,15 @@ public class UHCCommand extends BaseCommand {
         var newTittle = "";
         switch (score) {
             case "UHC": {
-                newTittle = ChatColor.of("#1c70b0") + "" + ChatColor.BOLD + "UHC";
+                newTittle = ChatColor.AQUA + "" + ChatColor.BOLD + "UHC";
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "game title " + newTittle);
-                Game.setScoreColors(ChatColor.of("#1c98b0") + "");
+                Game.setScoreColors(ChatColor.of("#0ca2d4") + "");
             }
                 break;
             case "RUN": {
                 newTittle = ChatColor.GOLD + "" + ChatColor.BOLD + "UHC RUN";
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "game title " + newTittle);
                 Game.setScoreColors(ChatColor.of("#FFFF55") + "");
-            }
-                break;
-            case "CLOROX": {
-                newTittle = ChatColor.of("#29f4ff") + "" + ChatColor.BOLD + "CLOROX";
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "game title " + newTittle);
-                Game.setScoreColors(ChatColor.of("#0ca2d4") + "");
             }
                 break;
             case "GAMES": {
@@ -320,12 +286,6 @@ public class UHCCommand extends BaseCommand {
                 break;
             case "VANDAL": {
                 newTittle = ChatColor.of("#ef9e48") + "" + ChatColor.BOLD + "UHC VANDÁLICO";
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "game title " + newTittle);
-                Game.setScoreColors(ChatColor.of("#00d0db") + "");
-            }
-                break;
-            case "TORNEOVANDALICO": {
-                newTittle = ChatColor.of("#ef9e48") + "" + ChatColor.BOLD + "TORNEO UHC VANDÁLICO";
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "game title " + newTittle);
                 Game.setScoreColors(ChatColor.of("#00d0db") + "");
             }
@@ -417,7 +377,7 @@ public class UHCCommand extends BaseCommand {
     @CommandPermission("uhc.admin")
     public void unloadForceLoaded(CommandSender sender) {
         sender.sendMessage("Unloaded all chunks");
-        Bukkit.getWorlds().get(0).getForceLoadedChunks().forEach(all -> all.setForceLoaded(false));
+        Bukkit.getWorld("world").getForceLoadedChunks().forEach(all -> all.setForceLoaded(false));
 
     }
 

@@ -12,7 +12,6 @@ import org.bukkit.Sound;
 import org.bukkit.Statistic;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.command.CommandSender;
-import org.bukkit.potion.PotionEffectType;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
@@ -69,7 +68,7 @@ public class StartCommand extends BaseCommand {
         if (locs == null || locs.isEmpty()) {
             sender.sendMessage("No locations have been found yet.");
             for (int i = 0; i < tasks; i++) {
-                var task = new ChunkLoadTask(Bukkit.getWorlds().get(0), instance.getChunkManager());
+                var task = new ChunkLoadTask(Bukkit.getWorld("world"), instance.getChunkManager());
                 instance.getChunkManager().getPendingChunkLoadTasks().add(task);
             }
             sender.sendMessage("Queued up " + tasks + " task(s)...");
@@ -80,7 +79,7 @@ public class StartCommand extends BaseCommand {
                     + ")\n Scheduling more locations now...");
 
             for (int i = 0; i < tasks; i++) {
-                var task = new ChunkLoadTask(Bukkit.getWorlds().get(0), instance.getChunkManager());
+                var task = new ChunkLoadTask(Bukkit.getWorld("world"), instance.getChunkManager());
                 instance.getChunkManager().getPendingChunkLoadTasks().add(task);
             }
             sender.sendMessage("Queued up " + tasks + " task(s)...");
@@ -134,7 +133,6 @@ public class StartCommand extends BaseCommand {
                 players.setFoodLevel(26);
                 players.setTotalExperience(0);
                 players.setLevel(0);
-                players.removePotionEffect(PotionEffectType.NIGHT_VISION);
                 players.setGameMode(GameMode.SURVIVAL);
                 players.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
                 ScatterScoreboard sb = new ScatterScoreboard(players);
@@ -170,7 +168,6 @@ public class StartCommand extends BaseCommand {
 
         Bukkit.getOnlinePlayers().stream().filter(it -> it.getGameMode() != GameMode.SPECTATOR)
                 .forEach(players -> instance.getPlayerManager().addCreateUHCPlayer(players.getUniqueId(), true));
-        Bukkit.getOnlinePlayers().forEach(all -> all.removePotionEffect(PotionEffectType.NIGHT_VISION));
 
         var teleportEvent = new TeleportationCompletedEvent();
         if (delayTicks != null && delayTicks > 0) {
@@ -229,14 +226,12 @@ public class StartCommand extends BaseCommand {
                 players.setFoodLevel(26);
                 players.setTotalExperience(0);
                 players.setLevel(0);
-                players.removePotionEffect(PotionEffectType.NIGHT_VISION);
                 players.setGameMode(GameMode.SURVIVAL);
                 players.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
             });
 
             Bukkit.getOnlinePlayers().stream().filter(it -> it.getGameMode() != GameMode.SPECTATOR)
                     .forEach(players -> instance.getPlayerManager().addCreateUHCPlayer(players.getUniqueId(), true));
-            Bukkit.getOnlinePlayers().forEach(all -> all.removePotionEffect(PotionEffectType.NIGHT_VISION));
 
             var teleportEvent = new TeleportationCompletedEvent();
 

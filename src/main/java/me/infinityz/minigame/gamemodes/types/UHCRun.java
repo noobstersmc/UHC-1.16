@@ -81,7 +81,7 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
         setEnabled(true);
 
         instance.getGame().setNether(false);
-        instance.getGame().setPvpTime(1200);
+        instance.getGame().setPvpTime(900);
         instance.getGame().setBorderTime(1200);
         instance.getGame().setBorderCenterTime(600);
         instance.getGame().setBorderCenter(100);

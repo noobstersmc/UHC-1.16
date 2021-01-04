@@ -79,7 +79,7 @@ public class ConfigListener implements Listener {
             var player = e.getPlayer();
             // If player's world is nether, scatter them in the overworld.
             if (player.getWorld().getEnvironment() == Environment.NETHER) {
-                var worldToTeleport = Bukkit.getWorlds().get(0);
+                var worldToTeleport = Bukkit.getWorld("world");
                 var radius = (int) worldToTeleport.getWorldBorder().getSize() / 2;
                 // Teleport Async to save resources.
                 player.teleportAsync(
@@ -204,7 +204,7 @@ public class ConfigListener implements Listener {
             e.setCancelled(true);
             e.setUseBed(Result.DENY);
             e.getBed().setType(Material.AIR);
-            e.getBed().getLocation().createExplosion(3.0f, true, true);
+            e.getBed().getLocation().createExplosion(1.5f, true, true);
         }
 
     }

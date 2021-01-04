@@ -8,7 +8,6 @@ import org.bukkit.GameRule;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
-import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.WorldBorder;
 import org.bukkit.boss.BarColor;
@@ -35,7 +34,6 @@ import net.md_5.bungee.api.ChatColor;
 @RequiredArgsConstructor
 public class GameLoop extends BukkitRunnable {
     private boolean borderShrink = false;
-    private final World mainWorld = Bukkit.getWorlds().get(0);
     private @NonNull UHC instance;
     private THashMap<UUID, Long> borderTeleportMap = new THashMap<>();
     public static final ChatColor HAVELOCK_BLUE = ChatColor.of("#4788d9");
@@ -64,7 +62,7 @@ public class GameLoop extends BukkitRunnable {
 
         Bukkit.getPluginManager().callEvent(new GameTickEvent(time, true));
 
-        var worldBorder = mainWorld.getWorldBorder();
+        var worldBorder = Bukkit.getWorld("world").getWorldBorder();
 
         if (!instance.getGamemodeManager().isScenarioEnable(GoToHell.class)) {
             if (!borderShrink && worldBorder.getSize() <= 1000) {

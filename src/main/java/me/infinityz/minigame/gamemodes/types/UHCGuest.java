@@ -5,41 +5,27 @@ import java.util.ArrayList;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.WorldBorder;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ItemSpawnEvent;
-import org.bukkit.event.player.PlayerItemConsumeEvent;
-import org.bukkit.inventory.meta.SuspiciousStewMeta;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
 import me.infinityz.minigame.UHC;
-import me.infinityz.minigame.advancements.AdvancementAPI;
-import me.infinityz.minigame.advancements.FrameType;
-import me.infinityz.minigame.advancements.Trigger;
-import me.infinityz.minigame.advancements.Trigger.TriggerType;
-import me.infinityz.minigame.events.GameStartedEvent;
 import me.infinityz.minigame.events.ScoreboardUpdateEvent;
 import me.infinityz.minigame.game.Game;
 import me.infinityz.minigame.gamemodes.IGamemode;
 import me.infinityz.minigame.tasks.GameLoop;
 import net.md_5.bungee.api.ChatColor;
 
-public class UHCLatam extends IGamemode implements Listener {
+public class UHCGuest extends IGamemode implements Listener {
     private UHC instance;
     private WorldBorder worldBorder = Bukkit.getWorld("world").getWorldBorder();
-    private AdvancementAPI advancement;
 
-    public UHCLatam(UHC instance) {
-        super("UHC Latam", "T2");
+    public UHCGuest(UHC instance) {
+        super("UHC Guest", "Custom features.");
         this.instance = instance;
-        this.advancement = AdvancementAPI.builder(new NamespacedKey(instance, "uhc-latam")).frame(FrameType.CHALLENGE)
-                .background("minecraft:textures/block/blackstone_top.png").icon("golden_apple").title("¡UHC Latam T2!")
-                .description("Participa en UHC Latam T2").toast(true)
-                .trigger(Trigger.builder(TriggerType.IMPOSSIBLE, "hello")).announce(true).build();
+
     }
 
     @Override
@@ -52,8 +38,6 @@ public class UHCLatam extends IGamemode implements Listener {
         Game.setScoreboardTitle(ChatColor.of("#E6E6FA") + "🗡 " + ChatColor.of("#77DBD6") + "" + ChatColor.BOLD
                 + "UHC Latam T2 " + ChatColor.of("#E6E6FA") + "☠");
 
-        advancement.add();
-
         setEnabled(true);
         return true;
     }
@@ -63,7 +47,6 @@ public class UHCLatam extends IGamemode implements Listener {
         if (!isEnabled())
             return false;
         instance.getListenerManager().unregisterListener(this);
-        advancement.remove();
 
         setEnabled(false);
         return true;
@@ -140,44 +123,11 @@ public class UHCLatam extends IGamemode implements Listener {
     }
 
     @EventHandler
-    public void onStart(GameStartedEvent e) {
-        Bukkit.getScheduler().runTask(instance, () -> {
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
-                        "scoreboard objectives modify health_name rendertype hearts");
-        });
-        
-
-    }
-
-    @EventHandler
     public void onItemSpawn(ItemSpawnEvent e) {
         var stack = e.getEntity().getItemStack();
         var type = stack.getType();
         if (type == Material.GHAST_TEAR) {
             stack.setType(Material.GOLD_INGOT);
-        }
-    }
-
-    @EventHandler(ignoreCancelled = true)
-    public void onItemConsume(PlayerItemConsumeEvent e) {
-        var item = e.getItem().getType();
-        System.out.println("entry");
-        if (item == Material.AIR || item != Material.SUSPICIOUS_STEW || !e.getItem().hasItemMeta())
-            return;
-        System.out.println("check 1");
-        SuspiciousStewMeta stewMeta = (SuspiciousStewMeta) e.getItem().getItemMeta();
-        if (stewMeta.hasCustomEffect(PotionEffectType.REGENERATION)) {
-            stewMeta.clearCustomEffects();
-            stewMeta.addCustomEffect(new PotionEffect(PotionEffectType.HARM, 1, 1), true);
-            var itemConsumed = e.getItem();
-            itemConsumed.setItemMeta(stewMeta);
-            e.setItem(itemConsumed);
-            var hasRegen = e.getPlayer().hasPotionEffect(PotionEffectType.REGENERATION);
-            if (!hasRegen) {
-                Bukkit.getScheduler().runTaskLater(instance, () -> {
-                    e.getPlayer().addPotionEffect(PotionEffectType.REGENERATION.createEffect(1, 0));
-                }, 1L);
-            }
         }
     }
 

@@ -55,6 +55,7 @@ import me.infinityz.minigame.commands.PVP;
 import me.infinityz.minigame.commands.StartCommand;
 import me.infinityz.minigame.commands.UHCCommand;
 import me.infinityz.minigame.commands.Utilities;
+import me.infinityz.minigame.commands.WorldCMD;
 import me.infinityz.minigame.condor.CondorManager;
 import me.infinityz.minigame.crafting.CraftingManager;
 import me.infinityz.minigame.enums.Stage;
@@ -87,6 +88,11 @@ public class UHC extends JavaPlugin {
     private static @Getter UHC instance;
     private static @Setter TaskChainFactory taskChainFactory;
 
+    //worlds
+    private @Getter WorldCreator world = new WorldCreator("world");
+    private @Getter WorldCreator world_nether = new WorldCreator("world_nether");
+    private @Getter WorldCreator world_end = new WorldCreator("world_end");
+
     @Override
     public void onLoad() {
         var client = HttpClient.newHttpClient();
@@ -102,10 +108,6 @@ public class UHC extends JavaPlugin {
     @Override
     public void onEnable() {
 
-        //LOBBY
-        WorldCreator lobby = new WorldCreator("lobby");
-        lobby.environment(Environment.NORMAL);
-        lobby.createWorld();
         /**
          * Initialize taskChain, fastInv, and set the game stage to loading
          */
@@ -130,6 +132,7 @@ public class UHC extends JavaPlugin {
         commandManager.registerCommand(new GameRestoreCMD(this));
         commandManager.registerCommand(new ConfigCommand(this));
         commandManager.registerCommand(new GamemodesCMD(this));
+        commandManager.registerCommand(new WorldCMD(this));
 
         /*
          * Initilialize all the managers
@@ -151,6 +154,9 @@ public class UHC extends JavaPlugin {
         /* Run some startup code */
         runStartUp();
 
+        //worlds code creation
+        createWorlds();
+
         /* In case the server is already running and it is a reload */
         Bukkit.getOnlinePlayers().forEach(all -> Bukkit.getPluginManager().callEvent(new PlayerJoinEvent(all, "")));
 
@@ -171,6 +177,21 @@ public class UHC extends JavaPlugin {
         // gamemodeManager.getEnabledGamemodes().forEach(IGamemode::disableScenario);
         // commandManager.unregisterCommands();
         craftingManager.purgeRecipes();
+    }
+
+    private void createWorlds(){
+        //world code
+        world.environment(Environment.NORMAL);
+        world.createWorld();
+        if(instance.getGame().isNether()){
+            world_nether.environment(Environment.NETHER);
+            world_nether.createWorld();
+        }
+        if(instance.getGame().isEnd()){
+            world_end.environment(Environment.THE_END);
+            world_end.createWorld();
+        }
+
     }
 
     void runStartUp() {

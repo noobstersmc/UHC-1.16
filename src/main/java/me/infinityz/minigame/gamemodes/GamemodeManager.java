@@ -32,6 +32,7 @@ import me.infinityz.minigame.gamemodes.types.GoldenRetreiver;
 import me.infinityz.minigame.gamemodes.types.GoneFishing;
 import me.infinityz.minigame.gamemodes.types.HasteyBoys;
 import me.infinityz.minigame.gamemodes.types.HasteyBoysPlus;
+import me.infinityz.minigame.gamemodes.types.HeavyPockets;
 import me.infinityz.minigame.gamemodes.types.InfiniteEnchanter;
 import me.infinityz.minigame.gamemodes.types.Limits;
 import me.infinityz.minigame.gamemodes.types.LuckyLeaves;
@@ -51,6 +52,7 @@ import me.infinityz.minigame.gamemodes.types.ThunderKill;
 import me.infinityz.minigame.gamemodes.types.TiempoBomba;
 import me.infinityz.minigame.gamemodes.types.Timber;
 import me.infinityz.minigame.gamemodes.types.TripleOres;
+import me.infinityz.minigame.gamemodes.types.UHCGuest;
 import me.infinityz.minigame.gamemodes.types.UHCLatam;
 import me.infinityz.minigame.gamemodes.types.UHCMeetup;
 import me.infinityz.minigame.gamemodes.types.UHCRun;
@@ -116,11 +118,13 @@ public class GamemodeManager {
         registerGamemode(new MeetupDoubleLifeBar(instance));
         registerGamemode(new XCrossBows(instance));
         registerGamemode(new ColdWeapons(instance));
+        registerGamemode(new HeavyPockets(instance));
 
         //Invitados
         registerGamemode(new UHCVandalico(instance));
         registerGamemode(new UHCLatam(instance));
         registerGamemode(new Baguettes(instance));
+        registerGamemode(new UHCGuest(instance));
 
         // Scenarios pack
         registerGamemode(new UHCRun(instance));

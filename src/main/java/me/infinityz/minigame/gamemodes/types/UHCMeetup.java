@@ -52,7 +52,7 @@ import net.md_5.bungee.api.ChatColor;
 public class UHCMeetup extends IGamemode implements Listener {
     private UHC instance;
     private Random random = new Random();
-    private WorldBorder worldBorder = Bukkit.getWorlds().get(0).getWorldBorder();
+    private WorldBorder worldBorder = Bukkit.getWorld("world").getWorldBorder();
     private final ItemStack lapis = new ItemBuilder(Material.LAPIS_LAZULI).amount(64).build();
     private @Getter BukkitTask waitingForPlayers;
     private Integer amo = 0;
@@ -80,7 +80,7 @@ public class UHCMeetup extends IGamemode implements Listener {
 
         instance.getGame().setNether(false);
         instance.getGame().setHealTime(-1);
-        instance.getGame().setPvpTime(10);
+        instance.getGame().setPvpTime(15);
         instance.getGame().setBorderTime(360);
         instance.getGame().setFinalBorderGrace(120);
         instance.getGame().setBorderCenterTime(120);
@@ -220,7 +220,7 @@ public class UHCMeetup extends IGamemode implements Listener {
             }, 20*20);
         }
         var player = e.getPlayer();
-        var world = Bukkit.getWorlds().get(0);
+        var world = Bukkit.getWorld("world");
         var worldBorderSizeHaved = (int) world.getWorldBorder().getSize() / 2;
         player.teleportAsync(ChunksManager.findScatterLocation(world, worldBorderSizeHaved))
                 .thenAccept(result -> player
@@ -326,7 +326,6 @@ public class UHCMeetup extends IGamemode implements Listener {
         inv.setItem(8, new ItemStack(Material.OAK_PLANKS, 64));
 
         inv.addItem(new ItemStack(Material.IRON_INGOT, randomLevel(10)));
-        inv.addItem(new ItemStack(Material.GOLD_INGOT, randomLevel(10)));
         inv.addItem(new ItemStack(Material.BOOK, randomLevel(3)));
         inv.addItem(new ItemStack(Material.ARROW, randomLevel(12) + 12));
         inv.addItem(new ItemStack(Material.COBBLESTONE, 64));
@@ -396,19 +395,15 @@ public class UHCMeetup extends IGamemode implements Listener {
 
     public void misc(Player player) {
         final var inv = player.getInventory();
-        switch (random.nextInt(3)) {
+        switch (random.nextInt(2)) {
             case 1: {
-                inv.addItem(new ItemStack(Material.PUFFERFISH_BUCKET));
+                inv.addItem(new ItemStack(Material.TNT, randomLevel(5)));
+                inv.addItem(new ItemStack(Material.FLINT_AND_STEEL));
             }
                 break;
             case 2: {
                 inv.addItem(new ItemStack(Material.NETHERITE_INGOT, 1));
                 inv.addItem(new ItemStack(Material.SMITHING_TABLE));
-            }
-                break;
-            case 3: {
-                inv.addItem(new ItemStack(Material.TNT, randomLevel(5)));
-                inv.addItem(new ItemStack(Material.FLINT_AND_STEEL));
             }
                 break;
             default: {
@@ -421,13 +416,13 @@ public class UHCMeetup extends IGamemode implements Listener {
 
     public ItemStack specialItem() {
         ItemStack special;
-        switch (random.nextInt(9)) {
+        switch (random.nextInt(7)) {
             case 1: {
                 special = new ItemStack(Material.ENDER_PEARL);
             }
                 break;
             case 2: {
-                special = new ItemStack(Material.COBWEB, randomLevel(4) + 4);
+                special = new ItemStack(Material.COBWEB, randomLevel(4) + 2);
             }
                 break;
             case 3: {
@@ -440,23 +435,16 @@ public class UHCMeetup extends IGamemode implements Listener {
             }
                 break;
             case 5: {
-                special = new ItemStack(Material.SPECTRAL_ARROW, randomLevel(6) + 6);
+                special = new ItemBuilder(Material.TRIDENT).enchant(Enchantment.RIPTIDE, 2)
+                        .enchant(Enchantment.IMPALING, 2).build();
             }
                 break;
             case 6: {
-                special = PotionItemStack(Material.SPLASH_POTION, PotionType.INSTANT_DAMAGE, false, true);
+                special = PotionItemStack(Material.POTION, PotionType.FIRE_RESISTANCE, false, false);
             }
                 break;
             case 7: {
                 special = PotionItemStack(Material.POTION, PotionType.SPEED, false, false);
-            }
-                break;
-            case 8: {
-                special = PotionItemStack(Material.POTION, PotionType.FIRE_RESISTANCE, false, false);
-            }
-                break;
-            case 9: {
-                special = PotionItemStack(Material.LINGERING_POTION, PotionType.JUMP, false, false);
             }
                 break;
             default: {

@@ -12,7 +12,7 @@ import net.md_5.bungee.api.ChatColor;
 public class IngameScoreboard extends IScoreboard {
     private UHC instance;
     private UHCPlayer uhcPlayer;
-    private WorldBorder worldBorder = Bukkit.getWorlds().get(0).getWorldBorder();
+    private WorldBorder worldBorder = Bukkit.getWorld("world").getWorldBorder();
 
     public IngameScoreboard(Player player, UHC instance) {
         super(player);

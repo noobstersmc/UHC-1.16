@@ -190,7 +190,7 @@ public class IngameListeners implements Listener {
             uhcP.setAlive(false);
             p.setGameMode(GameMode.SPECTATOR);
         } else if (uhcP.isDead() && !uhcP.isAlive()) {
-            p.teleport(Bukkit.getWorlds().get(0).getSpawnLocation().add(0.0, 10, 0.0));
+            p.teleport(Bukkit.getWorld("world").getSpawnLocation().add(0.0, 10, 0.0));
             p.setGameMode(GameMode.SPECTATOR);
             uhcP.setAlive(false);
             p.getInventory().clear();

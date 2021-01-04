@@ -48,7 +48,7 @@ public class LatescatterCMD extends BaseCommand {
             
         }
 
-        var world = Bukkit.getWorlds().get(0);
+        var world = Bukkit.getWorld("world");
         var worldBorderSizeHaved = (int) world.getWorldBorder().getSize() / 2;
 
         player.sendMessage((ChatColor.of("#7ab83c") + "Loading a location..."));
