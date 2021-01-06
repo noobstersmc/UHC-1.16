@@ -11,6 +11,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.nio.file.Files;
+import java.time.Duration;
 import java.util.LinkedList;
 import java.util.Properties;
 import java.util.UUID;
@@ -64,12 +65,13 @@ import me.infinityz.minigame.gamemodes.GamemodeManager;
 import me.infinityz.minigame.gamemodes.GamemodesCMD;
 import me.infinityz.minigame.listeners.ListenerManager;
 import me.infinityz.minigame.players.PlayerManager;
+import me.infinityz.minigame.portals.PortalListeners;
 import me.infinityz.minigame.scoreboard.ScoreboardManager;
 import me.infinityz.minigame.teams.TeamManager;
 import net.md_5.bungee.api.ChatColor;
 
 public class UHC extends JavaPlugin {
-    
+
     private @Getter Gson gson = new Gson();
     private @Getter @Setter Stage gameStage;
     private @Getter ScoreboardManager scoreboardManager;
@@ -84,19 +86,22 @@ public class UHC extends JavaPlugin {
     private @Getter @Setter Game game;
     private @Getter BorderManager borderManager;
     private @Getter CondorManager condorManager;
+    private @Getter PortalListeners portalListeners;
     /* Statics */
     private static @Getter UHC instance;
     private static @Setter TaskChainFactory taskChainFactory;
 
-    //worlds
+    // worlds
     private @Getter WorldCreator world = new WorldCreator("world");
     private @Getter WorldCreator world_nether = new WorldCreator("world_nether");
     private @Getter WorldCreator world_end = new WorldCreator("world_end");
 
     @Override
     public void onLoad() {
+
         var client = HttpClient.newHttpClient();
-        var request = HttpRequest.newBuilder(URI.create("http://condor.jcedeno.us:420/seeds")).build();
+        var request = HttpRequest.newBuilder(URI.create("http://condor.jcedeno.us:420/seeds"))
+                .timeout(Duration.ofSeconds(3)).build();
         try {
             var response = client.send(request, BodyHandlers.ofString());
             changeSeed(response.body());
@@ -108,10 +113,12 @@ public class UHC extends JavaPlugin {
     @Override
     public void onEnable() {
 
+        createWorlds();
+
         /**
          * Initialize taskChain, fastInv, and set the game stage to loading
          */
-        
+
         setTaskChainFactory(BukkitTaskChainFactory.create(this));
         FastInvManager.register(this);
         gameStage = Stage.LOADING;
@@ -150,18 +157,25 @@ public class UHC extends JavaPlugin {
         condorManager = new CondorManager(this);
         /* Initiliaze the game data */
         game = new Game();
+        portalListeners = new PortalListeners(this);
 
         /* Run some startup code */
         runStartUp();
-
-        //worlds code creation
-        createWorlds();
 
         /* In case the server is already running and it is a reload */
         Bukkit.getOnlinePlayers().forEach(all -> Bukkit.getPluginManager().callEvent(new PlayerJoinEvent(all, "")));
 
         /* Lobby stage has been reached */
         gameStage = Stage.LOBBY;
+
+        if (instance.getGame().isNether()) {
+            world_nether.environment(Environment.NETHER);
+            world_nether.createWorld();
+        }
+        if (instance.getGame().isEnd()) {
+            world_end.environment(Environment.THE_END);
+            world_end.createWorld();
+        }
     }
 
     @Override
@@ -179,18 +193,10 @@ public class UHC extends JavaPlugin {
         craftingManager.purgeRecipes();
     }
 
-    private void createWorlds(){
-        //world code
+    private void createWorlds() {
+        // world code
         world.environment(Environment.NORMAL);
         world.createWorld();
-        if(instance.getGame().isNether()){
-            world_nether.environment(Environment.NETHER);
-            world_nether.createWorld();
-        }
-        if(instance.getGame().isEnd()){
-            world_end.environment(Environment.THE_END);
-            world_end.createWorld();
-        }
 
     }
 
