@@ -28,6 +28,7 @@ import co.aikar.commands.annotation.Subcommand;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import me.infinityz.minigame.UHC;
+import net.md_5.bungee.api.ChatColor;
 
 @CommandAlias("portals")
 public class PortalListeners extends BaseCommand implements Listener {
@@ -218,7 +219,7 @@ public class PortalListeners extends BaseCommand implements Listener {
                         if (nether != null) {
                             travelDimensions(player, player.getLocation(), nether);
                         } else {
-                            player.sendMessage("No nether world available");
+                            player.sendMessage(ChatColor.RED + "Nether world not available.");
                         }
                         Bukkit.getScheduler().runTaskLater(instance, () -> {
                             p.remove(player);
@@ -228,7 +229,7 @@ public class PortalListeners extends BaseCommand implements Listener {
                         if (overworld != null) {
                             travelDimensions(player, player.getLocation(), overworld);
                         } else {
-                            player.sendMessage("No overworld available");
+                            player.sendMessage(ChatColor.RED + "Overworld not available.");
                         }
                         Bukkit.getScheduler().runTaskLater(instance, () -> {
                             p.remove(player);

@@ -21,7 +21,6 @@ import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
-import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.event.world.PortalCreateEvent.CreateReason;
 import org.bukkit.inventory.ItemStack;
@@ -55,14 +54,6 @@ public class ConfigListener implements Listener {
         var type = stack.getType();
         if (type == Material.GHAST_TEAR) {
             stack.setType(Material.GOLD_INGOT);
-        }
-    }
-
-    @EventHandler
-    public void onPortal(PlayerPortalEvent e) {
-        if (!instance.getGame().isNether() && e.getTo().getWorld().getEnvironment() == Environment.NETHER) {
-            e.getPlayer().sendMessage(ChatColor.RED + "Nether is currently disabled!");
-            e.setCancelled(true);
         }
     }
 

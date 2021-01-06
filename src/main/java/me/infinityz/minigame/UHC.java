@@ -91,11 +91,6 @@ public class UHC extends JavaPlugin {
     private static @Getter UHC instance;
     private static @Setter TaskChainFactory taskChainFactory;
 
-    // worlds
-    private @Getter WorldCreator world = new WorldCreator("world");
-    private @Getter WorldCreator world_nether = new WorldCreator("world_nether");
-    private @Getter WorldCreator world_end = new WorldCreator("world_end");
-
     @Override
     public void onLoad() {
 
@@ -113,7 +108,7 @@ public class UHC extends JavaPlugin {
     @Override
     public void onEnable() {
 
-        createWorlds();
+        createMainWorld();
 
         /**
          * Initialize taskChain, fastInv, and set the game stage to loading
@@ -168,14 +163,6 @@ public class UHC extends JavaPlugin {
         /* Lobby stage has been reached */
         gameStage = Stage.LOBBY;
 
-        if (instance.getGame().isNether()) {
-            world_nether.environment(Environment.NETHER);
-            world_nether.createWorld();
-        }
-        if (instance.getGame().isEnd()) {
-            world_end.environment(Environment.THE_END);
-            world_end.createWorld();
-        }
     }
 
     @Override
@@ -193,8 +180,9 @@ public class UHC extends JavaPlugin {
         craftingManager.purgeRecipes();
     }
 
-    private void createWorlds() {
+    private void createMainWorld() {
         // world code
+        WorldCreator world = new WorldCreator("world");
         world.environment(Environment.NORMAL);
         world.createWorld();
 

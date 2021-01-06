@@ -180,9 +180,18 @@ public class GlobalListener implements Listener {
         Bukkit.getOnlinePlayers().stream().filter(player -> player.getWorld().getEnvironment() == Environment.NETHER)
                 .forEach(netherPlayer -> netherPlayer.teleportAsync(
                         ChunksManager.centerLocation(ChunksManager.findScatterLocation(worldToTeleport, radius))));
+        unloadNether();
         // Mensaje para todos.
         Bukkit.broadcastMessage(ChatColor.of("#2be49c") + "The Nether has been disabled.");
 
+    }
+
+    public void unloadNether(){
+        try {
+            Bukkit.unloadWorld(Bukkit.getWorld("world_nether"), false);
+        } catch (Exception e) {
+            unloadNether();
+        }
     }
 
     @EventHandler
