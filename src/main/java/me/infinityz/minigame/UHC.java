@@ -225,10 +225,12 @@ public class UHC extends JavaPlugin {
     private void setCondorConfig(final Gson gson) {
         var condor_id = getCondorID();
         // If ID exist, pull data from redis
+
+        var scenarios_linked_list = new LinkedList<String>();
+
         if (!condor_id.isBlank()) {
             var condor_data = getCondorManager().getJedis().get("data:" + condor_id);
             var server_data = gson.fromJson(condor_data, JsonObject.class);
-            var scenarios_linked_list = new LinkedList<String>();
             // Set hostname and gameID
             var hostname = server_data.get("host").getAsString();
             game.setHostname(hostname);
@@ -247,14 +249,16 @@ public class UHC extends JavaPlugin {
                 getTeamManger().setTeamManagement(true);
                 getTeamManger().setTeamSize(team_size);
             }
-            scenarios_linked_list.add("worldload");
-            // Execute commands
-            scenarios_linked_list.stream().forEachOrdered(e -> {
-                Bukkit.getScheduler().runTaskLater(this, () -> {
-                    runCommand(e);
-                }, 10L);
-            });
         }
+
+        scenarios_linked_list.add("worldload");
+
+        // Execute commands
+        scenarios_linked_list.stream().forEachOrdered(e -> {
+            Bukkit.getScheduler().runTaskLater(this, () -> {
+                runCommand(e);
+            }, 10L);
+        });
 
     }
 

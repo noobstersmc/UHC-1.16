@@ -10,7 +10,6 @@ import org.bukkit.World.Environment;
 import org.bukkit.WorldCreator;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -57,11 +56,6 @@ public class PortalListeners extends BaseCommand implements Listener {
             player.sendMessage("Created world " + world);
         }
 
-    }
-
-    @Subcommand("clear")
-    public void portalsListClear(CommandSender sender) {
-        p.clear();
     }
 
     @Subcommand("pc")
@@ -155,8 +149,10 @@ public class PortalListeners extends BaseCommand implements Listener {
                     var block = target.getBlockAt(x, y, z);
                     if (block.getType() == Material.NETHER_PORTAL) {
                         var portalShape = PortalShape.of(block.getLocation());
-                        entity.teleport(portalShape.getTeleportLocation(entity));
-
+                        var tpLoc = portalShape.getTeleportLocation(entity);
+                        entity.teleport(tpLoc);
+                        // Clean lava if nearby
+                        replaceNearbyLava(portalShape.getBlocks()[0][0].getRelative(BlockFace.DOWN).getLocation(), 10);
                         return true;
                     } else if (block.getType() != Material.AIR
                             && block.getRelative(BlockFace.UP).getType() == Material.AIR) {
@@ -172,9 +168,29 @@ public class PortalListeners extends BaseCommand implements Listener {
         }
 
         var portal = Portal.createPortal(closest_loc != null ? closest_loc : ratioed_target);
-        entity.teleport(portal.getTeleportLocation());
+        var tpLoc = portal.getTeleportLocation();
+        entity.teleport(tpLoc);
+        // Clean lava if nearby
+
+        var lowest_block = portal.getPortal_blocks()[1][1].getRelative(BlockFace.DOWN);
+        replaceNearbyLava(lowest_block.getLocation(), 10);
 
         return false;
+    }
+
+    private void replaceNearbyLava(Location location, int radius) {
+        for (int x = location.getBlockX() - radius; x <= location.getBlockX() + radius; x++) {
+            for (int y = location.getBlockY() - radius; y <= location.getBlockY() + radius; y++) {
+                if (y < location.getBlockY())
+                    continue;
+                for (int z = location.getBlockZ() - radius; z <= location.getBlockZ() + radius; z++) {
+                    var block = location.getWorld().getBlockAt(x, y, z);
+                    if (block.getType() == Material.LAVA) {
+                        block.setType(Material.AIR);
+                    }
+                }
+            }
+        }
     }
 
     public void travelDimensions(Entity entity, Location from, World target) {

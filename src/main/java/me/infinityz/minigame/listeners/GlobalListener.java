@@ -180,23 +180,24 @@ public class GlobalListener implements Listener {
         Bukkit.getOnlinePlayers().stream().filter(player -> player.getWorld().getEnvironment() == Environment.NETHER)
                 .forEach(netherPlayer -> netherPlayer.teleportAsync(
                         ChunksManager.centerLocation(ChunksManager.findScatterLocation(worldToTeleport, radius))));
-        unloadNether();
+        Bukkit.getScheduler().runTaskLater(instance, () -> unloadNether(), 20 * 3);
         // Mensaje para todos.
         Bukkit.broadcastMessage(ChatColor.of("#2be49c") + "The Nether has been disabled.");
 
     }
 
-    public void unloadNether(){
+    public void unloadNether() {
         try {
             Bukkit.unloadWorld(Bukkit.getWorld("world_nether"), false);
         } catch (Exception e) {
-            unloadNether();
+            e.printStackTrace();
         }
     }
 
     @EventHandler
     public void onPortal(PlayerPortalEvent e) {
-        if(e.getPlayer().getWorld().getName().toString() == "lobby") e.setCancelled(true);
+        if (e.getPlayer().getWorld().getName().toString() == "lobby")
+            e.setCancelled(true);
     }
 
     /**
@@ -204,8 +205,9 @@ public class GlobalListener implements Listener {
      */
     @EventHandler(priority = EventPriority.HIGH)
     public void onPVP(EntityDamageByEntityEvent e) {
-        if(e.getEntity() == e.getDamager() || instance.getGame().isPvp() 
-        || instance.getGameStage().equals(Stage.LOBBY)) return;
+        if (e.getEntity() == e.getDamager() || instance.getGame().isPvp()
+                || instance.getGameStage().equals(Stage.LOBBY))
+            return;
 
         if (e.getEntity() instanceof Player) {
             Player p2 = null;
@@ -390,9 +392,9 @@ public class GlobalListener implements Listener {
             players.setFoodLevel(26);
             players.playSound(players.getLocation(), Sound.ENTITY_RAVAGER_CELEBRATE, 1, 1);
 
-            if(!instance.getGamemodeManager().isScenarioEnable(UHCMeetup.class))
+            if (!instance.getGamemodeManager().isScenarioEnable(UHCMeetup.class))
                 Bukkit.dispatchCommand(players, "config");
-            
+
             bar.addPlayer(players);
         });
         Bukkit.broadcastMessage(GameLoop.SHAMROCK_GREEN + "UHC has started!");

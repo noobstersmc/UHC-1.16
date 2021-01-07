@@ -72,13 +72,13 @@ public class WorldCMD extends BaseCommand {
     
     @Subcommand("unload")
     @CommandCompletion("@worlds")
-    public void worldRemove(Player sender, World world) {
+    public void worldRemove(CommandSender sender, World world) {
         Bukkit.unloadWorld(world, false);
         sender.sendMessage(ChatColor.RED + "World " + world + " unloaded.");
     }
 
     @Subcommand("load")
-    public void worldCreateAndLoad(Player sender, String type, String newWorld, @Optional Long seed) {
+    public void worldCreateAndLoad(CommandSender sender, String type, String newWorld, @Optional Long seed) {
         var world = Bukkit.getWorld(newWorld);
         if(world != null){
             sender.sendMessage(ChatColor.RED + "World " + newWorld + " is already created.");
@@ -94,7 +94,7 @@ public class WorldCMD extends BaseCommand {
                 var response = client.send(request, BodyHandlers.ofString());
                 worldCreator.seed(Long.parseLong(response.body()));
             } catch (Exception e) {
-                e.printStackTrace();
+                //e.printStackTrace();
             }
         }else{
             worldCreator.seed(seed);
