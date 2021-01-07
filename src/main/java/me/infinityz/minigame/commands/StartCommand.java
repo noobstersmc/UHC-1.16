@@ -189,12 +189,13 @@ public class StartCommand extends BaseCommand {
         }
 
         chain.sync(() -> {
-            
+
             var world = Bukkit.getWorld("world");
             if (world != null)
-                Bukkit.getOnlinePlayers().forEach(players -> players
-                        .teleportAsync(ChunksManager.findScatterLocation(world, instance.getGame().getBorderSize() / 2)));
+                Bukkit.getOnlinePlayers().forEach(players -> players.teleportAsync(
+                        ChunksManager.findScatterLocation(world, instance.getGame().getBorderSize() / 2)));
 
+                    
             if (instance.getTeamManger().isTeamManagement()) {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "team man false");
             }
@@ -230,11 +231,14 @@ public class StartCommand extends BaseCommand {
                 players.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
             });
 
-            Bukkit.getOnlinePlayers().stream().filter(it -> it.getGameMode() != GameMode.SPECTATOR)
-                    .forEach(players -> instance.getPlayerManager().addCreateUHCPlayer(players.getUniqueId(), true));
+            try {
+                Bukkit.getOnlinePlayers().stream().filter(it -> it.getGameMode() != GameMode.SPECTATOR).forEach(
+                        players -> instance.getPlayerManager().addCreateUHCPlayer(players.getUniqueId(), true));
 
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             var teleportEvent = new TeleportationCompletedEvent();
-
 
             Bukkit.getPluginManager().callEvent(teleportEvent);
 
