@@ -76,6 +76,9 @@ public class WorldCMD extends BaseCommand {
         Bukkit.unloadWorld(world, false);
         sender.sendMessage(ChatColor.RED + "World " + world + " unloaded.");
     }
+    @Subcommand("recycle")
+    public void recycle(CommandSender sender){
+    }
 
     @Subcommand("load")
     public void worldCreateAndLoad(CommandSender sender, String type, String newWorld, @Optional Long seed) {
