@@ -193,7 +193,7 @@ public class StartCommand extends BaseCommand {
             var world = Bukkit.getWorld("world");
             if (world != null)
                 Bukkit.getOnlinePlayers().forEach(players -> players
-                        .teleport(ChunksManager.findScatterLocation(world, instance.getGame().getBorderSize() / 2)));
+                        .teleportAsync(ChunksManager.findScatterLocation(world, instance.getGame().getBorderSize() / 2)));
 
             if (instance.getTeamManger().isTeamManagement()) {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "team man false");

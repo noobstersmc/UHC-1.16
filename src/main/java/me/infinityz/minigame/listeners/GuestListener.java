@@ -1,6 +1,5 @@
 package me.infinityz.minigame.listeners;
 
-import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -20,7 +19,6 @@ public class GuestListener implements Listener {
 
         if (player.hasPermission("group.vandal") && !player.hasPermission("group.vandalhost")
                 && player.getName().equalsIgnoreCase(instance.getGame().getHostname())) {
-            if (!player.hasPlayedBefore()) Bukkit.dispatchCommand(e.getPlayer(), "scenario UHC Vandálico");
             player.addAttachment(instance).setPermission("group.vandalhost", true);
             player.updateCommands();
         }

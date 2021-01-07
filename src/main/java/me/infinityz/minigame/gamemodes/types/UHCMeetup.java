@@ -39,7 +39,6 @@ import co.aikar.commands.annotation.Subcommand;
 import fr.mrmicky.fastinv.ItemBuilder;
 import lombok.Getter;
 import me.infinityz.minigame.UHC;
-import me.infinityz.minigame.chunks.ChunksManager;
 import me.infinityz.minigame.enums.Stage;
 import me.infinityz.minigame.events.GameStartedEvent;
 import me.infinityz.minigame.events.PlayerJoinedLateEvent;
@@ -186,6 +185,9 @@ public class UHCMeetup extends IGamemode implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
 
+        if (!instance.getGameStage().equals(Stage.LOBBY))
+            return;
+
         if(!instance.getGame().isHasAutoStarted() && (instance.getGame().getAutoStart() - Bukkit.getOnlinePlayers().size()) == 1){
             
             Bukkit.broadcastMessage(meetupPrefix + ChatColor.WHITE + e.getPlayer().getName() 
@@ -206,9 +208,6 @@ public class UHCMeetup extends IGamemode implements Listener {
              + instance.getGame().getUhcslots() + "] ");
         }
 
-        if (!instance.getGameStage().equals(Stage.LOBBY) || e.getPlayer().hasPlayedBefore())
-            return;
-
         if (!instance.getGame().isHasAutoStarted() && Bukkit.getOnlinePlayers().size() >= instance.getGame().getAutoStart()) {
 
             instance.getGame().setHasAutoStarted(true);
@@ -219,13 +218,7 @@ public class UHCMeetup extends IGamemode implements Listener {
                 Bukkit.getScheduler().runTask(instance, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "start"));
             }, 20*20);
         }
-        var player = e.getPlayer();
-        var world = Bukkit.getWorld("world");
-        var worldBorderSizeHaved = (int) world.getWorldBorder().getSize() / 2;
-        player.teleportAsync(ChunksManager.findScatterLocation(world, worldBorderSizeHaved))
-                .thenAccept(result -> player
-                        .sendMessage((ChatColor.of("#7ab83c") + (result ? "You have been scattered into the world."
-                                : "Coudn't scatter you, ask for help."))));
+
     }
 
     @EventHandler

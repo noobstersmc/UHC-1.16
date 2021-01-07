@@ -11,7 +11,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -96,12 +95,6 @@ public class LobbyListeners implements Listener {
             }
         }
 
-    }
-
-    @EventHandler
-    public void onPickup(EntityPickupItemEvent e) {
-        if (!e.getEntity().hasPermission("lobby.edit"))
-            e.setCancelled(true);
     }
 
     /*

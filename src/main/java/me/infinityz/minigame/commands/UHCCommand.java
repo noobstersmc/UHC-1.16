@@ -366,7 +366,7 @@ public class UHCCommand extends BaseCommand {
     @CommandPermission("staff.perm")
     public void onDelta(Player sender, int size) {
         for (var i = 0; i < size; i++) {
-            var task = new ChunkLoadTask(sender.getWorld(), instance.getChunkManager());
+            var task = new ChunkLoadTask(Bukkit.getWorld("world"), instance.getChunkManager());
             instance.getChunkManager().getPendingChunkLoadTasks().add(task);
         }
         sender.sendActionBar("Queued up " + size + " task(s)...");
