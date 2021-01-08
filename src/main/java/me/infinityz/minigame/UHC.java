@@ -6,12 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse.BodyHandlers;
 import java.nio.file.Files;
-import java.time.Duration;
 import java.util.LinkedList;
 import java.util.Properties;
 import java.util.UUID;
@@ -22,10 +17,9 @@ import com.google.gson.JsonObject;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
-
 import org.bukkit.NamespacedKey;
-import org.bukkit.WorldCreator;
 import org.bukkit.World.Environment;
+import org.bukkit.WorldCreator;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -41,6 +35,7 @@ import co.aikar.taskchain.BukkitTaskChainFactory;
 import co.aikar.taskchain.TaskChain;
 import co.aikar.taskchain.TaskChainFactory;
 import fr.mrmicky.fastinv.FastInvManager;
+import kong.unirest.Unirest;
 import lombok.Getter;
 import lombok.Setter;
 import me.infinityz.minigame.border.BorderManager;
@@ -57,7 +52,9 @@ import me.infinityz.minigame.commands.StartCommand;
 import me.infinityz.minigame.commands.UHCCommand;
 import me.infinityz.minigame.commands.Utilities;
 import me.infinityz.minigame.commands.WorldCMD;
+import me.infinityz.minigame.condor.CondorConfig;
 import me.infinityz.minigame.condor.CondorManager;
+import me.infinityz.minigame.condor.JsonConfig;
 import me.infinityz.minigame.crafting.CraftingManager;
 import me.infinityz.minigame.enums.Stage;
 import me.infinityz.minigame.game.Game;
@@ -86,29 +83,83 @@ public class UHC extends JavaPlugin {
     private @Getter @Setter Game game;
     private @Getter BorderManager borderManager;
     private @Getter CondorManager condorManager;
+    private @Getter CondorConfig condorConfig;
     private @Getter PortalListeners portalListeners;
     /* Statics */
     private static @Getter UHC instance;
     private static @Setter TaskChainFactory taskChainFactory;
 
-    @Override
-    public void onLoad() {
+    /* Condor Pre Boot-up code starts */
+    private static String CONDOR_URL = "http://condor.jcedeno.us:420";
+    private static JsonConfig JSON_CONFIG;
 
-        var client = HttpClient.newHttpClient();
-        var request = HttpRequest.newBuilder(URI.create("http://condor.jcedeno.us:420/seeds"))
-                .timeout(Duration.ofSeconds(3)).build();
+    static {
+        Unirest.config().connectTimeout(1000);
         try {
-            var response = client.send(request, BodyHandlers.ofString());
-            changeSeed(response.body());
-        } catch (Exception e) {
+            JSON_CONFIG = new JsonConfig("condor.json");
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public void onEnable() {
+    public void onLoad() {
+        /* Before anything else happens, try to obtain information from condor/lair */
+        String condor_id = null;
 
-        createMainWorld();
+        if (JSON_CONFIG != null) {
+            var element = JSON_CONFIG.getJsonObject().get("condor-id");
+            if (element != null) {
+                condor_id = element.getAsString();
+            }
+        } else {
+            condor_id = getCondorID();
+        }
+        System.out.println("[CONDOR] Condor id is: " + condor_id);
+        if (condor_id != null) {
+            var response = Unirest.get(CONDOR_URL + "/game").header("auth", "Condor-Secreto")
+                    .header("Content-Type", "application/json").header("Accept", "application/json")
+                    .header("condor-id", condor_id).asJson();
+
+            if (response != null && response.getBody() != null) {
+                System.out.println("[CONDOR] Response is: " + response.getBody().toString());
+
+            } else {
+                System.out.println("[CONDOR] Condor not available");
+            }
+        }
+
+    }
+
+    public void loadJsonConfig() {
+
+    }
+
+    /**
+     * Returns an UUID condor_id from properties file if present, otherwise it
+     * returns null.
+     * 
+     * @return condor-id as String from server.properties or null
+     */
+    private String getCondorID() {
+        var properties = new Properties();
+        var propertiesFile = new File("server.properties");
+
+        try (var is = new FileInputStream(propertiesFile)) {
+            properties.load(is);
+        } catch (Exception ignore) {
+            ignore.printStackTrace();
+        }
+
+        var condor_id = properties.getProperty("condor-id");
+
+        return condor_id != null ? condor_id : "";
+    }
+
+    /* Condor Pre Boot-up code ends */
+
+    @Override
+    public void onEnable() {
 
         /**
          * Initialize taskChain, fastInv, and set the game stage to loading
@@ -180,10 +231,13 @@ public class UHC extends JavaPlugin {
         craftingManager.purgeRecipes();
     }
 
-    private void createMainWorld() {
+    private void createMainWorld(Long seed) {
         // world code
         WorldCreator world = new WorldCreator("world");
         world.environment(Environment.NORMAL);
+        if (seed != null)
+            world.seed(seed);
+
         world.createWorld();
 
     }
@@ -260,21 +314,6 @@ public class UHC extends JavaPlugin {
             }, 10L);
         });
 
-    }
-
-    private String getCondorID() {
-        var properties = new Properties();
-        var propertiesFile = new File("server.properties");
-
-        try (var is = new FileInputStream(propertiesFile)) {
-            properties.load(is);
-        } catch (Exception ignore) {
-            ignore.printStackTrace();
-        }
-
-        var condor_id = properties.getProperty("condor-id");
-
-        return condor_id != null ? condor_id : "";
     }
 
     private void runCommand(String command) {

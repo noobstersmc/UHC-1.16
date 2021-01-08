@@ -180,7 +180,8 @@ public class Game {
     }
 
     double getCurrentBorderSize() {
-        return Bukkit.getWorld("world").getWorldBorder().getSize();
+        var world = Bukkit.getWorld("world");
+        return world != null ? world.getWorldBorder().getSize() : 0;
     }
 
     String getScenarios(UHC instance) {

@@ -62,33 +62,37 @@ public class GameLoop extends BukkitRunnable {
 
         Bukkit.getPluginManager().callEvent(new GameTickEvent(time, true));
 
-        var worldBorder = Bukkit.getWorld("world").getWorldBorder();
+        var world = Bukkit.getWorld("world");
+        if (world != null) {
+            var worldBorder = world.getWorldBorder();
 
-        if (!instance.getGamemodeManager().isScenarioEnable(GoToHell.class)) {
-            if (!borderShrink && worldBorder.getSize() <= 1000) {
-                borderShrink = true;
-                Bukkit.getScheduler().runTask(instance, () -> {
-                    Bukkit.getWorlds().forEach(worlds -> {
-                        worlds.setGameRule(GameRule.DO_INSOMNIA, false);
-                        worlds.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
-                        worlds.setTime(400);
+            if (!instance.getGamemodeManager().isScenarioEnable(GoToHell.class)) {
+                if (!borderShrink && worldBorder.getSize() <= 1000) {
+                    borderShrink = true;
+                    Bukkit.getScheduler().runTask(instance, () -> {
+                        Bukkit.getWorlds().forEach(worlds -> {
+                            worlds.setGameRule(GameRule.DO_INSOMNIA, false);
+                            worlds.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
+                            worlds.setTime(400);
+                        });
+                        Bukkit.getPluginManager().callEvent(new NetherDisabledEvent());
+                        instance.getGame().setNether(false);
                     });
-                    Bukkit.getPluginManager().callEvent(new NetherDisabledEvent());
-                    instance.getGame().setNether(false);
-                });
+                }
             }
+
+            performBorderDamage();
+            timedEvent(time);
+
+            var border = ((int) (worldBorder.getSize() / 2));
+            handleBossbar(time);
+
+            autoDQ();
+
+            Bukkit.getOnlinePlayers().parallelStream()
+                    .forEach(player -> borderDistanceActionBar(player, worldBorder, border));
+
         }
-
-        performBorderDamage();
-        timedEvent(time);
-
-        var border = ((int) (worldBorder.getSize() / 2));
-        handleBossbar(time);
-
-        autoDQ();
-
-        Bukkit.getOnlinePlayers().parallelStream()
-                .forEach(player -> borderDistanceActionBar(player, worldBorder, border));
     }
 
     private void timedEvent(int time) {

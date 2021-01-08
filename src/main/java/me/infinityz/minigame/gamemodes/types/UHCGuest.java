@@ -20,7 +20,7 @@ import net.md_5.bungee.api.ChatColor;
 
 public class UHCGuest extends IGamemode implements Listener {
     private UHC instance;
-    private WorldBorder worldBorder = Bukkit.getWorld("world").getWorldBorder();
+    private WorldBorder worldBorder;
 
     public UHCGuest(UHC instance) {
         super("UHC Guest", "Custom features.");
@@ -53,7 +53,6 @@ public class UHCGuest extends IGamemode implements Listener {
 
     }
 
-
     /*
      * Scoreboard Interceptor starts
      */
@@ -65,10 +64,12 @@ public class UHCGuest extends IGamemode implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onModifyScoreboard(ScoreboardUpdateEvent e) {
+        if (worldBorder == null)
+            worldBorder = Bukkit.getWorld("world").getWorldBorder();
+
         e.setCancelled(false);
         var list = new ArrayList<String>();
         var player = e.getScoreboard().getPlayer();
-
 
         var team = instance.getTeamManger().getPlayerTeam(player.getUniqueId());
         // https://papermc.io/javadocs/paper/1.16/org/bukkit/event/inventory/PrepareItemCraftEvent.html
@@ -89,7 +90,8 @@ public class UHCGuest extends IGamemode implements Listener {
                             list.add(String.format(
                                     ChatColor.GRAY + "(" + ChatColor.of("#E6E6FA") + x + ", " + z + ChatColor.GRAY
                                             + ") " + ChatColor.of("#E6E6FA") + "%.1f" + ChatColor.DARK_RED + "❤",
-                                    (double)Math.round((onlineMember.getHealth() + onlineMember.getAbsorptionAmount()) / 2.0D)));
+                                    (double) Math.round(
+                                            (onlineMember.getHealth() + onlineMember.getAbsorptionAmount()) / 2.0D)));
 
                         } else {
                             list.add(ChatColor.RED + "☠ " + ChatColor.STRIKETHROUGH + onlineMember.getName() + "");
@@ -97,12 +99,12 @@ public class UHCGuest extends IGamemode implements Listener {
                     } else {
 
                         var uhcPlayer = instance.getPlayerManager().getPlayer(members);
-                        if(uhcPlayer != null && !uhcPlayer.isAlive()){
+                        if (uhcPlayer != null && !uhcPlayer.isAlive()) {
                             list.add(ChatColor.RED + "☠ " + ChatColor.STRIKETHROUGH + offlinePlayer.getName() + "");
-                        }else{
+                        } else {
                             list.add(ChatColor.GREEN + offlinePlayer.getName() + "");
                             list.add(ChatColor.GRAY + "" + ChatColor.ITALIC + " Offline");
-                            
+
                         }
 
                     }
@@ -113,7 +115,8 @@ public class UHCGuest extends IGamemode implements Listener {
         }
         list.add("");
         list.add(ChatColor.of("#66CDAA") + "➟Borde: " + ChatColor.of("#E6E6FA") + ((int) worldBorder.getSize() / 2));
-        list.add(ChatColor.of("#66CDAA") + "➟Jugadores: " + ChatColor.of("#E6E6FA") + instance.getPlayerManager().getAlivePlayers());
+        list.add(ChatColor.of("#66CDAA") + "➟Jugadores: " + ChatColor.of("#E6E6FA")
+                + instance.getPlayerManager().getAlivePlayers());
         list.add(ChatColor.of("#66CDAA") + "➟Tiempo: " + ChatColor.of("#E6E6FA")
                 + GameLoop.timeConvert(instance.getGame().getGameTime()));
         list.add("");

@@ -11,10 +11,9 @@ import me.infinityz.minigame.events.ScoreboardUpdateEvent;
 import me.infinityz.minigame.gamemodes.IGamemode;
 import net.md_5.bungee.api.ChatColor;
 
-
 public class UHCVandalico extends IGamemode implements Listener {
     private UHC instance;
-    private WorldBorder worldBorder = Bukkit.getWorld("world").getWorldBorder();
+    private WorldBorder worldBorder;
 
     public UHCVandalico(UHC instance) {
         super("UHC Vandálico", "UHCs Nórdicos.");
@@ -55,11 +54,11 @@ public class UHCVandalico extends IGamemode implements Listener {
         return true;
     }
 
-
     @EventHandler(priority = EventPriority.LOW)
     public void onInterceptUpate(ScoreboardUpdateEvent e) {
-        if(instance.getGamemodeManager().isScenarioEnable(UHCMeetup.class) 
-            || instance.getGamemodeManager().isScenarioEnable(UHCRun.class)) return;
+        if (instance.getGamemodeManager().isScenarioEnable(UHCMeetup.class)
+                || instance.getGamemodeManager().isScenarioEnable(UHCRun.class))
+            return;
 
         e.setCancelled(true);
     }
@@ -73,12 +72,15 @@ public class UHCVandalico extends IGamemode implements Listener {
         return hours > 0 ? String.format("%02d:%02d:%02d", hours, minutes, seconds)
                 : String.format("%02d:%02d", minutes, seconds);
     }
-     
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onModifyScoreboard(ScoreboardUpdateEvent e) {
-        if(instance.getGamemodeManager().isScenarioEnable(UHCMeetup.class)
-            || instance.getGamemodeManager().isScenarioEnable(UHCRun.class)) return;
+        if (instance.getGamemodeManager().isScenarioEnable(UHCMeetup.class)
+                || instance.getGamemodeManager().isScenarioEnable(UHCRun.class))
+            return;
+
+        if (worldBorder == null)
+            worldBorder = Bukkit.getWorld("world").getWorldBorder();
 
         e.setCancelled(false);
         var uhcPlayer = instance.getPlayerManager().getPlayer(e.getScoreboard().getPlayer().getUniqueId());
@@ -86,32 +88,36 @@ public class UHCVandalico extends IGamemode implements Listener {
 
         if (isTeams) {
             var team = instance.getTeamManger().getPlayerTeam(e.getScoreboard().getPlayer().getUniqueId());
-            e.setLinesArray(
-                "━━━━━━━━━━━━━━━━━━━━━━━━━",
-                ChatColor.of("#00d0db") + "Time: " + ChatColor.WHITE + timeConvert(instance.getGame().getGameTime()),
-                ChatColor.of("#00d0db") + "Border: " + ChatColor.WHITE + ((int) worldBorder.getSize() / 2), 
-                "━━━━━━━━━━━━━━━━━━━━━━━━━",
-                ChatColor.of("#00d0db") + "Kills: " + ChatColor.WHITE + (uhcPlayer != null ? uhcPlayer.getKills() : 0),
-                ChatColor.of("#00d0db") + "Team Kills: " + ChatColor.WHITE + (team != null ? team.getTeamKills() : 0), 
-                ChatColor.of("#00d0db") + "Players Left: " + ChatColor.WHITE + instance.getPlayerManager().getAlivePlayers(),
-                "━━━━━━━━━━━━━━━━━━━━━━━━━",
-                ChatColor.of("#00d0db") + "Hosted by: " + ChatColor.WHITE + "noobsters.net",
-                "━━━━━━━━━━━━━━━━━━━━━━━━━");
-        
+            e.setLinesArray("━━━━━━━━━━━━━━━━━━━━━━━━━",
+                    ChatColor.of("#00d0db") + "Time: " + ChatColor.WHITE
+                            + timeConvert(instance.getGame().getGameTime()),
+                    ChatColor.of("#00d0db") + "Border: " + ChatColor.WHITE + ((int) worldBorder.getSize() / 2),
+                    "━━━━━━━━━━━━━━━━━━━━━━━━━",
+                    ChatColor.of("#00d0db") + "Kills: " + ChatColor.WHITE
+                            + (uhcPlayer != null ? uhcPlayer.getKills() : 0),
+                    ChatColor.of("#00d0db") + "Team Kills: " + ChatColor.WHITE
+                            + (team != null ? team.getTeamKills() : 0),
+                    ChatColor.of("#00d0db") + "Players Left: " + ChatColor.WHITE
+                            + instance.getPlayerManager().getAlivePlayers(),
+                    "━━━━━━━━━━━━━━━━━━━━━━━━━",
+                    ChatColor.of("#00d0db") + "Hosted by: " + ChatColor.WHITE + "noobsters.net",
+                    "━━━━━━━━━━━━━━━━━━━━━━━━━");
+
         } else {
-            e.setLinesArray(
-                "━━━━━━━━━━━━━━━━━━━━━━━━━",
-                ChatColor.of("#00d0db") + "Time: " + ChatColor.WHITE + timeConvert(instance.getGame().getGameTime()),
-                ChatColor.of("#00d0db") + "Border: " + ChatColor.WHITE + ((int) worldBorder.getSize() / 2), 
-                "━━━━━━━━━━━━━━━━━━━━━━━━━",
-                ChatColor.of("#00d0db") + "Kills: " + ChatColor.WHITE + (uhcPlayer != null ? uhcPlayer.getKills() : 0),
-                ChatColor.of("#00d0db") + "Players Left: " + ChatColor.WHITE + instance.getPlayerManager().getAlivePlayers(),
-                "━━━━━━━━━━━━━━━━━━━━━━━━━",
-                ChatColor.of("#00d0db") + "Hosted by: " + ChatColor.WHITE + "noobsters.net",
-                "━━━━━━━━━━━━━━━━━━━━━━━━━");
+            e.setLinesArray("━━━━━━━━━━━━━━━━━━━━━━━━━",
+                    ChatColor.of("#00d0db") + "Time: " + ChatColor.WHITE
+                            + timeConvert(instance.getGame().getGameTime()),
+                    ChatColor.of("#00d0db") + "Border: " + ChatColor.WHITE + ((int) worldBorder.getSize() / 2),
+                    "━━━━━━━━━━━━━━━━━━━━━━━━━",
+                    ChatColor.of("#00d0db") + "Kills: " + ChatColor.WHITE
+                            + (uhcPlayer != null ? uhcPlayer.getKills() : 0),
+                    ChatColor.of("#00d0db") + "Players Left: " + ChatColor.WHITE
+                            + instance.getPlayerManager().getAlivePlayers(),
+                    "━━━━━━━━━━━━━━━━━━━━━━━━━",
+                    ChatColor.of("#00d0db") + "Hosted by: " + ChatColor.WHITE + "noobsters.net",
+                    "━━━━━━━━━━━━━━━━━━━━━━━━━");
         }
 
     }
 
 }
-

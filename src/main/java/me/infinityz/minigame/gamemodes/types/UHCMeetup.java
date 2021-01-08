@@ -51,11 +51,12 @@ import net.md_5.bungee.api.ChatColor;
 public class UHCMeetup extends IGamemode implements Listener {
     private UHC instance;
     private Random random = new Random();
-    private WorldBorder worldBorder = Bukkit.getWorld("world").getWorldBorder();
+    private WorldBorder worldBorder;
     private final ItemStack lapis = new ItemBuilder(Material.LAPIS_LAZULI).amount(64).build();
     private @Getter BukkitTask waitingForPlayers;
     private Integer amo = 0;
-    private String meetupPrefix = ChatColor.of("#2cc36b") + "[" + ChatColor.GREEN + "UHC Meetup" + ChatColor.of("#2cc36b") + "] ";
+    private String meetupPrefix = ChatColor.of("#2cc36b") + "[" + ChatColor.GREEN + "UHC Meetup"
+            + ChatColor.of("#2cc36b") + "] ";
 
     public UHCMeetup(UHC instance) {
         super("UHC Meetup", "An UHC Meetup as a gamemode.");
@@ -164,18 +165,20 @@ public class UHCMeetup extends IGamemode implements Listener {
             else if (!sender.hasPermission("forcestart.cmd"))
                 sender.sendMessage(Game.getUpToMVP());
             else {
-                if(Bukkit.getOnlinePlayers().size() < 4){
+                if (Bukkit.getOnlinePlayers().size() < 4) {
                     sender.sendMessage(ChatColor.RED + "You need at least 4 players to force start.");
                     return;
                 }
                 instance.getGame().setHasAutoStarted(true);
-                Bukkit.getOnlinePlayers().forEach(all -> all.playSound(all.getLocation(), Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO, 1, 1));
+                Bukkit.getOnlinePlayers()
+                        .forEach(all -> all.playSound(all.getLocation(), Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO, 1, 1));
                 Bukkit.broadcastMessage(ChatColor.of("#c3752c") + sender.getName() + " forced to start the game!");
                 Bukkit.broadcastMessage(ChatColor.of("#4788d9") + "Starting in 30 seconds!");
 
-                Bukkit.getScheduler().runTaskLater(instance, ()->{
-                Bukkit.getScheduler().runTask(instance, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "start"));
-                }, 20*20);
+                Bukkit.getScheduler().runTaskLater(instance, () -> {
+                    Bukkit.getScheduler().runTask(instance,
+                            () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "start"));
+                }, 20 * 20);
 
             }
         }
@@ -188,35 +191,41 @@ public class UHCMeetup extends IGamemode implements Listener {
         if (!instance.getGameStage().equals(Stage.LOBBY))
             return;
 
-        if(!instance.getGame().isHasAutoStarted() && (instance.getGame().getAutoStart() - Bukkit.getOnlinePlayers().size()) == 1){
-            
-            Bukkit.broadcastMessage(meetupPrefix + ChatColor.WHITE + e.getPlayer().getName() 
-            + " joined the game. " + ChatColor.GREEN + "[" + Bukkit.getOnlinePlayers().size() + "/" 
-             + instance.getGame().getUhcslots() + "] \n" + GameLoop.SHAMROCK_GREEN + "1 player needed to start!");
+        if (!instance.getGame().isHasAutoStarted()
+                && (instance.getGame().getAutoStart() - Bukkit.getOnlinePlayers().size()) == 1) {
 
-        }else if(!instance.getGame().isHasAutoStarted() && (instance.getGame().getAutoStart() - Bukkit.getOnlinePlayers().size()) != 0){
+            Bukkit.broadcastMessage(meetupPrefix + ChatColor.WHITE + e.getPlayer().getName() + " joined the game. "
+                    + ChatColor.GREEN + "[" + Bukkit.getOnlinePlayers().size() + "/" + instance.getGame().getUhcslots()
+                    + "] \n" + GameLoop.SHAMROCK_GREEN + "1 player needed to start!");
 
-            Bukkit.broadcastMessage(meetupPrefix + ChatColor.WHITE + e.getPlayer().getName() 
-            + " joined the game. " + ChatColor.GREEN + "[" +  Bukkit.getOnlinePlayers().size() + "/" 
-             + instance.getGame().getUhcslots() + "] \n" + GameLoop.SHAMROCK_GREEN 
-             + (instance.getGame().getAutoStart() - Bukkit.getOnlinePlayers().size()) + " players needed to start!");
+        } else if (!instance.getGame().isHasAutoStarted()
+                && (instance.getGame().getAutoStart() - Bukkit.getOnlinePlayers().size()) != 0) {
 
-        }else{
-            
-            Bukkit.broadcastMessage(meetupPrefix + ChatColor.WHITE + e.getPlayer().getName()
-            + " joined the game. " + ChatColor.GREEN + "[" + Bukkit.getOnlinePlayers().size() + "/" 
-             + instance.getGame().getUhcslots() + "] ");
+            Bukkit.broadcastMessage(meetupPrefix + ChatColor.WHITE + e.getPlayer().getName() + " joined the game. "
+                    + ChatColor.GREEN + "[" + Bukkit.getOnlinePlayers().size() + "/" + instance.getGame().getUhcslots()
+                    + "] \n" + GameLoop.SHAMROCK_GREEN
+                    + (instance.getGame().getAutoStart() - Bukkit.getOnlinePlayers().size())
+                    + " players needed to start!");
+
+        } else {
+
+            Bukkit.broadcastMessage(
+                    meetupPrefix + ChatColor.WHITE + e.getPlayer().getName() + " joined the game. " + ChatColor.GREEN
+                            + "[" + Bukkit.getOnlinePlayers().size() + "/" + instance.getGame().getUhcslots() + "] ");
         }
 
-        if (!instance.getGame().isHasAutoStarted() && Bukkit.getOnlinePlayers().size() >= instance.getGame().getAutoStart()) {
+        if (!instance.getGame().isHasAutoStarted()
+                && Bukkit.getOnlinePlayers().size() >= instance.getGame().getAutoStart()) {
 
             instance.getGame().setHasAutoStarted(true);
-            Bukkit.getOnlinePlayers().forEach(all -> all.playSound(all.getLocation(), Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO, 1, 1));
+            Bukkit.getOnlinePlayers()
+                    .forEach(all -> all.playSound(all.getLocation(), Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO, 1, 1));
             Bukkit.broadcastMessage(GameLoop.HAVELOCK_BLUE + "Starting in 30 seconds!");
 
-            Bukkit.getScheduler().runTaskLater(instance, ()->{
-                Bukkit.getScheduler().runTask(instance, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "start"));
-            }, 20*20);
+            Bukkit.getScheduler().runTaskLater(instance, () -> {
+                Bukkit.getScheduler().runTask(instance,
+                        () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "start"));
+            }, 20 * 20);
         }
 
     }
@@ -248,6 +257,8 @@ public class UHCMeetup extends IGamemode implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onModifyScoreboard(ScoreboardUpdateEvent e) {
+        if (worldBorder == null)
+            worldBorder = Bukkit.getWorld("world").getWorldBorder();
         e.setCancelled(false);
         var player = e.getScoreboard().getPlayer();
 
@@ -262,7 +273,8 @@ public class UHCMeetup extends IGamemode implements Listener {
                 ChatColor.of("#2cc36b") + "Gamemode: " + ChatColor.WHITE
                         + instance.getGamemodeManager().getFirstEnabledScenario(),
                 "",
-                ChatColor.of("#2cc36b") + "Time: " + ChatColor.WHITE + GameLoop.timeConvert(instance.getGame().getGameTime()),
+                ChatColor.of("#2cc36b") + "Time: " + ChatColor.WHITE
+                        + GameLoop.timeConvert(instance.getGame().getGameTime()),
                 ChatColor.of("#2cc36b") + "Border: " + ChatColor.WHITE + ((int) worldBorder.getSize() / 2), "",
                 ChatColor.WHITE + "noobsters.net");
 
