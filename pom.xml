@@ -42,59 +42,68 @@
       <type>jar</type>
       <scope>compile</scope>
     </dependency>
+    <!-- OkHttp to contact with condor-->
     <dependency>
-      <groupId>com.konghq</groupId>
-      <artifactId>unirest-java</artifactId>
-      <version>3.11.09</version>
-      <scope>compile</scope>
+      <groupId>com.squareup.okhttp3</groupId>
+      <artifactId>okhttp</artifactId>
+      <version>4.9.0</version>
     </dependency>
+    <!-- Paper API 1.16.4-->
     <dependency>
       <groupId>com.destroystokyo.paper</groupId>
       <artifactId>paper-api</artifactId>
       <version>1.16.4-R0.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
+    <!-- Aikar ACF for Paper-->
     <dependency>
       <groupId>co.aikar</groupId>
       <artifactId>acf-paper</artifactId>
       <version>0.5.0-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
+    <!-- Aikar Taskchain tool for Bukkit-->
     <dependency>
       <groupId>co.aikar</groupId>
       <artifactId>taskchain-bukkit</artifactId>
       <version>3.7.2</version>
     </dependency>
+    <!-- Lombok annotation processor-->
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <version>1.18.12</version>
       <scope>provided</scope>
     </dependency>
+    <!-- Trove4j for TCollections (mucho rapido)-->
     <dependency>
       <groupId>net.sf.trove4j</groupId>
       <artifactId>core</artifactId>
       <version>3.1.0</version>
       <scope>compile</scope>
     </dependency>
+    <!-- Cache of local data to reduce data look up time-->
     <dependency>
       <groupId>com.github.ben-manes.caffeine</groupId>
       <artifactId>caffeine</artifactId>
       <version>2.8.5</version>
       <scope>compile</scope>
     </dependency>
+    <!-- FastInv, to be replace with RapidInv-->
     <dependency>
       <groupId>fr.mrmicky</groupId>
       <artifactId>FastInv</artifactId>
       <version>3.0.2</version>
       <scope>compile</scope>
     </dependency>
+    <!-- Unsure if necessary -->
     <dependency>
       <groupId>io.papermc</groupId>
       <artifactId>paperlib</artifactId>
       <version>1.0.4</version>
       <scope>compile</scope>
     </dependency>
+    <!-- Vault API -->
     <dependency>
       <groupId>net.milkbowl.vault</groupId>
       <artifactId>VaultAPI</artifactId>
@@ -118,6 +127,8 @@
         <directory>${basedir}/src/main/resources/</directory>
         <includes>
           <include>*.yml</include>
+          <!-- TBI - Still needs serious work-->
+          <include>*.json</include>
         </includes>
       </resource>
     </resources>

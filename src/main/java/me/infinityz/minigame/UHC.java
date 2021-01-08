@@ -35,7 +35,6 @@ import co.aikar.taskchain.BukkitTaskChainFactory;
 import co.aikar.taskchain.TaskChain;
 import co.aikar.taskchain.TaskChainFactory;
 import fr.mrmicky.fastinv.FastInvManager;
-import kong.unirest.Unirest;
 import lombok.Getter;
 import lombok.Setter;
 import me.infinityz.minigame.border.BorderManager;
@@ -52,6 +51,7 @@ import me.infinityz.minigame.commands.StartCommand;
 import me.infinityz.minigame.commands.UHCCommand;
 import me.infinityz.minigame.commands.Utilities;
 import me.infinityz.minigame.commands.WorldCMD;
+import me.infinityz.minigame.condor.CondorAPI;
 import me.infinityz.minigame.condor.CondorConfig;
 import me.infinityz.minigame.condor.CondorManager;
 import me.infinityz.minigame.condor.JsonConfig;
@@ -83,18 +83,17 @@ public class UHC extends JavaPlugin {
     private @Getter @Setter Game game;
     private @Getter BorderManager borderManager;
     private @Getter CondorManager condorManager;
-    private @Getter CondorConfig condorConfig;
+    private @Getter JsonObject condorConfig;
     private @Getter PortalListeners portalListeners;
     /* Statics */
     private static @Getter UHC instance;
     private static @Setter TaskChainFactory taskChainFactory;
 
     /* Condor Pre Boot-up code starts */
-    private static String CONDOR_URL = "http://condor.jcedeno.us:420";
     private static JsonConfig JSON_CONFIG;
+    private static String CONDOR_ID = null;
 
     static {
-        Unirest.config().connectTimeout(1000);
         try {
             JSON_CONFIG = new JsonConfig("condor.json");
         } catch (IOException e) {
@@ -105,33 +104,25 @@ public class UHC extends JavaPlugin {
     @Override
     public void onLoad() {
         /* Before anything else happens, try to obtain information from condor/lair */
-        String condor_id = null;
+        String condor_secret = null;
 
         if (JSON_CONFIG != null) {
-            var element = JSON_CONFIG.getJsonObject().get("condor-id");
+            var json = JSON_CONFIG.getJsonObject();
+            var element = json.get("condor_id");
             if (element != null) {
-                condor_id = element.getAsString();
+                CONDOR_ID = element.getAsString();
+            }
+            var secret = json.get("condor_secret");
+            if (secret != null) {
+                condor_secret = secret.getAsString();
             }
         } else {
-            condor_id = getCondorID();
+            CONDOR_ID = getCondorID();
         }
-        System.out.println("[CONDOR] Condor id is: " + condor_id);
-        if (condor_id != null) {
-            var response = Unirest.get(CONDOR_URL + "/game").header("auth", "Condor-Secreto")
-                    .header("Content-Type", "application/json").header("Accept", "application/json")
-                    .header("condor-id", condor_id).asJson();
-
-            if (response != null && response.getBody() != null) {
-                System.out.println("[CONDOR] Response is: " + response.getBody().toString());
-
-            } else {
-                System.out.println("[CONDOR] Condor not available");
-            }
-        }
-
-    }
-
-    public void loadJsonConfig() {
+        System.out.println("[CONDOR] Condor id is: " + CONDOR_ID);
+        if (CONDOR_ID != null)
+            condorConfig = CondorAPI.getGameJsonConfig(CONDOR_ID,
+                    condor_secret != null ? condor_secret : "Condor-Secreto");
 
     }
 
@@ -160,6 +151,15 @@ public class UHC extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        if(condorConfig != null){
+            var error = condorConfig.get("error");
+            if(error == null){
+                var config = CondorConfig.ofJson(condorConfig);
+                /* TODO: Use config to load required worlds with seed */
+            }else{
+                System.out.println(error);
+            }
+        }
 
         /**
          * Initialize taskChain, fastInv, and set the game stage to loading
@@ -244,8 +244,6 @@ public class UHC extends JavaPlugin {
 
     void runStartUp() {
 
-        setCondorConfig(new Gson());
-
         try {
             Scoreboard mainScoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
             mainScoreboard.getObjectives().forEach(Objective::unregister);
@@ -276,6 +274,7 @@ public class UHC extends JavaPlugin {
 
     }
 
+    @Deprecated
     private void setCondorConfig(final Gson gson) {
         var condor_id = getCondorID();
         // If ID exist, pull data from redis

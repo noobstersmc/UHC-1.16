@@ -28,7 +28,7 @@ public class CondorConfig {
             level_seed = "random";
 
         var scenariosList = new ArrayList<String>();
-        extra_data.getAsJsonArray("memberName").forEach(all -> scenariosList.add(all.getAsString()));
+        extra_data.getAsJsonArray("scenarios").forEach(all -> scenariosList.add(all.getAsString()));
 
         var scenarios = scenariosList.toArray(new String[] {});
 
