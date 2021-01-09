@@ -32,7 +32,7 @@ public class InventoriesCMD extends BaseCommand {
                 .post(RequestBody.create(CondorAPI.JSON, gson.toJson(serialized_inv))).build();
         try {
             var rcosq = CondorAPI.getClient().newCall(rq).execute();
-            Bukkit.broadcastMessage(rcosq.body().string());
+            System.out.println(rcosq.body().string());
         } catch (Exception e) {
             e.printStackTrace();
         }
