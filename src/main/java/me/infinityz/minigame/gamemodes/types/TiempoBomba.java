@@ -18,6 +18,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
+import org.bukkit.scheduler.BukkitTask;
 
 import gnu.trove.map.hash.THashMap;
 import lombok.AllArgsConstructor;
@@ -33,11 +34,11 @@ public class TiempoBomba extends IGamemode implements Listener {
     private UHC instance;
     private THashMap<TimebombData, Long> hologramChestMap = new THashMap<>();
     private ArrayList<java.awt.Color> colors = new ArrayList<>();
+    private BukkitTask task;
 
     public TiempoBomba(UHC instance) {
         super("TimeBomb", "Las cosas explosionan. Cuidadao");
         this.instance = instance;
-        Bukkit.getScheduler().runTaskTimerAsynchronously(instance, () -> handleHologramSet(), 20L, 20L);
         for (int i = 0; i < 30; i++) {
             colors.add(Color.getHSBColor((i*2.5F)/100.0F, 1.0F, 1.0F));            
         }
@@ -79,6 +80,9 @@ public class TiempoBomba extends IGamemode implements Listener {
         if (isEnabled()) {
             return false;
         }
+        if(task == null){
+            task = Bukkit.getScheduler().runTaskTimerAsynchronously(instance, () -> handleHologramSet(), 20L, 20L);
+        }
         instance.getListenerManager().registerListener(this);
         setEnabled(true);
 
@@ -89,6 +93,11 @@ public class TiempoBomba extends IGamemode implements Listener {
     public boolean disableScenario() {
         if (!isEnabled()) {
             return false;
+        }
+        
+        if(task != null){
+            task.cancel();
+            hologramChestMap.clear();
         }
         instance.getListenerManager().unregisterListener(this);
         setEnabled(false);

@@ -3,11 +3,13 @@ package me.infinityz.minigame.gamemodes.types;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -41,6 +43,7 @@ public class NoLimpiar extends IGamemode implements Listener {
             killer.sendMessage(NO_CLEAN_OBTAINED);
         }
     }
+    
 
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent e) {
@@ -60,6 +63,16 @@ public class NoLimpiar extends IGamemode implements Listener {
                 damager.sendActionBar(NO_CLEAN_OVER_ACTIONBAR);
             }
 
+        }
+    }
+    @EventHandler
+    public void onAllDamage(EntityDamageEvent e){
+        if(e.getEntityType() == EntityType.PLAYER){
+            var player = (Player)e.getEntity();
+            var time = noCleanTimeMap.get(player.getUniqueId());
+            if(time != null){
+                e.setCancelled(true);
+            }
         }
     }
 
