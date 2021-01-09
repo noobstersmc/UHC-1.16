@@ -2,7 +2,6 @@ package me.infinityz.minigame.commands;
 
 import com.google.gson.Gson;
 
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
