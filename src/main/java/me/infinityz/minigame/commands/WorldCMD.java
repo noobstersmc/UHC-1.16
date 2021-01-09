@@ -43,7 +43,7 @@ public class WorldCMD extends BaseCommand {
         Bukkit.dispatchCommand(sender, "chunky start");
 
         if (instance.getGame().isNether()) {
-            worldCreateAndLoad(sender, "NORMAL", "world_nether", Long.parseLong(UHC.getSEED()));
+            worldCreateAndLoad(sender, "NETHER", "world_nether", Long.parseLong(UHC.getSEED()));
             Bukkit.dispatchCommand(sender, "chunky world world_nether");
             Bukkit.dispatchCommand(sender, "chunky radius " + instance.getChunkManager().getBorder());
             Bukkit.dispatchCommand(sender, "chunky start");
@@ -93,16 +93,16 @@ public class WorldCMD extends BaseCommand {
             worldCreator.seed(seed);
         }
 
-        switch (type) {
-            case "NETHER": {
+        switch (type.toLowerCase()) {
+            case "nether": {
                 worldCreator.environment(Environment.NETHER);
                 break;
             }
-            case "END": {
+            case "end": {
                 worldCreator.environment(Environment.THE_END);
                 break;
             }
-            case "NORMAL": {
+            case "normal": {
                 worldCreator.environment(Environment.NORMAL);
                 break;
             }
