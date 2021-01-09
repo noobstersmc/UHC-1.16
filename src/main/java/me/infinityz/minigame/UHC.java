@@ -319,7 +319,6 @@ public class UHC extends JavaPlugin {
             it.setGameRule(GameRule.DO_WEATHER_CYCLE, false);
             it.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
             it.setGameRule(GameRule.SPECTATORS_GENERATE_CHUNKS, false);
-            it.setGameRule(GameRule.SEND_COMMAND_FEEDBACK, false);
             it.setSpawnLocation(0, it.getHighestBlockAt(0, 0).getZ() + 10, 0);
             it.getWorldBorder().setCenter(0, 0);
             it.getWorldBorder().setSize(game.getBorderSize());
