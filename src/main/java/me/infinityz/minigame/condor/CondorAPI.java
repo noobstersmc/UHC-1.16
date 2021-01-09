@@ -7,14 +7,15 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 
+import lombok.Getter;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
 public class CondorAPI {
     private static Gson gson = new Gson();
-    private static String CONDOR_URL = "http://condor.jcedeno.us:420";
-    private static OkHttpClient client = new OkHttpClient().newBuilder().connectTimeout(2, TimeUnit.SECONDS).build();
+    public static String CONDOR_URL = "http://condor.jcedeno.us:420";
+    private @Getter static OkHttpClient client = new OkHttpClient().newBuilder().connectTimeout(2, TimeUnit.SECONDS).build();
     public static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
 
     /**
@@ -67,7 +68,7 @@ public class CondorAPI {
     }
 
     /* Helper to reduce boiler plate */
-    static okhttp3.Request.Builder builder() {
+    public static okhttp3.Request.Builder builder() {
         return new Request.Builder();
     }
 
