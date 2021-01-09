@@ -102,6 +102,7 @@ public class UHC extends JavaPlugin {
     public void onLoad() {
         /* Before anything else happens, try to obtain information from condor/lair */
         String condor_secret = null;
+        CONDOR_ID = getCondorID();
 
         if (JSON_CONFIG != null) {
             var json = JSON_CONFIG.getJsonObject();
@@ -113,8 +114,6 @@ public class UHC extends JavaPlugin {
             if (secret != null) {
                 condor_secret = secret.getAsString();
             }
-        } else {
-            CONDOR_ID = getCondorID();
         }
         System.out.println("[CONDOR] Condor id is: " + CONDOR_ID);
         if (CONDOR_ID != null) {
