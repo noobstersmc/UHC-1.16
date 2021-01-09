@@ -2,14 +2,10 @@ package me.infinityz.minigame;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.file.Files;
 import java.util.Properties;
 import java.util.UUID;
-import java.util.logging.Level;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -21,6 +17,7 @@ import org.bukkit.World.Environment;
 import org.bukkit.WorldCreator;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitWorker;
@@ -190,7 +187,12 @@ public class UHC extends JavaPlugin {
          */
 
         setTaskChainFactory(BukkitTaskChainFactory.create(this));
-        FastInvManager.register(this);
+        /* Soon to be deprecated */
+        try {
+            FastInvManager.register(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         gameStage = Stage.LOADING;
         instance = this;
 
@@ -253,9 +255,46 @@ public class UHC extends JavaPlugin {
         getServer().getScheduler().getActiveWorkers().stream().filter(w -> w.getOwner() == this)
                 .map(BukkitWorker::getThread).forEach(Thread::interrupt);
         getServer().getScheduler().cancelTasks(this);
+        FastInvManager.closeAll();
+        HandlerList.unregisterAll(this);
         // gamemodeManager.getEnabledGamemodes().forEach(IGamemode::disableScenario);
         // commandManager.unregisterCommands();
         craftingManager.purgeRecipes();
+    }
+
+    public void restartSystem() {
+        Bukkit.getOnlinePlayers().forEach((p) -> p.kickPlayer("Restarting server"));
+        /*
+         * onDisable(); onEnable();
+         */
+        Bukkit.getWorlds().forEach(worlds -> {
+            if (!worlds.getName().equalsIgnoreCase("lobby")) {
+                Bukkit.unloadWorld(worlds, false);
+                try {
+                    deleteDirectory(worlds.getWorldFolder());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        var world = Bukkit.getWorlds().get(0).getWorldFolder();
+
+        try {
+            var advancement = new File(world, "advancements");
+            if (advancement.exists())
+                deleteDirectory(advancement);
+
+            var playerdata = new File(world, "playerdata");
+            if (playerdata.exists())
+                deleteDirectory(playerdata);
+
+            var stats = new File(world, "stats");
+            if (stats.exists())
+                deleteDirectory(stats);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     void runStartUp() {
@@ -300,7 +339,6 @@ public class UHC extends JavaPlugin {
                 game.setHostname(config.getHost());
                 game.setHostUUID(config.getHost_uuid());
 
-
                 var team_size = config.getTeam_size();
                 if (team_size > 1) {
                     teamManger.setTeamManagement(true);
@@ -310,7 +348,7 @@ public class UHC extends JavaPlugin {
                 for (var scenarios : config.getScenarios()) {
                     enableScenario(scenarios);
                 }
-                
+
                 var gameType = config.getGame_type();
                 if (!gameType.equalsIgnoreCase("UHC"))
                     enableScenario(gameType.replace("-", " "));
@@ -349,26 +387,6 @@ public class UHC extends JavaPlugin {
 
     public static <T> TaskChain<T> newSharedChain(String name) {
         return taskChainFactory.newSharedChain(name);
-    }
-
-    public void changeSeed(String seed) {
-        Properties properties = new Properties();
-        File propertiesFile = new File("server.properties");
-
-        try {
-            try (InputStream is = new FileInputStream(propertiesFile)) {
-                properties.load(is);
-            }
-
-            getLogger().info("Level seed has been updated!");
-            properties.setProperty("level-seed", seed);
-
-            try (OutputStream os = new FileOutputStream(propertiesFile)) {
-                properties.store(os, "Minecraft server properties");
-            }
-        } catch (IOException e) {
-            getLogger().log(Level.SEVERE, "An error occurred while updating the server properties", e);
-        }
     }
 
 }

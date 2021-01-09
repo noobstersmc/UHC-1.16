@@ -27,7 +27,6 @@ import co.aikar.commands.annotation.Flags;
 import co.aikar.commands.annotation.Optional;
 import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.annotation.Syntax;
-import co.aikar.taskchain.TaskChain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
@@ -67,17 +66,11 @@ public class UHCCommand extends BaseCommand {
         });
     }
 
-    @CommandPermission("uhc.debug")
-    @Subcommand("debug")
-    public void onC(CommandSender sender) {
-        var count = 10;
-        var chain = UHC.newChain().sync(() -> countDown(20));
-
-        while (count-- > 1) {
-            final var current = count;
-            chain.delay(20).sync(() -> countDown(current));
-        }
-        chain.delay(20).sync(TaskChain::abort).execute();
+    @CommandAlias("refresh")
+    @CommandPermission("uhc.refresh")
+    public void refreshCommands(Player sender) {
+        sender.updateCommands();
+        instance.restartSystem();
     }
 
     @Data
@@ -151,14 +144,6 @@ public class UHCCommand extends BaseCommand {
                 }
             }
         });
-    }
-
-    @Subcommand("seed")
-    @CommandPermission("uhc.admin")
-    public void onChangeSeed(CommandSender sender, @Default("") String seed) {
-        instance.changeSeed(seed);
-        sender.sendMessage("Attempting to change seed to: " + seed);
-
     }
 
     @Subcommand("autostart")
