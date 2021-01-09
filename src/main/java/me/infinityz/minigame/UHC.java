@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
-import java.util.LinkedList;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -92,6 +91,7 @@ public class UHC extends JavaPlugin {
     /* Condor Pre Boot-up code starts */
     private static JsonConfig JSON_CONFIG;
     private static String CONDOR_ID = null;
+    private @Getter static String SEED = "599751388478452208";
 
     static {
         try {
@@ -120,9 +120,11 @@ public class UHC extends JavaPlugin {
             CONDOR_ID = getCondorID();
         }
         System.out.println("[CONDOR] Condor id is: " + CONDOR_ID);
-        if (CONDOR_ID != null)
+        if (CONDOR_ID != null) {
             condorConfig = CondorAPI.getGameJsonConfig(CONDOR_ID,
                     condor_secret != null ? condor_secret : "Condor-Secreto");
+
+        }
 
     }
 
@@ -151,15 +153,37 @@ public class UHC extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        if(condorConfig != null){
+        /*
+         * Check if there's data available from condor Improve the code, looks messy.
+         */
+        if (condorConfig != null) {
             var error = condorConfig.get("error");
-            if(error == null){
+            if (error == null) {
                 var config = CondorConfig.ofJson(condorConfig);
-                /* TODO: Use config to load required worlds with seed */
-            }else{
+                var seed = config.getLevel_seed();
+                if (!seed.equalsIgnoreCase("random")) {
+                    SEED = seed;
+                }
+            } else {
                 System.out.println(error);
+                try {
+                    SEED = CondorAPI.getCondorRandomSeed();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } else {
+            try {
+                SEED = CondorAPI.getCondorRandomSeed();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
+
+        condorManager = new CondorManager(this);
+        /* TODO: Make condor send a ping as soon as the server goes online! */
+
+        new WorldCreator("world").seed(Long.parseLong(SEED)).environment(Environment.NORMAL).createWorld();
 
         /**
          * Initialize taskChain, fastInv, and set the game stage to loading
@@ -200,16 +224,19 @@ public class UHC extends JavaPlugin {
         gamemodeManager = new GamemodeManager(this);
         chatManager = new ChatManager(this);
         borderManager = new BorderManager(this);
-        condorManager = new CondorManager(this);
         /* Initiliaze the game data */
         game = new Game();
         portalListeners = new PortalListeners(this);
+
+        /* Install the config */
+        processConfig();
 
         /* Run some startup code */
         runStartUp();
 
         /* In case the server is already running and it is a reload */
         Bukkit.getOnlinePlayers().forEach(all -> Bukkit.getPluginManager().callEvent(new PlayerJoinEvent(all, "")));
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "worldload");
 
         /* Lobby stage has been reached */
         gameStage = Stage.LOBBY;
@@ -229,17 +256,6 @@ public class UHC extends JavaPlugin {
         // gamemodeManager.getEnabledGamemodes().forEach(IGamemode::disableScenario);
         // commandManager.unregisterCommands();
         craftingManager.purgeRecipes();
-    }
-
-    private void createMainWorld(Long seed) {
-        // world code
-        WorldCreator world = new WorldCreator("world");
-        world.environment(Environment.NORMAL);
-        if (seed != null)
-            world.seed(seed);
-
-        world.createWorld();
-
     }
 
     void runStartUp() {
@@ -274,49 +290,45 @@ public class UHC extends JavaPlugin {
 
     }
 
-    @Deprecated
-    private void setCondorConfig(final Gson gson) {
-        var condor_id = getCondorID();
-        // If ID exist, pull data from redis
+    void processConfig() {
+        try {
+            if (condorConfig != null) {
+                var config = CondorConfig.ofJson(condorConfig);
 
-        var scenarios_linked_list = new LinkedList<String>();
+                game.setGameID(UUID.fromString(CONDOR_ID));
 
-        if (!condor_id.isBlank()) {
-            var condor_data = getCondorManager().getJedis().get("data:" + condor_id);
-            var server_data = gson.fromJson(condor_data, JsonObject.class);
-            // Set hostname and gameID
-            var hostname = server_data.get("host").getAsString();
-            game.setHostname(hostname);
-            game.setGameID(UUID.fromString(condor_id));
-            // Set the gameType
-            scenarios_linked_list
-                    .add("scenario " + server_data.get("game_type").getAsString().replace("-", " ").toLowerCase());
-            // Process extra data
-            var uhc_extra_data = server_data.get("extra_data").getAsJsonObject();
-            uhc_extra_data.get("scenarios").getAsJsonArray()
-                    .forEach(e -> scenarios_linked_list.add("scenario " + e.getAsString()));
+                game.setHostname(config.getHost());
+                game.setHostUUID(config.getHost_uuid());
 
-            // Handle team size
-            var team_size = uhc_extra_data.get("team_size").getAsInt();
-            if (team_size > 1) {
-                getTeamManger().setTeamManagement(true);
-                getTeamManger().setTeamSize(team_size);
+
+                var team_size = config.getTeam_size();
+                if (team_size > 1) {
+                    teamManger.setTeamManagement(true);
+                    teamManger.setTeamSize(team_size);
+                }
+
+                for (var scenarios : config.getScenarios()) {
+                    enableScenario(scenarios);
+                }
+                
+                var gameType = config.getGame_type();
+                if (!gameType.equalsIgnoreCase("UHC"))
+                    enableScenario(gameType.replace("-", " "));
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        scenarios_linked_list.add("worldload");
-
-        // Execute commands
-        scenarios_linked_list.stream().forEachOrdered(e -> {
-            Bukkit.getScheduler().runTaskLater(this, () -> {
-                runCommand(e);
-            }, 10L);
-        });
-
     }
 
-    private void runCommand(String command) {
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+    private void enableScenario(String scenarioName) {
+        var scenario = gamemodeManager.getGamemodesList().stream()
+                .filter(scen -> scen.getName().equalsIgnoreCase(scenarioName.toLowerCase())).findFirst();
+        if (scenario.isPresent()) {
+            scenario.get().enableScenario();
+            System.out.println("[UHC] Enabled " + scenario.get().getName());
+        } else {
+            System.err.println("[UHC] Couldn't find scenarios named " + scenarioName);
+        }
     }
 
     void deleteDirectory(File directoryToBeDeleted) throws IOException {

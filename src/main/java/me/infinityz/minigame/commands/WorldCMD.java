@@ -10,11 +10,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
-import org.bukkit.command.CommandSender;
 import org.bukkit.WorldCreator;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import lombok.RequiredArgsConstructor;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandCompletion;
@@ -23,6 +22,7 @@ import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Optional;
 import co.aikar.commands.annotation.Subcommand;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import me.infinityz.minigame.UHC;
 import net.md_5.bungee.api.ChatColor;
 
@@ -48,13 +48,13 @@ public class WorldCMD extends BaseCommand {
         Bukkit.dispatchCommand(sender, "chunky radius " + instance.getChunkManager().getBorder());
         Bukkit.dispatchCommand(sender, "chunky start");
 
-        if(instance.getGame().isNether()){
+        if (instance.getGame().isNether()) {
             Bukkit.dispatchCommand(sender, "world load NETHER world_nether");
             Bukkit.dispatchCommand(sender, "chunky world world_nether");
             Bukkit.dispatchCommand(sender, "chunky radius " + instance.getChunkManager().getBorder());
             Bukkit.dispatchCommand(sender, "chunky start");
         }
-        if(instance.getGame().isEnd()){
+        if (instance.getGame().isEnd()) {
             Bukkit.dispatchCommand(sender, "world load END world_end");
             Bukkit.dispatchCommand(sender, "chunky world world_end");
             Bukkit.dispatchCommand(sender, "chunky radius " + instance.getChunkManager().getBorder());
@@ -69,27 +69,28 @@ public class WorldCMD extends BaseCommand {
     public void worldload(CommandSender sender) {
         Bukkit.dispatchCommand(sender, "chunky-hynix status");
     }
-    
+
     @Subcommand("unload")
     @CommandCompletion("@worlds")
     public void worldRemove(CommandSender sender, World world) {
         Bukkit.unloadWorld(world, false);
         sender.sendMessage(ChatColor.RED + "World " + world + " unloaded.");
     }
+
     @Subcommand("recycle")
-    public void recycle(CommandSender sender){
+    public void recycle(CommandSender sender) {
     }
 
     @Subcommand("load")
     public void worldCreateAndLoad(CommandSender sender, String type, String newWorld, @Optional Long seed) {
         var world = Bukkit.getWorld(newWorld);
-        if(world != null){
+        if (world != null) {
             sender.sendMessage(ChatColor.RED + "World " + newWorld + " is already created.");
             return;
-        }
+        } 
         WorldCreator worldCreator = new WorldCreator(newWorld);
 
-        if(seed == null){
+        if (seed == null) {
             var client = HttpClient.newHttpClient();
             var request = HttpRequest.newBuilder(URI.create("http://condor.jcedeno.us:420/seeds"))
                     .timeout(Duration.ofSeconds(3)).build();
@@ -97,26 +98,25 @@ public class WorldCMD extends BaseCommand {
                 var response = client.send(request, BodyHandlers.ofString());
                 worldCreator.seed(Long.parseLong(response.body()));
             } catch (Exception e) {
-                //e.printStackTrace();
             }
-        }else{
+        } else {
             worldCreator.seed(seed);
         }
-        
-        switch(type){
-            case "NETHER":{
+
+        switch (type) {
+            case "NETHER": {
                 worldCreator.environment(Environment.NETHER);
                 break;
             }
-            case "END":{
+            case "END": {
                 worldCreator.environment(Environment.THE_END);
                 break;
             }
-            case "NORMAL":{
+            case "NORMAL": {
                 worldCreator.environment(Environment.NORMAL);
                 break;
             }
-            default:{
+            default: {
                 sender.sendMessage(ChatColor.RED + "Unknown world type.");
                 return;
             }
@@ -127,7 +127,7 @@ public class WorldCMD extends BaseCommand {
         refreshWorldCMDs(world);
     }
 
-    private void refreshWorldCMDs(World world){
+    private void refreshWorldCMDs(World world) {
         world.setGameRule(GameRule.NATURAL_REGENERATION, false);
         world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
         world.setGameRule(GameRule.DO_PATROL_SPAWNING, false);
@@ -142,6 +142,5 @@ public class WorldCMD extends BaseCommand {
         world.getWorldBorder().setDamageBuffer(0.0);
         world.getWorldBorder().setDamageAmount(0.0);
     }
-
 
 }

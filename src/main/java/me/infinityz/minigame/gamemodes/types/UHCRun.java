@@ -5,7 +5,7 @@ import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.attribute.Attribute; 
+import org.bukkit.attribute.Attribute;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ExperienceOrb;
@@ -28,6 +28,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.events.GameStartedEvent;
+import me.infinityz.minigame.gamemodes.GamemodeManager;
 import me.infinityz.minigame.gamemodes.IGamemode;
 import me.infinityz.minigame.gamemodes.interfaces.ScenarioPack;
 
@@ -36,20 +37,17 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
     private UHC instance;
     private Random random = new Random();
 
-    public UHCRun(UHC instance) {
+    public UHCRun(UHC instance, GamemodeManager gamemodeManager) {
         super("UHC Run", "An accelerated UHC Experience.");
         this.instance = instance;
-        
-        Bukkit.getScheduler().runTaskLater(instance, () -> {
-            var manager = instance.getGamemodeManager();
-            gamemodes.add(manager.getScenario(Cutclean.class));
-            gamemodes.add(manager.getScenario(HasteyBoys.class));
-            gamemodes.add(manager.getScenario(Timber.class));
-            gamemodes.add(manager.getScenario(FastLeaves.class));
-            gamemodes.add(manager.getScenario(LuckyLeaves.class));
-            gamemodes.add(manager.getScenario(FastSmelting.class));
 
-        }, 10);
+        /* Add gamemodes to your scenario packs like this */
+        gamemodes.add(gamemodeManager.getScenario(Cutclean.class));
+        gamemodes.add(gamemodeManager.getScenario(HasteyBoys.class));
+        gamemodes.add(gamemodeManager.getScenario(Timber.class));
+        gamemodes.add(gamemodeManager.getScenario(FastLeaves.class));
+        gamemodes.add(gamemodeManager.getScenario(LuckyLeaves.class));
+        gamemodes.add(gamemodeManager.getScenario(FastSmelting.class));
 
     }
 
@@ -73,9 +71,9 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
     public boolean enableScenario() {
         if (isEnabled())
             return false;
-        gamemodes.forEach(scenarios -> {
-            scenarios.enableScenario();
-        });
+        for (var gm : gamemodes) {
+            gm.enableScenario();
+        }
 
         instance.getListenerManager().registerListener(this);
         setEnabled(true);
@@ -97,9 +95,10 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
         if (!isEnabled())
             return false;
 
-        gamemodes.forEach(scenarios -> {
-            scenarios.disableScenario();
-        });
+        for (var gm : gamemodes) {
+            if (gm.isEnabled())
+                gm.disableScenario();
+        }
 
         instance.getGame().setNether(true);
         instance.getGame().setPvpTime(1200);
@@ -108,7 +107,6 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
         instance.getGame().setBorderCenterTime(1800);
         instance.getGame().setBorderCenter(200);
 
-        
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "bordersize 3000");
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "game score UHC");
 
@@ -123,7 +121,7 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
         if (e.getEntity() instanceof Piglin) {
             Piglin piglin = (Piglin) e.getEntity();
             piglin.setImmuneToZombification(true);
-        } else if(e.getEntity() instanceof PiglinBrute){
+        } else if (e.getEntity() instanceof PiglinBrute) {
             PiglinBrute brute = (PiglinBrute) e.getEntity();
             brute.setImmuneToZombification(true);
         }
@@ -166,7 +164,7 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
             meta.addEnchant(Enchantment.DIG_SPEED, 3, false);
             meta.addEnchant(Enchantment.DURABILITY, 3, false);
             result.setItemMeta(meta);
-        }else if(re.equalsIgnoreCase("book")){
+        } else if (re.equalsIgnoreCase("book")) {
             result.setAmount(3);
         }
 
@@ -201,7 +199,6 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
             stack.setType(Material.SUGAR_CANE);
         }
     }
-
 
     @EventHandler
     public void onMobs(EntityDeathEvent e) {

@@ -127,7 +127,7 @@ public class GamemodeManager {
         registerGamemode(new UHCGuest(instance));
 
         // Scenarios pack
-        registerGamemode(new UHCRun(instance));
+        registerGamemode(new UHCRun(instance, this));
         registerGamemode(new MetaGame(instance));
 
         // mode

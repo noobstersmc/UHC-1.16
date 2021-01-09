@@ -59,6 +59,13 @@ public class CondorAPI {
                 .addHeader("condor_id", condorID).get().build());
     }
 
+    public static String getCondorRandomSeed() throws IOException{
+        var rq = builder().url(CONDOR_URL + "/seeds").get().build();
+        var response = client.newCall(rq).execute().body().string();
+    
+        return response;
+    }
+
     /* Helper to reduce boiler plate */
     static okhttp3.Request.Builder builder() {
         return new Request.Builder();

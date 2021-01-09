@@ -155,7 +155,7 @@ public class GlobalListener implements Listener {
     public void joinMessage(PlayerJoinEvent e) {
         var player = e.getPlayer();
         if (!player.hasPermission("group.host")
-                && player.getName().equalsIgnoreCase(instance.getGame().getHostname())) {
+                && player.getUniqueId().toString() == instance.getGame().getHostUUID().toString()) {
             player.addAttachment(instance).setPermission("group.host", true);
             player.updateCommands();
         }

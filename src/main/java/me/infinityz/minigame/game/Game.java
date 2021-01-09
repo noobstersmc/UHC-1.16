@@ -42,6 +42,7 @@ public class Game {
 
     /* Game data */
     private UUID gameID = UUID.randomUUID();
+    private UUID hostUUID;
     private long startTime;
     private int gameTime = 0;
     private boolean pvp = false;
