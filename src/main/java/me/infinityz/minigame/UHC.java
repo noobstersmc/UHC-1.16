@@ -117,7 +117,7 @@ public class UHC extends JavaPlugin {
                 condor_secret = secret.getAsString();
             }
         }
-        System.out.println("[CONDOR] Condor id is: " + CONDOR_ID);
+        System.out.println("[CONDOR] Condor id is: " + (CONDOR_ID != null ? CONDOR_ID: " NULL"));
         if (CONDOR_ID != null) {
             condorConfig = CondorAPI.getGameJsonConfig(CONDOR_ID,
                     condor_secret != null ? condor_secret : "Condor-Secreto");
@@ -125,6 +125,7 @@ public class UHC extends JavaPlugin {
         }
         try {
             if (condorConfig != null) {
+                System.out.println(condorConfig.toString());
                 condorDataConfig = CondorConfig.ofJson(condorConfig);
             }
 
