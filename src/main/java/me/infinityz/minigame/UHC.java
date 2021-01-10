@@ -87,6 +87,7 @@ public class UHC extends JavaPlugin {
     private static @Setter TaskChainFactory taskChainFactory;
 
     /* Condor Pre Boot-up code starts */
+    private @Getter CondorConfig condorDataConfig;
     private static JsonConfig JSON_CONFIG;
     private static String CONDOR_ID = null;
     private @Getter static String SEED = "599751388478452208";
@@ -122,6 +123,14 @@ public class UHC extends JavaPlugin {
                     condor_secret != null ? condor_secret : "Condor-Secreto");
 
         }
+        try {
+            if (condorConfig != null) {
+                condorDataConfig = CondorConfig.ofJson(condorConfig);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -150,32 +159,23 @@ public class UHC extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        /*
-         * Check if there's data available from condor Improve the code, looks messy.
-         */
-        if (condorConfig != null) {
-            var error = condorConfig.get("error");
-            if (error == null) {
-                var config = CondorConfig.ofJson(condorConfig);
-                var seed = config.getLevel_seed();
-                if (!seed.equalsIgnoreCase("random")) {
-                    SEED = seed;
-                }
-            } else {
-                System.out.println(error);
-                try {
+        /*Create the base world with the correct seed */
+        try {
+            if(condorDataConfig != null){
+                var level_seed = condorDataConfig.getLevel_seed();
+                if(level_seed.contains("random")){    
                     SEED = CondorAPI.getCondorRandomSeed();
-                } catch (Exception e) {
-                    e.printStackTrace();
+                }else{
+                    SEED =level_seed; 
                 }
+            }else{                
+                SEED = CondorAPI.getCondorRandomSeed(); 
             }
-        } else {
-            try {
-                SEED = CondorAPI.getCondorRandomSeed();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        System.out.println("[CONDOR] Seed will be " + SEED);
 
         condorManager = new CondorManager(this);
         /* TODO: Make condor send a ping as soon as the server goes online! */
