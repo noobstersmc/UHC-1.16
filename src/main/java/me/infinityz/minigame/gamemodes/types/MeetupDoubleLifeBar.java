@@ -12,7 +12,7 @@ public class MeetupDoubleLifeBar extends IGamemode implements Listener {
     private UHC instance;
 
     public MeetupDoubleLifeBar(UHC instance) {
-        super("MeetupDoubleLifeBar", "Meetup Double life bar.");
+        super("MeetupDoubleLifeBar", "At meetup all players alive receive an extra life bar.");
         this.instance = instance;
     }
 

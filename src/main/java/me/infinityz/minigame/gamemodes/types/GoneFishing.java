@@ -18,7 +18,7 @@ public class GoneFishing extends IGamemode implements Listener {
     ItemStack item = new ItemStack(Material.FISHING_ROD);
 
     public GoneFishing(UHC instance) {
-        super("GoneFishing", "Go fishing.");
+        super("GoneFishing", "Go fishing! players start the game with a powerful fishing rod.");
         this.instance = instance;
     }
 

@@ -33,7 +33,7 @@ public class Limits extends IGamemode implements Listener {
     private UHC instance;
 
     public Limits(UHC instance) {
-        super("Limits", "Limits the gear that any given player can use or wear.");
+        super("Limits", "Limits the gear that any given player can use or wear to level 2 and 3/4 pieces.");
         this.instance = instance;
     }
 

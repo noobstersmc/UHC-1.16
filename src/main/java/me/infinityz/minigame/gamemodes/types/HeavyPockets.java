@@ -13,7 +13,7 @@ public class HeavyPockets extends IGamemode implements Listener {
     private UHC instance;
 
     public HeavyPockets(UHC instance) {
-        super("Heavy Pockets", "Players drop netherite scrap.");
+        super("Heavy Pockets", "Players drop netherite 2 scrap.");
         this.instance = instance;
     }
 

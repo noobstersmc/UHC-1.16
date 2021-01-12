@@ -14,7 +14,7 @@ public class DoubleLifeBar extends IGamemode implements Listener {
     private UHC instance;
 
     public DoubleLifeBar(UHC instance) {
-        super("DoubleLifeBar", "Double life bar.");
+        super("DoubleLifeBar", "Players play the game with Double life bar.");
         this.instance = instance;
     }
 

@@ -14,7 +14,7 @@ public class MetaGame extends IGamemode implements ScenarioPack, Listener {
     private UHC instance;
 
     public MetaGame(UHC instance) {
-        super("MetaGame", "A modern UHC Experience.");
+        super("MetaGame", "CutClean, Timber & HasteyBoys.");
         this.instance = instance;
         Bukkit.getScheduler().runTaskLater(instance, () -> {
             var manager = instance.getGamemodeManager();

@@ -64,7 +64,7 @@ public class Moles extends IGamemode implements Listener {
     private boolean announceMoles = true;
 
     public Moles(UHC instance) {
-        super("Moles", "One member of you team is secretly plotting against you. \nFind out how it is or die.");
+        super("Moles", "One member of you team is secretly plotting against you. \nFind out who is it or die.");
         this.instance = instance;
         this.command = new MolesCommand();
         instance.getCommandManager().registerCommand(command);

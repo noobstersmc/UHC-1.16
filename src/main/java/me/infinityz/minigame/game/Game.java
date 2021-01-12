@@ -67,7 +67,7 @@ public class Game {
     private int borderSize = 3000;
     private int borderCenter = 200;
     private int borderTime = 3600;
-    private int borderCenterTime = 1500;
+    private int borderCenterTime = 1200;
     private int pvpTime = 1200;
     private int healTime = 120;
     private int DMgrace = 600;

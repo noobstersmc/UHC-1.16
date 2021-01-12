@@ -23,15 +23,15 @@ public class DamageCycle extends IGamemode implements Listener {
     private DamageCause currentDamage = DamageCause.LIGHTNING;
     private DamageCause[] DAMAGE_CAUSES = new DamageCause[] { 
         DamageCause.LAVA, 
-        DamageCause.FIRE, // FIRETICK
+        DamageCause.FIRE, 
         DamageCause.HOT_FLOOR, 
         DamageCause.FALL,
-        DamageCause.ENTITY_EXPLOSION, // entity expl
+        DamageCause.ENTITY_EXPLOSION, 
         DamageCause.SUFFOCATION,
         DamageCause.PROJECTILE, 
         DamageCause.CONTACT, 
         DamageCause.MAGIC,
-        DamageCause.ENTITY_ATTACK, // only mobs
+        DamageCause.ENTITY_ATTACK, 
         DamageCause.DROWNING,
         DamageCause.POISON,
         DamageCause.WITHER,
@@ -84,9 +84,9 @@ public class DamageCycle extends IGamemode implements Listener {
 
         var cause = e.getCause();
         var shouldDie = false;
-        if ((cause == DamageCause.FIRE_TICK || cause == DamageCause.FIRE) && currentDamage == DamageCause.FIRE) {
+        if (currentDamage == DamageCause.FIRE && (cause == DamageCause.FIRE_TICK || cause == DamageCause.FIRE)) {
             shouldDie = true;
-        } else if ((cause == DamageCause.BLOCK_EXPLOSION || cause == DamageCause.ENTITY_EXPLOSION) && currentDamage == DamageCause.ENTITY_EXPLOSION) {
+        } else if (currentDamage == DamageCause.ENTITY_EXPLOSION && (cause == DamageCause.BLOCK_EXPLOSION || cause == DamageCause.ENTITY_EXPLOSION)) {
             shouldDie = true;
         }else if(cause == currentDamage){
             shouldDie = true;

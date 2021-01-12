@@ -62,8 +62,8 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
     }
 
     @CommandPermission("uhc.config.cmd")
-    @Subcommand("tearsdropgold")
-    @CommandAlias("tearsdropgold")
+    @Subcommand("tears-drop-gold")
+    @CommandAlias("tears-drop-gold")
     public void tearsNerf(CommandSender sender, @Optional Boolean bool) {
         if (bool == null)
             bool = !instance.getGame().isTearsDropGold();
@@ -85,8 +85,8 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
     }
 
     @CommandPermission("uhc.config.cmd")
-    @Subcommand("antimining")
-    @CommandAlias("antimining")
+    @Subcommand("anti-mining")
+    @CommandAlias("anti-mining")
     public void antimining(CommandSender sender, @Optional Boolean bool) {
         if (bool == null)
             bool = !instance.getGame().isAntiMining();
@@ -113,8 +113,8 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
     }
 
     @CommandPermission("uhc.config.cmd")
-    @Subcommand("maxdisconnect")
-    @CommandAlias("maxdisconnect")
+    @Subcommand("max-disconnect")
+    @CommandAlias("max-disconnect")
     public void changeMaxDisconectTime(CommandSender sender, Integer newMaxDisconnectTime) {
         instance.getGame().setMaxDisconnectTime(newMaxDisconnectTime*60);
         sender.sendMessage(ChatColor.YELLOW + "Max Disconnect time changed to: " + newMaxDisconnectTime + " minutes.");
@@ -154,7 +154,7 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
     }
 
     @CommandPermission("uhc.config.cmd")
-    @Subcommand("applerate")
+    @Subcommand("apple-rate")
     @CommandAlias("apple-rate")
     public void changeApplerate(CommandSender sender, Double rate) {
         sender.sendMessage(ChatColor.YELLOW + 

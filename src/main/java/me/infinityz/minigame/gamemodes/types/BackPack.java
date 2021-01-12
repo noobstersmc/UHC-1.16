@@ -20,7 +20,7 @@ public class BackPack extends IGamemode implements Listener {
     private UHC instance;
 
     public BackPack(UHC instance) {
-        super("BackPack", "Teams have a shared inventory.");
+        super("BackPack", "Teams have a shared inventory using commands: /bp, /backpack, /ti, /teaminventory");
         this.instance = instance;
         instance.getCommandManager().registerCommand(new backpack());
     }

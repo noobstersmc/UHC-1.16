@@ -13,7 +13,7 @@ public class BloodHunter extends IGamemode implements Listener {
     private UHC instance;
 
     public BloodHunter(UHC instance) {
-        super("BloodHunter", "Players get 1 extra heart for each kill.");
+        super("BloodHunter", "Players get 1 extra red heart for each kill.");
         this.instance = instance;
     }
 

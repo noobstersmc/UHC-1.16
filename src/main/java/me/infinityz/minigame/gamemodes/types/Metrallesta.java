@@ -15,11 +15,11 @@ import org.bukkit.inventory.meta.CrossbowMeta;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.gamemodes.IGamemode;
 
-public class XCrossBows extends IGamemode implements Listener {
+public class Metrallesta extends IGamemode implements Listener {
     private UHC instance;
 
-    public XCrossBows(UHC instance) {
-        super("XCrossBows", "Battle Royale.");
+    public Metrallesta(UHC instance) {
+        super("Metrallesta", "CrossBows reload instantly.");
         this.instance = instance;
     }
 

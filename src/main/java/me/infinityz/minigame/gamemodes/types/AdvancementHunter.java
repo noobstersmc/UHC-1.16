@@ -16,7 +16,7 @@ public class AdvancementHunter extends IGamemode implements Listener {
     private UHC instance;
 
     public AdvancementHunter(UHC instance) {
-        super("Advancement Hunter", "You get 1 heart for each advancement.");
+        super("Advancement Hunter", "The game starts with 1 red heart, players will get 1 extra for each advancement completed.");
         this.instance = instance;
     }
 

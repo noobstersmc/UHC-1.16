@@ -11,7 +11,7 @@ public class BloodExperience extends IGamemode implements Listener {
     private UHC instance;
 
     public BloodExperience(UHC instance) {
-        super("BloodExperience", "Enchants & anvils with a pinch of damage.");
+        super("BloodExperience", "Enchants & anvils with a pinch of damage, for each level consumed the player will take half a heart of damage.");
         this.instance = instance;
     }
 

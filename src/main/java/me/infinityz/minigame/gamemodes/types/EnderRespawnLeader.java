@@ -41,7 +41,7 @@ public class EnderRespawnLeader extends IGamemode implements Listener {
     private ArrayList<Long> respawnedList = new ArrayList<>();
 
     public EnderRespawnLeader(UHC instance) {
-        super("Ender RespawnLeader", "Respawn team leader with EnderCrystal.");
+        super("Ender RespawnLeader", "Respawn your team leader with custom EnderCrystals.");
         this.instance = instance;
         this.recipe = new EnderRespawnRecipe(new NamespacedKey(instance, "respawn_crystal"), null);
     }
