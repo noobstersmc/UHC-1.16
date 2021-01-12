@@ -49,7 +49,7 @@ public class ConfigListener implements Listener {
 
     @EventHandler
     public void onItemSpawn(ItemSpawnEvent e) {
-        if(!instance.getGame().isTearsNerf()) return;
+        if(!instance.getGame().isTearsDropGold()) return;
         var stack = e.getEntity().getItemStack();
         var type = stack.getType();
         if (type == Material.GHAST_TEAR) {
@@ -195,7 +195,7 @@ public class ConfigListener implements Listener {
             e.setCancelled(true);
             e.setUseBed(Result.DENY);
             e.getBed().setType(Material.AIR);
-            e.getBed().getLocation().createExplosion(1.5f, true, true);
+            e.getBed().getLocation().createExplosion(2.0f, true, true);
         }
 
     }

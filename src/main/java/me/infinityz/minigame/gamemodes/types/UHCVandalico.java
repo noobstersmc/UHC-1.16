@@ -30,7 +30,7 @@ public class UHCVandalico extends IGamemode implements Listener {
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "config advancements true");
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "config privateGame true");
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "whitelist on");
-        instance.getGame().setTearsNerf(true);
+        instance.getGame().setTearsDropGold(true);
         instance.getGame().setAutoDestruction(false);
         instance.getGame().setDeathMatch(false);
 
@@ -48,7 +48,7 @@ public class UHCVandalico extends IGamemode implements Listener {
         instance.getGame().setAutoDestruction(true);
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "game score UHC");
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "config advancements false");
-        instance.getGame().setTearsNerf(false);
+        instance.getGame().setTearsDropGold(false);
 
         setEnabled(false);
         return true;

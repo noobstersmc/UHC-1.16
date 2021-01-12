@@ -73,7 +73,7 @@ public class GameLoop extends BukkitRunnable {
                         Bukkit.getWorlds().forEach(worlds -> {
                             worlds.setGameRule(GameRule.DO_INSOMNIA, false);
                             worlds.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
-                            worlds.setTime(400);
+                            worlds.setTime(5000);
                         });
                         Bukkit.getPluginManager().callEvent(new NetherDisabledEvent());
                         instance.getGame().setNether(false);
@@ -98,14 +98,22 @@ public class GameLoop extends BukkitRunnable {
     private void timedEvent(int time) {
 
         var game = instance.getGame();
+        //all schedules are total (moment of the match)
+        var healTime = game.getHealTime();
+        var pvpStart = game.getPvpTime();
+        var borderStart = game.getBorderTime();
+        var borderReachCenter = game.getBorderTime() + game.getBorderCenterTime();
+        var secondBorder = borderReachCenter + game.getFinalBorderGrace();
+        var deathMatch = secondBorder + game.getDMgrace();
+        var borderCenter = game.getBorderCenter();
 
-        if (time == game.getHealTime() - 300) {
+        if (time == healTime - 300) {
             // AVISO 5MIN LEFT FOR FINAL HEAL
             Bukkit.getOnlinePlayers()
                     .forEach(all -> all.playSound(all.getLocation(), Sound.BLOCK_NOTE_BLOCK_BIT, 1, 1));
             Bukkit.broadcastMessage(HAVELOCK_BLUE + "5 minutes left for Final Heal.");
         }
-        if (time == game.getHealTime()) {
+        if (time == healTime) {
             // FINAL HEAL
             Bukkit.getScheduler().runTask(instance, () -> {
                 Bukkit.getOnlinePlayers().forEach(all -> {
@@ -117,14 +125,14 @@ public class GameLoop extends BukkitRunnable {
             Bukkit.broadcastMessage(SHAMROCK_GREEN + "Final heal!");
 
         }
-        if (time == game.getPvpTime() - 300) {
+        if (time == pvpStart - 300) {
             // AVISO 5 MINS LEFT FOR PVP
             Bukkit.getOnlinePlayers()
                     .forEach(all -> all.playSound(all.getLocation(), Sound.BLOCK_NOTE_BLOCK_BIT, 1, 1));
             Bukkit.broadcastMessage(HAVELOCK_BLUE + "PvP will be enabled in 5 minutes.");
 
         }
-        if (time == game.getPvpTime()) {
+        if (time == pvpStart) {
             // PVP ON
             Bukkit.getOnlinePlayers()
                     .forEach(all -> all.playSound(all.getLocation(), Sound.BLOCK_END_PORTAL_SPAWN, 1, 1.9F));
@@ -137,7 +145,7 @@ public class GameLoop extends BukkitRunnable {
                 });
 
         }
-        if (time == game.getBorderTime()) {
+        if (time == borderStart) {
             // BORDER TIME
             Bukkit.broadcastMessage(
                     HAVELOCK_BLUE + "The border has started to move to the center of the map in the next "
@@ -155,23 +163,24 @@ public class GameLoop extends BukkitRunnable {
             }));
         }
 
-        if (time == game.getBorderCenterTime() + game.getBorderTime()) {
-            // PENULTIMO BORDE 100
+        if (time == borderReachCenter) {
+            // BORDE LLEGA AL CENTRO
             instance.getGame().setAntiMining(true);
         }
 
-        if (time == game.getBorderCenterTime() + game.getBorderTime() + game.getFinalBorderGrace()) {
-            // ULTIMO BORDE 50
+        if (secondBorder == 0) {
+            //final border disabled
+        }else if(time == secondBorder){
+            // BORDE FINAL AUTO
             Bukkit.getScheduler().runTask(instance, () -> Bukkit.getWorlds().forEach(worlds -> {
-                worlds.getWorldBorder().setSize(50, 60);
+                worlds.getWorldBorder().setSize(borderCenter/2, 60);
             }));
         }
 
-        if (time == game.getBorderCenterTime() + game.getBorderTime() + game.getFinalBorderGrace() + game.getDMgrace()
-                && !game.isHasSomeoneWon()) {
+        if (time == deathMatch && !game.isHasSomeoneWon()) {
             // DEATHMATCH
-            if (!instance.getGame().isDeathMatch())
-                return;
+            if (!instance.getGame().isDeathMatch()) return;
+
             instance.getGame().setDeathMatchDamage(true);
             Bukkit.broadcastMessage(ChatColor.of("#d40c42") + "Death Match has started.");
             Bukkit.getScheduler().runTask(instance, () -> Bukkit.getOnlinePlayers().forEach(players -> {

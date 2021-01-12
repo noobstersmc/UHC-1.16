@@ -19,6 +19,7 @@ import net.md_5.bungee.api.ChatColor;
 public class GoToHell extends IGamemode implements Listener {
     private boolean damage = false;
     private float extradamage = 0;
+    private int delay = 10;
     private UHC instance;
 
     public GoToHell(UHC instance) {
@@ -55,7 +56,7 @@ public class GoToHell extends IGamemode implements Listener {
             damage = true;
         if(e.getSecond() == instance.getGame().getBorderTime()+instance.getGame().getBorderCenterTime())
             extradamage = 6;
-        if (damage && e.getSecond() % 5 == 0) {
+        if (damage && e.getSecond() % delay == 0) {
         Bukkit.getScheduler().runTask(instance, ()->{
         
             Bukkit.getOnlinePlayers().forEach(players -> {

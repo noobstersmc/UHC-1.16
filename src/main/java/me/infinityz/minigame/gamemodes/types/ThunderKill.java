@@ -38,12 +38,13 @@ public class ThunderKill extends IGamemode implements Listener {
     @EventHandler
     public void onPlayerDeath(UHCPlayerDequalificationEvent e){
         if(!thunder){
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "weather thunder");
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "time set night");
+            Bukkit.getWorlds().forEach(worlds ->{
+                
+            });
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "execute in minecraft:world run weather thunder");
             thunder = true;
         } else{
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "weather clear");
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "time set day");
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "execute in minecraft:world run weather clear");
             thunder = false;
         }
     }

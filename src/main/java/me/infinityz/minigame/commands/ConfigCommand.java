@@ -62,36 +62,54 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
     }
 
     @CommandPermission("uhc.config.cmd")
-    @Subcommand("tearsnerf")
-    @CommandAlias("tearsnerf")
-    public void tearsNerf(CommandSender sender, Boolean bool) {
-        instance.getGame().setTearsNerf(bool);
-        sender.sendMessage("Tears Nerf has been set to " + bool);
+    @Subcommand("tearsdropgold")
+    @CommandAlias("tearsdropgold")
+    public void tearsNerf(CommandSender sender, @Optional Boolean bool) {
+        if (bool == null)
+            bool = !instance.getGame().isTearsDropGold();
+
+        instance.getGame().setTearsDropGold(bool);
+        sender.sendMessage(ChatColor.YELLOW + "Tears drop gold has been set to: " + bool);
     }
 
     @CommandPermission("uhc.config.cmd")
     @Subcommand("deathmatch")
     @CommandAlias("deathmatch")
-    public void deathmatch(CommandSender sender, Boolean bool) {
+    public void deathmatch(CommandSender sender, @Optional Boolean bool) {
+        if (bool == null)
+            bool = !instance.getGame().isDeathMatch();
+
         instance.getGame().setDeathMatch(bool);
-        instance.getGame().setDeathMatchDamage(bool);
-        sender.sendMessage("DeathMatch has been set to " + bool);
+        if(bool == false && instance.getGame().isDeathMatchDamage()) instance.getGame().setDeathMatchDamage(false);
+        sender.sendMessage(ChatColor.YELLOW + "DeathMatch has been set to: " + bool);
     }
 
     @CommandPermission("uhc.config.cmd")
     @Subcommand("antimining")
     @CommandAlias("antimining")
-    public void antimining(CommandSender sender, Boolean bool) {
+    public void antimining(CommandSender sender, @Optional Boolean bool) {
+        if (bool == null)
+            bool = !instance.getGame().isAntiMining();
+
         instance.getGame().setAntiMining(bool);
-        sender.sendMessage("AntiMining has been set to " + bool);
+        sender.sendMessage(ChatColor.YELLOW + "Anti Mining has been set to: " + bool);
     }
 
     @CommandPermission("uhc.config.cmd")
     @Subcommand("privategame")
     @CommandAlias("privategame")
-    public void gamePrivate(CommandSender sender, Boolean bool) {
+    public void gamePrivate(CommandSender sender, @Optional Boolean bool) {
+        if (bool == null)
+            bool = !instance.getGame().isPrivateGame();
+
         instance.getGame().setPrivateGame(bool);
-        sender.sendMessage("Private Game changed to " + bool);
+        if(bool){
+            Bukkit.dispatchCommand(sender, "whitelist add " + instance.getGame().getHostname());
+            Bukkit.dispatchCommand(sender, "whitelist on");
+        }else{
+            Bukkit.dispatchCommand(sender, "whitelist off");
+        }
+        sender.sendMessage(ChatColor.YELLOW + "Private Game changed to: " + bool);
     }
 
     @CommandPermission("uhc.config.cmd")
@@ -99,92 +117,47 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
     @CommandAlias("maxdisconnect")
     public void changeMaxDisconectTime(CommandSender sender, Integer newMaxDisconnectTime) {
         instance.getGame().setMaxDisconnectTime(newMaxDisconnectTime*60);
-        sender.sendMessage("Max Disconnect time changed to " + newMaxDisconnectTime + " minutes.");
+        sender.sendMessage(ChatColor.YELLOW + "Max Disconnect time changed to: " + newMaxDisconnectTime + " minutes.");
     }
 
     @CommandPermission("uhc.config.cmd")
-    @Subcommand("beds nerf")
+    @Subcommand("beds-nerf")
     @CommandAlias("beds-nerf")
-    public void changeBedsNerf(CommandSender sender, Boolean bool) {
+    public void changeBedsNerf(CommandSender sender, @Optional Boolean bool) {
+        if (bool == null)
+            bool = !instance.getGame().isBedsNerf();
+
         instance.getGame().setBedsNerf(bool);
-        sender.sendMessage("BedsNerf changed to " + bool);
+        sender.sendMessage(ChatColor.YELLOW + "Beds Nerf changed to: " + bool);
     }
 
     @CommandPermission("uhc.config.cmd")
     @Subcommand("advancements")
     @CommandAlias("advancements")
     public void announceAdvancements(CommandSender sender, Boolean bool) {
+
         Bukkit.getWorlds().forEach(it -> {
             it.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, bool);
         });
-        sender.sendMessage("Show Advancements changed to " + bool);
+        sender.sendMessage(ChatColor.YELLOW + "Show Advancements changed to: " + bool);
     }
 
     @CommandPermission("uhc.config.cmd")
-    @Subcommand("pvptime")
-    @CommandAlias("pvptime")
-    public void changePvpTime(CommandSender sender, Integer newPvpTime) {
-        instance.getGame().setPvpTime(newPvpTime * 60);
-        sender.sendMessage("Pvp time changed to " + newPvpTime + " minutes.");
-    }
-
-    @CommandPermission("uhc.config.cmd")
-    @Subcommand("healtime")
-    @CommandAlias("healtime")
-    public void changeHealTime(CommandSender sender, Integer newHealTime) {
-        instance.getGame().setHealTime(newHealTime * 60);
-        sender.sendMessage("Heal time changed to " + newHealTime + " minutes.");
-    }
-
-    @CommandPermission("uhc.config.cmd")
-    @Subcommand("bordertime")
-    @CommandAlias("bordertime")
-    public void changeBorderTime(CommandSender sender, Integer newBorderTime) {
-        instance.getGame().setBorderTime(newBorderTime * 60);
-        sender.sendMessage("Border time changed to " + newBorderTime + " minutes.");
-    }
-
-    @CommandPermission("uhc.config.cmd")
-    @Subcommand("bordercentertime")
-    @CommandAlias("bordercentertime")
-    public void changeBorderCenterTime(CommandSender sender, Integer newBorderCenterTime) {
-        instance.getGame().setBorderCenterTime(newBorderCenterTime * 60);
-        sender.sendMessage("Border center time changed to " + newBorderCenterTime + " minutes.");
-    }
-
-    @CommandPermission("uhc.config.cmd")
-    @Subcommand("bordercenter")
-    @CommandAlias("bordercenter")
-    public void changeBorderCenter(CommandSender sender, Integer newBorderCenter) {
-        instance.getGame().setBorderCenterTime(newBorderCenter);
-        sender.sendMessage("Border center changed to " + newBorderCenter + " minutes.");
-    }
-
-    @CommandPermission("uhc.config.cmd")
-    @Subcommand("bordersize")
-    @CommandAlias("bordersize")
-    public void changeBorderSize(CommandSender sender, Integer newBorderSize) {
-        instance.getGame().setBorderSize(newBorderSize);
-        sender.sendMessage("Border size changed " + newBorderSize + " blocks");
-        Bukkit.getWorlds().forEach(it -> it.getWorldBorder().setSize(newBorderSize));
-    }
-
-    @CommandPermission("uhc.config.cmd")
-    @Subcommand("strength nerf")
+    @Subcommand("strength-nerf")
     @CommandAlias("strength-nerf")
     public void changeStrengthNerf(CommandSender sender, @Optional Boolean bool) {
         if (bool == null)
             bool = !instance.getGame().isStrengthNerf();
 
         instance.getGame().setStrengthNerf(bool);
-        sender.sendMessage("Strength has been set to: " + bool);
+        sender.sendMessage(ChatColor.YELLOW + "Strength Nerf has been set to: " + bool);
     }
 
     @CommandPermission("uhc.config.cmd")
     @Subcommand("applerate")
     @CommandAlias("apple-rate")
     public void changeApplerate(CommandSender sender, Double rate) {
-        sender.sendMessage(
+        sender.sendMessage(ChatColor.YELLOW + 
                 "Applerate has been changed from " + instance.getGame().getApplerate() + "% to " + rate + "%");
         instance.getGame().setApplerate(rate);
     }
@@ -194,7 +167,7 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
     @CommandAlias("slots||setslots||maxslots")
     public void changeSlots(CommandSender sender, Integer newSlots) {
         instance.getGame().setUhcslots(newSlots);
-        sender.sendMessage("Slots set to: " + newSlots);
+        sender.sendMessage(ChatColor.YELLOW + "Slots set to: " + newSlots);
     }
 
 

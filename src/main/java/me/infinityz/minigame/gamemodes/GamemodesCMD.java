@@ -26,7 +26,7 @@ public class GamemodesCMD extends BaseCommand {
 
     }
 
-    @CommandPermission("scenarios.cmd")
+    @CommandPermission("uhc.scenarios")
     @Default
     @CommandCompletion("@scenarios")
     public void onEnable(CommandSender sender, String scenario) {

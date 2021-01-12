@@ -1,10 +1,12 @@
 package me.infinityz.minigame.portals;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.WorldCreator;
@@ -13,8 +15,11 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityPortalEnterEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 
@@ -24,6 +29,7 @@ import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Name;
 import co.aikar.commands.annotation.Subcommand;
+import gnu.trove.map.hash.THashMap;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import me.infinityz.minigame.UHC;
@@ -33,11 +39,78 @@ import net.md_5.bungee.api.ChatColor;
 public class PortalListeners extends BaseCommand implements Listener {
 
     private UHC instance;
+    private THashMap<UUID, Long> portalProtectionMap = new THashMap<>();
+    private static String PORTAL_PROT_OBTAINED = ChatColor.RED + "You have acquired 20 seconds of portal protection.";
+    private static String PORTAL_PROT_PLAYER_PROTECTED = ChatColor.RED + "You can't damage %s for the next %.1f" + "s";
+    private static String PORTAL_PROT_LOST = ChatColor.RED + "You have lost your portal protection.";
+    private static String PORTAL_PROT_OVER_ACTIONBAR = ChatColor.YELLOW + " ⚠ ";
+    private static String PORTAL_PROT_STATUS_ACTIONBAR = ChatColor.GREEN + "Portal protection: %.1f" + "s";
 
     public PortalListeners(final UHC instance) {
         this.instance = instance;
         instance.getListenerManager().registerListener(this);
         instance.getCommandManager().registerCommand(this);
+
+        Bukkit.getScheduler().runTaskTimerAsynchronously(instance, () -> {
+            var iterator = portalProtectionMap.entrySet().iterator();
+            while (iterator.hasNext()) {
+                var entry = iterator.next();
+                var player = Bukkit.getPlayer(entry.getKey());
+                var differential = entry.getValue() - System.currentTimeMillis();
+                if (differential <= 0) {
+                    iterator.remove();
+                    if (player != null && player.isOnline()) {
+                        player.sendMessage(PORTAL_PROT_LOST);
+                        player.sendActionBar(PORTAL_PROT_OVER_ACTIONBAR);
+                        player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO, 1, 0.6f);
+                    }
+                } else if (player != null && player.isOnline()) {
+                    player.sendActionBar(String.format(PORTAL_PROT_STATUS_ACTIONBAR, differential / 1000.0D));
+                }
+            }
+        }, 2L, 2L);
+
+    }
+
+    @EventHandler
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent e) {
+        if (e.getEntity() instanceof Player) {
+            var damagerFromProj = getProjectileOwner(e);
+            var damager = damagerFromProj != null ? damagerFromProj
+                    : (e.getDamager() instanceof Player ? (Player) e.getDamager() : null);
+            var time = portalProtectionMap.get(e.getEntity().getUniqueId());
+
+            if (damager != null && time != null) {
+                damager.sendMessage(String.format(PORTAL_PROT_PLAYER_PROTECTED, e.getEntity().getName(),
+                        (time - System.currentTimeMillis()) / 1000.0D));
+                e.setCancelled(true);
+            } else if (damager != null && portalProtectionMap.contains(damager.getUniqueId())) {
+                portalProtectionMap.remove(damager.getUniqueId());
+                damager.sendMessage(PORTAL_PROT_LOST);
+                damager.sendActionBar(PORTAL_PROT_OVER_ACTIONBAR);
+            }
+
+        }
+    }
+
+    @EventHandler
+    public void onAllDamage(EntityDamageEvent e) {
+        if (e.getEntityType() == EntityType.PLAYER) {
+            var player = (Player) e.getEntity();
+            var time = portalProtectionMap.get(player.getUniqueId());
+            if (time != null) {
+                e.setCancelled(true);
+            }
+        }
+    }
+
+    private Player getProjectileOwner(EntityDamageByEntityEvent e) {
+        if (e.getDamager() instanceof Projectile) {
+            var proj = (Projectile) e.getDamager();
+            if (proj.getShooter() != null && proj.getShooter() instanceof Player)
+                return (Player) proj.getShooter();
+        }
+        return null;
     }
 
     @CommandCompletion("@worlds")
@@ -151,6 +224,11 @@ public class PortalListeners extends BaseCommand implements Listener {
                         var portalShape = PortalShape.of(block.getLocation());
                         var tpLoc = portalShape.getTeleportLocation(entity);
                         entity.teleport(tpLoc);
+                        // portal protection
+                        if (entity instanceof Player) {
+                            portalProtectionMap.put(entity.getUniqueId(), System.currentTimeMillis() + 20_000);
+                            entity.sendMessage(PORTAL_PROT_OBTAINED);
+                        }
                         // Clean lava if nearby
                         replaceNearbyLava(portalShape.getBlocks()[0][0].getRelative(BlockFace.DOWN).getLocation(), 10);
                         return true;
@@ -170,6 +248,11 @@ public class PortalListeners extends BaseCommand implements Listener {
         var portal = Portal.createPortal(closest_loc != null ? closest_loc : ratioed_target);
         var tpLoc = portal.getTeleportLocation();
         entity.teleport(tpLoc);
+        // portal protection
+        if (entity instanceof Player) {
+            portalProtectionMap.put(entity.getUniqueId(), System.currentTimeMillis() + 20_000);
+            entity.sendMessage(PORTAL_PROT_OBTAINED);
+        }
         // Clean lava if nearby
 
         var lowest_block = portal.getPortal_blocks()[1][1].getRelative(BlockFace.DOWN);

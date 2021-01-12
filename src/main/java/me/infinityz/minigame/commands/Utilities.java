@@ -116,8 +116,6 @@ public @RequiredArgsConstructor class Utilities extends BaseCommand {
         }
     }
 
-    
-
     public boolean toggleGm(Player player){
         if(player.getGameMode() == GameMode.SURVIVAL){
             player.setGameMode(GameMode.SPECTATOR);

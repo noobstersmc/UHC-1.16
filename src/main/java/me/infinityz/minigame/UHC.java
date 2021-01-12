@@ -38,6 +38,7 @@ import me.infinityz.minigame.chat.ChatManager;
 import me.infinityz.minigame.chunks.ChunksManager;
 import me.infinityz.minigame.commands.ConfigCommand;
 import me.infinityz.minigame.commands.ContextConditions;
+import me.infinityz.minigame.commands.GameLoopCMD;
 import me.infinityz.minigame.commands.GameRestoreCMD;
 import me.infinityz.minigame.commands.GlobalMute;
 import me.infinityz.minigame.commands.HelpopCommand;
@@ -213,6 +214,7 @@ public class UHC extends JavaPlugin {
         commandManager.registerCommand(new ConfigCommand(this));
         commandManager.registerCommand(new GamemodesCMD(this));
         commandManager.registerCommand(new WorldCMD(this));
+        commandManager.registerCommand(new GameLoopCMD(this));
 
         commandManager.registerCommand(new InventoriesCMD());
 

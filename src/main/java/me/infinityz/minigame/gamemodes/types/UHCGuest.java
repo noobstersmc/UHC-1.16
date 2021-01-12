@@ -35,8 +35,9 @@ public class UHCGuest extends IGamemode implements Listener {
 
         instance.getListenerManager().registerListener(this);
 
-        Game.setScoreboardTitle(ChatColor.of("#E6E6FA") + "🗡 " + ChatColor.of("#77DBD6") + "" + ChatColor.BOLD
-                + "UHC Latam T2 " + ChatColor.of("#E6E6FA") + "☠");
+        Game.setScoreboardTitle(ChatColor.GOLD + "UHC " + ChatColor.of("#308242") + "" + ChatColor.BOLD
+                + "MÉ" + ChatColor.of("#ddf3e2") + "XI" + ChatColor.of("#cb1014") + "CO");
+        Game.setScoreColors(ChatColor.of("#77cb10") + "");
 
         setEnabled(true);
         return true;
@@ -47,6 +48,8 @@ public class UHCGuest extends IGamemode implements Listener {
         if (!isEnabled())
             return false;
         instance.getListenerManager().unregisterListener(this);
+
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "game score UHC");
 
         setEnabled(false);
         return true;
@@ -72,9 +75,10 @@ public class UHCGuest extends IGamemode implements Listener {
         var player = e.getScoreboard().getPlayer();
 
         var team = instance.getTeamManger().getPlayerTeam(player.getUniqueId());
-        // https://papermc.io/javadocs/paper/1.16/org/bukkit/event/inventory/PrepareItemCraftEvent.html
+
         if (team != null) {
-            list.add(ChatColor.of("#66CDAA") + "➟Equipo: ");
+            list.add(ChatColor.of("#77cb10") + "Tiempo: " + ChatColor.WHITE
+                + GameLoop.timeConvert(instance.getGame().getGameTime()));
             list.add("");
             for (var members : team.getMembers()) {
                 if (members != null
@@ -82,28 +86,22 @@ public class UHCGuest extends IGamemode implements Listener {
                     var offlinePlayer = Bukkit.getOfflinePlayer(members);
                     if (offlinePlayer.isOnline()) {
                         var onlineMember = offlinePlayer.getPlayer();
-                        var location = onlineMember.getLocation();
-                        var x = location.getBlockX();
-                        var z = location.getBlockZ();
                         if (onlineMember.getGameMode() != GameMode.SPECTATOR) {
-                            list.add(ChatColor.GREEN + onlineMember.getName() + "");
-                            list.add(String.format(
-                                    ChatColor.GRAY + "(" + ChatColor.of("#E6E6FA") + x + ", " + z + ChatColor.GRAY
-                                            + ") " + ChatColor.of("#E6E6FA") + "%.1f" + ChatColor.DARK_RED + "❤",
-                                    (double) Math.round(
-                                            (onlineMember.getHealth() + onlineMember.getAbsorptionAmount()) / 2.0D)));
+                            list.add(ChatColor.GREEN + onlineMember.getName() + String.format(
+                                ChatColor.WHITE + " %.1f" + ChatColor.DARK_RED + "❤",
+                                (double) Math.round(
+                                        (onlineMember.getHealth() + onlineMember.getAbsorptionAmount()) / 2.0D)));
 
                         } else {
-                            list.add(ChatColor.RED + "☠ " + ChatColor.STRIKETHROUGH + onlineMember.getName() + "");
+                            list.add(ChatColor.RED + "❌ " + ChatColor.STRIKETHROUGH + onlineMember.getName() + "");
                         }
                     } else {
 
                         var uhcPlayer = instance.getPlayerManager().getPlayer(members);
                         if (uhcPlayer != null && !uhcPlayer.isAlive()) {
-                            list.add(ChatColor.RED + "☠ " + ChatColor.STRIKETHROUGH + offlinePlayer.getName() + "");
+                            list.add(ChatColor.RED + "❌ " + ChatColor.STRIKETHROUGH + offlinePlayer.getName() + "");
                         } else {
-                            list.add(ChatColor.GREEN + offlinePlayer.getName() + "");
-                            list.add(ChatColor.GRAY + "" + ChatColor.ITALIC + " Offline");
+                            list.add(ChatColor.GRAY + offlinePlayer.getName() + "");
 
                         }
 
@@ -114,13 +112,11 @@ public class UHCGuest extends IGamemode implements Listener {
 
         }
         list.add("");
-        list.add(ChatColor.of("#66CDAA") + "➟Borde: " + ChatColor.of("#E6E6FA") + ((int) worldBorder.getSize() / 2));
-        list.add(ChatColor.of("#66CDAA") + "➟Jugadores: " + ChatColor.of("#E6E6FA")
+        list.add(ChatColor.of("#77cb10") + "Borde: " + ChatColor.WHITE + ((int) worldBorder.getSize() / 2));
+        list.add(ChatColor.of("#77cb10") + "Vivos: " + ChatColor.WHITE
                 + instance.getPlayerManager().getAlivePlayers());
-        list.add(ChatColor.of("#66CDAA") + "➟Tiempo: " + ChatColor.of("#E6E6FA")
-                + GameLoop.timeConvert(instance.getGame().getGameTime()));
         list.add("");
-        list.add(ChatColor.of("#E6E6FA") + "noobsters.net");
+        list.add(ChatColor.WHITE + "noobsters.net");
 
         e.setLines(list.toArray(new String[] {}));
     }

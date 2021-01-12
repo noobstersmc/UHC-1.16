@@ -50,7 +50,7 @@ public class Game {
     private boolean hasSomeoneWon = false;
     private boolean deathMatchDamage = false;
     private boolean antiMining = false;
-    private int uhcslots = 60;
+    private int uhcslots = 50;
     /* Game config */
     private boolean autoDestruction = true;
     private boolean deathMatch = true;
@@ -60,11 +60,10 @@ public class Game {
     private boolean strengthNerf = true;
     private boolean criticalNerf = true;
     private boolean bedsNerf = true;
-    private boolean anchorNerf = true;
-    private boolean tearsNerf = false;
+    private boolean tearsDropGold = false;
     private double applerate = 0.80;
     private int maxDisconnectTime = 600;
-    /* program */
+    /* Game Loop */
     private int borderSize = 3000;
     private int borderCenter = 200;
     private int borderTime = 3600;
@@ -73,6 +72,7 @@ public class Game {
     private int healTime = 120;
     private int DMgrace = 600;
     private int finalBorderGrace = 300;
+    /* UHC MEETUP */
     private int autoStart = 12;
     private boolean hasAutoStarted = false;
     /* Other */

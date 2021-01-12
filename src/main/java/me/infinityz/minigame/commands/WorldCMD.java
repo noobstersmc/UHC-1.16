@@ -49,7 +49,7 @@ public class WorldCMD extends BaseCommand {
             Bukkit.dispatchCommand(sender, "chunky start");
         }
         if (instance.getGame().isEnd()) {
-            worldCreateAndLoad(sender, "NORMAL", "world_end", Long.parseLong(UHC.getSEED()));
+            worldCreateAndLoad(sender, "END", "world_end", Long.parseLong(UHC.getSEED()));
             Bukkit.dispatchCommand(sender, "chunky world world_end");
             Bukkit.dispatchCommand(sender, "chunky radius " + instance.getChunkManager().getBorder());
             Bukkit.dispatchCommand(sender, "chunky start");

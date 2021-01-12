@@ -18,6 +18,7 @@ import me.infinityz.minigame.gamemodes.types.BloodHunter;
 import me.infinityz.minigame.gamemodes.types.BowLess;
 import me.infinityz.minigame.gamemodes.types.ColdWeapons;
 import me.infinityz.minigame.gamemodes.types.Cutclean;
+import me.infinityz.minigame.gamemodes.types.DamageCycle;
 import me.infinityz.minigame.gamemodes.types.DoubleGold;
 import me.infinityz.minigame.gamemodes.types.DoubleLifeBar;
 import me.infinityz.minigame.gamemodes.types.DoubleOres;
@@ -30,6 +31,7 @@ import me.infinityz.minigame.gamemodes.types.FlorPoderosa;
 import me.infinityz.minigame.gamemodes.types.GoToHell;
 import me.infinityz.minigame.gamemodes.types.GoldenRetreiver;
 import me.infinityz.minigame.gamemodes.types.GoneFishing;
+import me.infinityz.minigame.gamemodes.types.HasteyBabies;
 import me.infinityz.minigame.gamemodes.types.HasteyBoys;
 import me.infinityz.minigame.gamemodes.types.HasteyBoysPlus;
 import me.infinityz.minigame.gamemodes.types.HeavyPockets;
@@ -119,6 +121,8 @@ public class GamemodeManager {
         registerGamemode(new XCrossBows(instance));
         registerGamemode(new ColdWeapons(instance));
         registerGamemode(new HeavyPockets(instance));
+        registerGamemode(new HasteyBabies(instance));
+        registerGamemode(new DamageCycle(instance));
 
         //Invitados
         registerGamemode(new UHCVandalico(instance));

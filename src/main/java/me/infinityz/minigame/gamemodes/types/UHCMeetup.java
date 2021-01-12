@@ -400,7 +400,7 @@ public class UHCMeetup extends IGamemode implements Listener {
 
     public void misc(Player player) {
         final var inv = player.getInventory();
-        switch (random.nextInt(2)) {
+        switch (random.nextInt(3)) {
             case 1: {
                 inv.addItem(new ItemStack(Material.TNT, randomLevel(5)));
                 inv.addItem(new ItemStack(Material.FLINT_AND_STEEL));
@@ -440,15 +440,10 @@ public class UHCMeetup extends IGamemode implements Listener {
             }
                 break;
             case 5: {
-                special = new ItemBuilder(Material.TRIDENT).enchant(Enchantment.RIPTIDE, 2)
-                        .enchant(Enchantment.IMPALING, 2).build();
-            }
-                break;
-            case 6: {
                 special = PotionItemStack(Material.POTION, PotionType.FIRE_RESISTANCE, false, false);
             }
                 break;
-            case 7: {
+            case 6: {
                 special = PotionItemStack(Material.POTION, PotionType.SPEED, false, false);
             }
                 break;

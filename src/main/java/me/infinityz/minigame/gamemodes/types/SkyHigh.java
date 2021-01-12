@@ -21,7 +21,7 @@ public class SkyHigh extends IGamemode implements Listener {
     private boolean damage = false;
     private float extradamage = 6;
     private float exda = 0;
-    private int delay = 5;
+    private int delay = 10;
     private UHC instance;
 
     public SkyHigh(UHC instance) {

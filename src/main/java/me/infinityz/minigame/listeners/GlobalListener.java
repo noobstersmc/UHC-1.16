@@ -38,7 +38,6 @@ import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.chunks.ChunksManager;
 import me.infinityz.minigame.enums.Stage;
 import me.infinityz.minigame.events.GameStartedEvent;
-import me.infinityz.minigame.events.GameTickEvent;
 import me.infinityz.minigame.events.NetherDisabledEvent;
 import me.infinityz.minigame.events.TeleportationCompletedEvent;
 import me.infinityz.minigame.game.Game;
@@ -103,52 +102,6 @@ public class GlobalListener implements Listener {
         shooter.sendMessage(ChatColor.GOLD + "🏹 " + p.getDisplayName() + ChatColor.GRAY + " is at " + ChatColor.WHITE
                 + (((int) (p.getHealth() - e.getFinalDamage())) / 2.0D) + ChatColor.DARK_RED + "❤");
 
-    }
-
-    // DEATHMATCH
-
-    @EventHandler
-    public void onDeathMatch(GameTickEvent e) {
-        if (instance.getGame().isDeathMatch() && !instance.getGame().isHasSomeoneWon()
-                && instance.getGame().isDeathMatchDamage() && e.getSecond() % 5 == 0) {
-            Bukkit.getScheduler().runTask(instance, () -> {
-                Bukkit.getOnlinePlayers().forEach(players -> {
-                    if (players.getGameMode() == GameMode.SURVIVAL) {
-                        if (players.getHealth() > 2)
-                            players.setHealth(players.getHealth() - 2);
-                        players.damage(2);
-                    }
-                });
-            });
-        }
-
-    }
-
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void onAntiMining(GameTickEvent e) {
-        if (instance.getGame().isAntiMining()) {
-            Bukkit.getScheduler().runTask(instance, () -> {
-                Bukkit.getOnlinePlayers().forEach(players -> {
-                    if (players.getGameMode() == GameMode.SURVIVAL
-                            && players.getWorld().getEnvironment() != Environment.NETHER
-                            && players.getLocation().getY() < 55)
-                        players.sendActionBar(ChatColor.YELLOW + "⚠ You must be on surface at meetup.");
-                });
-            });
-        }
-
-    }
-
-    @EventHandler
-    public void onAntiMiningMine(BlockBreakEvent e) {
-        if (instance.getGame().isAntiMining()) {
-            var player = e.getPlayer().getLocation().getY();
-            var block = e.getBlock().getLocation().getY();
-            if (e.getPlayer().getWorld().getEnvironment() != Environment.NETHER && player < 55 && player > block) {
-                e.setCancelled(true);
-                e.getPlayer().sendMessage(ChatColor.RED + "Mining is not allowed at meetup.");
-            }
-        }
     }
 
     @EventHandler
