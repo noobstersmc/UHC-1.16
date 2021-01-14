@@ -44,18 +44,6 @@ public class Moles extends IGamemode implements Listener {
      * last team standing.
      */
 
-    /**
-     * Moles:
-     * 
-     * /moles preset AleIV pre elegir moles y que los randomize basado en los pre
-     * elegidos y en team size -1
-     * 
-     * bool moles announce teams/no se anuncian
-     * 
-     * se anuncian al morir/no se anuncian
-     * 
-     */
-
     private UHC instance;
     private @Getter THashSet<Team> molesSet = new THashSet<>();
     private @Getter THashSet<UUID> molesPredefined = new THashSet<>();
@@ -192,7 +180,7 @@ public class Moles extends IGamemode implements Listener {
     public class MolesCommand extends BaseCommand {
 
         @Subcommand("get")
-        @CommandPermission("uhc.moles.create")
+        @CommandPermission("uhc.moles")
         public void onFindMoles(CommandSender sender) {
             if (!isEnabled())
                 return;
@@ -242,7 +230,7 @@ public class Moles extends IGamemode implements Listener {
 
         @Subcommand("add moles")
         @CommandCompletion("@onlineplayers")
-        @CommandPermission("uhc.moles.add")
+        @CommandPermission("uhc.moles")
         public void addMole(CommandSender sender, @Flags("other") OfflinePlayer target) {
             if (addToMoles(target.getUniqueId())) {
                 sender.sendMessage("Added " + target.getName() + " to moles");
@@ -255,7 +243,7 @@ public class Moles extends IGamemode implements Listener {
 
         @Subcommand("remove moles")
         @CommandCompletion("@onlineplayers")
-        @CommandPermission("uhc.moles.remove")
+        @CommandPermission("uhc.moles")
         public void removeMoles(CommandSender sender, @Flags("other") OfflinePlayer target) {
             if (target != null && molesPredefined.contains(target.getUniqueId())) {
                 molesPredefined.remove(target.getUniqueId());
@@ -266,14 +254,14 @@ public class Moles extends IGamemode implements Listener {
         }
 
         @Subcommand("clear moles list")
-        @CommandPermission("uhc.moles.list")
+        @CommandPermission("uhc.moles")
         public void clearMolesList(CommandSender sender) {
             molesPredefined.clear();
             sender.sendMessage("Clear Moles list.");
         }
 
         @Subcommand("list moles list")
-        @CommandPermission("uhc.moles.listMoles")
+        @CommandPermission("uhc.moles")
         public void listMolesList(CommandSender sender) {
             sender.sendMessage("Moles in list: ");
             molesPredefined.forEach(all -> {
@@ -290,7 +278,7 @@ public class Moles extends IGamemode implements Listener {
         }
 
         @CommandAlias("choose")
-        @CommandPermission("uhc.moles.choose")
+        @CommandPermission("uhc.moles")
         public void chooseFromList(CommandSender sender) {
             var possibleMoles = getMolesPredefined();
             var size = instance.getTeamManger().getTeamSize() - 1;
@@ -343,7 +331,7 @@ public class Moles extends IGamemode implements Listener {
 
         @Subcommand("win")
         @CommandAlias("win")
-        @CommandPermission("uhc.moles.win")
+        @CommandPermission("uhc.moles")
         public void winCommand(CommandSender sender, @Flags("other") OfflinePlayer target, String customMessage) {
             var mole = isMole(target.getUniqueId());
             var team = instance.getTeamManger().getPlayerTeam(target.getUniqueId());
@@ -361,7 +349,7 @@ public class Moles extends IGamemode implements Listener {
         @Subcommand("tl|check")
         @CommandAlias("mtl")
         @CommandCompletion("@uhcPlayers")
-        @CommandPermission("uhc.moles.check")
+        @CommandPermission("uhc.moles")
         public void moleCheck(CommandSender sender, @Flags("other") OfflinePlayer target) {
             if (!isEnabled())
                 return;
@@ -387,7 +375,7 @@ public class Moles extends IGamemode implements Listener {
         }
 
         @CommandAlias("announce")
-        @CommandPermission("uhc.moles.announce")
+        @CommandPermission("uhc.moles")
         public void onCommand(CommandSender sender, @Optional Boolean bool) {
             if (bool != null) {
                 announceMoles = bool;
@@ -416,7 +404,7 @@ public class Moles extends IGamemode implements Listener {
         }
 
         @Subcommand("listall")
-        @CommandPermission("uhc.moles.listall")
+        @CommandPermission("uhc.moles")
         public void moleListall(Player player) {
             player.sendMessage("The moles are: ");
             molesSet.forEach(all -> {

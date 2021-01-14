@@ -2,6 +2,7 @@ package me.infinityz.minigame.commands;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
@@ -17,6 +18,8 @@ import co.aikar.commands.annotation.Syntax;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import me.infinityz.minigame.UHC;
+import me.infinityz.minigame.chunks.ChunksManager;
+import me.infinityz.minigame.game.features.Capsule;
 import net.md_5.bungee.api.ChatColor;
 
 /**
@@ -126,6 +129,23 @@ public @RequiredArgsConstructor class Utilities extends BaseCommand {
             return false;
         }
         return false;
+    }
+
+    @CommandPermission("test.cmd")
+    @CommandCompletion("@onlineplayers")
+    @Subcommand("test")
+    @CommandAlias("test")
+    public void testCMD(Player sender) {
+        var world = Bukkit.getWorld("world");
+        var worldBorderSizeHaved = (int) world.getWorldBorder().getSize() / 2;
+        var location = ChunksManager.findScatterLocation(world, worldBorderSizeHaved).add(0, 5, 0);
+        Capsule capsula = new Capsule(location);
+        capsula.create(Material.SMOOTH_STONE, Material.LODESTONE, Material.LIGHT_GRAY_STAINED_GLASS_PANE, Material.SMOOTH_STONE_SLAB);
+        sender.teleport(capsula.getLocation());
+        Bukkit.getScheduler().runTaskLater(instance, ()->{
+            capsula.destroy();
+        }, 20*10);
+
     }
 
 }

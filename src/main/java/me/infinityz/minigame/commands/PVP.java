@@ -1,5 +1,6 @@
 package me.infinityz.minigame.commands;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
 import co.aikar.commands.BaseCommand;
@@ -28,7 +29,7 @@ public class PVP extends BaseCommand {
             instance.getGame().setPvp(!instance.getGame().isPvp());
         }
 
-        sender.sendMessage(ChatColor.of("#DABC12") + "PvP has been set to " + instance.getGame().isPvp());
+        Bukkit.broadcastMessage(ChatColor.YELLOW + "PvP has been set to " + instance.getGame().isPvp());
     }
 
 }

@@ -35,8 +35,10 @@ public class UHCGuest extends IGamemode implements Listener {
 
         instance.getListenerManager().registerListener(this);
 
-        Game.setScoreboardTitle(ChatColor.GOLD + "UHC " + ChatColor.of("#308242") + "" + ChatColor.BOLD
-                + "MÉ" + ChatColor.of("#ddf3e2") + "XI" + ChatColor.of("#cb1014") + "CO");
+        String title = ChatColor.GOLD + "" + ChatColor.BOLD + "UHC " + ChatColor.of("#308242") + "" + ChatColor.BOLD
+        + "MÉ" + ChatColor.of("#ddf3e2") + "" + ChatColor.BOLD + "XI" + ChatColor.of("#cb1014") + "" + ChatColor.BOLD + "CO";
+
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "game title " + title);
         Game.setScoreColors(ChatColor.of("#77cb10") + "");
 
         setEnabled(true);
@@ -101,7 +103,7 @@ public class UHCGuest extends IGamemode implements Listener {
                         if (uhcPlayer != null && !uhcPlayer.isAlive()) {
                             list.add(ChatColor.RED + "❌ " + ChatColor.STRIKETHROUGH + offlinePlayer.getName() + "");
                         } else {
-                            list.add(ChatColor.GRAY + offlinePlayer.getName() + "");
+                            list.add(ChatColor.GRAY + "⌛ " + offlinePlayer.getName() + "");
 
                         }
 

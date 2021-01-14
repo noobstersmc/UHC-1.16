@@ -69,7 +69,8 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
             bool = !instance.getGame().isTearsDropGold();
 
         instance.getGame().setTearsDropGold(bool);
-        sender.sendMessage(ChatColor.YELLOW + "Tears drop gold has been set to: " + bool);
+        var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
+        Bukkit.broadcast(senderName + ChatColor.YELLOW + "Tears drop gold has been set to: " + bool, "uhc.configchanges.see");
     }
 
     @CommandPermission("uhc.config.cmd")
@@ -81,7 +82,8 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
 
         instance.getGame().setDeathMatch(bool);
         if(bool == false && instance.getGame().isDeathMatchDamage()) instance.getGame().setDeathMatchDamage(false);
-        sender.sendMessage(ChatColor.YELLOW + "DeathMatch has been set to: " + bool);
+        var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
+        Bukkit.broadcast(senderName + ChatColor.YELLOW + "DeathMatch has been set to: " + bool, "uhc.configchanges.see");
     }
 
     @CommandPermission("uhc.config.cmd")
@@ -92,7 +94,8 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
             bool = !instance.getGame().isAntiMining();
 
         instance.getGame().setAntiMining(bool);
-        sender.sendMessage(ChatColor.YELLOW + "Anti Mining has been set to: " + bool);
+        var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
+        Bukkit.broadcast(senderName + ChatColor.YELLOW + "Anti Mining has been set to: " + bool, "uhc.configchanges.see");
     }
 
     @CommandPermission("uhc.config.cmd")
@@ -109,7 +112,8 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
         }else{
             Bukkit.dispatchCommand(sender, "whitelist off");
         }
-        sender.sendMessage(ChatColor.YELLOW + "Private Game changed to: " + bool);
+        var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
+        Bukkit.broadcast(senderName + ChatColor.YELLOW + "Private Game changed to: " + bool, "uhc.configchanges.see");
     }
 
     @CommandPermission("uhc.config.cmd")
@@ -117,7 +121,8 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
     @CommandAlias("max-disconnect")
     public void changeMaxDisconectTime(CommandSender sender, Integer newMaxDisconnectTime) {
         instance.getGame().setMaxDisconnectTime(newMaxDisconnectTime*60);
-        sender.sendMessage(ChatColor.YELLOW + "Max Disconnect time changed to: " + newMaxDisconnectTime + " minutes.");
+        var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
+        Bukkit.broadcast(senderName + ChatColor.YELLOW + "Max Disconnect time changed to: " + newMaxDisconnectTime + " minutes.", "uhc.configchanges.see");
     }
 
     @CommandPermission("uhc.config.cmd")
@@ -128,18 +133,25 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
             bool = !instance.getGame().isBedsNerf();
 
         instance.getGame().setBedsNerf(bool);
-        sender.sendMessage(ChatColor.YELLOW + "Beds Nerf changed to: " + bool);
+        var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
+        Bukkit.broadcast(senderName + ChatColor.YELLOW + "Beds Nerf changed to: " + bool, "uhc.configchanges.see");
     }
 
     @CommandPermission("uhc.config.cmd")
     @Subcommand("advancements")
     @CommandAlias("advancements")
-    public void announceAdvancements(CommandSender sender, Boolean bool) {
+    public void announceAdvancements(CommandSender sender, @Optional Boolean bool) {
+        var game = instance.getGame();
+        if (bool == null)
+            bool = !game.isAdvancements();
+        game.setAdvancements(bool);
 
         Bukkit.getWorlds().forEach(it -> {
-            it.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, bool);
+            it.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, game.isAdvancements());
         });
-        sender.sendMessage(ChatColor.YELLOW + "Show Advancements changed to: " + bool);
+        
+        var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
+        Bukkit.broadcast(senderName + ChatColor.YELLOW + "Show Advancements changed to: " + bool, "uhc.configchanges.see");
     }
 
     @CommandPermission("uhc.config.cmd")
@@ -150,15 +162,17 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
             bool = !instance.getGame().isStrengthNerf();
 
         instance.getGame().setStrengthNerf(bool);
-        sender.sendMessage(ChatColor.YELLOW + "Strength Nerf has been set to: " + bool);
+        var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
+        Bukkit.broadcast(senderName + ChatColor.YELLOW + "Strength Nerf has been set to: " + bool, "uhc.configchanges.see");
     }
 
     @CommandPermission("uhc.config.cmd")
     @Subcommand("apple-rate")
     @CommandAlias("apple-rate")
     public void changeApplerate(CommandSender sender, Double rate) {
-        sender.sendMessage(ChatColor.YELLOW + 
-                "Applerate has been changed from " + instance.getGame().getApplerate() + "% to " + rate + "%");
+        var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
+        Bukkit.broadcast(senderName + ChatColor.YELLOW + 
+                "Applerate has been changed from " + instance.getGame().getApplerate() + "% to " + rate + "%", "uhc.configchanges.see");
         instance.getGame().setApplerate(rate);
     }
 
@@ -167,7 +181,8 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
     @CommandAlias("slots||setslots||maxslots")
     public void changeSlots(CommandSender sender, Integer newSlots) {
         instance.getGame().setUhcslots(newSlots);
-        sender.sendMessage(ChatColor.YELLOW + "Slots set to: " + newSlots);
+        var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
+        Bukkit.broadcast(senderName + ChatColor.YELLOW + "Slots set to: " + newSlots, "uhc.configchanges.see");
     }
 
 

@@ -42,7 +42,7 @@ public class GoneFishing extends IGamemode implements Listener {
 
     @EventHandler
     public void onStart(GameStartedEvent e) {
-        var item = new ItemBuilder(Material.FISHING_ROD).enchant(Enchantment.LURE, 666).enchant(Enchantment.LUCK, 666).enchant(Enchantment.VANISHING_CURSE).build();
+        var item = new ItemBuilder(Material.FISHING_ROD).enchant(Enchantment.LURE, 3).enchant(Enchantment.LUCK, 3).enchant(Enchantment.DURABILITY, 3).enchant(Enchantment.VANISHING_CURSE).build();
         Bukkit.getOnlinePlayers().forEach(players -> {
             players.getInventory().addItem(item);
         });
@@ -50,7 +50,7 @@ public class GoneFishing extends IGamemode implements Listener {
 
     @EventHandler
     public void onPlayerJoinLate(PlayerJoinedLateEvent e){
-        var item = new ItemBuilder(Material.FISHING_ROD).enchant(Enchantment.LURE, 666).enchant(Enchantment.LUCK, 666).enchant(Enchantment.VANISHING_CURSE).build();
+        var item = new ItemBuilder(Material.FISHING_ROD).enchant(Enchantment.LURE, 3).enchant(Enchantment.LUCK, 3).enchant(Enchantment.DURABILITY, 3).enchant(Enchantment.VANISHING_CURSE).build();
         e.getPlayer().getInventory().addItem(item);
     }
 

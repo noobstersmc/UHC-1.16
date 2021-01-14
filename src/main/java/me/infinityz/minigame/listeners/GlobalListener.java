@@ -213,7 +213,8 @@ public class GlobalListener implements Listener {
         final var item = player.getInventory().getItemInMainHand().getType();
 
         if (item.equals(Material.FLINT_AND_STEEL) || item.equals(Material.LAVA_BUCKET)
-                || item.equals(Material.FIRE_CHARGE) || item.equals(Material.TNT_MINECART)) {
+                || item.equals(Material.FIRE_CHARGE) || item.equals(Material.TNT_MINECART)
+                || item.equals(Material.ENDER_PEARL)) {
 
             var players = e.getPlayer().getLocation().getNearbyPlayers(5, p -> !excludePlayers(player, p)
                     && p.getUniqueId() != player.getUniqueId() && p.getGameMode() == GameMode.SURVIVAL);

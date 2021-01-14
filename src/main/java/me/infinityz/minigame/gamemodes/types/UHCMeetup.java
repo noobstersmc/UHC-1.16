@@ -1,5 +1,6 @@
 package me.infinityz.minigame.gamemodes.types;
 
+import java.util.HashMap;
 import java.util.Random;
 
 import com.destroystokyo.paper.event.player.PlayerAdvancementCriterionGrantEvent;
@@ -39,11 +40,13 @@ import co.aikar.commands.annotation.Subcommand;
 import fr.mrmicky.fastinv.ItemBuilder;
 import lombok.Getter;
 import me.infinityz.minigame.UHC;
+import me.infinityz.minigame.chunks.ChunksManager;
 import me.infinityz.minigame.enums.Stage;
 import me.infinityz.minigame.events.GameStartedEvent;
 import me.infinityz.minigame.events.PlayerJoinedLateEvent;
 import me.infinityz.minigame.events.ScoreboardUpdateEvent;
 import me.infinityz.minigame.game.Game;
+import me.infinityz.minigame.game.features.Capsule;
 import me.infinityz.minigame.gamemodes.IGamemode;
 import me.infinityz.minigame.tasks.GameLoop;
 import net.md_5.bungee.api.ChatColor;
@@ -51,6 +54,8 @@ import net.md_5.bungee.api.ChatColor;
 public class UHCMeetup extends IGamemode implements Listener {
     private UHC instance;
     private Random random = new Random();
+    private Integer meetupSlots = 32;
+    private HashMap<String, Capsule> capsules = new HashMap<>();
     private WorldBorder worldBorder;
     private final ItemStack lapis = new ItemBuilder(Material.LAPIS_LAZULI).amount(64).build();
     private @Getter BukkitTask waitingForPlayers;
@@ -78,18 +83,28 @@ public class UHCMeetup extends IGamemode implements Listener {
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "game title " + newTittle);
         Game.setScoreColors(ChatColor.of("#2cc36b") + "");
 
-        instance.getGame().setNether(false);
-        instance.getGame().setHealTime(-1);
-        instance.getGame().setPvpTime(15);
-        instance.getGame().setBorderTime(360);
-        instance.getGame().setFinalBorderGrace(120);
-        instance.getGame().setBorderCenterTime(120);
-        instance.getGame().setBorderCenter(200);
-        instance.getGame().setDMgrace(300);
-        instance.getGame().setAntiMining(true);
-        instance.getGame().setUhcslots(32);
+        var game = instance.getGame();
+        game.setNether(false);
+        game.setHealTime(-1);
+        game.setPvpTime(15);
+        game.setBorderTime(360);
+        game.setFinalBorderGrace(120);
+        game.setBorderCenterTime(120);
+        game.setBorderCenter(200);
+        game.setDMgrace(300);
+        game.setAntiMining(true);
+        game.setUhcslots(meetupSlots);
 
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "bordersize 300");
+
+        for (int cap = 0; cap < meetupSlots; cap++) {
+            var world = Bukkit.getWorld("world");
+            var worldBorderSizeHaved = (int) world.getWorldBorder().getSize() / 2;
+            var location = ChunksManager.findScatterLocation(world, worldBorderSizeHaved).add(0, 6, 0);
+            Capsule capsule = new Capsule(location);
+            capsules.put(cap + "", capsule);
+
+        }
 
         waitingForPlayers = Bukkit.getScheduler().runTaskTimerAsynchronously(instance, () -> {
             Bukkit.getOnlinePlayers().forEach(players -> {
@@ -108,14 +123,15 @@ public class UHCMeetup extends IGamemode implements Listener {
             return false;
         instance.getListenerManager().unregisterListener(this);
 
-        instance.getGame().setNether(true);
-        instance.getGame().setPvpTime(1200);
-        instance.getGame().setBorderTime(3600);
-        instance.getGame().setFinalBorderGrace(300);
-        instance.getGame().setBorderCenterTime(1800);
-        instance.getGame().setBorderCenter(200);
-        instance.getGame().setDMgrace(600);
-        instance.getGame().setAntiMining(false);
+        var game = instance.getGame();
+        game.setNether(true);
+        game.setPvpTime(1200);
+        game.setBorderTime(3600);
+        game.setFinalBorderGrace(300);
+        game.setBorderCenterTime(1800);
+        game.setBorderCenter(200);
+        game.setDMgrace(600);
+        game.setAntiMining(false);
 
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "bordersize 3000");
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "game score UHC");
@@ -186,10 +202,59 @@ public class UHCMeetup extends IGamemode implements Listener {
     }
 
     @EventHandler
+    public void onQuit(PlayerQuitEvent e){
+        var uuid = e.getPlayer().getUniqueId().toString();
+        
+        if(capsules.containsKey(uuid)){
+            var capsule = capsules.get(uuid);
+            capsule.setInUse(false);
+        }
+    }
+
+    @EventHandler
     public void onJoin(PlayerJoinEvent e) {
 
         if (!instance.getGameStage().equals(Stage.LOBBY))
             return;
+        var player = e.getPlayer();
+        var uuid = player.getUniqueId().toString();
+        if (capsules.containsKey(uuid)) {
+            var capsule = capsules.get(uuid);
+            capsule.setInUse(true);
+            player.teleport(capsule.getLocation());
+        } else {
+            var neededCap = capsules.values().stream().filter(Capsule::notUsedAndNotCreated).findFirst();
+
+            var capsule = neededCap.isPresent() ? neededCap.get() : null;
+            if (capsule == null) {
+                neededCap = capsules.values().stream().filter(Capsule::notUsed).findFirst();
+                capsule = neededCap.isPresent() ? neededCap.get() : null;
+                if(capsule ==null){
+                    var world = Bukkit.getWorld("world");
+                    var worldBorderSizeHaved = (int) world.getWorldBorder().getSize() / 2;
+                    var location = ChunksManager.findScatterLocation(world, worldBorderSizeHaved).add(0, 6, 0);
+                    capsule = new Capsule(location);
+                }
+            }
+
+            capsules.put(uuid, capsule);
+
+            if (player.hasPermission("capsule.plus")) {
+                capsule.create(Material.EMERALD_BLOCK, Material.SMOOTH_QUARTZ, Material.LIME_STAINED_GLASS_PANE,
+                        Material.SMOOTH_QUARTZ_SLAB);
+            } else if (player.hasPermission("capsule.mvp")) {
+                capsule.create(Material.DIAMOND_BLOCK, Material.PRISMARINE_BRICKS,
+                        Material.LIGHT_BLUE_STAINED_GLASS_PANE, Material.PRISMARINE_BRICK_SLAB);
+            } else if (player.hasPermission("capsule.vip")) {
+                capsule.create(Material.GOLD_BLOCK, Material.CHISELED_SANDSTONE, Material.ORANGE_STAINED_GLASS_PANE,
+                        Material.CUT_SANDSTONE_SLAB);
+            } else {
+                capsule.create(Material.SMOOTH_STONE, Material.LODESTONE, Material.LIGHT_GRAY_STAINED_GLASS_PANE,
+                        Material.SMOOTH_STONE_SLAB);
+            }
+
+            player.teleport(capsule.getLocation());
+        }
 
         if (!instance.getGame().isHasAutoStarted()
                 && (instance.getGame().getAutoStart() - Bukkit.getOnlinePlayers().size()) == 1) {
@@ -247,6 +312,10 @@ public class UHCMeetup extends IGamemode implements Listener {
             equip(players);
             players.sendMessage(ChatColor.of("#c3752c") + "Use /reroll to reload your kit!");
         });
+
+        for (var cap : capsules.values()) {
+            cap.destroy();
+        }
 
     }
 
@@ -306,7 +375,7 @@ public class UHCMeetup extends IGamemode implements Listener {
     }
 
     @EventHandler
-    public void onQuit(PlayerQuitEvent e) {
+    public void onQuitDamage(PlayerQuitEvent e) {
         final var player = e.getPlayer();
         if (player.getLastDamageCause() instanceof EntityDamageByEntityEvent) {
             var lastDamage = (EntityDamageByEntityEvent) player.getLastDamageCause();

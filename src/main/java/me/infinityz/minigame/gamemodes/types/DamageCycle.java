@@ -21,23 +21,10 @@ public class DamageCycle extends IGamemode implements Listener {
     private UHC instance;
     private Random random = new Random();
     private DamageCause currentDamage = DamageCause.LIGHTNING;
-    private DamageCause[] DAMAGE_CAUSES = new DamageCause[] { 
-        DamageCause.LAVA, 
-        DamageCause.FIRE, 
-        DamageCause.HOT_FLOOR, 
-        DamageCause.FALL,
-        DamageCause.ENTITY_EXPLOSION, 
-        DamageCause.SUFFOCATION,
-        DamageCause.PROJECTILE, 
-        DamageCause.CONTACT, 
-        DamageCause.MAGIC,
-        DamageCause.ENTITY_ATTACK, 
-        DamageCause.DROWNING,
-        DamageCause.POISON,
-        DamageCause.WITHER,
-        DamageCause.STARVATION, 
-        DamageCause.THORNS 
-    };
+    private DamageCause[] DAMAGE_CAUSES = new DamageCause[] { DamageCause.LAVA, DamageCause.FIRE, DamageCause.HOT_FLOOR,
+            DamageCause.FALL, DamageCause.ENTITY_EXPLOSION, DamageCause.SUFFOCATION, DamageCause.PROJECTILE,
+            DamageCause.CONTACT, DamageCause.MAGIC, DamageCause.ENTITY_ATTACK, DamageCause.DROWNING, DamageCause.POISON,
+            DamageCause.WITHER, DamageCause.STARVATION, DamageCause.THORNS };
 
     public DamageCycle(UHC instance) {
         super("Damage Cycle",
@@ -83,37 +70,41 @@ public class DamageCycle extends IGamemode implements Listener {
     public void onDamage(EntityDamageEvent e) {
 
         var cause = e.getCause();
-        var shouldDie = false;
-        if (currentDamage == DamageCause.FIRE && (cause == DamageCause.FIRE_TICK || cause == DamageCause.FIRE)) {
-            shouldDie = true;
-        } else if (currentDamage == DamageCause.ENTITY_EXPLOSION && (cause == DamageCause.BLOCK_EXPLOSION || cause == DamageCause.ENTITY_EXPLOSION)) {
-            shouldDie = true;
-        }else if(cause == currentDamage){
-            shouldDie = true;
-        }
-        if(cause == DamageCause.ENTITY_ATTACK)
-            shouldDie = false;
-        
-        if(shouldDie){
+
+        if (currentDamage == DamageCause.ENTITY_ATTACK)
+            return;
+
+        if ((currentDamage == DamageCause.FIRE && (cause == DamageCause.FIRE_TICK || cause == DamageCause.FIRE))
+                || (currentDamage == DamageCause.ENTITY_EXPLOSION
+                        && (cause == DamageCause.BLOCK_EXPLOSION || cause == DamageCause.ENTITY_EXPLOSION))
+                || (cause == currentDamage)) {
+
             e.setDamage(1000);
-            Bukkit.broadcastMessage(ChatColor.of("#e00b87") + "DAMAGE CYCLE! BUAJAJA!");
+            if (!(e.getEntity() instanceof Player))
+                return;
+            Bukkit.broadcastMessage(ChatColor.of("#e00b87") + "DAMAGE CYCLE! BUAHAHA!");
             Bukkit.getOnlinePlayers().forEach(players -> {
-            players.playSound(players.getLocation(), Sound.ENTITY_RAVAGER_CELEBRATE, 1, 0.1f);
+                players.playSound(players.getLocation(), Sound.ENTITY_RAVAGER_CELEBRATE, 1, 0.1f);
             });
+
         }
 
     }
 
     @EventHandler
-    public void onDamageEntity(EntityDamageByEntityEvent e){
-            var entity = e.getEntity();
-            if(entity instanceof Player) return;
-            if(entity instanceof Projectile) return;
-        if(currentDamage == DamageCause.ENTITY_ATTACK){
+    public void onDamageEntity(EntityDamageByEntityEvent e) {
+        var entity = e.getEntity();
+        if (entity instanceof Player)
+            return;
+        if (entity instanceof Projectile)
+            return;
+        if (currentDamage == DamageCause.ENTITY_ATTACK) {
             e.setDamage(1000);
-            Bukkit.broadcastMessage(ChatColor.of("#e00b87") + "DAMAGE CYCLE! BUAJAJA!");
+            if (!(e.getEntity() instanceof Player))
+                return;
+            Bukkit.broadcastMessage(ChatColor.of("#e00b87") + "DAMAGE CYCLE! BUAHAHA!");
             Bukkit.getOnlinePlayers().forEach(players -> {
-            players.playSound(players.getLocation(), Sound.ENTITY_RAVAGER_CELEBRATE, 1, 0.1f);
+                players.playSound(players.getLocation(), Sound.ENTITY_RAVAGER_CELEBRATE, 1, 0.1f);
             });
         }
     }

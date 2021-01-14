@@ -1,8 +1,7 @@
 package me.infinityz.minigame.gamemodes.types;
 
 import org.bukkit.attribute.Attribute;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
@@ -35,10 +34,9 @@ public class BloodHunter extends IGamemode implements Listener {
         return true;
     }
 
-    @EventHandler(priority = EventPriority.LOW)
     public void onKill(PlayerDeathEvent e) {
         var killer = e.getEntity().getKiller();
-        if (killer != null) {
+        if (killer != null && killer instanceof Player) {
             killer.getAttribute(Attribute.GENERIC_MAX_HEALTH)
                     .setBaseValue(killer.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue() + 2);
         }

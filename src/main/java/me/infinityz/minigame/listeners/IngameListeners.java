@@ -113,9 +113,8 @@ public class IngameListeners implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
-        var lobby = Bukkit.getWorld("lobby");
         var player = e.getPlayer();
-        if (player.getWorld() == lobby) {
+        if (player.getWorld() == Bukkit.getWorld("lobby")) {
             player.teleport(Bukkit.getWorld("world").getSpawnLocation());
         }
 

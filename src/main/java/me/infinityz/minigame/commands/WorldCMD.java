@@ -18,6 +18,7 @@ import co.aikar.commands.annotation.Subcommand;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import me.infinityz.minigame.UHC;
+import me.infinityz.minigame.gamemodes.types.UHCMeetup;
 import net.md_5.bungee.api.ChatColor;
 
 @RequiredArgsConstructor
@@ -121,10 +122,11 @@ public class WorldCMD extends BaseCommand {
         world.setGameRule(GameRule.NATURAL_REGENERATION, false);
         world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
         world.setGameRule(GameRule.DO_PATROL_SPAWNING, false);
-        world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
+        world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, instance.getGame().isAdvancements());
         world.setGameRule(GameRule.DO_WEATHER_CYCLE, false);
         world.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
         world.setGameRule(GameRule.SPECTATORS_GENERATE_CHUNKS, false);
+        world.setGameRule(GameRule.DO_MOB_SPAWNING, !instance.getGamemodeManager().isScenarioEnable(UHCMeetup.class));
         world.setSpawnLocation(0, world.getHighestBlockAt(0, 0).getZ() + 10, 0);
         world.getWorldBorder().setCenter(0, 0);
         world.getWorldBorder().setSize(instance.getGame().getBorderSize());

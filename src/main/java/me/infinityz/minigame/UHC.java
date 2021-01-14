@@ -18,7 +18,6 @@ import org.bukkit.WorldCreator;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.event.HandlerList;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitWorker;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -58,6 +57,7 @@ import me.infinityz.minigame.enums.Stage;
 import me.infinityz.minigame.game.Game;
 import me.infinityz.minigame.gamemodes.GamemodeManager;
 import me.infinityz.minigame.gamemodes.GamemodesCMD;
+import me.infinityz.minigame.gamemodes.types.UHCMeetup;
 import me.infinityz.minigame.listeners.ListenerManager;
 import me.infinityz.minigame.players.PlayerManager;
 import me.infinityz.minigame.portals.PortalListeners;
@@ -242,7 +242,6 @@ public class UHC extends JavaPlugin {
         runStartUp();
 
         /* In case the server is already running and it is a reload */
-        Bukkit.getOnlinePlayers().forEach(all -> Bukkit.getPluginManager().callEvent(new PlayerJoinEvent(all, "")));
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "worldload");
 
         /* Lobby stage has been reached */
@@ -320,10 +319,11 @@ public class UHC extends JavaPlugin {
             it.setGameRule(GameRule.NATURAL_REGENERATION, false);
             it.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
             it.setGameRule(GameRule.DO_PATROL_SPAWNING, false);
-            it.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
+            it.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, game.isAdvancements());
             it.setGameRule(GameRule.DO_WEATHER_CYCLE, false);
             it.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
             it.setGameRule(GameRule.SPECTATORS_GENERATE_CHUNKS, false);
+            it.setGameRule(GameRule.DO_MOB_SPAWNING, !instance.getGamemodeManager().isScenarioEnable(UHCMeetup.class));
             it.setSpawnLocation(0, it.getHighestBlockAt(0, 0).getZ() + 10, 0);
             it.getWorldBorder().setCenter(0, 0);
             it.getWorldBorder().setSize(game.getBorderSize());

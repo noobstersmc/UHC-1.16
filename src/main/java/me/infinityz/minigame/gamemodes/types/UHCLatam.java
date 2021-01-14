@@ -23,7 +23,6 @@ import me.infinityz.minigame.advancements.Trigger;
 import me.infinityz.minigame.advancements.Trigger.TriggerType;
 import me.infinityz.minigame.events.GameStartedEvent;
 import me.infinityz.minigame.events.ScoreboardUpdateEvent;
-import me.infinityz.minigame.game.Game;
 import me.infinityz.minigame.gamemodes.IGamemode;
 import me.infinityz.minigame.tasks.GameLoop;
 import net.md_5.bungee.api.ChatColor;
@@ -49,8 +48,9 @@ public class UHCLatam extends IGamemode implements Listener {
 
         instance.getListenerManager().registerListener(this);
 
-        Game.setScoreboardTitle(ChatColor.of("#E6E6FA") + "🗡 " + ChatColor.of("#77DBD6") + "" + ChatColor.BOLD
-                + "UHC Latam T2 " + ChatColor.of("#E6E6FA") + "☠");
+        String title = ChatColor.of("#E6E6FA") + "🗡 " + ChatColor.of("#77DBD6") + "" + ChatColor.BOLD
+        + "UHC Latam T2 " + ChatColor.of("#E6E6FA") + "☠";
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "game title " + title);
 
         advancement.add();
 

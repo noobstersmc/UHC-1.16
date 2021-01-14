@@ -26,7 +26,6 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.chunks.ChunkLoadTask;
-import me.infinityz.minigame.chunks.ChunksManager;
 import me.infinityz.minigame.enums.Stage;
 import me.infinityz.minigame.events.TeleportationCompletedEvent;
 import me.infinityz.minigame.gamemodes.types.UHCMeetup;
@@ -190,7 +189,6 @@ public class StartCommand extends BaseCommand {
 
         chain.sync(() -> {
 
-                    
             if (instance.getTeamManger().isTeamManagement()) {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "team man false");
             }
@@ -214,7 +212,6 @@ public class StartCommand extends BaseCommand {
 
             instance.getListenerManager().unregisterListener(instance.getListenerManager().getLobby());
 
-            var world = Bukkit.getWorld("world");
             Bukkit.getOnlinePlayers().forEach(players -> {
 
                 players.setStatistic(Statistic.TIME_SINCE_REST, 0);
@@ -225,9 +222,6 @@ public class StartCommand extends BaseCommand {
                 players.setLevel(0);
                 players.setGameMode(GameMode.SURVIVAL);
                 players.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
-                players.teleport(
-                        ChunksManager.findScatterLocation(world, instance.getGame().getBorderSize() / 2));
-                        instance.getPlayerManager().addCreateUHCPlayer(players.getUniqueId(), true);
             });
             var teleportEvent = new TeleportationCompletedEvent();
 
