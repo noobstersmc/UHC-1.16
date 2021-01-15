@@ -27,10 +27,13 @@ import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.crafting.recipes.CarrotRecipe;
 import me.infinityz.minigame.crafting.recipes.DragonBreath;
 import me.infinityz.minigame.crafting.recipes.GoldenHead;
+import me.infinityz.minigame.crafting.recipes.GoldenHoney;
 import me.infinityz.minigame.crafting.recipes.MelonRecipe;
 import me.infinityz.minigame.crafting.recipes.NetheriteRecipe;
 import me.infinityz.minigame.crafting.recipes.SimpleNetherite;
+import me.infinityz.minigame.crafting.recipes.SuperGoldenHoney;
 import me.infinityz.minigame.crafting.recipes.TotemRecipe;
+import me.infinityz.minigame.crafting.recipes.UltraGoldenHoney;
 import net.md_5.bungee.api.ChatColor;
 
 public class CraftingManager implements Listener {

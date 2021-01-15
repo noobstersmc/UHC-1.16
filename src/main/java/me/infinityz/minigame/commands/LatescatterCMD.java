@@ -31,7 +31,7 @@ public class LatescatterCMD extends BaseCommand {
 
         if (instance.getGamemodeManager().isScenarioEnable(UHCMeetup.class)){
             if (!player.hasPermission("latescatter.meetup")){
-                player.sendMessage(Game.getUpToMVP());
+                player.sendMessage(Game.getUpToVIP());
                 return;
             }else if(instance.getGame().getGameTime() >= instance.getGame().getBorderTime()){
                 player.sendMessage(ChatColor.RED + "LateScatter is only available before border start to move.");

@@ -1,5 +1,6 @@
 package me.infinityz.minigame.gamemodes;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
 import co.aikar.commands.BaseCommand;
@@ -11,6 +12,7 @@ import co.aikar.commands.annotation.HelpCommand;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import me.infinityz.minigame.UHC;
+import net.md_5.bungee.api.ChatColor;
 
 /**
  * GamemodesCMD
@@ -22,7 +24,7 @@ public class GamemodesCMD extends BaseCommand {
 
     @HelpCommand
     public void command(CommandSender sender) {
-        sender.sendMessage("Scenarios coso");
+        Bukkit.dispatchCommand(sender, "config");
 
     }
 
@@ -31,16 +33,17 @@ public class GamemodesCMD extends BaseCommand {
     @CommandCompletion("@scenarios")
     public void onEnable(CommandSender sender, String scenario) {
         var gamemode = getScenarioFromName(scenario);
+        var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
         if(gamemode != null){
             if(gamemode.enableScenario()){
-                sender.sendMessage("Scenario " + gamemode.getName() + " has been enabled.");
+                Bukkit.broadcastMessage(senderName + ChatColor.YELLOW + "Scenario " + gamemode.getName() + " has been enabled.");
             }else if(gamemode.disableScenario()){
-                sender.sendMessage("Scenario " + gamemode.getName() + " has been disabled.");
+                Bukkit.broadcastMessage(senderName + ChatColor.YELLOW + "Scenario " + gamemode.getName() + " has been disabled.");
             }else{
-                sender.sendMessage("Couldn't enable or disable " + gamemode.getName() + ".");
+                sender.sendMessage(ChatColor.RED + "Couldn't enable or disable " + gamemode.getName() + ".");
             }
         }else{
-            sender.sendMessage("Scenario " + scenario + " doesn't exist");
+            sender.sendMessage(ChatColor.RED + "Scenario " + scenario + " doesn't exist");
         }
     }
 

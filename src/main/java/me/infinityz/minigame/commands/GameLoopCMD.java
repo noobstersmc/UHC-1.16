@@ -54,7 +54,7 @@ public class GameLoopCMD extends BaseCommand {
     public void changeBorderTime(CommandSender sender, Integer newBorderTime) {
         var game = instance.getGame();
 
-        if(!sender.hasPermission("uhc.gameloop.security") && game.getGameTime() < game.getBorderTime()-1) {
+        if(!sender.hasPermission("uhc.gameloop.security") && game.getGameTime() > game.getBorderTime()-1) {
             sender.sendMessage(ChatColor.RED + "Is too late to change this config.");
             return;
         }
@@ -69,7 +69,7 @@ public class GameLoopCMD extends BaseCommand {
     public void changeBorderCenterTime(CommandSender sender, Integer newBorderCenterTime) {
 
         var game = instance.getGame();
-        if(!sender.hasPermission("uhc.gameloop.security") && game.getGameTime() < game.getBorderTime()-1) {
+        if(!sender.hasPermission("uhc.gameloop.security") && game.getGameTime() > game.getBorderTime()-1) {
             sender.sendMessage(ChatColor.RED + "Is too late to change this config.");
             return;
         }
@@ -91,7 +91,7 @@ public class GameLoopCMD extends BaseCommand {
     public void changeBorderCenter(CommandSender sender, Integer newBorderCenter) {
 
         var game = instance.getGame();
-        if(!sender.hasPermission("uhc.gameloop.security") && game.getGameTime() < game.getBorderTime()-1) {
+        if(!sender.hasPermission("uhc.gameloop.security") && game.getGameTime() > game.getBorderTime()-1) {
             sender.sendMessage(ChatColor.RED + "Is too late to change this config.");
             return;
         }
@@ -138,7 +138,7 @@ public class GameLoopCMD extends BaseCommand {
     public void changeFinalBorderGrace(CommandSender sender, Integer newFinalBorderGrace) {
 
         var game = instance.getGame();
-        if(!sender.hasPermission("uhc.gameloop.security") && game.getGameTime() < game.getBorderTime()-1) {
+        if(!sender.hasPermission("uhc.gameloop.security") && game.getGameTime() > game.getBorderTime()-1) {
             sender.sendMessage(ChatColor.RED + "Is too late to change this config.");
             return;
         }
@@ -154,7 +154,7 @@ public class GameLoopCMD extends BaseCommand {
     public void changeDMGrace(CommandSender sender, Integer newDeathMatchGrace) {
 
         var game = instance.getGame();
-        if(!sender.hasPermission("uhc.gameloop.security") && game.getGameTime() < game.getBorderTime()-1) {
+        if(!sender.hasPermission("uhc.gameloop.security") && game.getGameTime() > game.getBorderTime()-1) {
             sender.sendMessage(ChatColor.RED + "Is too late to change this config.");
             return;
         }

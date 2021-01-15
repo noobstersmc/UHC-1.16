@@ -35,6 +35,7 @@ import me.infinityz.minigame.gamemodes.types.HasteyBabies;
 import me.infinityz.minigame.gamemodes.types.HasteyBoys;
 import me.infinityz.minigame.gamemodes.types.HasteyBoysPlus;
 import me.infinityz.minigame.gamemodes.types.HeavyPockets;
+import me.infinityz.minigame.gamemodes.types.HoneyBadgers;
 import me.infinityz.minigame.gamemodes.types.InfiniteEnchanter;
 import me.infinityz.minigame.gamemodes.types.Limits;
 import me.infinityz.minigame.gamemodes.types.LuckyLeaves;
@@ -123,6 +124,7 @@ public class GamemodeManager {
         registerGamemode(new HeavyPockets(instance));
         registerGamemode(new HasteyBabies(instance));
         registerGamemode(new DamageCycle(instance));
+        registerGamemode(new HoneyBadgers(instance));
 
         //Invitados
         registerGamemode(new UHCVandalico(instance));

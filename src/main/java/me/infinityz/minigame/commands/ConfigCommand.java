@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Optional;
@@ -14,6 +15,7 @@ import co.aikar.commands.annotation.Subcommand;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import me.infinityz.minigame.UHC;
+import me.infinityz.minigame.events.NetherDisabledEvent;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 
@@ -62,8 +64,27 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
     }
 
     @CommandPermission("uhc.config.cmd")
+    @Subcommand("nether")
+    @CommandAlias("nether")
+    @CommandCompletion("@bool")
+    public void onNetherOff(CommandSender sender, @Optional Boolean bool) {
+        if (bool != null) {
+            instance.getGame().setNether(bool);
+        } else {
+            instance.getGame().setNether(!instance.getGame().isNether());
+        }
+        var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
+        Bukkit.broadcastMessage(senderName + "Nether has been set to " + instance.getGame().isNether());
+        if (!instance.getGame().isNether()) {
+            // Call Event
+            Bukkit.getPluginManager().callEvent(new NetherDisabledEvent());
+        }
+    }
+
+    @CommandPermission("uhc.config.cmd")
     @Subcommand("tears-drop-gold")
     @CommandAlias("tears-drop-gold")
+    @CommandCompletion("@bool")
     public void tearsNerf(CommandSender sender, @Optional Boolean bool) {
         if (bool == null)
             bool = !instance.getGame().isTearsDropGold();
@@ -76,6 +97,7 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
     @CommandPermission("uhc.config.cmd")
     @Subcommand("deathmatch")
     @CommandAlias("deathmatch")
+    @CommandCompletion("@bool")
     public void deathmatch(CommandSender sender, @Optional Boolean bool) {
         if (bool == null)
             bool = !instance.getGame().isDeathMatch();
@@ -89,6 +111,7 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
     @CommandPermission("uhc.config.cmd")
     @Subcommand("anti-mining")
     @CommandAlias("anti-mining")
+    @CommandCompletion("@bool")
     public void antimining(CommandSender sender, @Optional Boolean bool) {
         if (bool == null)
             bool = !instance.getGame().isAntiMining();
@@ -101,6 +124,7 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
     @CommandPermission("uhc.config.cmd")
     @Subcommand("privategame")
     @CommandAlias("privategame")
+    @CommandCompletion("@bool")
     public void gamePrivate(CommandSender sender, @Optional Boolean bool) {
         if (bool == null)
             bool = !instance.getGame().isPrivateGame();
@@ -128,6 +152,7 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
     @CommandPermission("uhc.config.cmd")
     @Subcommand("beds-nerf")
     @CommandAlias("beds-nerf")
+    @CommandCompletion("@bool")
     public void changeBedsNerf(CommandSender sender, @Optional Boolean bool) {
         if (bool == null)
             bool = !instance.getGame().isBedsNerf();
@@ -140,6 +165,7 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
     @CommandPermission("uhc.config.cmd")
     @Subcommand("advancements")
     @CommandAlias("advancements")
+    @CommandCompletion("@bool")
     public void announceAdvancements(CommandSender sender, @Optional Boolean bool) {
         var game = instance.getGame();
         if (bool == null)
@@ -157,6 +183,7 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
     @CommandPermission("uhc.config.cmd")
     @Subcommand("strength-nerf")
     @CommandAlias("strength-nerf")
+    @CommandCompletion("@bool")
     public void changeStrengthNerf(CommandSender sender, @Optional Boolean bool) {
         if (bool == null)
             bool = !instance.getGame().isStrengthNerf();

@@ -34,7 +34,6 @@ import lombok.RequiredArgsConstructor;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.chunks.ChunkLoadTask;
 import me.infinityz.minigame.chunks.ChunksManager;
-import me.infinityz.minigame.events.NetherDisabledEvent;
 import me.infinityz.minigame.events.PlayerJoinedLateEvent;
 import me.infinityz.minigame.game.Game;
 import me.infinityz.minigame.game.border.FortniteBorder;
@@ -133,7 +132,6 @@ public class UHCCommand extends BaseCommand {
     @CommandPermission("staff.perm")
     @Conditions("ingame")
     @Subcommand("alive")
-    @CommandAlias("alive")
     public void alive(CommandSender sender) {
         sender.sendMessage("Alive offline players: ");
         instance.getPlayerManager().getUhcPlayerMap().entrySet().forEach(entry -> {
@@ -209,23 +207,6 @@ public class UHCCommand extends BaseCommand {
         target.setKills(target.getKills() + 1);
         sender.sendMessage("Gave " + 1 + " kills to " + Bukkit.getOfflinePlayer(target.getUUID()).getName());
 
-    }
-
-    @CommandPermission("staff.perm")
-    @Subcommand("nether")
-    @Syntax("<bol> - Set nether to enabled or disabled")
-    @CommandCompletion("@bool")
-    public void onNetherOff(CommandSender sender, @Optional Boolean bool) {
-        if (bool != null) {
-            instance.getGame().setNether(bool);
-        } else {
-            instance.getGame().setNether(!instance.getGame().isNether());
-        }
-        sender.sendMessage("Nether has been set to " + instance.getGame().isNether());
-        if (!instance.getGame().isNether()) {
-            // Call Event
-            Bukkit.getPluginManager().callEvent(new NetherDisabledEvent());
-        }
     }
 
     @CommandPermission("uhc.scoreboard.change")
@@ -400,17 +381,28 @@ public class UHCCommand extends BaseCommand {
 
     }
 
-    @Subcommand("autodestruction")
-    @CommandPermission("uhc.admin")
+    @Subcommand("autodestruction|autodestroy")
+    @CommandAlias("autodestruction|autodestroy")
+    @CommandPermission("uhc.config.cmd")
     public void autoDestroy(CommandSender sender) {
+        var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
         if (instance.getGame().isAutoDestruction()) {
             instance.getGame().setAutoDestruction(false);
-            sender.sendMessage("Auto destruction is now OFF");
+            Bukkit.broadcast(senderName + ChatColor.YELLOW + "Auto destruction has been disabled.", "uhc.configchanges.see");
         } else {
             instance.getGame().setAutoDestruction(true);
-            sender.sendMessage("Auto destruction is now ON");
+            Bukkit.broadcast(senderName + ChatColor.YELLOW + "Auto destruction has been enabled.", "uhc.configchanges.see");
         }
 
+    }
+
+    @Subcommand("close game")
+    @CommandAlias("close game")
+    @CommandPermission("uhc.close")
+    public void lairDeleteThis(CommandSender sender) {
+        var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
+        Bukkit.broadcastMessage(senderName + "This Game has been closed by " + sender.getName().toString());
+        Bukkit.dispatchCommand(sender, "lair delete this");
     }
 
     @Subcommand("claim")
