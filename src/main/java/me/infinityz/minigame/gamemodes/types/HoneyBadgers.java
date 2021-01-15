@@ -41,10 +41,14 @@ public class HoneyBadgers extends IGamemode implements Listener {
         if (isEnabled())
             return false;
         instance.getListenerManager().registerListener(this);
-        Bukkit.addRecipe(goldenHoney.getRecipe());
-        Bukkit.addRecipe(superGoldenHoney.getRecipe());
-        Bukkit.addRecipe(ultraGoldenHoney.getRecipe());
-
+        /*
+         * Bukkit.addRecipe(goldenHoney.getRecipe());
+         * Bukkit.addRecipe(superGoldenHoney.getRecipe());
+         * Bukkit.addRecipe(ultraGoldenHoney.getRecipe());
+         */
+        goldenHoney.logic();
+        superGoldenHoney.logic();
+        ultraGoldenHoney.logic();
 
         Bukkit.getOnlinePlayers().forEach(all -> {
             all.discoverRecipe(this.goldenHoney.getNamespacedKey());
@@ -92,10 +96,10 @@ public class HoneyBadgers extends IGamemode implements Listener {
         if (itemMeta.getDisplayName().equalsIgnoreCase(ChatColor.GOLD + "Golden Honey")) {
             player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20 * 5, 1));
             player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 20 * 60 * 2, 1));
-        }else if(itemMeta.getDisplayName().equalsIgnoreCase(ChatColor.GOLD + "Super Golden Honey")){
+        } else if (itemMeta.getDisplayName().equalsIgnoreCase(ChatColor.GOLD + "Super Golden Honey")) {
             player.getAttribute(Attribute.GENERIC_MAX_HEALTH)
                     .setBaseValue(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue() + 2);
-        }else if(itemMeta.getDisplayName().equalsIgnoreCase(ChatColor.GOLD + "Ultra Golden Honey")){
+        } else if (itemMeta.getDisplayName().equalsIgnoreCase(ChatColor.GOLD + "Ultra Golden Honey")) {
             player.getAttribute(Attribute.GENERIC_MAX_HEALTH)
                     .setBaseValue(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue() + 20);
         }
