@@ -214,7 +214,7 @@ public class GamemodeManager {
 
     public String getFirstEnabledScenario() {
         for (var gm : gamemodesList) {
-            if (gm.isEnabled() && gm.getClass() != UHCMeetup.class)
+            if (gm.isEnabled() && gm.getClass() != UHCMeetup.class && gm.getClass() != NoLimpiar.class)
                 return gm.getName();
         }
         return "Vanilla";

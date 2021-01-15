@@ -111,33 +111,6 @@ public class ConfigListener implements Listener {
 
     }
 
-    /**
-     * Nerfed critical damage to + 2 instead of 1.5x
-     */
-    @EventHandler(priority = EventPriority.LOW)
-    public void nerfCriticalDamage(EntityDamageByEntityEvent e) {
-        if (e.getEntity().getType() != EntityType.PLAYER || e.getDamager().getType() != EntityType.PLAYER
-                || !instance.getGame().isCriticalNerf())
-            return;
-        var damager = (Player) e.getDamager();
-        if (isCritical(damager)) {
-            final var damage = e.getDamage();
-            final var backToBaseDamage = damage / 1.5;
-            final var damageDifferential = damage - backToBaseDamage;
-            if (damageDifferential > 2)
-                e.setDamage(backToBaseDamage + 4);
-
-        }
-    }
-
-    @SuppressWarnings("all")
-    private boolean isCritical(Player player) {
-        return player.getFallDistance() > 0.0F && !player.isOnGround() && !player.isInsideVehicle()
-                && !player.hasPotionEffect(PotionEffectType.BLINDNESS)
-                && player.getLocation().getBlock().getType() != Material.LADDER
-                && player.getLocation().getBlock().getType() != Material.VINE;
-    }
-
     /*
      * End portal cancel creation
      */

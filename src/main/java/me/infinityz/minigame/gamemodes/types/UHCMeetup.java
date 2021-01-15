@@ -6,6 +6,7 @@ import java.util.Random;
 import com.destroystokyo.paper.event.player.PlayerAdvancementCriterionGrantEvent;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.WorldBorder;
@@ -54,7 +55,7 @@ import net.md_5.bungee.api.ChatColor;
 public class UHCMeetup extends IGamemode implements Listener {
     private UHC instance;
     private Random random = new Random();
-    private Integer meetupSlots = 32;
+    private Integer meetupSlots = 24;
     private HashMap<String, Capsule> capsules = new HashMap<>();
     private WorldBorder worldBorder;
     private final ItemStack lapis = new ItemBuilder(Material.LAPIS_LAZULI).amount(64).build();
@@ -87,11 +88,11 @@ public class UHCMeetup extends IGamemode implements Listener {
         game.setNether(false);
         game.setHealTime(-1);
         game.setPvpTime(15);
-        game.setBorderTime(360);
+        game.setBorderTime(240);
         game.setFinalBorderGrace(120);
         game.setBorderCenterTime(120);
-        game.setBorderCenter(200);
-        game.setDMgrace(300);
+        game.setBorderCenter(100);
+        game.setDMgrace(120);
         game.setAntiMining(true);
         game.setUhcslots(meetupSlots);
 
@@ -101,6 +102,11 @@ public class UHCMeetup extends IGamemode implements Listener {
             var world = Bukkit.getWorld("world");
             var worldBorderSizeHaved = (int) world.getWorldBorder().getSize() / 2;
             var location = ChunksManager.findScatterLocation(world, worldBorderSizeHaved).add(0, 6, 0);
+            var limit = 0;
+            while(!areGoodOtherLocs(location) && limit < 20){
+                location = ChunksManager.findScatterLocation(world, worldBorderSizeHaved).add(0, 6, 0);
+                limit++;
+            }
             Capsule capsule = new Capsule(location);
             capsules.put(cap + "", capsule);
 
@@ -115,6 +121,26 @@ public class UHCMeetup extends IGamemode implements Listener {
 
         setEnabled(true);
         return true;
+    }
+
+    public boolean areGoodOtherLocs(Location loc){
+        for (var cap : capsules.values()) {
+            if(isGoodDistance(loc, cap.getLocation())){
+                return true;
+            }
+        }
+        return false;
+    }
+    public boolean isGoodDistance(Location loc1, Location loc2){
+        var x1 = loc1.getBlock().getX();
+        var x2 = loc1.getBlock().getX();
+        var z1 = loc2.getBlock().getZ();
+        var z2 = loc2.getBlock().getZ();
+
+        if(Math.sqrt(Math.pow((x2-x1), 2) + Math.pow((z2-z1), 2)) < 20){
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -310,11 +336,13 @@ public class UHCMeetup extends IGamemode implements Listener {
     public void onStart(GameStartedEvent e) {
         Bukkit.getOnlinePlayers().forEach(players -> {
             equip(players);
-            players.sendMessage(ChatColor.of("#c3752c") + "Use /reroll to reload your kit!");
         });
+        Bukkit.broadcastMessage(ChatColor.of("#c3752c") + "Use /reroll to reload your kit!");
 
         for (var cap : capsules.values()) {
-            cap.destroy();
+            if(cap != null && cap.isCreated()){
+                cap.destroy();
+            }
         }
 
     }
@@ -337,8 +365,8 @@ public class UHCMeetup extends IGamemode implements Listener {
                 ChatColor.of("#2cc36b") + "Your Kills: " + ChatColor.WHITE
                         + (uhcPlayer != null ? uhcPlayer.getKills() : 0),
                 "",
-                ChatColor.of("#2cc36b") + "Players Left: " + ChatColor.WHITE
-                        + instance.getPlayerManager().getAlivePlayers(),
+                ChatColor.of("#2cc36b") + "Players: " + ChatColor.WHITE
+                        + instance.getPlayerManager().getAlivePlayers() + "/" + instance.getGame().getUhcslots(),
                 ChatColor.of("#2cc36b") + "Gamemode: " + ChatColor.WHITE
                         + instance.getGamemodeManager().getFirstEnabledScenario(),
                 "",

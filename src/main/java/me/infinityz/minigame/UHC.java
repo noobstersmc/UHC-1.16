@@ -57,7 +57,6 @@ import me.infinityz.minigame.enums.Stage;
 import me.infinityz.minigame.game.Game;
 import me.infinityz.minigame.gamemodes.GamemodeManager;
 import me.infinityz.minigame.gamemodes.GamemodesCMD;
-import me.infinityz.minigame.gamemodes.types.UHCMeetup;
 import me.infinityz.minigame.listeners.ListenerManager;
 import me.infinityz.minigame.players.PlayerManager;
 import me.infinityz.minigame.portals.PortalListeners;
@@ -323,7 +322,6 @@ public class UHC extends JavaPlugin {
             it.setGameRule(GameRule.DO_WEATHER_CYCLE, false);
             it.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
             it.setGameRule(GameRule.SPECTATORS_GENERATE_CHUNKS, false);
-            it.setGameRule(GameRule.DO_MOB_SPAWNING, !instance.getGamemodeManager().isScenarioEnable(UHCMeetup.class));
             it.setSpawnLocation(0, it.getHighestBlockAt(0, 0).getZ() + 10, 0);
             it.getWorldBorder().setCenter(0, 0);
             it.getWorldBorder().setSize(game.getBorderSize());

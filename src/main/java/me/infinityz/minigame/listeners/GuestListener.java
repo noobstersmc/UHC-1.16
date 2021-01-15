@@ -18,8 +18,7 @@ public class GuestListener implements Listener {
     public void joinRank(PlayerJoinEvent e) {
         var player = e.getPlayer();
 
-        if (player.hasPermission("group.vandal") && !player.hasPermission("group.vandalhost")
-                && player.getUniqueId().compareTo(instance.getGame().getHostUUID()) == 0) {
+        if (player.hasPermission("group.vandal") && player.getUniqueId().compareTo(instance.getGame().getHostUUID()) == 0) {
             player.addAttachment(instance).setPermission("group.vandalhost", true);
             player.updateCommands();
         }

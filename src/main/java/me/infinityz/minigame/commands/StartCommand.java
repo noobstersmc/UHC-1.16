@@ -192,28 +192,28 @@ public class StartCommand extends BaseCommand {
             if (instance.getTeamManger().isTeamManagement()) {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "team man false");
             }
-
+    
             if (instance.getTeamManger().getTeamSize() > 1) {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "team random");
             }
-
+    
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "scoreboard objectives setdisplay list health_name");
-
+    
             instance.getChunkManager().getAutoChunkScheduler().cancel();
-
+    
             Bukkit.getWorlds().forEach(it -> {
                 it.getWorldBorder().setSize(instance.getGame().getBorderSize());
                 it.setDifficulty(Difficulty.HARD);
                 it.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, true);
                 it.setTime(0);
             });
-
+    
             instance.getScoreboardManager().purgeScoreboards();
-
+    
             instance.getListenerManager().unregisterListener(instance.getListenerManager().getLobby());
-
+    
             Bukkit.getOnlinePlayers().forEach(players -> {
-
+    
                 players.setStatistic(Statistic.TIME_SINCE_REST, 0);
                 players.getInventory().clear();
                 players.setExp(0.0f);
@@ -223,8 +223,11 @@ public class StartCommand extends BaseCommand {
                 players.setGameMode(GameMode.SURVIVAL);
                 players.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
             });
+    
+            Bukkit.getOnlinePlayers().stream().filter(it -> it.getGameMode() != GameMode.SPECTATOR)
+                    .forEach(players -> instance.getPlayerManager().addCreateUHCPlayer(players.getUniqueId(), true));
+    
             var teleportEvent = new TeleportationCompletedEvent();
-
             Bukkit.getPluginManager().callEvent(teleportEvent);
 
         }).sync(TaskChain::abort).execute();

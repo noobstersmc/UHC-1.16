@@ -482,37 +482,44 @@ public class IngameListeners implements Listener {
     }
 
     private static void fireWorksEffect(Player player) {
-        var command1 = "summon firework_rocket %d %d %d {LifeTime:30,FireworksItem:{id:firework_rocket,Count:1,tag:{Fireworks:{Flight:1,Explosions:[{Type:2,Flicker:0,Trail:1,Colors:[I;3887386,8073150,2651799,4312372],FadeColors:[I;3887386,11250603,4312372,15790320]}]}}}}";
-        var command2 = "summon firework_rocket %d %d %d {LifeTime:30,FireworksItem:{id:firework_rocket,Count:1,tag:{Fireworks:{Flight:2,Explosions:[{Type:3,Flicker:1,Trail:1,Colors:[I;5320730,2437522,8073150,11250603,6719955],FadeColors:[I;2437522,2651799,11250603,6719955,15790320]}]}}}}";
-        var command3 = "summon firework_rocket %d %d %d {LifeTime:30,FireworksItem:{id:firework_rocket,Count:1,tag:{Fireworks:{Flight:3,Explosions:[{Type:1,Flicker:1,Trail:1,Colors:[I;11743532,14602026,12801229,15435844],FadeColors:[I;11743532,14188952,15435844]}]}}}}";
-        var loc = player.getLocation();
-        loc.setWorld(player.getWorld());
+        var command1 = "execute in minecraft:world run summon firework_rocket %d %d %d {LifeTime:30,FireworksItem:{id:firework_rocket,Count:1,tag:{Fireworks:{Flight:1,Explosions:[{Type:2,Flicker:0,Trail:1,Colors:[I;3887386,8073150,2651799,4312372],FadeColors:[I;3887386,11250603,4312372,15790320]}]}}}}";
+        var command2 = "execute in minecraft:world run summon firework_rocket %d %d %d {LifeTime:30,FireworksItem:{id:firework_rocket,Count:1,tag:{Fireworks:{Flight:2,Explosions:[{Type:3,Flicker:1,Trail:1,Colors:[I;5320730,2437522,8073150,11250603,6719955],FadeColors:[I;2437522,2651799,11250603,6719955,15790320]}]}}}}";
+        var command3 = "execute in minecraft:world run summon firework_rocket %d %d %d {LifeTime:30,FireworksItem:{id:firework_rocket,Count:1,tag:{Fireworks:{Flight:3,Explosions:[{Type:1,Flicker:1,Trail:1,Colors:[I;11743532,14602026,12801229,15435844],FadeColors:[I;11743532,14188952,15435844]}]}}}}";
 
         UHC.newChain().delay(1).sync(() -> {
+            var loc = player.getLocation();
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
                     String.format(command1, loc.getBlockX(), loc.getBlockY() + 1, loc.getBlockZ()));
         }).delay(20).sync(() -> {
+            var loc = player.getLocation();
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
                     String.format(command2, loc.getBlockX(), loc.getBlockY() + 1, loc.getBlockZ()));
         }).delay(20).sync(() -> {
+            var loc = player.getLocation();
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
                     String.format(command3, loc.getBlockX(), loc.getBlockY() + 1, loc.getBlockZ()));
         }).delay(20).sync(() -> {
+            var loc = player.getLocation();
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
                     String.format(command1, loc.getBlockX(), loc.getBlockY() + 1, loc.getBlockZ()));
         }).delay(20).sync(() -> {
+            var loc = player.getLocation();
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
                     String.format(command2, loc.getBlockX(), loc.getBlockY() + 1, loc.getBlockZ()));
         }).delay(20).sync(() -> {
+            var loc = player.getLocation();
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
                     String.format(command3, loc.getBlockX(), loc.getBlockY() + 1, loc.getBlockZ()));
         }).delay(20).sync(() -> {
+            var loc = player.getLocation();
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
                     String.format(command1, loc.getBlockX(), loc.getBlockY() + 1, loc.getBlockZ()));
         }).delay(20).sync(() -> {
+            var loc = player.getLocation();
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
                     String.format(command2, loc.getBlockX(), loc.getBlockY() + 1, loc.getBlockZ()));
         }).delay(20).sync(() -> {
+            var loc = player.getLocation();
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
                     String.format(command3, loc.getBlockX(), loc.getBlockY() + 1, loc.getBlockZ()));
         }).sync(TaskChain::abort).execute();
