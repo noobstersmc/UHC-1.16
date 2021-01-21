@@ -24,6 +24,7 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.RenderType;
 import org.bukkit.scoreboard.Scoreboard;
+import org.kovalski.corpsemaster.Main;
 
 import co.aikar.commands.PaperCommandManager;
 import co.aikar.taskchain.BukkitTaskChainFactory;
@@ -122,6 +123,10 @@ public class UHC extends JavaPlugin {
             condorConfig = CondorAPI.getGameJsonConfig(CONDOR_ID, condor_secret != null ? condor_secret : "6QR3W05K3F");
 
         }
+
+        // TODO: De mientras asi se accede a corpse. luego lo cambio
+        var corpse = Main.getInstance();
+        // corpse.createCorpse(arg0, arg1);
         try {
             if (condorConfig != null) {
                 System.out.println(condorConfig.toString());
