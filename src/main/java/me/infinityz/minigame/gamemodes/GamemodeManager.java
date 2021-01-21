@@ -17,6 +17,7 @@ import me.infinityz.minigame.gamemodes.types.BloodExperience;
 import me.infinityz.minigame.gamemodes.types.BloodHunter;
 import me.infinityz.minigame.gamemodes.types.BowLess;
 import me.infinityz.minigame.gamemodes.types.ColdWeapons;
+import me.infinityz.minigame.gamemodes.types.CrossBowLess;
 import me.infinityz.minigame.gamemodes.types.Cutclean;
 import me.infinityz.minigame.gamemodes.types.DamageCycle;
 import me.infinityz.minigame.gamemodes.types.DoubleGold;
@@ -35,7 +36,6 @@ import me.infinityz.minigame.gamemodes.types.HasteyBabies;
 import me.infinityz.minigame.gamemodes.types.HasteyBoys;
 import me.infinityz.minigame.gamemodes.types.HasteyBoysPlus;
 import me.infinityz.minigame.gamemodes.types.HeavyPockets;
-import me.infinityz.minigame.gamemodes.types.HoneyBadgers;
 import me.infinityz.minigame.gamemodes.types.InfiniteEnchanter;
 import me.infinityz.minigame.gamemodes.types.Limits;
 import me.infinityz.minigame.gamemodes.types.LuckyLeaves;
@@ -46,8 +46,9 @@ import me.infinityz.minigame.gamemodes.types.Moles;
 import me.infinityz.minigame.gamemodes.types.MonstersInc;
 import me.infinityz.minigame.gamemodes.types.NineSlots;
 import me.infinityz.minigame.gamemodes.types.NoFall;
-import me.infinityz.minigame.gamemodes.types.NoLimpiar;
+import me.infinityz.minigame.gamemodes.types.NoClean;
 import me.infinityz.minigame.gamemodes.types.PermaGlow;
+import me.infinityz.minigame.gamemodes.types.Popeye;
 import me.infinityz.minigame.gamemodes.types.ShieldLess;
 import me.infinityz.minigame.gamemodes.types.SkyHigh;
 import me.infinityz.minigame.gamemodes.types.Switcheroo;
@@ -106,7 +107,7 @@ public class GamemodeManager {
         registerGamemode(new GoldenRetreiver(instance));
         registerGamemode(new FlorPoderosa(instance));
         registerGamemode(new TiempoBomba(instance));
-        registerGamemode(new NoLimpiar(instance));
+        registerGamemode(new NoClean(instance));
         registerGamemode(new FastLeaves());
         registerGamemode(new NineSlots(instance));
         registerGamemode(new DoubleGold(instance));
@@ -124,7 +125,8 @@ public class GamemodeManager {
         registerGamemode(new HeavyPockets(instance));
         registerGamemode(new HasteyBabies(instance));
         registerGamemode(new DamageCycle(instance));
-        registerGamemode(new HoneyBadgers(instance));
+        registerGamemode(new CrossBowLess(instance));
+        registerGamemode(new Popeye(instance));
 
         //Invitados
         registerGamemode(new UHCVandalico(instance));
@@ -216,7 +218,7 @@ public class GamemodeManager {
 
     public String getFirstEnabledScenario() {
         for (var gm : gamemodesList) {
-            if (gm.isEnabled() && gm.getClass() != UHCMeetup.class && gm.getClass() != NoLimpiar.class)
+            if (gm.isEnabled() && gm.getClass() != UHCMeetup.class && gm.getClass() != NoClean.class)
                 return gm.getName();
         }
         return "Vanilla";

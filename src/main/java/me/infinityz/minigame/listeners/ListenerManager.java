@@ -28,6 +28,7 @@ public class ListenerManager {
         configListener = new ConfigListener(instance);
     
         Bukkit.getPluginManager().registerEvents(new GlobalListener(instance), instance);
+        Bukkit.getPluginManager().registerEvents(new GracePeriodListeners(instance), instance);
         Bukkit.getPluginManager().registerEvents(new GuestListener(instance), instance);
 
         Bukkit.getPluginManager().registerEvents(configListener, instance);

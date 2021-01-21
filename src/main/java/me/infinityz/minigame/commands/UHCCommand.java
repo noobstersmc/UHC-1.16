@@ -381,8 +381,8 @@ public class UHCCommand extends BaseCommand {
 
     }
 
-    @Subcommand("autodestruction|autodestroy")
-    @CommandAlias("autodestruction|autodestroy")
+    @Subcommand("autodestroy|autodestruction|")
+    @CommandAlias("autodestroyauto|destruction")
     @CommandPermission("uhc.config.cmd")
     public void autoDestroy(CommandSender sender) {
         var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
@@ -394,15 +394,6 @@ public class UHCCommand extends BaseCommand {
             Bukkit.broadcast(senderName + ChatColor.YELLOW + "Auto destruction has been enabled.", "uhc.configchanges.see");
         }
 
-    }
-
-    @Subcommand("close game")
-    @CommandAlias("close game")
-    @CommandPermission("uhc.close")
-    public void lairDeleteThis(CommandSender sender) {
-        var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
-        Bukkit.broadcastMessage(senderName + "This Game has been closed by " + sender.getName().toString());
-        Bukkit.dispatchCommand(sender, "lair delete this");
     }
 
     @Subcommand("claim")

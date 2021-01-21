@@ -137,7 +137,7 @@ public class UHCMeetup extends IGamemode implements Listener {
         var z1 = loc2.getBlock().getZ();
         var z2 = loc2.getBlock().getZ();
 
-        if(Math.sqrt(Math.pow((x2-x1), 2) + Math.pow((z2-z1), 2)) < 20){
+        if(Math.sqrt(Math.pow((x2-x1), 2) + Math.pow((z2-z1), 2)) <= 10){
             return true;
         }
         return false;

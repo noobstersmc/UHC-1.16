@@ -36,9 +36,9 @@ public class GamemodesCMD extends BaseCommand {
         var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
         if(gamemode != null){
             if(gamemode.enableScenario()){
-                Bukkit.broadcastMessage(senderName + ChatColor.YELLOW + "Scenario " + gamemode.getName() + " has been enabled.");
+                Bukkit.broadcastMessage(senderName + ChatColor.GREEN + "Scenario " + gamemode.getName() + " has been enabled.");
             }else if(gamemode.disableScenario()){
-                Bukkit.broadcastMessage(senderName + ChatColor.YELLOW + "Scenario " + gamemode.getName() + " has been disabled.");
+                Bukkit.broadcastMessage(senderName + ChatColor.GREEN + "Scenario " + gamemode.getName() + " has been disabled.");
             }else{
                 sender.sendMessage(ChatColor.RED + "Couldn't enable or disable " + gamemode.getName() + ".");
             }

@@ -21,10 +21,22 @@ public class DamageCycle extends IGamemode implements Listener {
     private UHC instance;
     private Random random = new Random();
     private DamageCause currentDamage = DamageCause.LIGHTNING;
-    private DamageCause[] DAMAGE_CAUSES = new DamageCause[] { DamageCause.LAVA, DamageCause.FIRE, DamageCause.HOT_FLOOR,
-            DamageCause.FALL, DamageCause.ENTITY_EXPLOSION, DamageCause.SUFFOCATION, DamageCause.PROJECTILE,
-            DamageCause.CONTACT, DamageCause.MAGIC, DamageCause.ENTITY_ATTACK, DamageCause.DROWNING, DamageCause.POISON,
-            DamageCause.WITHER, DamageCause.STARVATION, DamageCause.THORNS };
+    private DamageCause[] DAMAGE_CAUSES = new DamageCause[] { 
+        DamageCause.LAVA, 
+        DamageCause.FIRE, 
+        DamageCause.HOT_FLOOR,
+        DamageCause.FALL, 
+        DamageCause.ENTITY_EXPLOSION, 
+        DamageCause.SUFFOCATION, 
+        DamageCause.PROJECTILE,
+        DamageCause.CONTACT, 
+        DamageCause.MAGIC,
+        DamageCause.ENTITY_ATTACK, 
+        DamageCause.DROWNING, 
+        DamageCause.POISON,
+        DamageCause.WITHER, 
+        DamageCause.STARVATION, 
+        DamageCause.THORNS };
 
     public DamageCycle(UHC instance) {
         super("Damage Cycle",
@@ -93,10 +105,8 @@ public class DamageCycle extends IGamemode implements Listener {
 
     @EventHandler
     public void onDamageEntity(EntityDamageByEntityEvent e) {
-        var entity = e.getEntity();
-        if (entity instanceof Player)
-            return;
-        if (entity instanceof Projectile)
+        var attacker = e.getDamager();
+        if ((attacker instanceof Player) || (attacker instanceof Projectile))
             return;
         if (currentDamage == DamageCause.ENTITY_ATTACK) {
             e.setDamage(1000);

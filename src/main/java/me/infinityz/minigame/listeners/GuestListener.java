@@ -15,7 +15,7 @@ public class GuestListener implements Listener {
     }
 
     @EventHandler
-    public void joinRank(PlayerJoinEvent e) {
+    public void joinRankVandal(PlayerJoinEvent e) {
         var player = e.getPlayer();
 
         if (player.hasPermission("group.vandal") && player.getUniqueId().compareTo(instance.getGame().getHostUUID()) == 0) {

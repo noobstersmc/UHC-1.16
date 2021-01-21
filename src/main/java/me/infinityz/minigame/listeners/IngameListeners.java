@@ -38,6 +38,7 @@ import lombok.RequiredArgsConstructor;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.enums.DQReason;
 import me.infinityz.minigame.events.GameTickEvent;
+import me.infinityz.minigame.events.PlayerJoinedLateEvent;
 import me.infinityz.minigame.events.PlayerWinEvent;
 import me.infinityz.minigame.events.ScoreboardUpdateEvent;
 import me.infinityz.minigame.events.TeamWinEvent;
@@ -62,7 +63,16 @@ public class IngameListeners implements Listener {
     private @Getter List<Material> possibleFence = Arrays.stream(Material.values())
             .filter(material -> material.name().contains("FENCE") && !material.name().contains("FENCE_GATE"))
             .collect(Collectors.toList());
+            
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void lateJoinFix(PlayerJoinedLateEvent e){
+        final var location = e.getPlayer().getLocation();
+        var spawn = Game.getLobbySpawn();
+        e.getPlayer().teleport(location);
+        e.getPlayer().teleportAsync(spawn);
+        
 
+    }
     // DEATHMATCH
 
     @EventHandler

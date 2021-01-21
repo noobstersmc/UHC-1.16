@@ -79,8 +79,8 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
         setEnabled(true);
 
         instance.getGame().setNether(false);
-        instance.getGame().setPvpTime(900);
         instance.getGame().setBorderTime(1200);
+        instance.getGame().setPvpTime(900);
         instance.getGame().setBorderCenterTime(600);
         instance.getGame().setBorderCenter(100);
 
@@ -102,7 +102,6 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
 
         instance.getGame().setNether(true);
         instance.getGame().setPvpTime(1200);
-
         instance.getGame().setBorderTime(3600);
         instance.getGame().setBorderCenterTime(1800);
         instance.getGame().setBorderCenter(200);
@@ -207,6 +206,8 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
             e.getDrops().add(new ItemStack(Material.LEATHER));
         if (type == EntityType.CHICKEN)
             e.getDrops().add(new ItemStack(Material.ARROW, 3));
+        if (type == EntityType.BLAZE && random.nextBoolean())
+            e.getDrops().add(new ItemStack(Material.GLOWSTONE));
     }
 
 }

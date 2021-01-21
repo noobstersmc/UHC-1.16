@@ -22,6 +22,7 @@ import gnu.trove.map.hash.THashMap;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import me.infinityz.minigame.UHC;
+import me.infinityz.minigame.chunks.ChunksManager;
 import me.infinityz.minigame.enums.DQReason;
 import me.infinityz.minigame.events.GameTickEvent;
 import me.infinityz.minigame.events.NetherDisabledEvent;
@@ -307,8 +308,23 @@ public class GameLoop extends BukkitRunnable {
                         && !players.getWorld().getWorldBorder().isInside(players.getLocation()))
                 .forEach(outsideBorderPlayer -> Bukkit.getScheduler().runTask(instance, () -> {
                     outsideBorderPlayer.damage(1);
+
                     if (outsideBorderPlayer.getWorld().getEnvironment() == Environment.NORMAL)
                         handleBorderRescue(outsideBorderPlayer);
+                    else if(outsideBorderPlayer.getWorld().getEnvironment() == Environment.NETHER && !instance.getGamemodeManager().isScenarioEnable(GoToHell.class)){
+                            var border = outsideBorderPlayer.getWorld().getWorldBorder();
+                            var loc = outsideBorderPlayer.getLocation();
+                            var distance = Math.abs(distanceToNearestPoint(border, loc));
+                            if (distance >= 10) {
+                                var worldToTeleport = Bukkit.getWorld("world");
+                                var radius = (int) worldToTeleport.getWorldBorder().getSize() / 2;
+                                var newLoc = ChunksManager.centerLocation(ChunksManager.findScatterLocation(worldToTeleport, radius));
+                                
+                                outsideBorderPlayer.teleportAsync(newLoc);
+                                outsideBorderPlayer.sendMessage(ChatColor.of("#1fbd90") + "The gods have decided to give you a second chance.");
+                                outsideBorderPlayer.playSound(newLoc, Sound.ENTITY_ENDERMAN_TELEPORT, SoundCategory.VOICE, 1.0f, 0.5f);
+                            }
+                    }
 
                     outsideBorderPlayer
                             .setLastDamageCause(new EntityDamageEvent(outsideBorderPlayer, DamageCause.CUSTOM, 1));

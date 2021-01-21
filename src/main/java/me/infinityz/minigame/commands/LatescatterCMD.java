@@ -53,11 +53,10 @@ public class LatescatterCMD extends BaseCommand {
 
         player.sendMessage((ChatColor.of("#7ab83c") + "Loading a location..."));
         player.setGameMode(GameMode.SURVIVAL);
-
-        player.teleportAsync(ChunksManager.findScatterLocation(world, worldBorderSizeHaved))
-                .thenAccept(result -> player
-                        .sendMessage((ChatColor.of("#7ab83c") + (result ? "You have been scattered into the world."
-                                : "Coudn't scatter you, ask for help."))));
+        
+        var loc = ChunksManager.findScatterLocation(world, worldBorderSizeHaved).add(0, 5, 0);;
+        player.teleport(loc);
+        player.sendMessage(ChatColor.of("#7ab83c") + "You have been scattered into the world.");
 
         uhcPlayer.setAlive(true);
         Bukkit.getPluginManager().callEvent(PlayerJoinedLateEvent.of(player));
