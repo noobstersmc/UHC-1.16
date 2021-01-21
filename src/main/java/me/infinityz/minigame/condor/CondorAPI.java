@@ -14,8 +14,9 @@ import okhttp3.Request;
 
 public class CondorAPI {
     private static Gson gson = new Gson();
-    public static String CONDOR_URL = "http://condor.jcedeno.us:420";
-    private @Getter static OkHttpClient client = new OkHttpClient().newBuilder().connectTimeout(2, TimeUnit.SECONDS).build();
+    public static String CONDOR_URL = "http://condor.jcedeno.us";
+    private @Getter static OkHttpClient client = new OkHttpClient().newBuilder().connectTimeout(2, TimeUnit.SECONDS)
+            .build();
     public static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
 
     /**
@@ -56,14 +57,14 @@ public class CondorAPI {
      */
     public static JsonObject getGameJsonConfig(String condorID, String secret) {
         /* Helper fucntion to create the request and return it */
-        return makeJsonRequest(builder().url(CONDOR_URL + "/game").addHeader("auth", secret)
-                .addHeader("condor_id", condorID).get().build());
+        return makeJsonRequest(builder().url(CONDOR_URL + "/utils/game?condor_id=" + condorID)
+                .addHeader("Authorization", secret).get().build());
     }
 
-    public static String getCondorRandomSeed() throws IOException{
-        var rq = builder().url(CONDOR_URL + "/seeds").get().build();
+    public static String getCondorRandomSeed() throws IOException {
+        var rq = builder().url(CONDOR_URL + "/utils/seeds").get().build();
         var response = client.newCall(rq).execute().body().string();
-    
+
         return response;
     }
 

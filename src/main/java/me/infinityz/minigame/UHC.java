@@ -117,10 +117,9 @@ public class UHC extends JavaPlugin {
                 condor_secret = secret.getAsString();
             }
         }
-        System.out.println("[CONDOR] Condor id is: " + (CONDOR_ID != null ? CONDOR_ID: " NULL"));
+        System.out.println("[CONDOR] Condor id is: " + (CONDOR_ID != null ? CONDOR_ID : " NULL"));
         if (CONDOR_ID != null) {
-            condorConfig = CondorAPI.getGameJsonConfig(CONDOR_ID,
-                    condor_secret != null ? condor_secret : "Condor-Secreto");
+            condorConfig = CondorAPI.getGameJsonConfig(CONDOR_ID, condor_secret != null ? condor_secret : "6QR3W05K3F");
 
         }
         try {
@@ -160,19 +159,19 @@ public class UHC extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        /*Create the base world with the correct seed */
+        /* Create the base world with the correct seed */
         try {
-            if(condorDataConfig != null){
+            if (condorDataConfig != null) {
                 var level_seed = condorDataConfig.getLevel_seed();
-                if(level_seed.contains("random")){    
+                if (level_seed.contains("random")) {
                     SEED = CondorAPI.getCondorRandomSeed();
-                }else{
-                    SEED =level_seed; 
+                } else {
+                    SEED = level_seed;
                 }
-            }else{                
-                SEED = CondorAPI.getCondorRandomSeed(); 
+            } else {
+                SEED = CondorAPI.getCondorRandomSeed();
             }
-            
+
         } catch (Exception e) {
             e.printStackTrace();
         }
