@@ -315,7 +315,7 @@ public class PortalListeners extends BaseCommand implements Listener {
                     var world = player.getWorld();
                     if (world.getEnvironment() == Environment.NORMAL) {
                         var nether = Bukkit.getWorld(world.getName() + "_nether");
-                        if (nether != null) {
+                        if (nether != null || !instance.getGame().isNether()) {
                             travelDimensions(player, player.getLocation(), nether);
                         } else {
                             player.sendMessage(ChatColor.RED + "Nether world not available.");

@@ -30,6 +30,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.potion.PotionEffectType;
 
 import co.aikar.taskchain.TaskChain;
 import lombok.Getter;
@@ -68,8 +69,10 @@ public class IngameListeners implements Listener {
     public void lateJoinFix(PlayerJoinedLateEvent e){
         final var location = e.getPlayer().getLocation();
         var spawn = Game.getLobbySpawn();
-        e.getPlayer().teleport(location);
-        e.getPlayer().teleportAsync(spawn);
+        var player = e.getPlayer();
+        player.addPotionEffect(PotionEffectType.DAMAGE_RESISTANCE.createEffect(200, 10));
+        player.teleport(spawn);
+        player.teleportAsync(location);
         
 
     }

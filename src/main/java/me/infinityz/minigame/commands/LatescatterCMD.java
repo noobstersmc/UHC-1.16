@@ -54,7 +54,7 @@ public class LatescatterCMD extends BaseCommand {
         player.sendMessage((ChatColor.of("#7ab83c") + "Loading a location..."));
         player.setGameMode(GameMode.SURVIVAL);
         
-        var loc = ChunksManager.findScatterLocation(world, worldBorderSizeHaved).add(0, 5, 0);;
+        var loc = ChunksManager.findScatterLocation(world, worldBorderSizeHaved).add(0, 5, 0);
         player.teleport(loc);
         player.sendMessage(ChatColor.of("#7ab83c") + "You have been scattered into the world.");
 
