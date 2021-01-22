@@ -127,6 +127,7 @@ public class UHC extends JavaPlugin {
         // TODO: De mientras asi se accede a corpse. luego lo cambio
         var corpse = Main.getInstance();
         // corpse.createCorpse(arg0, arg1);
+
         try {
             if (condorConfig != null) {
                 System.out.println(condorConfig.toString());
