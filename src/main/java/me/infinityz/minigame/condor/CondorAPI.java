@@ -57,12 +57,12 @@ public class CondorAPI {
      */
     public static JsonObject getGameJsonConfig(String condorID, String secret) {
         /* Helper fucntion to create the request and return it */
-        return makeJsonRequest(builder().url(CONDOR_URL + "/utils/game?condor_id=" + condorID)
+        return makeJsonRequest(builder().url(CONDOR_URL + "utils/game?condor_id=" + condorID)
                 .addHeader("Authorization", secret).get().build());
     }
 
     public static String getCondorRandomSeed() throws IOException {
-        var rq = builder().url(CONDOR_URL + "/utils/seeds").get().build();
+        var rq = builder().url(CONDOR_URL + "utils/seeds").get().build();
         var response = client.newCall(rq).execute().body().string();
 
         return response;
