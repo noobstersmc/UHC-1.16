@@ -14,7 +14,7 @@ import okhttp3.Request;
 
 public class CondorAPI {
     private static Gson gson = new Gson();
-    public static String CONDOR_URL = "http://condor.jcedeno.us";
+    public static String CONDOR_URL = "https://hynix-condor.herokuapp.com/";
     private @Getter static OkHttpClient client = new OkHttpClient().newBuilder().connectTimeout(2, TimeUnit.SECONDS)
             .build();
     public static final MediaType JSON = MediaType.get("application/json; charset=utf-8");

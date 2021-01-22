@@ -17,6 +17,7 @@ public class CondorConfig {
     String level_seed;
     String[] scenarios;
     int team_size;
+    boolean privacy;
 
     public static CondorConfig ofJson(JsonObject jsonObject) {
         var host = jsonObject.get("host").getAsString();
@@ -34,7 +35,8 @@ public class CondorConfig {
 
         var team_size = extra_data.get("team_size").getAsInt();
 
-        return CondorConfig.of(host, game_type, host_uuid, level_seed, scenarios, team_size);
+        return CondorConfig.of(host, game_type, host_uuid, level_seed, scenarios, team_size,
+                jsonObject.get("private").getAsBoolean());
     }
 
 }

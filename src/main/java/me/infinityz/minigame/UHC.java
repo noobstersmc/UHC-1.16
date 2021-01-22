@@ -24,7 +24,6 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.RenderType;
 import org.bukkit.scoreboard.Scoreboard;
-import org.kovalski.corpsemaster.Main;
 
 import co.aikar.commands.PaperCommandManager;
 import co.aikar.taskchain.BukkitTaskChainFactory;
@@ -125,7 +124,7 @@ public class UHC extends JavaPlugin {
         }
 
         // TODO: De mientras asi se accede a corpse. luego lo cambio
-        var corpse = Main.getInstance();
+        // var corpse = Main.getInstance();
         // corpse.createCorpse(arg0, arg1);
         try {
             if (condorConfig != null) {
@@ -344,6 +343,9 @@ public class UHC extends JavaPlugin {
 
                 game.setHostname(config.getHost());
                 game.setHostUUID(config.getHost_uuid());
+                // TODO: WHITELIST HOST TOO?
+                game.setPrivateGame(config.isPrivacy());
+                Bukkit.getWhitelistedPlayers().add(Bukkit.getOfflinePlayer(config.getHost_uuid()));
 
                 var team_size = config.getTeam_size();
                 if (team_size > 1) {
