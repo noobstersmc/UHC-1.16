@@ -149,11 +149,11 @@ public class EnderRespawnLeader extends IGamemode implements Listener {
         final double x = loc.getBlockX() + 0.0;
         final double y = loc.getBlockY() + 0.0;
         final double z = loc.getBlockZ() + 0.0;
-        final var tower = "fill %.0f %.0f %.0f %.0f %.0f %.0f minecraft:obsidian destroy";
+        final var tower = "execute in minecraft:world run fill %.0f %.0f %.0f %.0f %.0f %.0f minecraft:obsidian destroy";
         UHC.newChain().delay(1).sync(() -> {
             // TOWER 1
 
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "execute in minecraft:overworld run weather thunder");
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "execute in minecraft:world run weather thunder");
 
             loc.getWorld().playSound(loc, Sound.ENTITY_BLAZE_SHOOT, SoundCategory.VOICE, 10, 0.1f);
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
@@ -237,7 +237,7 @@ public class EnderRespawnLeader extends IGamemode implements Listener {
                 }).delay(10).sync(() -> {
                     loc.getWorld().strikeLightningEffect(loc.clone().set(x, y, z));
                     Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
-                            "execute in minecraft:overworld run weather clear");
+                            "execute in minecraft:world run weather clear");
                 }).sync(TaskChain::abort).execute();
     }
 
