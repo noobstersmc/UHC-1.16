@@ -35,6 +35,7 @@ import lombok.RequiredArgsConstructor;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.chunks.ChunkLoadTask;
 import me.infinityz.minigame.chunks.ChunksManager;
+import me.infinityz.minigame.condor.CondorAPI;
 import me.infinityz.minigame.events.PlayerJoinedLateEvent;
 import me.infinityz.minigame.game.Game;
 import me.infinityz.minigame.game.border.FortniteBorder;
@@ -70,7 +71,8 @@ public class UHCCommand extends BaseCommand {
     @CommandPermission("uhc.refresh")
     public void refreshCommands(Player sender) throws IOException {
         sender.updateCommands();
-        //instance.restartSystem();
+        // instance.restartSystem();
+        CondorAPI.delete("6QR3W05K3F", instance.getGame().getGameID().toString());
     }
 
     @Data
@@ -389,10 +391,12 @@ public class UHCCommand extends BaseCommand {
         var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
         if (instance.getGame().isAutoDestruction()) {
             instance.getGame().setAutoDestruction(false);
-            Bukkit.broadcast(senderName + ChatColor.YELLOW + "Auto destruction has been disabled.", "uhc.configchanges.see");
+            Bukkit.broadcast(senderName + ChatColor.YELLOW + "Auto destruction has been disabled.",
+                    "uhc.configchanges.see");
         } else {
             instance.getGame().setAutoDestruction(true);
-            Bukkit.broadcast(senderName + ChatColor.YELLOW + "Auto destruction has been enabled.", "uhc.configchanges.see");
+            Bukkit.broadcast(senderName + ChatColor.YELLOW + "Auto destruction has been enabled.",
+                    "uhc.configchanges.see");
         }
 
     }

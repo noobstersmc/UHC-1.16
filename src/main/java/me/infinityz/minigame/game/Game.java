@@ -114,6 +114,7 @@ public class Game {
         }
         try {
             CondorAPI.delete("6QR3W05K3F", instance.getGame().getGameID().toString());
+            Bukkit.getScheduler().runTask(instance, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "stop"));
 
         } catch (Exception e) {
             Bukkit.broadcastMessage("Error while autodeleting instance: " + e.getMessage());
@@ -139,7 +140,6 @@ public class Game {
 
             var scheduler = Bukkit.getScheduler();
             var count = 0;
-
             for (var p : Bukkit.getOnlinePlayers()) {
                 scheduler.runTaskLater(instance, () -> p.kickPlayer("Thanks for playing."), count += 5);
             }
