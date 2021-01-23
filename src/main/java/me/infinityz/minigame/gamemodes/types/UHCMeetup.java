@@ -183,11 +183,11 @@ public class UHCMeetup extends IGamemode implements Listener {
             if (!isEnabled())
                 sender.sendMessage(ChatColor.RED + "Command disabled.");
 
+            else if (!sender.hasPermission("reroll.cmd"))
+                sender.sendMessage(Game.getUpToVIP());
+
             else if (instance.getGame().getGameTime() > instance.getGame().getPvpTime())
                 sender.sendMessage(ChatColor.RED + "ReRoll command available only at the start of the game.");
-
-            else if (!sender.hasPermission("reroll.cmd"))
-                sender.sendMessage(Game.getUpToMVP());
 
             else {
                 sender.getInventory().clear();

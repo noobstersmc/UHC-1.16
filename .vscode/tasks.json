@@ -1,31 +1,26 @@
 {
-    // See https://go.microsoft.com/fwlink/?LinkId=733558
-    // for the documentation about the tasks.json format
-    "version": "2.0.0",
-    "tasks": [
-        {
-            "label": "Compile",
-            "type": "shell",
-            "command": "mvn -B  install",
-            "group": "build"
-        },
-        {
-            "label": "Clean Compile",
-            "type": "shell",
-            "command": "mvn -B clean install",
-            "group": "build"
-        },
-        {
-            "label": "verify",
-            "type": "shell",
-            "command": "mvn -B verify",
-            "group": "build"
-        },
-        {
-            "label": "test",
-            "type": "shell",
-            "command": "mvn -B test",
-            "group": "test"
-        }
-    ]
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "gradle",
+			"id": "c:\\Users\\aleja\\Documents\\repository\\UHC-1.16builduhc",
+			"script": "build",
+			"description": "Assembles and tests this project.",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"project": "uhc",
+			"buildFile": "C:\\Users\\aleja\\Documents\\repository\\UHC-1.16\\build.gradle",
+			"rootProject": "uhc",
+			"projectFolder": "c:\\Users\\aleja\\Documents\\repository\\UHC-1.16",
+			"workspaceFolder": "c:\\Users\\aleja\\Documents\\repository\\UHC-1.16",
+			"args": "",
+			"javaDebug": false,
+			"problemMatcher": [
+				"$gradle"
+			],
+			"label": "gradle: build"
+		}
+	]
 }

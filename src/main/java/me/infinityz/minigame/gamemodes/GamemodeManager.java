@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.gamemodes.types.AdvancementHunter;
+import me.infinityz.minigame.gamemodes.types.AntiBurn;
 import me.infinityz.minigame.gamemodes.types.BackPack;
 import me.infinityz.minigame.gamemodes.types.Baguettes;
 import me.infinityz.minigame.gamemodes.types.BloodDiamonds;
@@ -127,6 +128,7 @@ public class GamemodeManager {
         registerGamemode(new DamageCycle(instance));
         registerGamemode(new CrossBowLess(instance));
         registerGamemode(new Popeye(instance));
+        registerGamemode(new AntiBurn(instance));
 
         //Invitados
         registerGamemode(new UHCVandalico(instance));
