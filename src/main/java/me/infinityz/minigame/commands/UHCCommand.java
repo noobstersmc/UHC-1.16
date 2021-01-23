@@ -1,5 +1,6 @@
 package me.infinityz.minigame.commands;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -67,9 +68,9 @@ public class UHCCommand extends BaseCommand {
 
     @CommandAlias("refresh")
     @CommandPermission("uhc.refresh")
-    public void refreshCommands(Player sender) {
+    public void refreshCommands(Player sender) throws IOException {
         sender.updateCommands();
-        instance.restartSystem();
+        //instance.restartSystem();
     }
 
     @Data

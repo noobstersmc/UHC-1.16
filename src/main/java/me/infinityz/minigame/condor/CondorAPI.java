@@ -11,6 +11,7 @@ import lombok.Getter;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.Response;
 
 public class CondorAPI {
     private static Gson gson = new Gson();
@@ -66,6 +67,23 @@ public class CondorAPI {
         var response = client.newCall(rq).execute().body().string();
 
         return response;
+    }
+
+    
+    /**
+     * Create a delete request in condor
+     * 
+     * @param auth      Authorization token, also used as billing id.
+     * @param condor_id Condor_id of instance to be deleted
+     * @return Json Response in string form.
+     * @throws IOException
+     */
+    public static String delete(String auth, String condor_id) throws IOException {
+        Request request = new Request.Builder().url(CONDOR_URL + "instances/" + condor_id + "?fromBukkit=true")
+                .addHeader("Authorization", auth).addHeader("Content-Type", "application/json").delete().build();
+        try (Response response = client.newCall(request).execute()) {
+            return response.body().string();
+        }
     }
 
     /* Helper to reduce boiler plate */

@@ -18,8 +18,8 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import me.infinityz.minigame.UHC;
+import me.infinityz.minigame.condor.CondorAPI;
 import me.infinityz.minigame.enums.Stage;
-import me.infinityz.minigame.game.props.DeleteRequest;
 import me.infinityz.minigame.gamemodes.types.UHCMeetup;
 import me.infinityz.minigame.gamemodes.types.UHCRun;
 import net.md_5.bungee.api.ChatColor;
@@ -30,14 +30,16 @@ public class Game {
     private static @Getter @Setter BossBar bossbar;
     private static Gson gson = new GsonBuilder().create();
     private static @Getter @Setter String scoreboardTitle = ChatColor.AQUA + "" + ChatColor.BOLD + "UHC";
-    private static @Getter @Setter String tablistHeader =  ChatColor.DARK_RED + "" + ChatColor.BOLD + "NOOBSTERS\n" + ChatColor.of("#4788d9") + "\nJoin Our Community!\n" + ChatColor.of("#2be49c")
-    + "discord.noobsters.net\n" + ChatColor.AQUA + "twitter.com/NoobstersMC\n " + ChatColor.GOLD
-    + "noobsters.buycraft.net\n";
+    private static @Getter @Setter String tablistHeader = ChatColor.DARK_RED + "" + ChatColor.BOLD + "NOOBSTERS\n"
+            + ChatColor.of("#4788d9") + "\nJoin Our Community!\n" + ChatColor.of("#2be49c") + "discord.noobsters.net\n"
+            + ChatColor.AQUA + "twitter.com/NoobstersMC\n " + ChatColor.GOLD + "noobsters.buycraft.net\n";
     private static @Getter @Setter String scoreColors = ChatColor.of("#0ca2d4") + "";
-    private static @Getter @Setter String UpToMVP = ChatColor.RED + "This action is only available for " + ChatColor.of("#1af4c1") + "MVP" + ChatColor.RED + " and UP! \n" 
-            + ChatColor.GREEN + "Upgrade your rank at " + ChatColor.GOLD + "noobsters.buycraft.net";
-    private static @Getter @Setter String UpToVIP = ChatColor.RED + "This action is only available for " + ChatColor.of("#f4c91a") + "VIP" + ChatColor.RED + " and UP! \n" 
-            + ChatColor.GREEN + "Upgrade your rank at " + ChatColor.GOLD + "noobsters.buycraft.net";
+    private static @Getter @Setter String UpToMVP = ChatColor.RED + "This action is only available for "
+            + ChatColor.of("#1af4c1") + "MVP" + ChatColor.RED + " and UP! \n" + ChatColor.GREEN
+            + "Upgrade your rank at " + ChatColor.GOLD + "noobsters.buycraft.net";
+    private static @Getter @Setter String UpToVIP = ChatColor.RED + "This action is only available for "
+            + ChatColor.of("#f4c91a") + "VIP" + ChatColor.RED + " and UP! \n" + ChatColor.GREEN
+            + "Upgrade your rank at " + ChatColor.GOLD + "noobsters.buycraft.net";
     private static @Getter @Setter Location lobbySpawn;
 
     /* Game data */
@@ -110,9 +112,13 @@ public class Game {
             Bukkit.getScheduler().runTask(instance, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "stop"));
             return;
         }
-        var req = gson.toJson(DeleteRequest.ofGame());
-        instance.getCondorManager().getJedis().publish("destroy", req);
-        Bukkit.broadcast(req, "uhc.debug.destroy");
+        try {
+            CondorAPI.delete("6QR3W05K3F", instance.getGame().getGameID().toString());
+
+        } catch (Exception e) {
+            Bukkit.broadcastMessage("Error while autodeleting instance: " + e.getMessage());
+            // TODO: handle exception
+        }
     }
 
     public void selfDestroyTimed() {
@@ -130,15 +136,15 @@ public class Game {
                 Bukkit.broadcast(ChatColor.GRAY + "[UHC] Self-destruction was cancelled.", "uhc.destroy.self");
                 return;
             }
-            
+
             var scheduler = Bukkit.getScheduler();
             var count = 0;
 
             for (var p : Bukkit.getOnlinePlayers()) {
-            scheduler.runTaskLater(instance, ()->  p.kickPlayer("Thanks for playing."), count+=5);
+                scheduler.runTaskLater(instance, () -> p.kickPlayer("Thanks for playing."), count += 5);
             }
-            scheduler.runTaskLater(instance, ()-> sendSelfDestroyRequest(instance), count +=5);
-            
+            scheduler.runTaskLater(instance, () -> sendSelfDestroyRequest(instance), count += 5);
+
         }, 20 * delay);
 
     }
