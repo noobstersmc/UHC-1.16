@@ -4,6 +4,7 @@ import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -12,6 +13,10 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
+import co.aikar.commands.BaseCommand;
+import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandPermission;
+import co.aikar.commands.annotation.Default;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.events.GameTickEvent;
 import me.infinityz.minigame.gamemodes.IGamemode;
@@ -20,6 +25,7 @@ import net.md_5.bungee.api.ChatColor;
 public class DamageCycle extends IGamemode implements Listener {
     private UHC instance;
     private Random random = new Random();
+    private int delay = 300;
     private DamageCause currentDamage = DamageCause.LIGHTNING;
     private DamageCause[] DAMAGE_CAUSES = new DamageCause[] { 
         DamageCause.LAVA, 
@@ -42,6 +48,7 @@ public class DamageCycle extends IGamemode implements Listener {
         super("Damage Cycle",
                 "Every 5 minutes a damage type will be choosed randomly, if you take that type of damage you died.");
         this.instance = instance;
+        this.instance.getCommandManager().registerCommand(new DamageCycleCMD());
     }
 
     @Override
@@ -65,7 +72,7 @@ public class DamageCycle extends IGamemode implements Listener {
     @EventHandler
     public void onGameLoop(GameTickEvent e) {
 
-        if (e.getSecond() % 300 == 0) {
+        if (e.getSecond() % delay == 0) {
             Bukkit.getScheduler().runTask(instance, () -> {
                 currentDamage = DAMAGE_CAUSES[random.nextInt(DAMAGE_CAUSES.length)];
                 Bukkit.broadcastMessage(
@@ -117,6 +124,19 @@ public class DamageCycle extends IGamemode implements Listener {
                 players.playSound(players.getLocation(), Sound.ENTITY_RAVAGER_CELEBRATE, 1, 0.1f);
             });
         }
+    }
+
+    @CommandPermission("uhc.scenarios")
+    @CommandAlias("damagecycle")
+    public class DamageCycleCMD extends BaseCommand {
+
+        @Default
+        public void changeDelay(CommandSender sender, Integer newDelay) {
+            delay = newDelay*60;
+            var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
+            Bukkit.broadcast(senderName + ChatColor.YELLOW + "Damage Cycle delay has change to: " + newDelay + " minutes.", "uhc.configchanges.see");
+        }
+
     }
 
 }

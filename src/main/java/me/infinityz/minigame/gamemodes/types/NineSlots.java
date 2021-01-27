@@ -83,6 +83,7 @@ public class NineSlots extends IGamemode implements Listener {
         }
     }
 
+    @EventHandler
     public void onPlayerJoinLate(PlayerJoinedLateEvent e){
         Bukkit.getScheduler().runTaskLater(instance, ()->{
             fillInventory(e.getPlayer());

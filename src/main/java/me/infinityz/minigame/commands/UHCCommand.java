@@ -385,8 +385,8 @@ public class UHCCommand extends BaseCommand {
     }
 
     @Subcommand("autodestroy|autodestruction|")
-    @CommandAlias("autodestroyauto|destruction")
-    @CommandPermission("uhc.config.cmd")
+    @CommandAlias("autodestroy|destruction")
+    @CommandPermission("uhc.destroy.cmd")
     public void autoDestroy(CommandSender sender) {
         var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
         if (instance.getGame().isAutoDestruction()) {

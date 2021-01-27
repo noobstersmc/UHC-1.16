@@ -22,6 +22,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
@@ -100,15 +101,25 @@ public class GlobalListener implements Listener {
     }
 
     @EventHandler
+    public void login(PlayerLoginEvent e){
+        var player = e.getPlayer();
+        if(player.hasPermission("staff.perm") || player.hasPermission("group.host"))
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "whitelist add " + player.getName().toString());
+    }
+
+    @EventHandler
     public void joinMessage(PlayerJoinEvent e) {
         var player = e.getPlayer();
+        
         e.setJoinMessage("");
 
         player.setPlayerListHeader(Game.getTablistHeader());
-        if (player.hasPermission("group.community") && player.getUniqueId().compareTo(instance.getGame().getHostUUID()) == 0) {
+        if (player.getUniqueId().compareTo(instance.getGame().getHostUUID()) == 0) {
             player.addAttachment(instance).setPermission("group.host", true);
             player.updateCommands();
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "whitelist add " + player.getName().toString());
         }
+
     }
 
     @EventHandler

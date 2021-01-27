@@ -21,7 +21,7 @@ public class SkyHigh extends IGamemode implements Listener {
     private boolean damage = false;
     private float extradamage = 6;
     private float exda = 0;
-    private int delay = 10;
+    private int delay = 600;
     private UHC instance;
 
     public SkyHigh(UHC instance) {
@@ -76,8 +76,11 @@ public class SkyHigh extends IGamemode implements Listener {
         @Default
         public void toggleDamage(CommandSender sender) {
             damage = !damage;
-            sender.sendMessage("Damage has been switch to: " + damage);
-            Bukkit.broadcastMessage(ChatColor.of("#7fe5f0") + "Go above coordinate Y=150 now. Player's that remain in surface will take a heart of damage every 5 seconds.");
+            if(damage == true){
+                var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
+                Bukkit.broadcast(senderName + ChatColor.YELLOW + "SkyHigh Damage switch to: " + damage, "uhc.configchanges.see");
+                Bukkit.broadcastMessage(ChatColor.of("#7fe5f0") + "Go above coordinate Y=150 now. Player's that remain in surface will take a heart of damage every 5 seconds.");
+            }
 
         }
 
@@ -85,15 +88,17 @@ public class SkyHigh extends IGamemode implements Listener {
         @CommandAlias("extradamage")
         public void extraDamage(CommandSender sender, Float ed) {
             extradamage = ed;
-            sender.sendMessage(ChatColor.GRAY + "SkyHigh Extra damage set to " + ed);
+            var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
+            Bukkit.broadcast(senderName + ChatColor.YELLOW + "SkyHigh extra damage set to " + ed/2 + " hearts.", "uhc.configchanges.see");
 
         }
 
         @Subcommand("delay")
         @CommandAlias("delay")
         public void delay(CommandSender sender, Integer de) {
-            delay = de;
-            sender.sendMessage(ChatColor.GRAY + "SkyHigh Delay set to " + de);
+            delay = de*60;
+            var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
+            Bukkit.broadcast(senderName + ChatColor.YELLOW + "SkyHigh delay set to " + de + " minutes.", "uhc.configchanges.see");
 
         }
     }

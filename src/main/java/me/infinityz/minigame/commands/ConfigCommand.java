@@ -203,7 +203,7 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
         instance.getGame().setApplerate(rate);
     }
 
-    @CommandPermission("uhc.config.cmd")
+    @CommandPermission("staff.perm")
     @Subcommand("setslots")
     @CommandAlias("slots||setslots||maxslots")
     public void changeSlots(CommandSender sender, Integer newSlots) {

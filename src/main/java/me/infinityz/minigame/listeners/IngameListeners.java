@@ -45,6 +45,7 @@ import me.infinityz.minigame.events.ScoreboardUpdateEvent;
 import me.infinityz.minigame.events.TeamWinEvent;
 import me.infinityz.minigame.events.UHCPlayerDequalificationEvent;
 import me.infinityz.minigame.game.Game;
+import me.infinityz.minigame.gamemodes.types.BareBones;
 import me.infinityz.minigame.gamemodes.types.GoldenRetreiver;
 import me.infinityz.minigame.gamemodes.types.SkyHigh;
 import me.infinityz.minigame.gamemodes.types.TiempoBomba;
@@ -304,7 +305,8 @@ public class IngameListeners implements Listener {
     public void onDeathHead(PlayerDeathEvent e) {
         final Player p = e.getEntity();
         if (instance.getGamemodeManager().isScenarioEnable(GoldenRetreiver.class)
-                || instance.getGamemodeManager().isScenarioEnable(UHCMeetup.class))
+                || instance.getGamemodeManager().isScenarioEnable(UHCMeetup.class) 
+                || instance.getGamemodeManager().isScenarioEnable(BareBones.class))
             return;
 
         if (instance.getGamemodeManager().isScenarioEnable(TiempoBomba.class)

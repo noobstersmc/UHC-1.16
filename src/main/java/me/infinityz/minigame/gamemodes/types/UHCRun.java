@@ -171,6 +171,7 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void extraXp(BlockBreakEvent e) {
+        if(instance.getGame().isAntiMining()) return;
         var loc = e.getBlock().getLocation();
         if (e.getBlock().getType().toString().contains("ORE")) {
             loc.getWorld().spawn(loc, ExperienceOrb.class).setExperience(3);
