@@ -58,6 +58,7 @@ public class SuperHeroes extends IGamemode implements Listener {
             }break;
             case 4: {
                 player.addPotionEffect(new PotionEffect(PotionEffectType.HEALTH_BOOST, 20 * 100000, 4));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20 * 10, 4));
             }break;
             case 5: {
                 player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 20 * 100000, 0));
@@ -87,8 +88,10 @@ public class SuperHeroes extends IGamemode implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onStart(GameStartedEvent e) {
-        Bukkit.getOnlinePlayers().forEach(players->{
-            givePower(players);
+        Bukkit.getScheduler().runTask(instance, () -> {
+            Bukkit.getOnlinePlayers().forEach(players->{
+                givePower(players);
+            });
         });
 
     }
