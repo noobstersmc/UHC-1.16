@@ -44,7 +44,7 @@ public class SuperHeroes extends IGamemode implements Listener {
     }
 
     public void givePower(Player player){
-        switch(random.nextInt(3)) {
+        switch(random.nextInt(9)) {
             case 1: {
                 player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 100000, 0));
             }break;
