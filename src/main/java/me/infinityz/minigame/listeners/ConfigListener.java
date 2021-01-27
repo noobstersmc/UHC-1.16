@@ -17,6 +17,8 @@ import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.ItemSpawnEvent;
+import org.bukkit.event.inventory.BrewingStandFuelEvent;
+import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -61,6 +63,21 @@ public class ConfigListener implements Listener {
     public void onPortalCreate(PortalCreateEvent e) {
         if (!instance.getGame().isNether() && e.getReason() == CreateReason.FIRE) {
             e.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void brewing(BrewingStandFuelEvent e){
+        if(!instance.getGame().isPotions()){
+            e.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onCraftPowder(CraftItemEvent e){
+        if(!instance.getGame().isPotions() && e.getInventory().getResult() != null 
+            && e.getInventory().getResult().getType() == Material.BLAZE_POWDER){
+            e.getWhoClicked().sendMessage(ChatColor.RED + "Potions are disabled.");
         }
     }
 

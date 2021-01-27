@@ -22,6 +22,7 @@ import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import co.aikar.taskchain.TaskChain;
@@ -231,7 +232,7 @@ public class EnderRespawnLeader extends IGamemode implements Listener {
                     }
                     toRespawn.teleport(loc);
                     toRespawn.setGameMode(GameMode.SURVIVAL);
-                    toRespawn.addPotionEffect(PotionEffectType.DAMAGE_RESISTANCE.createEffect(200, 10));
+                    toRespawn.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 15, 20));
                     Bukkit.broadcastMessage(ChatColor.YELLOW + "" + toRespawn.getName() + " has been reborn from the darkness!");
 
                 }).delay(10).sync(() -> {

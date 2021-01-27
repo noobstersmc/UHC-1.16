@@ -30,6 +30,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import co.aikar.taskchain.TaskChain;
@@ -71,7 +72,7 @@ public class IngameListeners implements Listener {
         final var location = e.getPlayer().getLocation();
         var spawn = Game.getLobbySpawn();
         var player = e.getPlayer();
-        player.addPotionEffect(PotionEffectType.DAMAGE_RESISTANCE.createEffect(200, 10));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 10, 20));
         player.teleport(spawn);
         player.teleportAsync(location);
         
@@ -382,8 +383,10 @@ public class IngameListeners implements Listener {
         // 3-second timeout to get respawned in spectator mode.
         Player p = e.getEntity();
 
+        p.getActivePotionEffects().forEach(all -> p.removePotionEffect(all.getType()));
         p.setGameMode(GameMode.SPECTATOR);
         p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+        
         p.getWorld().strikeLightningEffect(p.getLocation());
         p.sendTitle(Title.builder().title("")
                 .subtitle(new ComponentBuilder("YOU ARE DEAD").bold(true).color(ChatColor.DARK_RED).create()).build());

@@ -84,7 +84,6 @@ public @RequiredArgsConstructor class Utilities extends BaseCommand {
 
     }
 
-    @CommandPermission("teleport.cmd")
     @CommandCompletion("@onlineplayers")
     @Subcommand("t")
     @CommandAlias("t")

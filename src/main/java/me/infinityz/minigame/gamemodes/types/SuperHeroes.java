@@ -5,8 +5,8 @@ import java.util.Random;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.BrewingStandFuelEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -30,6 +30,7 @@ public class SuperHeroes extends IGamemode implements Listener {
         if (isEnabled())
             return false;
         instance.getListenerManager().registerListener(this);
+        instance.getGame().setPotions(false);
         setEnabled(true);
         return true;
     }
@@ -39,6 +40,7 @@ public class SuperHeroes extends IGamemode implements Listener {
         if (!isEnabled())
             return false;
         instance.getListenerManager().unregisterListener(this);
+        instance.getGame().setPotions(true);
         setEnabled(false);
         return true;
     }
@@ -77,24 +79,17 @@ public class SuperHeroes extends IGamemode implements Listener {
             }break;
         }
     }
-
-    @EventHandler
-    public void brewing(BrewingStandFuelEvent e){
-        e.setCancelled(true);
-    }
     
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerJoinLate(PlayerJoinedLateEvent e){
         givePower(e.getPlayer());
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onStart(GameStartedEvent e) {
-        Bukkit.getScheduler().runTaskLater(instance, ()->{
-            Bukkit.getOnlinePlayers().forEach(players->{
-                givePower(players);
-            });
-        }, 20*5);
+        Bukkit.getOnlinePlayers().forEach(players->{
+            givePower(players);
+        });
 
     }
 

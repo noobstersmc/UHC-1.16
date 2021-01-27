@@ -64,6 +64,7 @@ public class Game {
     private boolean bedsNerf = true;
     private boolean tearsDropGold = false;
     private boolean advancements = false;
+    private boolean potions = true;
     private double applerate = 0.80;
     private int maxDisconnectTime = 600;
     /* Game Loop */

@@ -181,6 +181,19 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
     }
 
     @CommandPermission("uhc.config.cmd")
+    @Subcommand("potions")
+    @CommandAlias("potions")
+    @CommandCompletion("@bool")
+    public void changePotions(CommandSender sender, @Optional Boolean bool) {
+        if (bool == null)
+            bool = !instance.getGame().isPotions();
+
+        instance.getGame().setPotions(bool);
+        var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
+        Bukkit.broadcast(senderName + ChatColor.YELLOW + "Potions has been set to: " + bool, "uhc.configchanges.see");
+    }
+
+    @CommandPermission("uhc.config.cmd")
     @Subcommand("strength-nerf")
     @CommandAlias("strength-nerf")
     @CommandCompletion("@bool")
@@ -211,6 +224,8 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
         var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
         Bukkit.broadcast(senderName + ChatColor.YELLOW + "Slots set to: " + newSlots, "uhc.configchanges.see");
     }
+    
+
 
 
 }
