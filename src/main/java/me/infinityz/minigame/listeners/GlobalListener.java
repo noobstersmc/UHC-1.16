@@ -10,21 +10,15 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Banner;
-import org.bukkit.entity.Bat;
 import org.bukkit.entity.Egg;
 import org.bukkit.entity.FishHook;
-import org.bukkit.entity.Piglin;
-import org.bukkit.entity.PiglinBrute;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
-import org.bukkit.entity.Rabbit;
 import org.bukkit.entity.Snowball;
-import org.bukkit.entity.Squid;
 import org.bukkit.entity.Trident;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -55,23 +49,6 @@ public class GlobalListener implements Listener {
 
     public GlobalListener(UHC instance) {
         this.instance = instance;
-    }
-
-    @EventHandler
-    public void piglinZombification(CreatureSpawnEvent e) {
-        if (e.getEntity() instanceof Piglin) {
-            Piglin piglin = (Piglin) e.getEntity();
-            piglin.setImmuneToZombification(true);
-        } else if (e.getEntity() instanceof PiglinBrute) {
-            PiglinBrute brute = (PiglinBrute) e.getEntity();
-            brute.setImmuneToZombification(true);
-        }else if(e.getEntity() instanceof Bat){
-            e.setCancelled(true);
-        }else if(e.getEntity() instanceof Squid){
-            e.setCancelled(true);
-        }else if(e.getEntity() instanceof Rabbit){
-            e.setCancelled(true);
-        }
     }
 
     @EventHandler

@@ -9,15 +9,12 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ExperienceOrb;
-import org.bukkit.entity.Piglin;
-import org.bukkit.entity.PiglinBrute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -114,7 +111,7 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
         setEnabled(false);
         return true;
     }
-
+    /*
     @EventHandler
     public void piglinZombification(EntitySpawnEvent e) {
         if (e.getEntity() instanceof Piglin) {
@@ -124,7 +121,7 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
             PiglinBrute brute = (PiglinBrute) e.getEntity();
             brute.setImmuneToZombification(true);
         }
-    }
+    }*/
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
