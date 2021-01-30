@@ -201,9 +201,10 @@ public class GamemodeManager {
             }
         }
         if (uhcRun != null)
-            str.remove(uhcRun);
+            str.removeAll(uhcRun.getGamemodes());
+
         if (metaGame != null)
-            str.remove(metaGame);
+            str.removeAll(metaGame.getGamemodes());
         return str.stream().map(IGamemode::getName).toArray(String[]::new);
     }
 
