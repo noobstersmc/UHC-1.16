@@ -80,7 +80,7 @@ public class Game {
     private int autoStart = 12;
     private boolean hasAutoStarted = false;
     /* Other */
-    String scenarios;
+    String[] scenarios;
     Stage gameStage;
     double currentBorder;
     int playersAlive;
@@ -193,8 +193,8 @@ public class Game {
         return world != null ? world.getWorldBorder().getSize() : 0;
     }
 
-    String getScenarios(UHC instance) {
-        return instance.getGamemodeManager().getEnabledGamemodesToString();
+    String[] getScenarios(UHC instance) {
+        return instance.getGamemodeManager().getEnabledGamemodes().toArray(new String[] {});
     }
 
     Stage getGameStage(UHC instance) {
