@@ -44,8 +44,8 @@ import me.infinityz.minigame.commands.HelpopCommand;
 import me.infinityz.minigame.commands.InventoriesCMD;
 import me.infinityz.minigame.commands.LatescatterCMD;
 import me.infinityz.minigame.commands.PVP;
-import me.infinityz.minigame.commands.ToolCMD;
 import me.infinityz.minigame.commands.StartCommand;
+import me.infinityz.minigame.commands.ToolCMD;
 import me.infinityz.minigame.commands.UHCCommand;
 import me.infinityz.minigame.commands.Utilities;
 import me.infinityz.minigame.commands.WorldCMD;
@@ -186,8 +186,17 @@ public class UHC extends JavaPlugin {
         condorManager = new CondorManager(this);
         /* TODO: Make condor send a ping as soon as the server goes online! */
 
-        new WorldCreator("world").seed(Long.parseLong(SEED)).environment(Environment.NORMAL).createWorld();
+        try {
+            Long.valueOf(SEED);
+        } catch (Exception e) {
+            var chars = SEED.chars().toArray();
+            SEED = "";
+            for (var c : chars)
+                SEED += ("" + c);
+            SEED = SEED.substring(0, 16);
+        }
 
+        new WorldCreator("world").seed(Long.valueOf(SEED)).environment(Environment.NORMAL).createWorld();
         /**
          * Initialize taskChain, fastInv, and set the game stage to loading
          */
