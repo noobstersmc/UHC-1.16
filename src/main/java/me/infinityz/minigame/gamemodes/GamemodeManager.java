@@ -19,6 +19,7 @@ import me.infinityz.minigame.gamemodes.types.BloodExperience;
 import me.infinityz.minigame.gamemodes.types.BloodHunter;
 import me.infinityz.minigame.gamemodes.types.BowLess;
 import me.infinityz.minigame.gamemodes.types.ColdWeapons;
+import me.infinityz.minigame.gamemodes.types.Cripple;
 import me.infinityz.minigame.gamemodes.types.CrossBowLess;
 import me.infinityz.minigame.gamemodes.types.Cutclean;
 import me.infinityz.minigame.gamemodes.types.DamageCycle;
@@ -28,6 +29,7 @@ import me.infinityz.minigame.gamemodes.types.DoubleLifeBar;
 import me.infinityz.minigame.gamemodes.types.DoubleOres;
 import me.infinityz.minigame.gamemodes.types.EnderRespawn;
 import me.infinityz.minigame.gamemodes.types.EnderRespawnLeader;
+import me.infinityz.minigame.gamemodes.types.FastGetaway;
 import me.infinityz.minigame.gamemodes.types.FastLeaves;
 import me.infinityz.minigame.gamemodes.types.FastSmelting;
 import me.infinityz.minigame.gamemodes.types.FireLess;
@@ -66,6 +68,7 @@ import me.infinityz.minigame.gamemodes.types.UHCMeetup;
 import me.infinityz.minigame.gamemodes.types.UHCRun;
 import me.infinityz.minigame.gamemodes.types.UHCVandalico;
 import me.infinityz.minigame.gamemodes.types.UnDamaxe;
+import me.infinityz.minigame.gamemodes.types.VengefulSpirits;
 import me.infinityz.minigame.gamemodes.types.XPHunter;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -134,6 +137,9 @@ public class GamemodeManager {
         registerGamemode(new DiamondLess(instance));
         registerGamemode(new SuperHeroes(instance));
         registerGamemode(new BareBones(instance));
+        registerGamemode(new Cripple(instance));
+        registerGamemode(new FastGetaway(instance));
+        registerGamemode(new VengefulSpirits(instance));
 
         //Invitados
         registerGamemode(new UHCVandalico(instance));

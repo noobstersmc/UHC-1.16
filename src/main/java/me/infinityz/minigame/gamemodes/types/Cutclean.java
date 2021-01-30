@@ -135,6 +135,8 @@ public class Cutclean extends IGamemode implements Listener{
             case PIG:
             case SHEEP:
             case SALMON:
+            case MUSHROOM_COW:
+            case HOGLIN:
             case COD:
             case RABBIT:
                 e.getDrops().forEach(it -> {

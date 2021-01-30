@@ -116,12 +116,22 @@ public class IngameListeners implements Listener {
 
     @EventHandler
     public void onAntiMiningMine(BlockBreakEvent e) {
+        var block = e.getBlock();
         if (instance.getGame().isAntiMining()) {
             var player = e.getPlayer().getLocation().getY();
-            var block = e.getBlock().getLocation().getY();
-            if (e.getPlayer().getWorld().getEnvironment() != Environment.NETHER && player < 55 && player > block) {
+            if (e.getPlayer().getWorld().getEnvironment() != Environment.NETHER && player < 55 && player > block.getLocation().getY()) {
                 e.setCancelled(true);
                 e.getPlayer().sendMessage(ChatColor.RED + "Mining is not allowed at meetup.");
+            }
+            
+        }else{
+            var uhcPlayer = instance.getPlayerManager().getPlayer(e.getPlayer().getUniqueId());
+            if(block.getType() == Material.DIAMOND_ORE){
+                uhcPlayer.setMinedDiamonds(uhcPlayer.getMinedDiamonds() + 1);
+            }else if(block.getType() == Material.GOLD_ORE){
+                uhcPlayer.setMinedGold(uhcPlayer.getMinedGold() + 1);
+            }else if(block.getType() == Material.ANCIENT_DEBRIS){
+                uhcPlayer.setMinedAncientDebris(uhcPlayer.getMinedAncientDebris() + 1);
             }
         }
     }

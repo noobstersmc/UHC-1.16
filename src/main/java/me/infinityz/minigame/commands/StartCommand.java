@@ -222,7 +222,6 @@ public class StartCommand extends BaseCommand {
                 players.setLevel(0);
                 players.setGameMode(GameMode.SURVIVAL);
                 players.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
-                players.getActivePotionEffects().forEach(all -> players.removePotionEffect(all.getType()));
             });
     
             Bukkit.getOnlinePlayers().stream().filter(it -> it.getGameMode() != GameMode.SPECTATOR)

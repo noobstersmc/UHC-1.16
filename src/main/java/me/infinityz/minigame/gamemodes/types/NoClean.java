@@ -103,6 +103,7 @@ public class NoClean extends IGamemode implements Listener {
 
     @EventHandler
     public void onOpenChest(InventoryOpenEvent e){
+        if(e.getPlayer().getGameMode() == GameMode.SPECTATOR) return;
         if(e.getInventory().getType().toString().equals("CHEST")){
             var cleaner = (Player) e.getPlayer();
             var playerProtected = cleaner.getLocation().getNearbyPlayers(5).stream().filter(p -> !isTeamMate(cleaner, p)

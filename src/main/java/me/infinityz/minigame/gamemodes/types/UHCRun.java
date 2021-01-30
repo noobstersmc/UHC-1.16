@@ -111,19 +111,8 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
         setEnabled(false);
         return true;
     }
-    /*
-    @EventHandler
-    public void piglinZombification(EntitySpawnEvent e) {
-        if (e.getEntity() instanceof Piglin) {
-            Piglin piglin = (Piglin) e.getEntity();
-            piglin.setImmuneToZombification(true);
-        } else if (e.getEntity() instanceof PiglinBrute) {
-            PiglinBrute brute = (PiglinBrute) e.getEntity();
-            brute.setImmuneToZombification(true);
-        }
-    }*/
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onJoin(PlayerJoinEvent e) {
         giveRunEffects(e.getPlayer());
     }

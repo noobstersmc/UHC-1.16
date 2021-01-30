@@ -116,7 +116,6 @@ public class UHCCommand extends BaseCommand {
         var world = Bukkit.getWorld("world");
         var target = uhcPlayer.getPlayer();
         var reviveArgs = ReviveArgs.from(uhcPlayer, args);
-        target.getActivePotionEffects().forEach(all -> target.removePotionEffect(all.getType()));
         Bukkit.getPluginManager().callEvent(PlayerJoinedLateEvent.of(target));
 
         target.teleportAsync(reviveArgs.isWithLocation() ? uhcPlayer.getLastKnownPosition().toLocation()

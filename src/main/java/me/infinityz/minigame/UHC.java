@@ -44,6 +44,7 @@ import me.infinityz.minigame.commands.HelpopCommand;
 import me.infinityz.minigame.commands.InventoriesCMD;
 import me.infinityz.minigame.commands.LatescatterCMD;
 import me.infinityz.minigame.commands.PVP;
+import me.infinityz.minigame.commands.ToolCMD;
 import me.infinityz.minigame.commands.StartCommand;
 import me.infinityz.minigame.commands.UHCCommand;
 import me.infinityz.minigame.commands.Utilities;
@@ -218,6 +219,7 @@ public class UHC extends JavaPlugin {
         commandManager.registerCommand(new GamemodesCMD(this));
         commandManager.registerCommand(new WorldCMD(this));
         commandManager.registerCommand(new GameLoopCMD(this));
+        commandManager.registerCommand(new ToolCMD(this));
 
         commandManager.registerCommand(new InventoriesCMD());
 

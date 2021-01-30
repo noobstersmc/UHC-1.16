@@ -48,34 +48,34 @@ public class SuperHeroes extends IGamemode implements Listener {
     public void givePower(Player player){
         switch(random.nextInt(9)) {
             case 1: {
-                player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 100000, 0));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 100000, 0, true, false));
             }break;
             case 2: {
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * 100000, 1));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * 100000, 1, true, false));
             }break;
             case 3: {
-                player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 20 * 100000, 1));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 20 * 100000, 1, true, false));
             }break;
             case 4: {
-                player.addPotionEffect(new PotionEffect(PotionEffectType.HEALTH_BOOST, 20 * 100000, 4));
-                player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20 * 10, 4));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.HEALTH_BOOST, 20 * 100000, 4, true, false));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20 * 10, 4, true, false));
             }break;
             case 5: {
                 player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 20 * 100000, 0));
             }break;
             case 6: {
-                player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 20 * 100000, 0));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 20 * 100000, 0, true, false));
             }break;
             case 7: {
-                player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 20 * 100000, 0));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 20 * 100000, 0, true, false));
             }break;
             case 8: {
-                player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 100000, 0));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 100000, 0, true, false));
             }break;
             default: {
-                player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 20 * 100000, 3));
-                player.addPotionEffect(new PotionEffect(PotionEffectType.DOLPHINS_GRACE, 20 * 100000, 0));
-                player.addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING, 20 * 100000, 0));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 20 * 100000, 3, true, false));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.DOLPHINS_GRACE, 20 * 100000, 0, true, false));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING, 20 * 100000, 0, true, false));
 
             }break;
         }

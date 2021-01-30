@@ -23,6 +23,8 @@ public class UHCPlayer {
     private final @Getter UUID UUID;
     private @Getter @Setter int kills = 0;
     private @Getter @Setter int minedDiamonds = 0;
+    private @Getter @Setter int minedGold = 0;
+    private @Getter @Setter int minedAncientDebris = 0;
     private @Getter @Setter boolean alive = false;
     private @Getter @Setter boolean dead = false;
     private @Getter @Setter double lastKnownHealth = 20.0;
