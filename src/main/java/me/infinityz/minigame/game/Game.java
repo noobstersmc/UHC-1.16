@@ -1,6 +1,7 @@
 package me.infinityz.minigame.game;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.HashMap;
@@ -80,7 +81,7 @@ public class Game {
     private int autoStart = 12;
     private boolean hasAutoStarted = false;
     /* Other */
-    String scenarios;
+    String[] scenarios;
     Stage gameStage;
     double currentBorder;
     int playersAlive;
@@ -114,8 +115,16 @@ public class Game {
             return;
         }
         try {
-            CondorAPI.delete("6QR3W05K3F", instance.getGame().getGameID().toString());
-            Bukkit.getScheduler().runTask(instance, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "stop"));
+            // TODO: Try to ensure server stops emmitting data before deleting.
+            Bukkit.getScheduler().runTaskLater(instance, () -> {
+                try {
+                    CondorAPI.delete("6QR3W05K3F", instance.getGame().getGameID().toString());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }, 1);
+            Bukkit.getScheduler().runTaskLater(instance,
+                    () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "stop"), 2);
 
         } catch (Exception e) {
             Bukkit.broadcastMessage("Error while autodeleting instance: " + e.getMessage());
@@ -183,7 +192,7 @@ public class Game {
             // reads system IPAddress
             systemIpAddress = sc.readLine().trim();
         } catch (Exception e) {
-            systemIpAddress = "Cannot Execute Properly";
+            systemIpAddress = "0.0.0.0";
         }
         return systemIpAddress;
     }
@@ -193,8 +202,8 @@ public class Game {
         return world != null ? world.getWorldBorder().getSize() : 0;
     }
 
-    String getScenarios(UHC instance) {
-        return instance.getGamemodeManager().getEnabledGamemodesToString();
+    String[] getScenarios(UHC instance) {
+        return instance.getGamemodeManager().getEnabledAsArray();
     }
 
     Stage getGameStage(UHC instance) {

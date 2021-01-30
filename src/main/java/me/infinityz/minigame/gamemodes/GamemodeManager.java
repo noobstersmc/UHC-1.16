@@ -88,7 +88,7 @@ public class GamemodeManager {
         registerGamemode(new Cutclean(instance));
         registerGamemode(new EnderRespawnLeader(instance));
         registerGamemode(new EnderRespawn(instance));
-        //registerGamemode(new Moles(instance));
+        // registerGamemode(new Moles(instance));
         registerGamemode(new GoToHell(instance));
         registerGamemode(new BowLess(instance));
         registerGamemode(new UnDamaxe(instance));
@@ -141,7 +141,7 @@ public class GamemodeManager {
         registerGamemode(new FastGetaway(instance));
         registerGamemode(new VengefulSpirits(instance));
 
-        //Invitados
+        // Invitados
         registerGamemode(new UHCVandalico(instance));
         registerGamemode(new UHCLatam(instance));
         registerGamemode(new Baguettes(instance));
@@ -184,6 +184,29 @@ public class GamemodeManager {
         return list;
     }
 
+    public String[] getEnabledAsArray() {
+        /** Helpers */
+        UHCRun uhcRun = null;
+        MetaGame metaGame = null;
+        /** Scenario Array */
+        var str = new ArrayList<IGamemode>();
+        for (var gm : gamemodesList) {
+            if (gm.isEnabled()) {
+                if (gm instanceof UHCRun) {
+                    uhcRun = (UHCRun) gm;
+                } else if (gm instanceof MetaGame) {
+                    metaGame = (MetaGame) gm;
+                }
+                str.add(gm);
+            }
+        }
+        if (uhcRun != null)
+            str.remove(uhcRun);
+        if (metaGame != null)
+            str.remove(metaGame);
+        return str.stream().map(IGamemode::getName).toArray(String[]::new);
+    }
+
     public <T extends IGamemode> T getScenario(Class<T> clazz) {
         for (var gamemode : gamemodesList)
             if (gamemode.getClass() == clazz)
@@ -203,7 +226,7 @@ public class GamemodeManager {
     }
 
     //
-    
+
     public String getEnabledGamemodesToString() {
         var sb = new StringBuilder();
         var enabledScenarios = getEnabledGamemodes();

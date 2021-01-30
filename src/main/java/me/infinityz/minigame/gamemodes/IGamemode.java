@@ -16,6 +16,11 @@ public abstract class IGamemode {
         this.description = description;
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
+
     public abstract boolean enableScenario();
 
     public abstract boolean disableScenario();

@@ -28,7 +28,7 @@ public class LobbyListeners implements Listener {
     private @NonNull UHC instance;
 
     public LobbyListeners(UHC instance) {
-        this.instance = instance;
+    this.instance = instance;
         final var world = Bukkit.getWorld("lobby");
         world.setSpawnLocation(new Location(world, 0, 66, 0, 90, 0));
         Game.setLobbySpawn(world.getSpawnLocation());

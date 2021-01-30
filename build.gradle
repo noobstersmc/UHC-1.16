@@ -22,6 +22,11 @@ tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
 
+compileJava {
+    options.compilerArgs += ["-parameters"]
+    options.fork = true
+    options.forkOptions.executable = 'javac'
+}
 uploadArchives {
     repositories {
         mavenDeployer{
@@ -79,9 +84,6 @@ processResources {
 
 shadowJar {
     relocate 'co.aikar.commands', 'shadded.acf'
-    relocate 'co.aikar.locales', 'shadded.acf.locales'
-    relocate 'acf-minecraft_', 'shadded.acf.properties.acf-minecraft_'
-    relocate 'acf-core_', 'shadded.acf.properties.acf-core_'
     relocate 'fr.mrmicky', 'shadded.gui'
 }
 
