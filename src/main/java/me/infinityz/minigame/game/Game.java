@@ -53,7 +53,7 @@ public class Game {
     private boolean hasSomeoneWon = false;
     private boolean deathMatchDamage = false;
     private boolean antiMining = false;
-    private int uhcslots = 40;
+    private int uhcslots = 50;
     /* Game config */
     private boolean autoDestruction = true;
     private boolean deathMatch = true;
