@@ -89,6 +89,7 @@ public class StartCommand extends BaseCommand {
             return;
         }
 
+        instance.setGameStage(Stage.SCATTER);
         var count = 10;
         var chain = UHC.newChain().sync(() -> countDown(10));
 
@@ -96,8 +97,6 @@ public class StartCommand extends BaseCommand {
             final var current = count;
             chain.delay(20).sync(() -> countDown(current));
         }
-
-        instance.setGameStage(Stage.SCATTER);
 
         if (instance.getTeamManger().getTeamSize() > 1) {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "team random");

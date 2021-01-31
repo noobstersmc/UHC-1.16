@@ -46,7 +46,7 @@ public class DiamondLess extends IGamemode implements Listener {
             var items = e.getInventory().getContents();
             for (int i = 0; i < items.length; i++) {
                 if(items[i] != null && items[i].getType() == Material.DIAMOND){
-                    items[i].setType(Material.COAL);
+                    items[i].setType(Material.IRON_INGOT);
                 }
             }
         }
@@ -56,7 +56,7 @@ public class DiamondLess extends IGamemode implements Listener {
     public void onBreak(BlockBreakEvent e){
         var block = e.getBlock();
         if(block.getType() == Material.DIAMOND_ORE)
-            block.setType(Material.COAL_ORE);
+            block.setType(Material.IRON_ORE);
 
     }
 

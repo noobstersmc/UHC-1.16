@@ -21,7 +21,7 @@ public class SkyHigh extends IGamemode implements Listener {
     private boolean damage = false;
     private float extradamage = 6;
     private float exda = 0;
-    private int delay = 600;
+    private int delay = 10;
     private UHC instance;
 
     public SkyHigh(UHC instance) {
@@ -96,9 +96,9 @@ public class SkyHigh extends IGamemode implements Listener {
         @Subcommand("delay")
         @CommandAlias("delay")
         public void delay(CommandSender sender, Integer de) {
-            delay = de*60;
+            delay = de;
             var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
-            Bukkit.broadcast(senderName + ChatColor.YELLOW + "SkyHigh delay set to " + de + " minutes.", "uhc.configchanges.see");
+            Bukkit.broadcast(senderName + ChatColor.YELLOW + "SkyHigh delay set to " + de + " seconds.", "uhc.configchanges.see");
 
         }
     }

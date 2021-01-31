@@ -38,6 +38,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import me.infinityz.minigame.UHC;
+import me.infinityz.minigame.chunks.ChunksManager;
 import me.infinityz.minigame.enums.DQReason;
 import me.infinityz.minigame.events.GameTickEvent;
 import me.infinityz.minigame.events.PlayerJoinedLateEvent;
@@ -140,7 +141,10 @@ public class IngameListeners implements Listener {
     public void onJoin(PlayerJoinEvent e) {
         var player = e.getPlayer();
         if (player.getWorld() == Bukkit.getWorld("lobby")) {
-            player.teleport(Bukkit.getWorld("world").getSpawnLocation());
+            var world = Bukkit.getWorld("world");
+            var worldBorderSizeHaved = (int) world.getWorldBorder().getSize() / 2;
+            var loc = ChunksManager.findScatterLocation(world, worldBorderSizeHaved).add(0, 5, 0);
+            player.teleport(loc);
         }
 
     }

@@ -4,6 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.VillagerAcquireTradeEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
@@ -19,7 +20,7 @@ public class BareBones extends IGamemode implements Listener {
     private UHC instance;
 
     public BareBones(UHC instance) {
-        super("BareBones", "Players drop netherite 2 scrap.");
+        super("BareBones", "Enchants, Diamonds and Gold is disabled. Players interesting items.");
         this.instance = instance;
     }
 
@@ -57,7 +58,8 @@ public class BareBones extends IGamemode implements Listener {
     @EventHandler
     public void onCraft(PrepareItemCraftEvent e) {
         var recipe = e.getRecipe();
-        if(recipe != null && (recipe.getResult().getType() == Material.ENCHANTING_TABLE || recipe.getResult().getType() == Material.ANVIL)){
+        if(recipe != null && (recipe.getResult().getType() == Material.ENCHANTING_TABLE || recipe.getResult().getType() == Material.ANVIL 
+            || recipe.getResult().getType() == Material.ENCHANTING_TABLE)){
             e.getInventory().setResult(null);
         }
 
@@ -66,9 +68,19 @@ public class BareBones extends IGamemode implements Listener {
     @EventHandler
     public void onBreak(BlockBreakEvent e){
         var block = e.getBlock();
-        if(block.getType() == Material.DIAMOND_ORE || block.getType() == Material.GOLD_ORE)
-            block.setType(Material.COAL_ORE);
+        if(block.getType() == Material.DIAMOND_ORE)
+            block.setType(Material.IRON_INGOT);
+    }
 
+    @EventHandler
+    public void onItemSpawn(ItemSpawnEvent e) {
+        var stack = e.getEntity().getItemStack();
+        var type = stack.getType();
+        if (type == Material.GOLD_INGOT) {
+            stack.setType(Material.IRON_INGOT);
+        }else if (type == Material.GOLD_ORE) {
+            stack.setType(Material.IRON_ORE);
+        }
     }
 
     @EventHandler

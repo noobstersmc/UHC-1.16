@@ -19,8 +19,8 @@ import net.md_5.bungee.api.ChatColor;
 
 public class GoToHell extends IGamemode implements Listener {
     private boolean damage = false;
-    private float extradamage = 0;
-    private int delay = 600;
+    private float damageval = 3;
+    private int delay = 10;
     private UHC instance;
 
     public GoToHell(UHC instance) {
@@ -55,15 +55,13 @@ public class GoToHell extends IGamemode implements Listener {
     public void onStart(GameTickEvent e) {
         if(e.getSecond() == instance.getGame().getBorderTime())
             damage = true;
-        if(e.getSecond() == instance.getGame().getBorderTime()+instance.getGame().getBorderCenterTime())
-            extradamage = 6;
         if (damage && e.getSecond() % delay == 0) {
         Bukkit.getScheduler().runTask(instance, ()->{
         
             Bukkit.getOnlinePlayers().forEach(players -> {
                 if (players.getGameMode() == GameMode.SURVIVAL
                         && players.getWorld().getEnvironment() != Environment.NETHER)
-                    players.damage(2+extradamage);
+                    players.damage(damageval);
             });
         
         });
@@ -81,18 +79,27 @@ public class GoToHell extends IGamemode implements Listener {
             damage = !damage;
             if(damage == true){
                 var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
-                Bukkit.broadcast(senderName + ChatColor.YELLOW + "Go To Hell Damage switch to: " + damage, "uhc.configchanges.see");
+                Bukkit.broadcast(senderName + ChatColor.YELLOW + "Go To Hell Damage switch to: " + damage + " hearts.", "uhc.configchanges.see");
                 Bukkit.broadcastMessage(ChatColor.of("#cd4619")
-                    + "Go to the Nether now. Player's that remain in the overworld will take a heart of damage every 5 seconds.");
+                    + "Go to the Nether now. Player's that remain in the overworld will take "+ damageval + " hearts of damage every " + delay + " seconds.");
             }
         }
 
         @Subcommand("delay")
         @CommandAlias("delay")
-        public void extraDamage(CommandSender sender, Integer newDelay) {
-            delay = newDelay*60;
+        public void delay(CommandSender sender, Integer newDelay) {
+            delay = newDelay;
             var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
-            Bukkit.broadcast(senderName + ChatColor.YELLOW + "SkyHigh delay set to " + newDelay + " minutes.", "uhc.configchanges.see");
+            Bukkit.broadcast(senderName + ChatColor.YELLOW + "GoToHell delay set to " + newDelay + " seconds.", "uhc.configchanges.see");
+
+        }
+
+        @Subcommand("damagevalue")
+        @CommandAlias("damagevalue")
+        public void extradamage(CommandSender sender, Float damagevalue) {
+            damageval = damagevalue;
+            var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
+            Bukkit.broadcast(senderName + ChatColor.YELLOW + "Go To Hell damage value set to " + damagevalue/2 + " hearts.", "uhc.configchanges.see");
 
         }
 
