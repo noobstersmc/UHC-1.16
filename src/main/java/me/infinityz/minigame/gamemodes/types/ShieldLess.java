@@ -3,6 +3,7 @@ package me.infinityz.minigame.gamemodes.types;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.VillagerAcquireTradeEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 
 import me.infinityz.minigame.UHC;
@@ -41,6 +42,13 @@ public class ShieldLess extends IGamemode implements Listener {
             e.getInventory().setResult(null);
         }
 
+    }
+
+    @EventHandler
+    public void onTrade(VillagerAcquireTradeEvent e){
+        if(e.getRecipe().getResult().getType() == Material.SHIELD){
+            e.setCancelled(true);
+        }
     }
 
 
