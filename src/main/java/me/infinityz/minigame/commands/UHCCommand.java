@@ -15,6 +15,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.WorldBorder;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -116,6 +117,9 @@ public class UHCCommand extends BaseCommand {
         var world = Bukkit.getWorld("world");
         var target = uhcPlayer.getPlayer();
         var reviveArgs = ReviveArgs.from(uhcPlayer, args);
+        
+        target.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
+
         Bukkit.getPluginManager().callEvent(PlayerJoinedLateEvent.of(target));
 
         target.teleportAsync(reviveArgs.isWithLocation() ? uhcPlayer.getLastKnownPosition().toLocation()

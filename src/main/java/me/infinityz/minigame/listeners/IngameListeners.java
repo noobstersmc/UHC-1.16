@@ -125,15 +125,6 @@ public class IngameListeners implements Listener {
                 e.getPlayer().sendMessage(ChatColor.RED + "Mining is not allowed at meetup.");
             }
             
-        }else{
-            var uhcPlayer = instance.getPlayerManager().getPlayer(e.getPlayer().getUniqueId());
-            if(block.getType() == Material.DIAMOND_ORE){
-                uhcPlayer.setMinedDiamonds(uhcPlayer.getMinedDiamonds() + 1);
-            }else if(block.getType() == Material.GOLD_ORE){
-                uhcPlayer.setMinedGold(uhcPlayer.getMinedGold() + 1);
-            }else if(block.getType() == Material.ANCIENT_DEBRIS){
-                uhcPlayer.setMinedAncientDebris(uhcPlayer.getMinedAncientDebris() + 1);
-            }
         }
     }
 

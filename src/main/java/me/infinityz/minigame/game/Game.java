@@ -56,7 +56,7 @@ public class Game {
     private int uhcslots = 50;
     /* Game config */
     private boolean autoDestruction = true;
-    private boolean deathMatch = true;
+    private boolean deathMatch = false;
     private boolean privateGame = false;
     private boolean nether = true;
     private boolean end = false;

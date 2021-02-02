@@ -2,6 +2,7 @@ package me.infinityz.minigame.commands;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.attribute.Attribute;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
@@ -53,6 +54,7 @@ public class LatescatterCMD extends BaseCommand {
 
         player.sendMessage((ChatColor.of("#7ab83c") + "Loading a location..."));
         player.setGameMode(GameMode.SURVIVAL);
+        player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
         
         var loc = ChunksManager.findScatterLocation(world, worldBorderSizeHaved).add(0, 5, 0);
         player.teleport(loc);

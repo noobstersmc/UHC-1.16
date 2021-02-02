@@ -10,7 +10,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 
-import co.aikar.taskchain.TaskChain;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.gamemodes.IGamemode;
 
@@ -56,25 +55,20 @@ public class Timber extends IGamemode implements Listener {
 
     private void breakTree(Block block, Player player) {
         var item = new ItemStack(Material.AIR);
-        var i = 0;
-        if (isLog(block.getType())) {
+        var type = block.getType();
+        if (isLog(type)) {
             block.breakNaturally(item, true);
-            var cancelled = new BlockBreakEvent(block, player);
-            cancelled.setCancelled(true);
-            Bukkit.getPluginManager().callEvent(cancelled); 
-            i = 2;
-        } else {
-            i--;
-        }
-        if (i > 0) {
             for (BlockFace face : BlockFace.values()) {
                 if (face.equals(BlockFace.DOWN) || face.equals(BlockFace.UP) || face.equals(BlockFace.NORTH)
                         || face.equals(BlockFace.EAST) || face.equals(BlockFace.SOUTH) || face.equals(BlockFace.WEST)) {
-                    UHC.newChain().delay(3).sync(() -> breakTree(block.getRelative(face), player)).sync(TaskChain::abort)
-                            .execute();
+                            Bukkit.getScheduler().runTaskLater(instance, ()->{
+                                breakTree(block.getRelative(face), player);
+                            }, 3);
                 }
             }
+
         }
+
     }
 
 }

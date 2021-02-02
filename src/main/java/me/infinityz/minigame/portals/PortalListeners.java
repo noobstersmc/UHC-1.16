@@ -133,9 +133,9 @@ public class PortalListeners extends BaseCommand implements Listener {
 
     @Subcommand("pc")
     @CommandCompletion("@worlds <Integer>")
-    public void onPortalCreate(final Player player, World world, int ratio) {
+    public void onPortalCreate(final Player player, World world, int ratio, boolean go) {
         var initial_time = System.currentTimeMillis();
-        travelDimensions(player, player.getLocation(), world, ratio);
+        travelDimensions(player, player.getLocation(), world, ratio, go);
         Bukkit.broadcastMessage("Took " + (System.currentTimeMillis() - initial_time) + "ms to teleport.");
     }
 
@@ -204,8 +204,30 @@ public class PortalListeners extends BaseCommand implements Listener {
     }
 
     // Travel function
-    public boolean travelDimensions(Entity entity, Location from, World target, int ratio) {
-        final var ratioed_target = new Location(target, from.getX() * ratio, from.getY(), from.getZ() * ratio);
+    public boolean travelDimensions(Entity entity, Location from, World target, int ratio, boolean go) {
+        var calcRatio = new Location(target, from.getX() / ratio, from.getY(), from.getZ() / ratio);
+        if(!go){
+            calcRatio = new Location(target, from.getX() * ratio, from.getY(), from.getZ() * ratio);
+
+            var worldBorderSize = (int) Bukkit.getWorld("world").getWorldBorder().getSize() / 2;
+            var absX = Math.abs(calcRatio.getX());
+            var absZ = Math.abs(calcRatio.getZ());
+            if(absX >= worldBorderSize){
+                if(calcRatio.getX() >= 0)
+                    calcRatio.setX(worldBorderSize-10);
+                else
+                    calcRatio.setX(~(worldBorderSize - 10));
+            }
+            if(absZ >= worldBorderSize){
+                if(calcRatio.getZ() >= 0)
+                    calcRatio.setZ(worldBorderSize-10);
+                else
+                    calcRatio.setZ(~(worldBorderSize - 10));
+            }
+        }
+        
+
+        final var ratioed_target = calcRatio;
 
         var min = ratioed_target.clone().add(-64, 0, -64);
         min.setY(30);
@@ -264,7 +286,7 @@ public class PortalListeners extends BaseCommand implements Listener {
     private void replaceNearbyLava(Location location, int radius) {
         for (int x = location.getBlockX() - radius; x <= location.getBlockX() + radius; x++) {
             for (int y = location.getBlockY() - radius; y <= location.getBlockY() + radius; y++) {
-                if (y < location.getBlockY())
+                if (y <= location.getBlockY())
                     continue;
                 for (int z = location.getBlockZ() - radius; z <= location.getBlockZ() + radius; z++) {
                     var block = location.getWorld().getBlockAt(x, y, z);
@@ -274,10 +296,6 @@ public class PortalListeners extends BaseCommand implements Listener {
                 }
             }
         }
-    }
-
-    public void travelDimensions(Entity entity, Location from, World target) {
-        travelDimensions(entity, from, target, 1);
     }
 
     /**
@@ -316,7 +334,7 @@ public class PortalListeners extends BaseCommand implements Listener {
                     if (world.getEnvironment() == Environment.NORMAL) {
                         var nether = Bukkit.getWorld(world.getName() + "_nether");
                         if (nether != null || !instance.getGame().isNether()) {
-                            travelDimensions(player, player.getLocation(), nether);
+                            travelDimensions(player, player.getLocation(), nether, 4, true);
                         } else {
                             player.sendMessage(ChatColor.RED + "Nether world not available.");
                         }
@@ -326,7 +344,7 @@ public class PortalListeners extends BaseCommand implements Listener {
                     } else if (world.getEnvironment() == Environment.NETHER) {
                         var overworld = Bukkit.getWorld(world.getName().replace("_nether", ""));
                         if (overworld != null) {
-                            travelDimensions(player, player.getLocation(), overworld);
+                            travelDimensions(player, player.getLocation(), overworld, 4, false);
                         } else {
                             player.sendMessage(ChatColor.RED + "Overworld not available.");
                         }

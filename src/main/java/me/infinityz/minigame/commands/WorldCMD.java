@@ -72,11 +72,6 @@ public class WorldCMD extends BaseCommand {
         sender.sendMessage(ChatColor.RED + "World " + world + " unloaded.");
     }
 
-    @Subcommand("recycle")
-    @CommandPermission("recycle.cmd")
-    public void recycle(CommandSender sender) {
-    }
-
     @Subcommand("load")
     @CommandPermission("world.cmd")
     public void worldCreateAndLoad(CommandSender sender, String type, String newWorld, @Optional Long seed) {

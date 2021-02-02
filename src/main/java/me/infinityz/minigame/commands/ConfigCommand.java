@@ -131,10 +131,10 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
 
         instance.getGame().setPrivateGame(bool);
         if(bool){
-            Bukkit.dispatchCommand(sender, "whitelist add " + instance.getGame().getHostname());
-            Bukkit.dispatchCommand(sender, "whitelist on");
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "whitelist add " + instance.getGame().getHostname());
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "whitelist on");
         }else{
-            Bukkit.dispatchCommand(sender, "whitelist off");
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "whitelist off");
         }
         var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
         Bukkit.broadcast(senderName + ChatColor.YELLOW + "Private Game changed to: " + bool, "uhc.configchanges.see");

@@ -3,6 +3,7 @@ package me.infinityz.minigame.gamemodes.types;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -57,7 +58,7 @@ public class SuperHeroes extends IGamemode implements Listener {
                 player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 20 * 100000, 1, true, false));
             }break;
             case 4: {
-                player.addPotionEffect(new PotionEffect(PotionEffectType.HEALTH_BOOST, 20 * 100000, 4, true, false));
+                player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(40.0); 
                 player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20 * 10, 4, true, false));
             }break;
             case 5: {

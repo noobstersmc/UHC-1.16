@@ -7,7 +7,9 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.enchantment.EnchantItemEvent;
+import org.bukkit.event.entity.VillagerAcquireTradeEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 
 import me.infinityz.minigame.UHC;
@@ -53,6 +55,32 @@ public class ColdWeapons extends IGamemode implements Listener {
             toAdd.remove(Enchantment.FIRE_ASPECT);
         
         
+    }
+
+    @EventHandler
+    public void onTrade(VillagerAcquireTradeEvent e){
+        if(e.getRecipe().getResult().getType().toString().contains("SWORD")){
+            e.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onAnvil(PrepareAnvilEvent e){
+        var item = e.getResult();
+        if(item == null) return;
+        if(item.getType() == Material.ENCHANTED_BOOK){
+            var bookMeta = (EnchantmentStorageMeta) item.getItemMeta();
+            if(bookMeta.getStoredEnchants().containsKey(Enchantment.FIRE_ASPECT) 
+                || bookMeta.getStoredEnchants().containsKey(Enchantment.ARROW_FIRE)){
+                item.setType(Material.POISONOUS_POTATO);
+            }
+        }else{
+            if(item.containsEnchantment(Enchantment.FIRE_ASPECT))
+            item.removeEnchantment(Enchantment.FIRE_ASPECT);
+        
+            if(item.containsEnchantment(Enchantment.ARROW_FIRE))
+                item.removeEnchantment(Enchantment.ARROW_FIRE);
+        }
     }
     
     @EventHandler
