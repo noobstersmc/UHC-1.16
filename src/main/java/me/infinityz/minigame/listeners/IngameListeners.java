@@ -363,11 +363,13 @@ public class IngameListeners implements Listener {
                 if (optionalTeam.isPresent()) {
                     Bukkit.getPluginManager().callEvent(new TeamWinEvent(optionalTeam.get().getTeamID(), true));
                     instance.getGame().setHasSomeoneWon(true);
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "specchat");
                 } else if (solos.size() == 1) {
                     var optionalPlayer = solos.get(0);
                     if (optionalPlayer != null) {
                         Bukkit.getPluginManager().callEvent(new PlayerWinEvent(optionalPlayer.getUUID(), true));
                         instance.getGame().setHasSomeoneWon(true);
+                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "specchat");
                     }
                 }
             }
@@ -378,6 +380,7 @@ public class IngameListeners implements Listener {
             if (lastAlivePlayer != null) {
                 Bukkit.getPluginManager().callEvent(new PlayerWinEvent(lastAlivePlayer.getUUID(), true));
                 instance.getGame().setHasSomeoneWon(true);
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "specchat");
             }
 
         }

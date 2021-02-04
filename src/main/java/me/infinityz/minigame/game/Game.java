@@ -4,7 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 import com.google.gson.Gson;
@@ -49,11 +51,11 @@ public class Game {
     private long startTime;
     private int gameTime = 0;
     private boolean pvp = false;
-    private boolean globalMute = false;
     private boolean hasSomeoneWon = false;
     private boolean deathMatchDamage = false;
     private boolean antiMining = false;
     private int uhcslots = 50;
+    private List<String> whitelist = new ArrayList<>();
     /* Game config */
     private boolean autoDestruction = true;
     private boolean deathMatch = false;
@@ -67,6 +69,7 @@ public class Game {
     private boolean advancements = false;
     private boolean potions = true;
     private double applerate = 0.80;
+    private double flintrate = 3.00;
     private int maxDisconnectTime = 600;
     /* Game Loop */
     private int borderSize = 3000;

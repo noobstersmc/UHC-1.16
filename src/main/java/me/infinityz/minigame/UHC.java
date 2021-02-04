@@ -39,7 +39,6 @@ import me.infinityz.minigame.commands.ConfigCommand;
 import me.infinityz.minigame.commands.ContextConditions;
 import me.infinityz.minigame.commands.GameLoopCMD;
 import me.infinityz.minigame.commands.GameRestoreCMD;
-import me.infinityz.minigame.commands.GlobalMute;
 import me.infinityz.minigame.commands.HelpopCommand;
 import me.infinityz.minigame.commands.InventoriesCMD;
 import me.infinityz.minigame.commands.LatescatterCMD;
@@ -48,6 +47,7 @@ import me.infinityz.minigame.commands.StartCommand;
 import me.infinityz.minigame.commands.ToolCMD;
 import me.infinityz.minigame.commands.UHCCommand;
 import me.infinityz.minigame.commands.Utilities;
+import me.infinityz.minigame.commands.Whitelist;
 import me.infinityz.minigame.commands.WorldCMD;
 import me.infinityz.minigame.condor.CondorAPI;
 import me.infinityz.minigame.condor.CondorConfig;
@@ -221,7 +221,6 @@ public class UHC extends JavaPlugin {
         commandManager.registerCommand(new HelpopCommand(this));
         commandManager.registerCommand(new UHCCommand(this));
         commandManager.registerCommand(new LatescatterCMD(this));
-        commandManager.registerCommand(new GlobalMute(this));
         commandManager.registerCommand(new Utilities(this));
         commandManager.registerCommand(new GameRestoreCMD(this));
         commandManager.registerCommand(new ConfigCommand(this));
@@ -229,6 +228,7 @@ public class UHC extends JavaPlugin {
         commandManager.registerCommand(new WorldCMD(this));
         commandManager.registerCommand(new GameLoopCMD(this));
         commandManager.registerCommand(new ToolCMD(this));
+        commandManager.registerCommand(new Whitelist(this));
 
         commandManager.registerCommand(new InventoriesCMD());
 

@@ -10,9 +10,9 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Result;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -22,7 +22,6 @@ import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.event.world.PortalCreateEvent.CreateReason;
 import org.bukkit.inventory.ItemStack;
@@ -112,6 +111,19 @@ public class ConfigListener implements Listener {
     }
 
     /**
+     * FLINT RATE
+     */
+    @EventHandler
+    public void onFlint(BlockBreakEvent e) {
+        var block = e.getBlock();
+        if (block.getType() == Material.GRAVEL && Math.random() <= (instance.getGame().getFlintrate() / 100)) {
+            e.setDropItems(false);
+            Bukkit.getWorld(block.getWorld().getName().toString()).dropItemNaturally(block.getLocation(), new ItemStack(Material.FLINT));
+        }
+
+    }
+
+    /**
      * Strength nerf
      */
     @EventHandler
@@ -175,10 +187,7 @@ public class ConfigListener implements Listener {
     /*
      * BED NERF
      */
-
-    private static String FULL_MESSAGE = ChatColor.translateAlternateColorCodes('&',
-            "&fServer is full! \n &aUpgrade your rank at &6noobsters.buycraft.net");
-
+    
     @EventHandler
     public void nerfBedExplosion(PlayerBedEnterEvent e) {
         if (instance.getGame().isBedsNerf() && e.getBed().getWorld().getEnvironment() == Environment.NETHER) {
@@ -190,27 +199,5 @@ public class ConfigListener implements Listener {
 
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void slotLimit(PlayerLoginEvent e) {
-        final var player = e.getPlayer();
-        if (!shoudLogin(player))
-            e.disallow(org.bukkit.event.player.PlayerLoginEvent.Result.KICK_FULL, FULL_MESSAGE);
-
-    }
-
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void slotLimit(PlayerJoinEvent e) {
-        final var player = e.getPlayer();
-        if (!shoudLogin(player))
-            player.kickPlayer(FULL_MESSAGE);
-
-    }
-
-    private boolean shoudLogin(final Player player) {
-        final var online = Bukkit.getOnlinePlayers().size();
-        final var maxSlots = instance.getGame().getUhcslots();
-
-        return online <= maxSlots || player.hasPermission("reserved.slot");
-    }
 
 }
