@@ -30,6 +30,7 @@ import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import co.aikar.taskchain.TaskChain;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.chunks.ChunksManager;
 import me.infinityz.minigame.enums.Stage;
@@ -219,9 +220,38 @@ public class GlobalListener implements Listener {
             bar.addPlayer(players);
         });
         Bukkit.broadcastMessage(GameLoop.SHAMROCK_GREEN + "UHC has started!");
+        showRules();
 
         new AntiFallDamage(instance, Bukkit.getOnlinePlayers().stream()
                 .map(p -> p.getUniqueId().getMostSignificantBits()).collect(Collectors.toList()));
+
+    }
+
+    public void showRules(){
+        var rules = instance.getGame().getRules();
+        var count = 0;
+        var chain = UHC.newChain().sync(() -> {
+            Bukkit.broadcastMessage("");
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "globalmute true");
+        });
+
+        while (count <= rules.length) {
+            if(count == rules.length){
+                chain.delay(60).sync(() -> {
+                    Bukkit.broadcastMessage("");
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "globalmute false");
+                    Bukkit.broadcastMessage("");
+                });
+                break;
+            }
+            final var current = count;
+            chain.delay(60).sync(() -> {
+                Bukkit.broadcastMessage("");
+                Bukkit.broadcastMessage(rules[current]);
+            });
+            count++;
+        }
+        chain.sync(TaskChain::abort).execute();
 
     }
 

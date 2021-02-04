@@ -3,6 +3,7 @@ package me.infinityz.minigame.chat;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -48,9 +49,17 @@ public class ChatManager implements Listener {
         return defaultChat.getOrDefault(player.getUniqueId(), "global");
     }
 
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler(priority = EventPriority.LOW)
     public void chatChannel(AsyncPlayerChatEvent e) {
         var player = e.getPlayer();
+
+        var msg = e.getMessage();
+        if (msg.startsWith("!")) {
+            e.setMessage(msg.replaceFirst("!", ""));
+            return;
+        }else if (player.getGameMode() == GameMode.SPECTATOR) {
+            return;
+        }
 
         var chatManager = instance.getChatManager();
         var defaultChannel = chatManager.getDefaultOrNull(player);
