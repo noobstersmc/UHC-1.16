@@ -12,7 +12,6 @@ import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.gamemodes.types.AdvancementHunter;
 import me.infinityz.minigame.gamemodes.types.AntiBurn;
 import me.infinityz.minigame.gamemodes.types.BackPack;
-import me.infinityz.minigame.gamemodes.types.Baguettes;
 import me.infinityz.minigame.gamemodes.types.BareBones;
 import me.infinityz.minigame.gamemodes.types.BloodDiamonds;
 import me.infinityz.minigame.gamemodes.types.BloodExperience;
@@ -144,7 +143,6 @@ public class GamemodeManager {
         // Invitados
         registerGamemode(new UHCVandalico(instance));
         registerGamemode(new UHCLatam(instance));
-        registerGamemode(new Baguettes(instance));
         registerGamemode(new UHCGuest(instance));
 
         // Scenarios pack
