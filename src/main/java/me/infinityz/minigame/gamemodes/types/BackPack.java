@@ -47,10 +47,13 @@ public class BackPack extends IGamemode implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerDeath(PlayerDeathEvent e) {
-        //TODO: Check potential bug if team inventory and timebomb are enabled. Team inventory might required more than two chests on timebomb.
+        // TODO: Check potential bug if team inventory and timebomb are enabled. Team
+        // inventory might required more than two chests on timebomb.
         var team = instance.getTeamManger().getPlayerTeam(e.getEntity().getUniqueId());
+        if (team == null)
+            return;
         if (team.getAliveMembers(instance).isEmpty()) {
-            if(team.getTeamInventory() == null){
+            if (team.getTeamInventory() == null) {
                 return;
             }
             team.getTeamInventory().forEach(all -> {
