@@ -216,6 +216,16 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
         instance.getGame().setApplerate(rate);
     }
 
+    @CommandPermission("uhc.config.cmd")
+    @Subcommand("flint-rate")
+    @CommandAlias("flint-rate")
+    public void changeFlintRate(CommandSender sender, Double rate) {
+        var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
+        Bukkit.broadcast(senderName + ChatColor.YELLOW + 
+                "Flint Rate has been changed from " + instance.getGame().getFlintrate() + "% to " + rate + "%", "uhc.configchanges.see");
+        instance.getGame().setFlintrate(rate);
+    }
+
     @CommandPermission("staff.perm")
     @Subcommand("setslots")
     @CommandAlias("slots||setslots||maxslots")

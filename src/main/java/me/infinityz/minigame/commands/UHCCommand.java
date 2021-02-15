@@ -124,14 +124,15 @@ public class UHCCommand extends BaseCommand {
 
         target.teleportAsync(reviveArgs.isWithLocation() ? uhcPlayer.getLastKnownPosition().toLocation()
                 : ChunksManager.findLateScatterLocation(world))
-                .thenAccept(result -> target.sendMessage("You've been scattered into the world by an admin"));
+                .thenAccept(result -> target.sendMessage("You've been scattered into the world by an admin."));
         uhcPlayer.setAlive(true);
 
         if (reviveArgs.isWithItems())
             target.getInventory().setContents(uhcPlayer.getLastKnownInventory());
 
         target.setGameMode(GameMode.SURVIVAL);
-        sender.sendMessage(ChatColor.of("#7ab83c") + "The player has been scattered into the world");
+        var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
+        Bukkit.broadcast(senderName + ChatColor.YELLOW + ChatColor.of("#7ab83c") + target.getName().toString() + " has been scattered into the world.", "uhc.configchanges.see");
     }
 
     @CommandPermission("staff.perm")

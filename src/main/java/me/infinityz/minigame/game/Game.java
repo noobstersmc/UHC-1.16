@@ -4,9 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
 
 import com.google.gson.Gson;
@@ -55,7 +53,8 @@ public class Game {
     private boolean deathMatchDamage = false;
     private boolean antiMining = false;
     private int uhcslots = 50;
-    private List<String> whitelist = new ArrayList<>();
+    private boolean whitelistEnabled = false;
+    private HashMap<String, String> whitelist = new HashMap<>();
     private String[] rules = new String[] { 
         ChatColor.YELLOW + "UHC RULES:",
         ChatColor.AQUA + "1. " + ChatColor.WHITE + "Stalking is not allowed. ",

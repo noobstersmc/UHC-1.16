@@ -38,8 +38,9 @@ public @RequiredArgsConstructor class Utilities extends BaseCommand {
     @CommandAlias("togglespec|ts")
     public void onToggleSpec(Player sender) {
         toggleGm(sender);
-        sender.sendMessage(ChatColor.GRAY
-                + (sender.getGameMode() == GameMode.SPECTATOR ? "Temporal Spectator Enabled." : "Temporal Spectator Disabled."));
+        var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
+        Bukkit.broadcast(senderName + ChatColor.YELLOW + ChatColor.GRAY
+        + (sender.getGameMode() == GameMode.SPECTATOR ? "Temporal Spectator Enabled." : "Temporal Spectator Disabled."), "uhc.configchanges.see");
 
     }
 
@@ -52,7 +53,7 @@ public @RequiredArgsConstructor class Utilities extends BaseCommand {
             return;
         }
         sender.teleportAsync(target.getLocation());
-        sender.sendMessage(ChatColor.GRAY + "Teleported to " + target.getName().toString());
+        sender.sendActionBar(ChatColor.GRAY + "Teleported to " + target.getName().toString());
 
     }
 
@@ -62,7 +63,7 @@ public @RequiredArgsConstructor class Utilities extends BaseCommand {
     @CommandCompletion("@worlds")
     public void tpWorld(Player player, World world) {
         player.teleport(world.getSpawnLocation());
-        player.sendMessage("Teleported to world " + world);
+        player.sendActionBar(ChatColor.GRAY + "Teleported to world " + world.toString());
     }
 
     @CommandPermission("guest.cmd")
