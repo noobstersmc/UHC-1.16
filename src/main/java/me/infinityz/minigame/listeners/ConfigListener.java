@@ -48,6 +48,8 @@ public class ConfigListener implements Listener {
         return i;
     }
 
+    
+
     @EventHandler
     public void onItemSpawn(ItemSpawnEvent e) {
         if(!instance.getGame().isTearsDropGold()) return;

@@ -23,7 +23,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -76,18 +75,6 @@ public class SpectatorListener implements Listener {
             }
         }, 2L, 2L);
 
-    }
-
-    @EventHandler
-    public void onDeath(PlayerDeathEvent e){
-        var player = e.getEntity();
-        var playerManager = instance.getPlayerManager();
-        if(playerManager.getUhcPlayerMap().contains(player.getUniqueId())){
-            var uhcPlayer = playerManager.getPlayer(player.getUniqueId());
-            if(uhcPlayer.isSpecInfo()){
-                e.setDeathMessage("");
-            }
-        }
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -375,9 +362,7 @@ public class SpectatorListener implements Listener {
         var player = e.getPlayer();
         var playerManager = instance.getPlayerManager();
 
-        if(!playerManager.getUhcPlayerMap().contains(player.getUniqueId())) return;
-
-        var uhcPlayer = instance.getPlayerManager().getPlayer(player.getUniqueId());
+        var uhcPlayer = playerManager.getPlayer(player.getUniqueId());
 
         if (!uhcPlayer.isSpecInfo() || e.getPlayer().getGameMode() != GameMode.SPECTATOR) return;
             

@@ -83,11 +83,10 @@ public @RequiredArgsConstructor class ToolCMD extends BaseCommand {
     @CommandAlias("spme")
     public void spme(Player sender) {
         var playerManager = instance.getPlayerManager();
-        if(playerManager.getUhcPlayerMap().contains(sender.getUniqueId())){
-            var uhcPlayer = playerManager.getPlayer(sender.getUniqueId());
-            Bukkit.dispatchCommand(sender, "specinfo " + sender.getName().toString());
-            uhcPlayer.getPlayer().damage(100);
-        }
+        var uhcPlayer = playerManager.getPlayer(sender.getUniqueId());
+        Bukkit.dispatchCommand(sender, "specinfo " + sender.getName().toString());
+        uhcPlayer.getPlayer().damage(100);
+        
 
     }
 
