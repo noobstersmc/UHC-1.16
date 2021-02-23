@@ -24,7 +24,7 @@ public class FallOut extends IGamemode implements Listener {
     private UHC instance;
 
     public FallOut(UHC instance) {
-        super("FallOut", "Players that stay above Y=50 periodically recieve damage after border time.");
+        super("FallOut", "Players that stay above Y=40 periodically recieve damage after border time.");
         this.instance = instance;
         this.instance.getCommandManager().registerCommand(new FallOutCMD());
     }
@@ -59,7 +59,7 @@ public class FallOut extends IGamemode implements Listener {
             Bukkit.getScheduler().runTask(instance, ()->{
                 Bukkit.getOnlinePlayers().forEach(players -> {
                     if (players.getGameMode() == GameMode.SURVIVAL 
-                        && players.getLocation().getY() > 50)
+                        && players.getLocation().getY() > 40)
                             players.damage(2+exda);
                 });
             });
@@ -77,7 +77,7 @@ public class FallOut extends IGamemode implements Listener {
             if(damage == true){
                 var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
                 Bukkit.broadcast(senderName + ChatColor.YELLOW + "FallOut Damage switch to: " + damage, "uhc.configchanges.see");
-                Bukkit.broadcastMessage(ChatColor.of("#7aac2f") + "Go below coordinate Y=50 now. Player's that remain in surface will take a heart of damage every " + delay + " seconds.");
+                Bukkit.broadcastMessage(ChatColor.of("#7aac2f") + "Go below coordinate Y=40 now. Player's that remain in surface will take a heart of damage every " + delay + " seconds.");
             }
 
         }
