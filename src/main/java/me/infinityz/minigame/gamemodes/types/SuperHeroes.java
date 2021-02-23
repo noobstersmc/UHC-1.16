@@ -74,7 +74,7 @@ public class SuperHeroes extends IGamemode implements Listener {
                 player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 100000, 0, true, false));
             }break;
             default: {
-                player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 20 * 100000, 3, true, false));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 20 * 100000, 2, true, false));
                 player.addPotionEffect(new PotionEffect(PotionEffectType.DOLPHINS_GRACE, 20 * 100000, 0, true, false));
                 player.addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING, 20 * 100000, 0, true, false));
 

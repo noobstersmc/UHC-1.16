@@ -3,7 +3,7 @@ package me.infinityz.minigame.gamemodes.types;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.entity.VillagerAcquireTradeEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 
@@ -53,10 +53,11 @@ public class DiamondLess extends IGamemode implements Listener {
     }
 
     @EventHandler
-    public void onBreak(BlockBreakEvent e){
-        var block = e.getBlock();
-        if(block.getType() == Material.DIAMOND_ORE)
-            block.setType(Material.IRON_ORE);
+    public void onBreak(ItemSpawnEvent e){
+        var item = e.getEntity().getItemStack().getType();
+        if(item.toString().contains("DIAMOND")){
+            e.getEntity().getItemStack().setType(Material.IRON_INGOT);
+        }
 
     }
 

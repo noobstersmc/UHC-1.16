@@ -59,7 +59,7 @@ public class BareBones extends IGamemode implements Listener {
     public void onCraft(PrepareItemCraftEvent e) {
         var recipe = e.getRecipe();
         if(recipe != null && (recipe.getResult().getType() == Material.ENCHANTING_TABLE || recipe.getResult().getType() == Material.ANVIL 
-            || recipe.getResult().getType() == Material.ENCHANTING_TABLE)){
+            || recipe.getResult().getType() == Material.GOLDEN_APPLE)){
             e.getInventory().setResult(null);
         }
 
@@ -69,7 +69,7 @@ public class BareBones extends IGamemode implements Listener {
     public void onBreak(BlockBreakEvent e){
         var block = e.getBlock();
         if(block.getType() == Material.DIAMOND_ORE)
-            block.setType(Material.IRON_INGOT);
+            e.setDropItems(false);
     }
 
     @EventHandler

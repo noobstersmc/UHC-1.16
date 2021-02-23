@@ -103,6 +103,7 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
             bool = !instance.getGame().isDeathMatch();
 
         instance.getGame().setDeathMatch(bool);
+        if(bool == true && !instance.getGame().isDeathMatchDamage()) instance.getGame().setDeathMatchDamage(true);
         if(bool == false && instance.getGame().isDeathMatchDamage()) instance.getGame().setDeathMatchDamage(false);
         var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
         Bukkit.broadcast(senderName + ChatColor.YELLOW + "DeathMatch has been set to: " + bool, "uhc.configchanges.see");

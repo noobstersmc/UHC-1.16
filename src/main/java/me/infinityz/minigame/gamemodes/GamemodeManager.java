@@ -28,6 +28,7 @@ import me.infinityz.minigame.gamemodes.types.DoubleLifeBar;
 import me.infinityz.minigame.gamemodes.types.DoubleOres;
 import me.infinityz.minigame.gamemodes.types.EnderRespawn;
 import me.infinityz.minigame.gamemodes.types.EnderRespawnLeader;
+import me.infinityz.minigame.gamemodes.types.FallOut;
 import me.infinityz.minigame.gamemodes.types.FastGetaway;
 import me.infinityz.minigame.gamemodes.types.FastLeaves;
 import me.infinityz.minigame.gamemodes.types.FastSmelting;
@@ -139,6 +140,7 @@ public class GamemodeManager {
         registerGamemode(new Cripple(instance));
         registerGamemode(new FastGetaway(instance));
         registerGamemode(new VengefulSpirits(instance));
+        registerGamemode(new FallOut(instance));
 
         // Invitados
         registerGamemode(new UHCVandalico(instance));

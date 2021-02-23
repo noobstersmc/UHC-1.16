@@ -316,8 +316,8 @@ public class TeamCMD extends BaseCommand {
         team.sendTeamMessageWithPrefix(sender.getName() + ": " + ChatColor.GRAY + message);
     }
 
-    @CommandAlias("sendcoord|sendcoords|sc")
-    @Subcommand("sendcoord|sendcoords|sc")
+    @CommandAlias("sendcoord|sendcoords|sc|tl")
+    @Subcommand("sendcoord|sendcoords|sc|tl")
     public void teamSendCoords(@Conditions("hasTeam") Player sender) {
         if (sender.getGameMode() == GameMode.SPECTATOR) {
             sender.sendMessage(ChatColor.RED + "Error: Spectators can't send coords.");
@@ -338,7 +338,7 @@ public class TeamCMD extends BaseCommand {
     }
 
     @CommandCompletion("@otherplayers")
-    @CommandAlias("tl|kc")
+    @CommandAlias("kc")
     @Subcommand("list")
     public void teamList(CommandSender sender, @Optional @Flags("other") OfflinePlayer target) {
         // Verify is target is not null

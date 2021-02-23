@@ -47,7 +47,10 @@ public class DoubleLifeBar extends IGamemode implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onJoinLate(PlayerJoinedLateEvent e){
         var player = e.getPlayer();
-        player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(40.0);
+        Bukkit.getScheduler().runTaskLater(instance, ()->{
+            player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(40.0);
+
+        }, 20);
     }
 
 }

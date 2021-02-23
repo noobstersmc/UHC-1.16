@@ -65,7 +65,6 @@ public @RequiredArgsConstructor class ToolCMD extends BaseCommand {
         }
     }
 
-    @CommandPermission("staff.perm")
     @Subcommand("specinfo")
     @CommandAlias("specinfo")
     @CommandCompletion("@onlineplayers")
@@ -78,7 +77,6 @@ public @RequiredArgsConstructor class ToolCMD extends BaseCommand {
 
     }
 
-    @CommandPermission("staff.perm")
     @Subcommand("spme")
     @CommandAlias("spme")
     public void spme(Player sender) {

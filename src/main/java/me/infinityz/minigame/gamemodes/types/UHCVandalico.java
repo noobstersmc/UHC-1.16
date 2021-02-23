@@ -30,7 +30,6 @@ public class UHCVandalico extends IGamemode implements Listener {
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "config advancements true");
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "config privateGame true");
         instance.getGame().setTearsDropGold(true);
-        instance.getGame().setDeathMatch(false);
 
         setEnabled(true);
         return true;
@@ -42,7 +41,6 @@ public class UHCVandalico extends IGamemode implements Listener {
             return false;
         instance.getListenerManager().unregisterListener(this);
 
-        instance.getGame().setDeathMatch(true);
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "game score UHC");
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "config advancements false");
         instance.getGame().setTearsDropGold(false);

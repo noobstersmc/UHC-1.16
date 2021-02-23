@@ -2,7 +2,6 @@ package me.infinityz.minigame.gamemodes.types;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
-import org.bukkit.World.Environment;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -17,17 +16,17 @@ import me.infinityz.minigame.events.GameTickEvent;
 import me.infinityz.minigame.gamemodes.IGamemode;
 import net.md_5.bungee.api.ChatColor;
 
-public class SkyHigh extends IGamemode implements Listener {
+public class FallOut extends IGamemode implements Listener {
     private boolean damage = false;
     private float extradamage = 6;
     private float exda = 0;
     private int delay = 10;
     private UHC instance;
 
-    public SkyHigh(UHC instance) {
-        super("SkyHigh", "Players that stay below Y=150 periodically recieve damage after border time.");
+    public FallOut(UHC instance) {
+        super("FallOut", "Players that stay above Y=50 periodically recieve damage after border time.");
         this.instance = instance;
-        this.instance.getCommandManager().registerCommand(new SkyHighCMD());
+        this.instance.getCommandManager().registerCommand(new FallOutCMD());
     }
 
     @Override
@@ -60,8 +59,7 @@ public class SkyHigh extends IGamemode implements Listener {
             Bukkit.getScheduler().runTask(instance, ()->{
                 Bukkit.getOnlinePlayers().forEach(players -> {
                     if (players.getGameMode() == GameMode.SURVIVAL 
-                        && players.getWorld().getEnvironment() != Environment.NETHER
-                        && players.getLocation().getY() < 150)
+                        && players.getLocation().getY() > 50)
                             players.damage(2+exda);
                 });
             });
@@ -70,16 +68,16 @@ public class SkyHigh extends IGamemode implements Listener {
     }
 
     @CommandPermission("uhc.scenarios")
-    @CommandAlias("skyhigh")
-    public class SkyHighCMD extends BaseCommand {
+    @CommandAlias("FallOut")
+    public class FallOutCMD extends BaseCommand {
 
         @Default
         public void toggleDamage(CommandSender sender) {
             damage = !damage;
             if(damage == true){
                 var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
-                Bukkit.broadcast(senderName + ChatColor.YELLOW + "SkyHigh Damage switch to: " + damage, "uhc.configchanges.see");
-                Bukkit.broadcastMessage(ChatColor.of("#7fe5f0") + "Go above coordinate Y=150 now. Player's that remain in surface will take a heart of damage every " + delay + " seconds.");
+                Bukkit.broadcast(senderName + ChatColor.YELLOW + "FallOut Damage switch to: " + damage, "uhc.configchanges.see");
+                Bukkit.broadcastMessage(ChatColor.of("#7aac2f") + "Go below coordinate Y=50 now. Player's that remain in surface will take a heart of damage every " + delay + " seconds.");
             }
 
         }
@@ -89,7 +87,7 @@ public class SkyHigh extends IGamemode implements Listener {
         public void extraDamage(CommandSender sender, Float ed) {
             extradamage = ed;
             var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
-            Bukkit.broadcast(senderName + ChatColor.YELLOW + "SkyHigh extra damage set to " + ed/2 + " hearts.", "uhc.configchanges.see");
+            Bukkit.broadcast(senderName + ChatColor.YELLOW + "FallOut extra damage set to " + ed/2 + " hearts.", "uhc.configchanges.see");
 
         }
 
@@ -98,7 +96,7 @@ public class SkyHigh extends IGamemode implements Listener {
         public void delay(CommandSender sender, Integer de) {
             delay = de;
             var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
-            Bukkit.broadcast(senderName + ChatColor.YELLOW + "SkyHigh delay set to " + de + " seconds.", "uhc.configchanges.see");
+            Bukkit.broadcast(senderName + ChatColor.YELLOW + "FallOut delay set to " + de + " seconds.", "uhc.configchanges.see");
 
         }
     }
