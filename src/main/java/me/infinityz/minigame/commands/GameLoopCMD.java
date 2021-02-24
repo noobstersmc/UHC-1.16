@@ -102,7 +102,7 @@ public class GameLoopCMD extends BaseCommand {
             return;
         }
 
-        game.setBorderCenterTime(newBorderCenter);
+        game.setBorderCenter(newBorderCenter);
         var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
         Bukkit.broadcast(senderName + ChatColor.YELLOW + "Once the border start to move the final border size will be " + newBorderCenter + " of diameter.", "uhc.configchanges.see");
     }
