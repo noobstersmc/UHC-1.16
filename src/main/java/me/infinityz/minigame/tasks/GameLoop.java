@@ -28,6 +28,7 @@ import me.infinityz.minigame.events.GameTickEvent;
 import me.infinityz.minigame.events.NetherDisabledEvent;
 import me.infinityz.minigame.events.UHCPlayerDequalificationEvent;
 import me.infinityz.minigame.game.Game;
+import me.infinityz.minigame.gamemodes.types.FallOut;
 import me.infinityz.minigame.gamemodes.types.GoToHell;
 import me.infinityz.minigame.players.UHCPlayer;
 import net.md_5.bungee.api.ChatColor;
@@ -166,7 +167,7 @@ public class GameLoop extends BukkitRunnable {
 
         if (time == borderReachCenter) {
             // BORDE LLEGA AL CENTRO
-            instance.getGame().setAntiMining(true);
+            if(!instance.getGamemodeManager().isScenarioEnable(FallOut.class)) instance.getGame().setAntiMining(true);
         }
 
         if (secondBorder == 0) {
