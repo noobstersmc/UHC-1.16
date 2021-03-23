@@ -73,7 +73,7 @@ dependencies {
     /** Corpse Plugin */
     compileOnly 'org.kovalski:CorpseMaster:0.2.1'
     /** Added kern */
-    compileOnly 'net.noobsters:kern:0.2A-SNAPSHOT'
+    compileOnly 'net.noobsters:kern:0.2B-SNAPSHOT'
 }
 
 
