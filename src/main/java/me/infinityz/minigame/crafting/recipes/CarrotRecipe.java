@@ -1,6 +1,6 @@
 package me.infinityz.minigame.crafting.recipes;
 
-    import org.bukkit.Material;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
@@ -8,19 +8,19 @@ import org.bukkit.inventory.ShapedRecipe;
 
 import me.infinityz.minigame.crafting.CustomRecipe;
 
-    public class CarrotRecipe extends CustomRecipe {
-    
-        public CarrotRecipe(NamespacedKey namespacedKey, Recipe name) {
-            super(namespacedKey, name);
-    
-                    final ItemStack item = new ItemStack(Material.GOLDEN_CARROT);
+public class CarrotRecipe extends CustomRecipe {
 
-                    final ShapedRecipe recipe = new ShapedRecipe(namespacedKey, item);
-                    recipe.shape("AAA", "ABA", "AAA");
-                    recipe.setIngredient('A', Material.GOLD_INGOT);
-                    recipe.setIngredient('B', Material.CARROT);
+    public CarrotRecipe(NamespacedKey namespacedKey, Recipe name) {
+        super(namespacedKey, name);
 
-                    setRecipe(recipe);
-        }
-        
+        final ItemStack item = new ItemStack(Material.GOLDEN_CARROT);
+
+        final ShapedRecipe recipe = new ShapedRecipe(namespacedKey, item);
+        recipe.shape("AAA", "ABA", "AAA");
+        recipe.setIngredient('A', Material.GOLD_INGOT);
+        recipe.setIngredient('B', Material.CARROT);
+
+        setRecipe(recipe);
     }
+
+}

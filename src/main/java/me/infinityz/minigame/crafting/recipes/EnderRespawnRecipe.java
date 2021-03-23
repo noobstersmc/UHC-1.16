@@ -15,20 +15,19 @@ public class EnderRespawnRecipe extends CustomRecipe {
     public EnderRespawnRecipe(NamespacedKey namespacedKey, Recipe name) {
         super(namespacedKey, name);
 
-                final ItemStack respawnCrystal = new ItemStack(Material.END_CRYSTAL);
-                final ItemMeta im = respawnCrystal.getItemMeta();
-                im.setDisplayName(ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "Respawn Crystal");
-                respawnCrystal.setItemMeta(im);
+        final ItemStack respawnCrystal = new ItemStack(Material.END_CRYSTAL);
+        final ItemMeta im = respawnCrystal.getItemMeta();
+        im.setDisplayName(ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "Respawn Crystal");
+        respawnCrystal.setItemMeta(im);
 
-                final ShapelessRecipe recipe = new ShapelessRecipe(getNamespacedKey(), respawnCrystal);
-                recipe.addIngredient(2, Material.DIAMOND);
-                recipe.addIngredient(2, Material.BONE);
-                recipe.addIngredient(2, Material.LEATHER);
-                recipe.addIngredient(1, Material.ENDER_EYE);
-                recipe.addIngredient(2, Material.GOLDEN_APPLE);
+        final ShapelessRecipe recipe = new ShapelessRecipe(getNamespacedKey(), respawnCrystal);
+        recipe.addIngredient(2, Material.DIAMOND);
+        recipe.addIngredient(2, Material.BONE);
+        recipe.addIngredient(2, Material.LEATHER);
+        recipe.addIngredient(1, Material.ENDER_EYE);
+        recipe.addIngredient(2, Material.GOLDEN_APPLE);
 
-                setRecipe(recipe);
+        setRecipe(recipe);
     }
 
-    
 }

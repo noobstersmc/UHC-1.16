@@ -18,7 +18,6 @@ import org.bukkit.WorldCreator;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.event.HandlerList;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitWorker;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -58,6 +57,7 @@ import me.infinityz.minigame.enums.Stage;
 import me.infinityz.minigame.game.Game;
 import me.infinityz.minigame.gamemodes.GamemodeManager;
 import me.infinityz.minigame.gamemodes.GamemodesCMD;
+import me.infinityz.minigame.gui.GuiManager;
 import me.infinityz.minigame.listeners.ListenerManager;
 import me.infinityz.minigame.players.PlayerManager;
 import me.infinityz.minigame.portals.PortalListeners;
@@ -65,7 +65,6 @@ import me.infinityz.minigame.scoreboard.ScoreboardManager;
 import me.infinityz.minigame.teams.TeamManager;
 import net.md_5.bungee.api.ChatColor;
 import net.noobsters.kern.paper.Kern;
-import net.noobsters.kern.paper.guis.RapidInv;
 
 public class UHC extends JavaPlugin {
 
@@ -80,6 +79,7 @@ public class UHC extends JavaPlugin {
     private @Getter ChunksManager chunkManager;
     private @Getter GamemodeManager gamemodeManager;
     private @Getter ChatManager chatManager;
+    private @Getter GuiManager guiManager;
     private @Getter @Setter Game game;
     private @Getter BorderManager borderManager;
     private @Getter CondorManager condorManager;
@@ -172,10 +172,6 @@ public class UHC extends JavaPlugin {
         if (kernPlugin != null && kernPlugin instanceof Kern)
             this.kern = (Kern) kernPlugin;
 
-        /** Crear una Gui?*/
-        var inv = new RapidInv(InventoryType.CHEST, "Inventario bien perron");
-        
-
 
         /* Create the base world with the correct seed */
         try {
@@ -255,6 +251,7 @@ public class UHC extends JavaPlugin {
         gamemodeManager = new GamemodeManager(this);
         chatManager = new ChatManager(this);
         borderManager = new BorderManager(this);
+        guiManager = new GuiManager(this);
 
         /* Initiliaze the game data */
         game = new Game();

@@ -15,7 +15,7 @@ public class GoldenHead extends CustomRecipe {
 
     public GoldenHead(NamespacedKey namespacedKey, Recipe name) {
         super(namespacedKey, null);
-        
+
         final ItemStack goldenHead = new ItemStack(Material.GOLDEN_APPLE);
         final ItemMeta im = goldenHead.getItemMeta();
         im.setDisplayName(ChatColor.GOLD + "Golden Head");

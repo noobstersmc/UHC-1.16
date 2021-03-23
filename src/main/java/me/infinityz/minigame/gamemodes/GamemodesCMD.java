@@ -2,6 +2,7 @@ package me.infinityz.minigame.gamemodes;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
@@ -23,9 +24,9 @@ public class GamemodesCMD extends BaseCommand {
     private @NonNull UHC instance;
 
     @HelpCommand
-    public void command(CommandSender sender) {
-        Bukkit.dispatchCommand(sender, "config");
-
+    public void command(Player sender) {
+        /* SCENARIOS ENABLED GUI*/
+        instance.getGuiManager().getEnabledScenariosGui().open(sender);
     }
 
     @CommandPermission("uhc.scenarios")

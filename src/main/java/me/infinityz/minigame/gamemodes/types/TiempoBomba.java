@@ -71,7 +71,7 @@ public class TiempoBomba extends IGamemode implements Listener {
                 iterator.remove();
             } else {
                 int second = (30 - (int) differential);
-                if(second < 4) Bukkit.getOnlinePlayers().forEach(player -> player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO, 1, 0.6f));
+                if(second < 4) Bukkit.getOnlinePlayers().forEach(player -> player.playSound(armorStand.getLocation(), Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO, 0.5f, 0.6f));
                 armorStand.setCustomName(ChatColor.of(colors.get(second-1)) + "" + second + "s");
             }
         }

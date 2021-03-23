@@ -17,6 +17,7 @@ import co.aikar.commands.annotation.Subcommand;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import me.infinityz.minigame.UHC;
+import me.infinityz.minigame.enums.Stage;
 import me.infinityz.minigame.players.UHCPlayer;
 import net.md_5.bungee.api.ChatColor;
 
@@ -73,6 +74,10 @@ public @RequiredArgsConstructor class ToolCMD extends BaseCommand {
     @CommandAlias("specinfo")
     @CommandCompletion("@onlineplayers")
     public void specInfo(Player sender, @Flags("other") Player target) {
+        if(instance.getGame().getGameStage() != Stage.INGAME){
+            sender.sendMessage(ChatColor.RED + "You must be in game stage.");
+            return;
+        }
         UHCPlayer uhcPlayer = instance.getPlayerManager().getPlayer(target.getUniqueId());
         uhcPlayer.setSpecInfo(!uhcPlayer.isSpecInfo());
         var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
@@ -97,7 +102,7 @@ public @RequiredArgsConstructor class ToolCMD extends BaseCommand {
     @CommandAlias("togglespec|ts")
     public void onToggleSpec(Player sender) {
         toggleGm(sender);
-        var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
+        var senderName = ChatColor.GRAY + "[" + sender.getName() + "] ";
         Bukkit.broadcast(senderName + ChatColor.YELLOW + ChatColor.GRAY
         + (sender.getGameMode() == GameMode.SPECTATOR ? "Temporal Spectator Enabled." : "Temporal Spectator Disabled."), permissionDebug);
 
@@ -112,7 +117,7 @@ public @RequiredArgsConstructor class ToolCMD extends BaseCommand {
             return;
         }
         sender.teleportAsync(target.getLocation());
-        sender.sendActionBar(ChatColor.GRAY + "Teleported to " + target.getName().toString());
+        sender.sendActionBar(ChatColor.GRAY + "Teleported to " + target.getName());
 
     }
 
@@ -122,7 +127,7 @@ public @RequiredArgsConstructor class ToolCMD extends BaseCommand {
     @CommandCompletion("@worlds")
     public void tpWorld(Player player, World world) {
         player.teleport(world.getSpawnLocation());
-        player.sendActionBar(ChatColor.GRAY + "Teleported to world " + world.toString());
+        player.sendActionBar(ChatColor.GRAY + "Teleported to world " + world.getName());
     }
 
     @CommandPermission("staff.perm")
@@ -140,7 +145,7 @@ public @RequiredArgsConstructor class ToolCMD extends BaseCommand {
                 var p = Bukkit.getPlayer(mate.getUUID());
                 if(p != null && p.isOnline()) p.teleport(player.getLocation());
             });
-            player.sendActionBar(ChatColor.GRAY + "Teleported " + target + "'s team to you.");
+            player.sendActionBar(ChatColor.GRAY + "Teleported " + target.getName() + "'s team to you.");
         }else{
             player.sendActionBar(ChatColor.RED + "");
         }
@@ -159,12 +164,12 @@ public @RequiredArgsConstructor class ToolCMD extends BaseCommand {
     }
 
     public boolean toggleGm(Player player){
-        if(player.getGameMode() == GameMode.SURVIVAL){
+        if(player.getGameMode() == GameMode.CREATIVE){
             player.setGameMode(GameMode.SPECTATOR);
             return true;
         }  
         else if(player.getGameMode() == GameMode.SPECTATOR){
-            player.setGameMode(GameMode.SURVIVAL);
+            player.setGameMode(GameMode.CREATIVE);
             return false;
         }
         return false;
