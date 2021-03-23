@@ -7,18 +7,23 @@ import org.bukkit.Material;
 import org.bukkit.World.Environment;
 import org.bukkit.entity.Drowned;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Result;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.ItemSpawnEvent;
+import org.bukkit.event.inventory.BrewEvent;
 import org.bukkit.event.inventory.BrewingStandFuelEvent;
-import org.bukkit.event.inventory.CraftItemEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -28,6 +33,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffectType;
+import org.spigotmc.event.entity.EntityMountEvent;
 
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.chunks.ChunksManager;
@@ -75,10 +81,47 @@ public class ConfigListener implements Listener {
     }
 
     @EventHandler
-    public void onCraftPowder(CraftItemEvent e){
-        if(!instance.getGame().isPotions() && e.getInventory().getResult() != null 
-            && e.getInventory().getResult().getType() == Material.BLAZE_POWDER){
-            e.getWhoClicked().sendMessage(ChatColor.RED + "Potions are disabled.");
+    public void trade(InventoryOpenEvent e){
+        var inv = e.getInventory();
+        if(inv.getType() == InventoryType.MERCHANT && !instance.getGame().isTrades()){
+            e.setCancelled(true);
+            e.getPlayer().sendMessage(ChatColor.RED + "Trading is disabled.");
+        }
+    }
+
+    @EventHandler
+    public void horses(EntityMountEvent e){
+        var entity = e.getMount();
+        var player = e.getEntity();
+        if(!instance.getGame().isHorses() && entity instanceof Horse && player instanceof Player){
+            e.setCancelled(true);   
+            player.sendMessage(ChatColor.RED + "Horses are disabled."); 
+        }
+    }
+
+    @EventHandler
+    public void strength(BrewEvent e){
+        if(instance.getGame().isStrength()) return;
+        if(e.getContents().getIngredient().getType() ==  Material.BLAZE_POWDER){
+            e.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void beds(BlockPlaceEvent e){
+        if(!instance.getGame().isBeds() && e.getBlock().getType().toString().contains("BED")){
+            e.setCancelled(true);
+            e.getPlayer().sendMessage(ChatColor.RED + "Beds are disabled.");
+        }
+    }
+
+    @EventHandler
+    public void onDamage(EntityDamageEvent e) {
+        if(instance.getGame().isItemsBurn()) return;
+        if (e.getEntityType() == EntityType.DROPPED_ITEM && (e.getCause() == EntityDamageEvent.DamageCause.FIRE
+                || e.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK
+                || e.getCause() == EntityDamageEvent.DamageCause.LAVA)) {
+            e.setCancelled(true);
         }
     }
 

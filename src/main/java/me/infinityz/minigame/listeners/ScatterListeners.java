@@ -24,8 +24,6 @@ import net.md_5.bungee.api.ChatColor;
 public class ScatterListeners implements Listener {
     private @NonNull UHC instance;
 
-    // TODO: Prohibit login during scatter to avoid errors.
-
     @EventHandler(priority = EventPriority.MONITOR)
     public void scatterLogin(PlayerLoginEvent e) {
         e.disallow(org.bukkit.event.player.PlayerLoginEvent.Result.KICK_FULL, ChatColor.RED + "You can't join at scatter stage, please try again later.");   

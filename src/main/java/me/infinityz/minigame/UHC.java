@@ -46,7 +46,6 @@ import me.infinityz.minigame.commands.PVP;
 import me.infinityz.minigame.commands.StartCommand;
 import me.infinityz.minigame.commands.ToolCMD;
 import me.infinityz.minigame.commands.UHCCommand;
-import me.infinityz.minigame.commands.Utilities;
 import me.infinityz.minigame.commands.Whitelist;
 import me.infinityz.minigame.commands.WorldCMD;
 import me.infinityz.minigame.condor.CondorAPI;
@@ -180,7 +179,6 @@ public class UHC extends JavaPlugin {
         System.out.println("[CONDOR] Seed will be " + SEED);
 
         condorManager = new CondorManager(this);
-        /* TODO: Make condor send a ping as soon as the server goes online! */
 
         try {
             Long.valueOf(SEED);
@@ -217,7 +215,6 @@ public class UHC extends JavaPlugin {
         commandManager.registerCommand(new HelpopCommand(this));
         commandManager.registerCommand(new UHCCommand(this));
         commandManager.registerCommand(new LatescatterCMD(this));
-        commandManager.registerCommand(new Utilities(this));
         commandManager.registerCommand(new GameRestoreCMD(this));
         commandManager.registerCommand(new ConfigCommand(this));
         commandManager.registerCommand(new GamemodesCMD(this));
@@ -241,10 +238,10 @@ public class UHC extends JavaPlugin {
         gamemodeManager = new GamemodeManager(this);
         chatManager = new ChatManager(this);
         borderManager = new BorderManager(this);
+
         /* Initiliaze the game data */
         game = new Game();
         portalListeners = new PortalListeners(this);
-
         /* Install the config */
         processConfig();
 
@@ -351,7 +348,7 @@ public class UHC extends JavaPlugin {
 
                 game.setHostname(config.getHost());
                 game.setHostUUID(config.getHost_uuid());
-                // TODO: WHITELIST HOST TOO?
+
                 game.setPrivateGame(config.isPrivacy());
                 Bukkit.getWhitelistedPlayers().add(Bukkit.getOfflinePlayer(config.getHost_uuid()));
 

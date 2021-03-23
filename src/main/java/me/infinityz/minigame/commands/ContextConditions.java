@@ -141,6 +141,7 @@ public class ContextConditions {
         instance.getCommandManager().getCommandCompletions().registerAsyncCompletion("bool", c -> {
             return ImmutableList.of("true", "false");
         });
+        
         instance.getCommandManager().getCommandCompletions().registerAsyncCompletion("respawnArgs", c -> {
             return ImmutableList.of("--i", "-inventory", "--l", "-location");
         });

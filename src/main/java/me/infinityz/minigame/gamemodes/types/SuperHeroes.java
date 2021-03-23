@@ -4,6 +4,7 @@ import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -11,19 +12,26 @@ import org.bukkit.event.Listener;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import co.aikar.commands.BaseCommand;
+import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandPermission;
+import co.aikar.commands.annotation.Subcommand;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.events.GameStartedEvent;
 import me.infinityz.minigame.events.PlayerJoinedLateEvent;
 import me.infinityz.minigame.gamemodes.IGamemode;
+import net.md_5.bungee.api.ChatColor;
 
 public class SuperHeroes extends IGamemode implements Listener {
     private UHC instance;
     private Random random = new Random();
+    private String permissionDebug = "uhc.configchanges.see";
 
     public SuperHeroes(UHC instance) {
         super("SuperHeroes",
                 "Players get random super power, each power controls a potion effect.");
         this.instance = instance;
+        this.instance.getCommandManager().registerCommand(new SuperHeroesCMD());
     }
 
     @Override
@@ -44,6 +52,35 @@ public class SuperHeroes extends IGamemode implements Listener {
         instance.getGame().setPotions(true);
         setEnabled(false);
         return true;
+    }
+
+    @CommandPermission("uhc.scenarios")
+    @CommandAlias("superheroes")
+    public class SuperHeroesCMD extends BaseCommand {
+
+        @Subcommand("give-powers")
+        @CommandAlias("give-powers")
+        public void givePowers(CommandSender sender) {
+
+            Bukkit.getOnlinePlayers().forEach(player ->{
+                givePower(player);
+            });
+            var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
+            Bukkit.broadcast(senderName + ChatColor.YELLOW + "Superpowers refreshed.", permissionDebug);
+        }
+
+        @Subcommand("clear-powers")
+        @CommandAlias("clear-powers")
+        public void clearPowers(CommandSender sender) {
+
+            Bukkit.getOnlinePlayers().forEach(player ->{
+                player.getActivePotionEffects().forEach(all -> player.removePotionEffect(all.getType()));
+                player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
+            });
+            var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
+            Bukkit.broadcast(senderName + ChatColor.YELLOW + "Superpowers cleared.", permissionDebug);
+        }
+
     }
 
     public void givePower(Player player){
@@ -84,7 +121,9 @@ public class SuperHeroes extends IGamemode implements Listener {
     
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerJoinLate(PlayerJoinedLateEvent e){
-        givePower(e.getPlayer());
+        Bukkit.getScheduler().runTask(instance, () -> {
+            givePower(e.getPlayer());
+        });
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)

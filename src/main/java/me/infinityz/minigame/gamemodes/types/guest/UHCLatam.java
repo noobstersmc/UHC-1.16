@@ -1,4 +1,4 @@
-package me.infinityz.minigame.gamemodes.types;
+package me.infinityz.minigame.gamemodes.types.guest;
 
 import java.util.ArrayList;
 

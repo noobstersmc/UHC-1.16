@@ -24,6 +24,7 @@ import net.md_5.bungee.api.ChatColor;
 
 public class DamageCycle extends IGamemode implements Listener {
     private UHC instance;
+    private String permissionDebug = "uhc.configchanges.see";
     private Random random = new Random();
     private int delay = 300;
     private DamageCause currentDamage = DamageCause.LIGHTNING;
@@ -134,7 +135,7 @@ public class DamageCycle extends IGamemode implements Listener {
         public void changeDelay(CommandSender sender, Integer newDelay) {
             delay = newDelay*60;
             var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
-            Bukkit.broadcast(senderName + ChatColor.YELLOW + "Damage Cycle delay has change to: " + newDelay + " minutes.", "uhc.configchanges.see");
+            Bukkit.broadcast(senderName + ChatColor.YELLOW + "Damage Cycle delay has change to: " + newDelay + " minutes.", permissionDebug);
         }
 
     }

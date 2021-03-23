@@ -83,7 +83,8 @@ public class IngameListeners implements Listener {
 
     @EventHandler
     public void onDeathMatch(GameTickEvent e) {
-        if (instance.getGame().isDeathMatch() && !instance.getGame().isHasSomeoneWon()
+        var game = instance.getGame();
+        if (game.isDeathMatch() && !game.isHasSomeoneWon()
                 && instance.getGame().isDeathMatchDamage() && e.getSecond() % 5 == 0) {
             Bukkit.getScheduler().runTask(instance, () -> {
                 Bukkit.getOnlinePlayers().forEach(players -> {
@@ -235,7 +236,6 @@ public class IngameListeners implements Listener {
 
     @EventHandler
     public void onJoinLater(PlayerJoinEvent e) {
-        // TODO: Make this more compact and effcient.
         var p = e.getPlayer();
         var uhcP = instance.getPlayerManager().getPlayer(p.getUniqueId());
         var time = instance.getGame().getGameTime();
@@ -357,13 +357,17 @@ public class IngameListeners implements Listener {
                 if (optionalTeam.isPresent()) {
                     Bukkit.getPluginManager().callEvent(new TeamWinEvent(optionalTeam.get().getTeamID(), true));
                     instance.getGame().setHasSomeoneWon(true);
-                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "specchat");
+                    Bukkit.getScheduler().runTask(instance, ()->{
+                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "specchat");
+                    });
                 } else if (solos.size() == 1) {
                     var optionalPlayer = solos.get(0);
                     if (optionalPlayer != null) {
                         Bukkit.getPluginManager().callEvent(new PlayerWinEvent(optionalPlayer.getUUID(), true));
                         instance.getGame().setHasSomeoneWon(true);
-                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "specchat");
+                        Bukkit.getScheduler().runTask(instance, ()->{
+                            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "specchat");
+                        });
                     }
                 }
             }
@@ -374,7 +378,9 @@ public class IngameListeners implements Listener {
             if (lastAlivePlayer != null) {
                 Bukkit.getPluginManager().callEvent(new PlayerWinEvent(lastAlivePlayer.getUUID(), true));
                 instance.getGame().setHasSomeoneWon(true);
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "specchat");
+                Bukkit.getScheduler().runTask(instance, ()->{
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "specchat");
+                });
             }
 
         }

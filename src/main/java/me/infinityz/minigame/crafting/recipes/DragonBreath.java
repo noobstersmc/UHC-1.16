@@ -1,6 +1,5 @@
 package me.infinityz.minigame.crafting.recipes;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
@@ -18,12 +17,12 @@ import me.infinityz.minigame.crafting.CustomRecipe;
             super(namespacedKey, name);
     
                     final ItemStack dragonRecipe = new ItemStack(Material.DRAGON_BREATH);
-                    final ItemStack strenghtPot = PotionItemStack(Material.POTION, PotionType.STRENGTH, false, true);
+                    final ItemStack strengthPot = PotionItemStack(Material.POTION, PotionType.STRENGTH, false, true);
 
                     final ShapedRecipe recipe = new ShapedRecipe(namespacedKey, dragonRecipe);
                     recipe.shape("AAA", "ABA", "AAA");
                     recipe.setIngredient('A', Material.GOLD_NUGGET);
-                    recipe.setIngredient('B', strenghtPot.getType());
+                    recipe.setIngredient('B', strengthPot.getType());
 
                     setRecipe(recipe);
         }
@@ -35,16 +34,5 @@ import me.infinityz.minigame.crafting.CustomRecipe;
             potion.setItemMeta(meta);
             return potion;
         }
-    
-        @Override
-        public void logic() {
-            
-            var recipe = Bukkit.getServer().getRecipe(getNamespacedKey());
-            if(recipe == null){
-                Bukkit.getServer().addRecipe(getRecipe());
-            }
-    
-        }
-    
         
     }

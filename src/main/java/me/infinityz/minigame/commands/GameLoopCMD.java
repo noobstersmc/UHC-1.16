@@ -19,7 +19,7 @@ import net.md_5.bungee.api.ChatColor;
 public class GameLoopCMD extends BaseCommand {
 
     private @NonNull UHC instance;
-    
+    private String permissionDebug = "uhc.configchanges.see";
 
     @Subcommand("pvptime")
     @CommandAlias("pvptime")
@@ -46,7 +46,7 @@ public class GameLoopCMD extends BaseCommand {
 
         instance.getGame().setHealTime(newHealTime * 60);
         var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
-        Bukkit.broadcast(senderName + ChatColor.YELLOW + "Heal time will be at " + newHealTime + " minutes after start.", "uhc.configchanges.see");
+        Bukkit.broadcast(senderName + ChatColor.YELLOW + "Heal time will be at " + newHealTime + " minutes after start.", permissionDebug);
     }
 
     @Subcommand("bordertime")
@@ -82,7 +82,7 @@ public class GameLoopCMD extends BaseCommand {
 
         game.setBorderCenterTime(newBorderCenterTime * 60);
         var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
-        Bukkit.broadcast(senderName + ChatColor.YELLOW + "Once the border start to move will take " + newBorderCenterTime + " minutes to reach the center.", "uhc.configchanges.see");
+        Bukkit.broadcast(senderName + ChatColor.YELLOW + "Once the border start to move will take " + newBorderCenterTime + " minutes to reach the center.", permissionDebug);
     }
 
 
@@ -104,7 +104,7 @@ public class GameLoopCMD extends BaseCommand {
 
         game.setBorderCenter(newBorderCenter);
         var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
-        Bukkit.broadcast(senderName + ChatColor.YELLOW + "Once the border start to move the final border size will be " + newBorderCenter + " of diameter.", "uhc.configchanges.see");
+        Bukkit.broadcast(senderName + ChatColor.YELLOW + "Once the border start to move the final border size will be " + newBorderCenter + " of diameter.", permissionDebug);
     }
 
 
@@ -130,7 +130,7 @@ public class GameLoopCMD extends BaseCommand {
         instance.getGame().setBorderSize(newBorderSize);
         Bukkit.getWorlds().forEach(it -> it.getWorldBorder().setSize(newBorderSize));
         var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
-        Bukkit.broadcast(senderName + ChatColor.YELLOW + "Border size changed " + newBorderSize + " blocks of diameter.", "uhc.configchanges.see");
+        Bukkit.broadcast(senderName + ChatColor.YELLOW + "Border size changed " + newBorderSize + " blocks of diameter.", permissionDebug);
     }
 
     @Subcommand("finalbordertime")
@@ -145,7 +145,7 @@ public class GameLoopCMD extends BaseCommand {
 
         game.setFinalBorderGrace(newFinalBorderGrace);
         var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
-        Bukkit.broadcast(senderName + ChatColor.YELLOW + "Once the border reach the center " + newFinalBorderGrace + " minutes after will start the final border.", "uhc.configchanges.see");
+        Bukkit.broadcast(senderName + ChatColor.YELLOW + "Once the border reach the center " + newFinalBorderGrace + " minutes after will start the final border.", permissionDebug);
         sender.sendMessage(ChatColor.GREEN + "Set to 0 to disable the final border.");
     }
 
@@ -161,7 +161,7 @@ public class GameLoopCMD extends BaseCommand {
 
         game.setFinalBorderGrace(newDeathMatchGrace);
         var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
-        Bukkit.broadcast(senderName + ChatColor.YELLOW + "Once the final border ends " + newDeathMatchGrace + " minutes after will start the deathmatch.", "uhc.configchanges.see");
+        Bukkit.broadcast(senderName + ChatColor.YELLOW + "Once the final border ends " + newDeathMatchGrace + " minutes after will start the deathmatch.", permissionDebug);
         sender.sendMessage(ChatColor.GREEN + "Use '/deathmatch false' to disable the deathmatch.");
     }
 

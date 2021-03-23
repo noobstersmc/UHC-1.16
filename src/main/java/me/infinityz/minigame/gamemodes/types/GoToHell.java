@@ -22,6 +22,7 @@ public class GoToHell extends IGamemode implements Listener {
     private float damageval = 3;
     private int delay = 10;
     private UHC instance;
+    private String permissionDebug = "uhc.configchanges.see";
 
     public GoToHell(UHC instance) {
         super("Go to Hell", "Players that stay in the overworld will periodically recieve damage after border time.");
@@ -79,7 +80,7 @@ public class GoToHell extends IGamemode implements Listener {
             damage = !damage;
             if(damage == true){
                 var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
-                Bukkit.broadcast(senderName + ChatColor.YELLOW + "Go To Hell Damage switch to: " + damage + " hearts.", "uhc.configchanges.see");
+                Bukkit.broadcast(senderName + ChatColor.YELLOW + "Go To Hell Damage switch to: " + damage + " hearts.", permissionDebug);
                 Bukkit.broadcastMessage(ChatColor.of("#cd4619")
                     + "Go to the Nether now. Player's that remain in the overworld will take "+ damageval + " hearts of damage every " + delay + " seconds.");
             }
@@ -90,7 +91,7 @@ public class GoToHell extends IGamemode implements Listener {
         public void delay(CommandSender sender, Integer newDelay) {
             delay = newDelay;
             var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
-            Bukkit.broadcast(senderName + ChatColor.YELLOW + "GoToHell delay set to " + newDelay + " seconds.", "uhc.configchanges.see");
+            Bukkit.broadcast(senderName + ChatColor.YELLOW + "GoToHell delay set to " + newDelay + " seconds.", permissionDebug);
 
         }
 
@@ -99,7 +100,7 @@ public class GoToHell extends IGamemode implements Listener {
         public void extradamage(CommandSender sender, Float damagevalue) {
             damageval = damagevalue;
             var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
-            Bukkit.broadcast(senderName + ChatColor.YELLOW + "Go To Hell damage value set to " + damagevalue/2 + " hearts.", "uhc.configchanges.see");
+            Bukkit.broadcast(senderName + ChatColor.YELLOW + "Go To Hell damage value set to " + damagevalue/2 + " hearts.", permissionDebug);
 
         }
 

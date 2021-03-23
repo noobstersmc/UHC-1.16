@@ -22,6 +22,7 @@ public class FallOut extends IGamemode implements Listener {
     private float exda = 0;
     private int delay = 10;
     private UHC instance;
+    private String permissionDebug = "uhc.configchanges.see";
 
     public FallOut(UHC instance) {
         super("FallOut", "Players that stay above Y=40 periodically recieve damage after border time.");
@@ -76,7 +77,7 @@ public class FallOut extends IGamemode implements Listener {
             damage = !damage;
             if(damage == true){
                 var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
-                Bukkit.broadcast(senderName + ChatColor.YELLOW + "FallOut Damage switch to: " + damage, "uhc.configchanges.see");
+                Bukkit.broadcast(senderName + ChatColor.YELLOW + "FallOut Damage switch to: " + damage, permissionDebug);
                 Bukkit.broadcastMessage(ChatColor.of("#7aac2f") + "Go below coordinate Y=40 now. Player's that remain in surface will take a heart of damage every " + delay + " seconds.");
             }
 
@@ -87,7 +88,7 @@ public class FallOut extends IGamemode implements Listener {
         public void extraDamage(CommandSender sender, Float ed) {
             extradamage = ed;
             var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
-            Bukkit.broadcast(senderName + ChatColor.YELLOW + "FallOut extra damage set to " + ed/2 + " hearts.", "uhc.configchanges.see");
+            Bukkit.broadcast(senderName + ChatColor.YELLOW + "FallOut extra damage set to " + ed/2 + " hearts.", permissionDebug);
 
         }
 
@@ -96,7 +97,7 @@ public class FallOut extends IGamemode implements Listener {
         public void delay(CommandSender sender, Integer de) {
             delay = de;
             var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
-            Bukkit.broadcast(senderName + ChatColor.YELLOW + "FallOut delay set to " + de + " seconds.", "uhc.configchanges.see");
+            Bukkit.broadcast(senderName + ChatColor.YELLOW + "FallOut delay set to " + de + " seconds.", permissionDebug);
 
         }
     }

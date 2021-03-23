@@ -16,30 +16,30 @@ public class ListenerManager {
     private @Getter LobbyListeners lobby;
     private @Getter ScatterListeners scatter;
     private @Getter IngameListeners ingameListeners;
-    private @Getter SpectatorListener spectatorListener;
-    private @Getter ConfigListener configListener;
+    private @Getter GracePeriodListeners gracePeriodListeners;
 
     public ListenerManager(UHC instance) {
         this.instance = instance;
         lobby = new LobbyListeners(instance);
         scatter = new ScatterListeners(instance);
         ingameListeners = new IngameListeners(instance);
-        spectatorListener = new SpectatorListener(instance);
-        configListener = new ConfigListener(instance);
+        gracePeriodListeners = new GracePeriodListeners(instance);
     
         Bukkit.getPluginManager().registerEvents(new GlobalListener(instance), instance);
         Bukkit.getPluginManager().registerEvents(new LoginListeners(instance), instance);
-        Bukkit.getPluginManager().registerEvents(new GracePeriodListeners(instance), instance);
-        Bukkit.getPluginManager().registerEvents(new GuestListener(instance), instance);
-
-        Bukkit.getPluginManager().registerEvents(configListener, instance);
-        Bukkit.getPluginManager().registerEvents(lobby, instance);
-        // Team listener
+        Bukkit.getPluginManager().registerEvents(new ConfigListener(instance), instance);
         Bukkit.getPluginManager().registerEvents(new TeamListeners(instance), instance);
-        // Listener for GHEAD
+
+        registerListener(new SpectatorListener(instance));
+
+        Bukkit.getPluginManager().registerEvents(lobby, instance);
+        Bukkit.getPluginManager().registerEvents(gracePeriodListeners, instance);
+
+        // Crafting Listeners
         Bukkit.getPluginManager().registerEvents(instance.getCraftingManager(), instance);
-        // TODO: HERE FOR TESTING PURPOSES. MOVE SOON
-        registerListener(spectatorListener);
+
+
+
     }
 
     public void unregisterListener(Listener listener) {

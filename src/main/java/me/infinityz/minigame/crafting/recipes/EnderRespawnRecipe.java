@@ -1,6 +1,5 @@
 package me.infinityz.minigame.crafting.recipes;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
@@ -29,16 +28,6 @@ public class EnderRespawnRecipe extends CustomRecipe {
                 recipe.addIngredient(2, Material.GOLDEN_APPLE);
 
                 setRecipe(recipe);
-    }
-
-    @Override
-    public void logic() {
-        
-        var recipe = Bukkit.getServer().getRecipe(getNamespacedKey());
-        if(recipe == null){
-            Bukkit.getServer().addRecipe(getRecipe());
-        }
-
     }
 
     

@@ -25,6 +25,7 @@ public class UHCPlayer {
     private @Getter @Setter int minedDiamonds = 0;
     private @Getter @Setter int minedGold = 0;
     private @Getter @Setter int minedAncientDebris = 0;
+    private @Getter @Setter boolean thanksHost = false;
     private @Getter @Setter boolean specInfo = false;
     private @Getter @Setter boolean alive = false;
     private @Getter @Setter boolean dead = false;

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
@@ -37,7 +38,7 @@ public class TiempoBomba extends IGamemode implements Listener {
     private BukkitTask task;
 
     public TiempoBomba(UHC instance) {
-        super("TimeBomb", "Las cosas explosionan. Cuidadao");
+        super("TimeBomb", "Player stuff explode in a chest after 30 seconds.");
         this.instance = instance;
         for (int i = 0; i < 30; i++) {
             colors.add(Color.getHSBColor((i*2.5F)/100.0F, 1.0F, 1.0F));            
@@ -70,6 +71,7 @@ public class TiempoBomba extends IGamemode implements Listener {
                 iterator.remove();
             } else {
                 int second = (30 - (int) differential);
+                if(second < 4) Bukkit.getOnlinePlayers().forEach(player -> player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO, 1, 0.6f));
                 armorStand.setCustomName(ChatColor.of(colors.get(second-1)) + "" + second + "s");
             }
         }

@@ -76,6 +76,7 @@ public class GameLoop extends BukkitRunnable {
                             worlds.setGameRule(GameRule.DO_INSOMNIA, false);
                             worlds.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
                             worlds.setTime(5000);
+                            if(!instance.getGamemodeManager().isScenarioEnable(FallOut.class)) instance.getGame().setAntiMining(true);
                         });
                         Bukkit.getPluginManager().callEvent(new NetherDisabledEvent());
                         instance.getGame().setNether(false);
@@ -145,6 +146,8 @@ public class GameLoop extends BukkitRunnable {
                 Bukkit.getScheduler().runTask(instance, () -> {
                     Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "team man false");
                 });
+            var listeners = instance.getListenerManager();
+            listeners.unregisterListener(listeners.getGracePeriodListeners());
 
         }
         if (time == borderStart) {
@@ -163,11 +166,6 @@ public class GameLoop extends BukkitRunnable {
             Bukkit.getScheduler().runTask(instance, () -> Bukkit.getWorlds().forEach(worlds -> {
                 worlds.getWorldBorder().setSize(game.getBorderCenter(), game.getBorderCenterTime());
             }));
-        }
-
-        if (time == borderReachCenter) {
-            // BORDE LLEGA AL CENTRO
-            if(!instance.getGamemodeManager().isScenarioEnable(FallOut.class)) instance.getGame().setAntiMining(true);
         }
 
         if (secondBorder == 0) {

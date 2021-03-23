@@ -1,6 +1,5 @@
 package me.infinityz.minigame.crafting.recipes;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
@@ -14,13 +13,9 @@ import net.md_5.bungee.api.ChatColor;
 
 public class GoldenHead extends CustomRecipe {
 
-    public GoldenHead(NamespacedKey namespacedKey, Recipe recipe) {
-        super(namespacedKey, recipe);
-    }
-
-    public GoldenHead(NamespacedKey namespacedKey) {
+    public GoldenHead(NamespacedKey namespacedKey, Recipe name) {
         super(namespacedKey, null);
-
+        
         final ItemStack goldenHead = new ItemStack(Material.GOLDEN_APPLE);
         final ItemMeta im = goldenHead.getItemMeta();
         im.setDisplayName(ChatColor.GOLD + "Golden Head");
@@ -34,12 +29,6 @@ public class GoldenHead extends CustomRecipe {
 
         setRecipe(recipe);
 
-        logic();
-    }
-
-    @Override
-    public void logic() {
-        Bukkit.getServer().addRecipe(getRecipe());
     }
 
 }

@@ -3,6 +3,8 @@ package me.infinityz.minigame.gamemodes.types;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
+
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.events.GameTickEvent;
 import me.infinityz.minigame.gamemodes.IGamemode;
@@ -33,6 +35,15 @@ public class MeetupDoubleLifeBar extends IGamemode implements Listener {
         setEnabled(false);
         return true;
     }
+
+    @EventHandler
+    public void onJoin(PlayerJoinEvent e){
+        var player = e.getPlayer();
+        var game = instance.getGame();
+        if(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue() < 40 && game.getGameTime() > game.getBorderTime()){
+            player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(40.0);
+        }
+    }   
 
     @EventHandler
     public void onStart(GameTickEvent e) {

@@ -181,8 +181,6 @@ public class TeamCMD extends BaseCommand {
 
     }
 
-    // TODO: ADD FORCE JOIN | REMOVE
-
     @Conditions("teamManagement")
     @Subcommand("leave|quit|abandon")
     public void leaveTeam(@Conditions("isNotTeamLeader") Player player) {

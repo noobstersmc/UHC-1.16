@@ -55,6 +55,7 @@ import net.md_5.bungee.api.chat.hover.content.Text;
 public class UHCCommand extends BaseCommand {
 
     private @NonNull UHC instance;
+    private String permissionDebug = "uhc.configchanges.see";
 
     void countDown(final int time) {
         final var title = Title.builder().title("")
@@ -132,7 +133,7 @@ public class UHCCommand extends BaseCommand {
 
         target.setGameMode(GameMode.SURVIVAL);
         var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
-        Bukkit.broadcast(senderName + ChatColor.YELLOW + ChatColor.of("#7ab83c") + target.getName().toString() + " has been scattered into the world.", "uhc.configchanges.see");
+        Bukkit.broadcast(senderName + ChatColor.YELLOW + ChatColor.of("#7ab83c") + target.getName().toString() + " has been scattered into the world.", permissionDebug);
     }
 
     @CommandPermission("staff.perm")
@@ -267,12 +268,6 @@ public class UHCCommand extends BaseCommand {
 
     }
 
-    @CommandPermission("uhc.scoreboard.change")
-    @Subcommand("selector")
-    public void getSelector(CommandSender sender, String input) {
-
-    }
-
     @CommandPermission("staff.perm")
     @Subcommand("end")
     @Syntax("<bol> - Set end to enabled or disabled")
@@ -378,6 +373,19 @@ public class UHCCommand extends BaseCommand {
 
     }
 
+    @CommandPermission("staff.perm")
+    @Subcommand("anti-mining")
+    @CommandAlias("anti-mining")
+    @CommandCompletion("@bool")
+    public void antimining(CommandSender sender, @Optional Boolean bool) {
+        if (bool == null)
+            bool = !instance.getGame().isAntiMining();
+
+        instance.getGame().setAntiMining(bool);
+        var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
+        Bukkit.broadcast(senderName + ChatColor.YELLOW + "Anti Mining has been set to: " + bool, permissionDebug);
+    }
+
     @Subcommand("setHost")
     @CommandCompletion("@onlineplayers")
     @CommandPermission("uhc.admin")
@@ -395,11 +403,11 @@ public class UHCCommand extends BaseCommand {
         if (instance.getGame().isAutoDestruction()) {
             instance.getGame().setAutoDestruction(false);
             Bukkit.broadcast(senderName + ChatColor.YELLOW + "Auto destruction has been disabled.",
-                    "uhc.configchanges.see");
+            permissionDebug);
         } else {
             instance.getGame().setAutoDestruction(true);
             Bukkit.broadcast(senderName + ChatColor.YELLOW + "Auto destruction has been enabled.",
-                    "uhc.configchanges.see");
+            permissionDebug);
         }
 
     }

@@ -1,4 +1,4 @@
-package me.infinityz.minigame.gamemodes.types;
+package me.infinityz.minigame.gamemodes.types.guest;
 
 import org.bukkit.Bukkit;
 import org.bukkit.WorldBorder;
@@ -9,6 +9,8 @@ import org.bukkit.event.Listener;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.events.ScoreboardUpdateEvent;
 import me.infinityz.minigame.gamemodes.IGamemode;
+import me.infinityz.minigame.gamemodes.types.UHCMeetup;
+import me.infinityz.minigame.gamemodes.types.UHCRun;
 import net.md_5.bungee.api.ChatColor;
 
 public class UHCVandalico extends IGamemode implements Listener {

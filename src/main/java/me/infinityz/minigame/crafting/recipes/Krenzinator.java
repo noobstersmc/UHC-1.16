@@ -8,14 +8,13 @@ import org.bukkit.inventory.ShapelessRecipe;
 
 import me.infinityz.minigame.crafting.CustomRecipe;
 
-public class NetheriteRecipe extends CustomRecipe {
+public class Krenzinator extends CustomRecipe {
 
-    public NetheriteRecipe(NamespacedKey namespacedKey, Recipe name) {
+    public Krenzinator(NamespacedKey namespacedKey, Recipe name) {
         super(namespacedKey, null);
 
-        final ShapelessRecipe recipe = new ShapelessRecipe(namespacedKey, new ItemStack(Material.NETHERITE_INGOT, 2));
-        recipe.addIngredient(4, Material.NETHERITE_SCRAP);
-        recipe.addIngredient(4, Material.GOLD_INGOT);
+        final ShapelessRecipe recipe = new ShapelessRecipe(namespacedKey, new ItemStack(Material.DIAMOND));
+        recipe.addIngredient(9, Material.REDSTONE_BLOCK);
 
         setRecipe(recipe);
     }

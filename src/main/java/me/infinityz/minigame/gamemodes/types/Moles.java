@@ -321,7 +321,6 @@ public class Moles extends IGamemode implements Listener {
                 try {
                     FastBoard.removeTeam(all, "001Mole");
                 } catch (ReflectiveOperationException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
                 g(all);

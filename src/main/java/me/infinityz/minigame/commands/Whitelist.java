@@ -16,6 +16,7 @@ import net.md_5.bungee.api.ChatColor;
 public class Whitelist extends BaseCommand {
 
     private UHC instance;
+    private String permissionDebug = "uhc.configchanges.see";
 
     public Whitelist(UHC instance){
         this.instance = instance;
@@ -43,7 +44,7 @@ public class Whitelist extends BaseCommand {
     public void enableDisable(Player sender, Boolean bool) {
         instance.getGame().setWhitelistEnabled(bool);
         var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
-        Bukkit.broadcast(senderName + ChatColor.AQUA + "Whitelist " + bool, "uhc.configchanges.see");
+        Bukkit.broadcast(senderName + ChatColor.AQUA + "Whitelist " + bool, permissionDebug);
 
     }
 
@@ -66,7 +67,7 @@ public class Whitelist extends BaseCommand {
         
         whitelist.put(player.getUniqueId().toString(), player.getName().toString());
         var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
-        Bukkit.broadcast(senderName + ChatColor.AQUA + player.getName().toString() + " added to the whitelist.", "uhc.configchanges.see");
+        Bukkit.broadcast(senderName + ChatColor.AQUA + player.getName().toString() + " added to the whitelist.", permissionDebug);
 
     }
 
@@ -80,7 +81,7 @@ public class Whitelist extends BaseCommand {
         }else{
             whitelist.remove(player.getUniqueId().toString());
             var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
-            Bukkit.broadcast(senderName + ChatColor.AQUA + target + " removed from the whitelist.", "uhc.configchanges.see");
+            Bukkit.broadcast(senderName + ChatColor.AQUA + target + " removed from the whitelist.", permissionDebug);
         }
 
     }

@@ -10,7 +10,6 @@ import lombok.Getter;
 import lombok.Setter;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.gamemodes.types.AdvancementHunter;
-import me.infinityz.minigame.gamemodes.types.AntiBurn;
 import me.infinityz.minigame.gamemodes.types.BackPack;
 import me.infinityz.minigame.gamemodes.types.BareBones;
 import me.infinityz.minigame.gamemodes.types.BloodDiamonds;
@@ -62,11 +61,8 @@ import me.infinityz.minigame.gamemodes.types.ThunderKill;
 import me.infinityz.minigame.gamemodes.types.TiempoBomba;
 import me.infinityz.minigame.gamemodes.types.Timber;
 import me.infinityz.minigame.gamemodes.types.TripleOres;
-import me.infinityz.minigame.gamemodes.types.UHCGuest;
-import me.infinityz.minigame.gamemodes.types.UHCLatam;
 import me.infinityz.minigame.gamemodes.types.UHCMeetup;
 import me.infinityz.minigame.gamemodes.types.UHCRun;
-import me.infinityz.minigame.gamemodes.types.UHCVandalico;
 import me.infinityz.minigame.gamemodes.types.UnDamaxe;
 import me.infinityz.minigame.gamemodes.types.VengefulSpirits;
 import me.infinityz.minigame.gamemodes.types.XPHunter;
@@ -133,7 +129,6 @@ public class GamemodeManager {
         registerGamemode(new DamageCycle(instance));
         registerGamemode(new CrossBowLess(instance));
         registerGamemode(new Popeye(instance));
-        registerGamemode(new AntiBurn(instance));
         registerGamemode(new DiamondLess(instance));
         registerGamemode(new SuperHeroes(instance));
         registerGamemode(new BareBones(instance));
@@ -143,9 +138,9 @@ public class GamemodeManager {
         registerGamemode(new FallOut(instance));
 
         // Invitados
-        registerGamemode(new UHCVandalico(instance));
-        registerGamemode(new UHCLatam(instance));
-        registerGamemode(new UHCGuest(instance));
+        //registerGamemode(new UHCVandalico(instance));
+        //registerGamemode(new UHCLatam(instance));
+        //registerGamemode(new UHCGuest(instance));
 
         // Scenarios pack
         registerGamemode(new UHCRun(instance, this));

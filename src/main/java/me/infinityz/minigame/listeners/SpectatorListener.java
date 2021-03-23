@@ -224,12 +224,12 @@ public class SpectatorListener implements Listener {
     public void onJoinHide(PlayerJoinEvent e) {
         var player = e.getPlayer();
         // If gamemode is Spectator, then hide him from all other non spectators
-        if (e.getPlayer().getGameMode() == GameMode.SPECTATOR) {
-            Bukkit.getOnlinePlayers().stream().filter(all -> all.getGameMode() != GameMode.SPECTATOR)
+        if (e.getPlayer().getGameMode() != GameMode.SURVIVAL) {
+            Bukkit.getOnlinePlayers().stream().filter(all -> all.getGameMode() == GameMode.SURVIVAL)
                     .forEach(all -> all.hidePlayer(instance, player));
         } else {
             // If gamemode isn't Spectator, then hide all spectators for him.
-            Bukkit.getOnlinePlayers().stream().filter(it -> it.getGameMode() == GameMode.SPECTATOR)
+            Bukkit.getOnlinePlayers().stream().filter(it -> it.getGameMode() != GameMode.SURVIVAL)
                     .forEach(all -> player.hidePlayer(instance, all.getPlayer()));
         }
     }
@@ -238,14 +238,11 @@ public class SpectatorListener implements Listener {
     public void onGamemodeChange(PlayerGameModeChangeEvent e) {
         var player = e.getPlayer();
         // If gamemode to change is spectator
-        if (e.getNewGameMode() == GameMode.SPECTATOR) {
-            // If player has no perms hide f3
-            if (!player.hasPermission("uhc.spec.coords"))
-                disableF3(player);
+        if (e.getNewGameMode() != GameMode.SURVIVAL) {
 
             Bukkit.getOnlinePlayers().stream().forEach(all -> {
                 // If players are not specs, hide them the player
-                if (all.getGameMode() != GameMode.SPECTATOR) {
+                if (all.getGameMode() == GameMode.SURVIVAL) {
                     all.hidePlayer(instance, player);
                 } else {
                     // If players are specs, then show them to the player
@@ -253,14 +250,13 @@ public class SpectatorListener implements Listener {
                 }
             });
         } else {
-            enableF3(player);
             Bukkit.getOnlinePlayers().stream().forEach(all -> {
                 // When switching to other gamemodes, show them if not visible to player
                 if (!all.canSee(player)) {
                     all.showPlayer(instance, player);
                 }
                 // If one of the players is a spec, hide them from the player
-                if (all.getGameMode() == GameMode.SPECTATOR) {
+                if (all.getGameMode() != GameMode.SURVIVAL) {
                     player.hidePlayer(instance, all);
                 }
             });

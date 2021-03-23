@@ -55,7 +55,7 @@ public class Limits extends IGamemode implements Listener {
         if (!isEnabled())
             return false;
         // Disable the listeners that allow for this to work
-        instance.getListenerManager().registerListener(this);
+        instance.getListenerManager().unregisterListener(this);
         instance.getListenerManager().unregisterListener(armorListener);
         instance.getListenerManager().unregisterListener(dispenserArmorListener);
 

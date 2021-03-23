@@ -1,6 +1,5 @@
 package me.infinityz.minigame.crafting.recipes;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
@@ -11,11 +10,7 @@ import me.infinityz.minigame.crafting.CustomRecipe;
 
 public class SimpleNetherite extends CustomRecipe {
 
-    public SimpleNetherite(NamespacedKey namespacedKey, Recipe recipe) {
-        super(namespacedKey, recipe);
-    }
-
-    public SimpleNetherite(NamespacedKey namespacedKey) {
+    public SimpleNetherite(NamespacedKey namespacedKey, Recipe name) {
         super(namespacedKey, null);
 
         final ShapelessRecipe recipe = new ShapelessRecipe(namespacedKey, new ItemStack(Material.NETHERITE_INGOT));
@@ -23,12 +18,6 @@ public class SimpleNetherite extends CustomRecipe {
         recipe.addIngredient(2, Material.GOLD_INGOT);
 
         setRecipe(recipe);
-        logic();
-    }
-
-    @Override
-    public void logic() {
-        Bukkit.getServer().addRecipe(getRecipe());
     }
 
 }

@@ -16,8 +16,6 @@ public abstract class CustomRecipe {
         this.recipe = recipe;
     }
 
-    public abstract void logic();
-
     public NamespacedKey getNamespacedKey() {
         return namespacedKey;
     }

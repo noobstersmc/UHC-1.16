@@ -53,6 +53,7 @@ public class Game {
     private boolean deathMatchDamage = false;
     private boolean antiMining = false;
     private int uhcslots = 50;
+    private String UHCWorld = "world";
     private boolean whitelistEnabled = false;
     private HashMap<String, String> whitelist = new HashMap<>();
     private String[] rules = new String[] { 
@@ -74,15 +75,21 @@ public class Game {
     private boolean privateGame = false;
     private boolean nether = true;
     private boolean end = false;
-    private boolean strengthNerf = true;
-    private boolean criticalNerf = true;
-    private boolean bedsNerf = true;
-    private boolean tearsDropGold = false;
     private boolean advancements = false;
     private boolean potions = true;
     private double applerate = 0.80;
     private double flintrate = 3.00;
     private int maxDisconnectTime = 600;
+    /*Game Nerfs && Buffers*/
+    private boolean beds = true;
+    private boolean strength = true;
+    private boolean itemsBurn = true;
+    private boolean strengthNerf = true;
+    private boolean criticalNerf = true;
+    private boolean bedsNerf = true;
+    private boolean tearsDropGold = false;
+    private boolean trades = true;
+    private boolean horses = true;
     /* Game Loop */
     private int borderSize = 3000;
     private int borderCenter = 200;
@@ -95,6 +102,7 @@ public class Game {
     /* UHC MEETUP */
     private int autoStart = 12;
     private boolean hasAutoStarted = false;
+
     /* Other */
     String[] scenarios;
     Stage gameStage;
