@@ -12,7 +12,7 @@ plugins {
 }
 
 group = 'net.noobsters'
-version = '0.6A-SNAPSHOT'
+version = '0.8A-SNAPSHOT'
 description = 'Noobsters UHC Engine'
 java.sourceCompatibility = JavaVersion.VERSION_11
 
@@ -33,7 +33,7 @@ uploadArchives {
             repository(url: "https://hynix-repository.ue.r.appspot.com/") {
                 authentication(userName: "jcedeno", password: "PinchePerro")
             }
-            pom.version = "0.6A-SNAPSHOT"
+            pom.version = "0.8A-SNAPSHOT"
             pom.artifactId = "uhc"
             pom.groupId = "net.noobsters"
         }
@@ -72,6 +72,8 @@ dependencies {
     compileOnly 'net.milkbowl.vault:VaultAPI:1.7'
     /** Corpse Plugin */
     compileOnly 'org.kovalski:CorpseMaster:0.2.1'
+    /** Added kern */
+    compileOnly 'net.noobsters:kern:0.2A-SNAPSHOT'
 }
 
 

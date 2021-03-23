@@ -18,6 +18,7 @@ import org.bukkit.WorldCreator;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.event.HandlerList;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitWorker;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -63,6 +64,8 @@ import me.infinityz.minigame.portals.PortalListeners;
 import me.infinityz.minigame.scoreboard.ScoreboardManager;
 import me.infinityz.minigame.teams.TeamManager;
 import net.md_5.bungee.api.ChatColor;
+import net.noobsters.kern.paper.Kern;
+import net.noobsters.kern.paper.guis.RapidInv;
 
 public class UHC extends JavaPlugin {
 
@@ -91,6 +94,9 @@ public class UHC extends JavaPlugin {
     private static JsonConfig JSON_CONFIG;
     private static String CONDOR_ID = null;
     private @Getter static String SEED = "599751388478452208";
+
+    /* Kern */
+    private @Getter Kern kern;
 
     static {
         try {
@@ -160,6 +166,17 @@ public class UHC extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        /* Obtain kern and store it for easy use */
+        var kernPlugin = Bukkit.getPluginManager().getPlugin("Kern");
+
+        if (kernPlugin != null && kernPlugin instanceof Kern)
+            this.kern = (Kern) kernPlugin;
+
+        /** Crear una Gui?*/
+        var inv = new RapidInv(InventoryType.CHEST, "Inventario bien perron");
+        
+
+
         /* Create the base world with the correct seed */
         try {
             if (condorDataConfig != null) {
