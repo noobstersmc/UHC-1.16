@@ -9,12 +9,17 @@ import lombok.RequiredArgsConstructor;
 import me.infinityz.minigame.gamemodes.IGamemode;
 
 @RequiredArgsConstructor
-public class GamemodeDisabledEvent extends Event{
+public class GamemodeDisabledEvent extends Event {
     /*
      * Methods Required by BukkitAPI
      */
     private @Getter static final HandlerList HandlerList = new HandlerList();
     private @Getter final HandlerList Handlers = HandlerList;
     private @Getter @NonNull IGamemode gamemode;
+
+    public GamemodeDisabledEvent(IGamemode gamemode, boolean async) {
+        super(async);
+        this.gamemode = gamemode;
+    }
 
 }

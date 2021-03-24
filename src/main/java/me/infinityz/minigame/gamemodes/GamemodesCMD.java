@@ -28,22 +28,24 @@ public class GamemodesCMD extends BaseCommand {
     @CommandCompletion("@scenarios")
     public void onEnable(CommandSender sender, @Optional String scenario) {
 
-        if(scenario ==  null && sender instanceof Player){
-            /* SCENARIOS ENABLED GUI*/
+        if (scenario == null && sender instanceof Player) {
+            /* SCENARIOS ENABLED GUI */
             instance.getGuiManager().getEnabledScenariosGui().open((Player) sender);
         }
 
         var gamemode = getScenarioFromName(scenario);
         var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
-        if(gamemode != null){
-            if(gamemode.enableScenario()){
-                Bukkit.broadcastMessage(senderName + ChatColor.GREEN + "Scenario " + gamemode.getName() + " has been enabled.");
-            }else if(gamemode.disableScenario()){
-                Bukkit.broadcastMessage(senderName + ChatColor.GREEN + "Scenario " + gamemode.getName() + " has been disabled.");
-            }else{
-                sender.sendMessage(ChatColor.RED + "Couldn't enable or disable " + gamemode.getName() + ".");
+        if (gamemode != null) {
+            if (!gamemode.isEnabled()) {
+                Bukkit.broadcastMessage(
+                        senderName + ChatColor.GREEN + "Scenario " + gamemode.getName() + " has been enabled.");
+                gamemode.callEnable();
+            } else {
+                Bukkit.broadcastMessage(
+                        senderName + ChatColor.GREEN + "Scenario " + gamemode.getName() + " has been disabled.");
+                gamemode.callDisable();
             }
-        }else{
+        } else {
             sender.sendMessage(ChatColor.RED + "Scenario " + scenario + " doesn't exist");
         }
     }

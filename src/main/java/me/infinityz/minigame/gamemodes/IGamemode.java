@@ -30,13 +30,13 @@ public abstract class IGamemode {
     public abstract boolean disableScenario();
 
     public void callEnable() {
-        if(enableScenario())
-            Bukkit.getPluginManager().callEvent(new GamemodeEnabledEvent(this));
+        if (enableScenario())
+            Bukkit.getPluginManager().callEvent(new GamemodeEnabledEvent(this, !Bukkit.isPrimaryThread()));
     }
 
     public void callDisable() {
-        if(disableScenario())
-            Bukkit.getPluginManager().callEvent(new GamemodeDisabledEvent(this));
+        if (disableScenario())
+            Bukkit.getPluginManager().callEvent(new GamemodeDisabledEvent(this, !Bukkit.isPrimaryThread()));
     }
-    
+
 }

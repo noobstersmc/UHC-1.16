@@ -389,7 +389,7 @@ public class UHC extends JavaPlugin {
         var scenario = gamemodeManager.getGamemodesList().stream()
                 .filter(scen -> scen.getName().equalsIgnoreCase(scenarioName.toLowerCase())).findFirst();
         if (scenario.isPresent()) {
-            scenario.get().enableScenario();
+            scenario.get().callEnable();
             System.out.println("[UHC] Enabled " + scenario.get().getName());
         } else {
             System.err.println("[UHC] Couldn't find scenarios named " + scenarioName);

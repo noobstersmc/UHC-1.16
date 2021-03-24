@@ -47,7 +47,7 @@ public class MetaGame extends IGamemode implements ScenarioPack, Listener {
         if (isEnabled())
             return false;
         gamemodes.forEach(scenarios -> {
-            scenarios.enableScenario();
+            scenarios.callEnable();
         });
 
         instance.getListenerManager().registerListener(this);
@@ -62,7 +62,7 @@ public class MetaGame extends IGamemode implements ScenarioPack, Listener {
             return false;
 
         gamemodes.forEach(scenarios -> {
-            scenarios.disableScenario();
+            scenarios.callDisable();
         });
 
         instance.getListenerManager().unregisterListener(this);
