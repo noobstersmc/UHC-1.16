@@ -13,7 +13,7 @@ public class ShieldLess extends IGamemode implements Listener {
     private UHC instance;
 
     public ShieldLess(UHC instance) {
-        super("ShieldLess", "Shields are disabled.");
+        super("ShieldLess", "Shields are disabled.", Material.SHIELD);
         this.instance = instance;
     }
 

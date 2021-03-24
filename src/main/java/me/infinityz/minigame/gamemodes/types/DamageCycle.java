@@ -3,6 +3,7 @@ package me.infinityz.minigame.gamemodes.types;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -47,7 +48,7 @@ public class DamageCycle extends IGamemode implements Listener {
 
     public DamageCycle(UHC instance) {
         super("Damage Cycle",
-                "Every 5 minutes a damage type will be choosed randomly, if you take that type of damage you died.");
+                "Every 5 minutes a damage type will be choosed randomly, if you take that type of damage you died.", Material.CLOCK);
         this.instance = instance;
         this.instance.getCommandManager().registerCommand(new DamageCycleCMD());
     }

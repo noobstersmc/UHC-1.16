@@ -1,5 +1,6 @@
 package me.infinityz.minigame.gamemodes.types;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,7 +16,7 @@ public class FastGetaway extends IGamemode implements Listener {
 
     public FastGetaway(UHC instance) {
         super("FastGetaway",
-                "For each kill players get 1 minute of speed 2.");
+                "For each kill players get 1 minute of speed 2.", Material.FEATHER);
         this.instance = instance;
 
     }

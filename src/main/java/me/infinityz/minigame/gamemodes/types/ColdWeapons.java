@@ -19,7 +19,7 @@ public class ColdWeapons extends IGamemode implements Listener {
     private UHC instance;
 
     public ColdWeapons(UHC instance) {
-        super("ColdWeapons", "Fire weapons are disabled.");
+        super("ColdWeapons", "Fire weapons are disabled.", Material.ICE);
         this.instance = instance;
     }
 

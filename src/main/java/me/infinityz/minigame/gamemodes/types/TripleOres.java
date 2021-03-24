@@ -29,7 +29,8 @@ public class TripleOres extends IGamemode implements Listener{
     private Random random = new Random();
 
     public TripleOres(UHC instance) {
-        super("TripleOres", "All ores drop three times.");
+        super("TripleOres", "All ores drop three times.", Material.DIAMOND);
+        setIconCount(3);
         this.instance = instance;
     }
 

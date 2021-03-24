@@ -23,7 +23,7 @@ public class UHCGuest extends IGamemode implements Listener {
     private WorldBorder worldBorder;
 
     public UHCGuest(UHC instance) {
-        super("UHC Guest", "Custom features.");
+        super("UHC Guest", "Custom features.", Material.ENCHANTED_GOLDEN_APPLE);
         this.instance = instance;
 
     }

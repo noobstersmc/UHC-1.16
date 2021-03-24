@@ -22,7 +22,7 @@ public class NineSlots extends IGamemode implements Listener {
     private ItemStack fillItem;
 
     public NineSlots(UHC instance) {
-        super("NineSlots", "Only the hotbar slots are enabled.");
+        super("NineSlots", "Only the hotbar slots are enabled.", Material.BARRIER);
         this.instance = instance;
     }
 

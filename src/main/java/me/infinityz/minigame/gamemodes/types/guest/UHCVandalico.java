@@ -1,6 +1,7 @@
 package me.infinityz.minigame.gamemodes.types.guest;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.WorldBorder;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -18,7 +19,7 @@ public class UHCVandalico extends IGamemode implements Listener {
     private WorldBorder worldBorder;
 
     public UHCVandalico(UHC instance) {
-        super("UHC Vandálico", "UHCs Nórdicos.");
+        super("UHC Vandálico", "UHCs Nórdicos.", Material.ENCHANTED_GOLDEN_APPLE);
         this.instance = instance;
     }
 

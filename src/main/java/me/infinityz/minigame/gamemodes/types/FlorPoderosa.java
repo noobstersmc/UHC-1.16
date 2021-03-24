@@ -25,7 +25,7 @@ public class FlorPoderosa extends IGamemode implements Listener {
     private Random random = new Random();
 
     public FlorPoderosa(UHC instance) {
-        super("FlowerPower", "Las flores dropean cosas poderosas.");
+        super("FlowerPower", "Las flores dropean cosas poderosas.", Material.CORNFLOWER);
         this.instance = instance;
 
         for (var materials : Material.values()) {

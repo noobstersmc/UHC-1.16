@@ -1,5 +1,6 @@
 package me.infinityz.minigame.gamemodes.types;
 
+import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -12,7 +13,7 @@ public class FireLess extends IGamemode implements Listener {
     private UHC instance;
 
     public FireLess(UHC instance) {
-        super("FireLess", "Fire damage is disabled.");
+        super("FireLess", "Fire damage is disabled.", Material.FIRE);
         this.instance = instance;
     }
 

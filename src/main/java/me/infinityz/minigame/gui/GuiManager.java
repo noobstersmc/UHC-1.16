@@ -6,6 +6,8 @@ import org.bukkit.event.Listener;
 import lombok.Getter;
 import lombok.Setter;
 import me.infinityz.minigame.UHC;
+import me.infinityz.minigame.gamemodes.events.GamemodeDisabledEvent;
+import me.infinityz.minigame.gamemodes.events.GamemodeEnabledEvent;
 import me.infinityz.minigame.gui.types.EnabledScenarios;
 import net.noobsters.kern.paper.guis.RapidInv;
 
@@ -23,13 +25,13 @@ public class GuiManager implements Listener {
     }
 
     @EventHandler
-    public void scenarioEnable() {
-
+    public void scenarioEnable(GamemodeEnabledEvent e) {
+        enabledScenariosGui.update();
     }
 
     @EventHandler
-    public void scenarioDisable() {
-
+    public void scenarioDisable(GamemodeDisabledEvent e) {
+        enabledScenariosGui.update();
     }
 
 }

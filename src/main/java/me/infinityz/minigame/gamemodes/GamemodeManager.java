@@ -282,7 +282,7 @@ public class GamemodeManager {
 
         } else {
             componentBuilder.append("Vanilla+").event(
-                    new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Vanilla game with some modifications.")));
+                    new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Clasic Minecraft Vanilla UHC experience.")));
         }
 
         return componentBuilder.create();

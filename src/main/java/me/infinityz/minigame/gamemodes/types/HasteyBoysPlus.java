@@ -21,7 +21,7 @@ public class HasteyBoysPlus extends IGamemode implements Listener {
     private UHC instance;
 
     public HasteyBoysPlus(UHC instance) {
-        super("HasteyBoys+", "Tools come pre-enchanted with efficiency 5 and unbreaking 3.");
+        super("HasteyBoys+", "Tools come pre-enchanted with efficiency 5 and unbreaking 3.", Material.NETHERITE_PICKAXE);
         this.instance = instance;
     }
 

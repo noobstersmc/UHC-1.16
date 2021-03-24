@@ -1,5 +1,6 @@
 package me.infinityz.minigame.gamemodes.types;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -14,7 +15,7 @@ public class UnDamaxe extends IGamemode implements Listener {
     private UHC instance;
 
     public UnDamaxe(UHC instance) {
-        super("UnDamaxe", "Axe damage is disabled.");
+        super("UnDamaxe", "Axe damage is disabled.", Material.DIAMOND_AXE);
         this.instance = instance;
     }
 

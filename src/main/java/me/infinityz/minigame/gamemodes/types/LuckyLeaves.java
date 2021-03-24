@@ -13,7 +13,7 @@ public class LuckyLeaves extends IGamemode implements Listener {
     private UHC instance;
 
     public LuckyLeaves(UHC instance) {
-        super("LuckyLeaves", "Trees have a chance to drop golden apples.");
+        super("LuckyLeaves", "Trees have a chance to drop golden apples.", Material.GOLDEN_APPLE);
         this.instance = instance;
     }
 

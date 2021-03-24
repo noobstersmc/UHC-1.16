@@ -2,6 +2,7 @@ package me.infinityz.minigame.gamemodes.types;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.World.Environment;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.EventHandler;
@@ -26,7 +27,7 @@ public class SkyHigh extends IGamemode implements Listener {
     private String permissionDebug = "uhc.configchanges.see";
 
     public SkyHigh(UHC instance) {
-        super("SkyHigh", "Players that stay below Y=150 periodically recieve damage after border time.");
+        super("SkyHigh", "Players that stay below Y=150 periodically recieve damage after border time.", Material.TNT_MINECART);
         this.instance = instance;
         this.instance.getCommandManager().registerCommand(new SkyHighCMD());
     }

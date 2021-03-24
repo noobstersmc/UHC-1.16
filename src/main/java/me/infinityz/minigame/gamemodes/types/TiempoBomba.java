@@ -38,7 +38,7 @@ public class TiempoBomba extends IGamemode implements Listener {
     private BukkitTask task;
 
     public TiempoBomba(UHC instance) {
-        super("TimeBomb", "Player stuff explode in a chest after 30 seconds.");
+        super("TimeBomb", "Player stuff explode in a chest after 30 seconds.", Material.TNT);
         this.instance = instance;
         for (int i = 0; i < 30; i++) {
             colors.add(Color.getHSBColor((i*2.5F)/100.0F, 1.0F, 1.0F));            

@@ -1,6 +1,7 @@
 package me.infinityz.minigame.gamemodes.types;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -14,7 +15,7 @@ public class DoubleLifeBar extends IGamemode implements Listener {
     private UHC instance;
 
     public DoubleLifeBar(UHC instance) {
-        super("DoubleLifeBar", "Players play the game with Double life bar.");
+        super("DoubleLifeBar", "Players play the game with Double life bar.", Material.GLISTERING_MELON_SLICE);
         this.instance = instance;
     }
 

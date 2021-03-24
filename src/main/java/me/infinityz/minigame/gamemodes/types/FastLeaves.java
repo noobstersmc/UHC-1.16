@@ -2,6 +2,7 @@ package me.infinityz.minigame.gamemodes.types;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
+import org.bukkit.Material;
 import org.bukkit.World;
 
 import me.infinityz.minigame.gamemodes.IGamemode;
@@ -9,7 +10,7 @@ import me.infinityz.minigame.gamemodes.IGamemode;
 public class FastLeaves extends IGamemode {
 
     public FastLeaves() {
-        super("FastLeaves", "Leaves decay faster.");
+        super("FastLeaves", "Leaves decay faster.", Material.OAK_LEAVES);
     }
 
     @Override

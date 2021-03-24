@@ -15,7 +15,7 @@ public class FastSmelting extends IGamemode implements Listener {
     private UHC instance;
 
     public FastSmelting(UHC instance) {
-        super("FastSmelting", "Item smelting is speed up 5 times.");
+        super("FastSmelting", "Item smelting is speed up 5 times.", Material.BLAST_FURNACE);
         this.instance = instance;
     }
 

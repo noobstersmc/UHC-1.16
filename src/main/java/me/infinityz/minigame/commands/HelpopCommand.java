@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.enums.Stage;
 import net.md_5.bungee.api.ChatColor;
+import net.noobsters.kern.paper.Kern;
 
 @RequiredArgsConstructor
 @CommandAlias("helpop")
@@ -50,6 +51,8 @@ public class HelpopCommand extends BaseCommand {
         var player = instance.getPlayerManager().getPlayer(sender.getUniqueId());
         if(player.isThanksHost()){
             sender.sendMessage(ChatColor.RED + "You already thanked the host.");
+        }else if(Kern.getInstance().getChatManager().isGlobalmute()){
+            sender.sendMessage(ChatColor.RED + "Globalmute is Enabled.");
         }else if(game.isHasSomeoneWon()){
             player.setThanksHost(true);
             Bukkit.broadcastMessage(thanks(ChatColor.AQUA + sender.getName()));

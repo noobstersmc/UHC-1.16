@@ -20,7 +20,7 @@ public class Popeye extends IGamemode implements Listener {
     private UHC instance;
 
     public Popeye(UHC instance) {
-        super("Popeye", "Eat Spinach(Kelp) to gain haste.");
+        super("Popeye", "Eat Spinach(Kelp) to gain haste.", Material.DRIED_KELP);
         this.instance = instance;
     }
 

@@ -16,7 +16,7 @@ public class CrossBowLess extends IGamemode implements Listener {
     private UHC instance;
 
     public CrossBowLess(UHC instance) {
-        super("CrossBowLess", "CrossBows are disabled.");
+        super("CrossBowLess", "CrossBows are disabled.", Material.CROSSBOW);
         this.instance = instance;
     }
 

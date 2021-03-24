@@ -1,5 +1,6 @@
 package me.infinityz.minigame.gamemodes.types;
 
+import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,7 +14,7 @@ public class VengefulSpirits extends IGamemode implements Listener {
     private UHC instance;
 
     public VengefulSpirits(UHC instance) {
-        super("VengefulSpirits", "When a player dies below coordinate Y=50 spawns a blaze. Above that coordinate will spawn a Ghast.");
+        super("VengefulSpirits", "When a player dies below coordinate Y=50 spawns a blaze. Above that coordinate will spawn a Ghast.", Material.GHAST_TEAR);
         this.instance = instance;
     }
 

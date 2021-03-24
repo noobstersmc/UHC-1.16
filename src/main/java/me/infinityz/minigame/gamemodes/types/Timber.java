@@ -17,7 +17,7 @@ public class Timber extends IGamemode implements Listener {
     private UHC instance;
 
     public Timber(UHC instance) {
-        super("Timber", "Logs fall in chain.");
+        super("Timber", "Logs fall in chain.", Material.OAK_LOG);
         this.instance = instance;
     }
 

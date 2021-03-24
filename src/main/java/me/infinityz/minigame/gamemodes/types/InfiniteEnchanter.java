@@ -26,7 +26,7 @@ public class InfiniteEnchanter extends IGamemode implements Listener {
     private final ItemStack lapis = new ItemBuilder(Material.LAPIS_LAZULI).amount(64).build();
 
     public InfiniteEnchanter(UHC instance) {
-        super("Infinite Enchanter", "Unlimited enchanted resources.");
+        super("Infinite Enchanter", "Unlimited enchanted resources.", Material.BOOKSHELF);
         this.instance = instance;
 
     }

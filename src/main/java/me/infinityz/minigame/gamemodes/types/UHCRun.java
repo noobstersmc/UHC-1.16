@@ -35,7 +35,7 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
     private Random random = new Random();
 
     public UHCRun(UHC instance, GamemodeManager gamemodeManager) {
-        super("UHC Run", "An accelerated UHC Experience.");
+        super("UHC Run", "An accelerated UHC Experience.", Material.GOLD_BLOCK);
         this.instance = instance;
 
         /* Add gamemodes to your scenario packs like this */

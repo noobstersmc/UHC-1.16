@@ -1,6 +1,7 @@
 package me.infinityz.minigame.gamemodes.types;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -14,7 +15,7 @@ public class MeetupDoubleLifeBar extends IGamemode implements Listener {
     private UHC instance;
 
     public MeetupDoubleLifeBar(UHC instance) {
-        super("MeetupDoubleLifeBar", "At meetup all players alive receive an extra life bar.");
+        super("MeetupDoubleLifeBar", "At meetup all players alive receive an extra life bar.", Material.GLISTERING_MELON_SLICE);
         this.instance = instance;
     }
 

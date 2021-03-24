@@ -29,7 +29,8 @@ public class DoubleOres extends IGamemode implements Listener{
     private Random random = new Random();
 
     public DoubleOres(UHC instance) {
-        super("DoubleOres", "All ores drop twice.");
+        super("DoubleOres", "All ores drop twice.", Material.DIAMOND);
+        setIconCount(2);
         this.instance = instance;
     }
 

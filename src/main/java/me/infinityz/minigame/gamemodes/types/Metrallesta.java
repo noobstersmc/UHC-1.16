@@ -19,7 +19,7 @@ public class Metrallesta extends IGamemode implements Listener {
     private UHC instance;
 
     public Metrallesta(UHC instance) {
-        super("Metrallesta", "CrossBows reload instantly.");
+        super("Metrallesta", "CrossBows reload instantly.", Material.CROSSBOW);
         this.instance = instance;
     }
 

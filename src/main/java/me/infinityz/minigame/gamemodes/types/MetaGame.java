@@ -3,6 +3,7 @@ package me.infinityz.minigame.gamemodes.types;
 import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.event.Listener;
 
 import me.infinityz.minigame.UHC;
@@ -14,7 +15,7 @@ public class MetaGame extends IGamemode implements ScenarioPack, Listener {
     private UHC instance;
 
     public MetaGame(UHC instance) {
-        super("MetaGame", "CutClean, Timber & HasteyBoys.");
+        super("MetaGame", "CutClean, Timber & HasteyBoys.", Material.DIAMOND_CHESTPLATE);
         this.instance = instance;
         Bukkit.getScheduler().runTaskLater(instance, () -> {
             var manager = instance.getGamemodeManager();

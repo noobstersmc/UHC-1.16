@@ -1,6 +1,7 @@
 package me.infinityz.minigame.gamemodes.types;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
@@ -13,7 +14,7 @@ public class ThunderKill extends IGamemode implements Listener {
     private boolean thunder = false;
 
     public ThunderKill(UHC instance) {
-        super("ThunderKill", "Every time a player dies weather changes between day and storm.");
+        super("ThunderKill", "Every time a player dies weather changes between day and storm.", Material.TRIDENT);
         this.instance = instance;
     }
 

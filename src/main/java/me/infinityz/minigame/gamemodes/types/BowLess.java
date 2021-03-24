@@ -16,7 +16,7 @@ public class BowLess extends IGamemode implements Listener {
     private UHC instance;
 
     public BowLess(UHC instance) {
-        super("BowLess", "Bows are disabled.");
+        super("BowLess", "Bows are disabled.", Material.BOW);
         this.instance = instance;
     }
 

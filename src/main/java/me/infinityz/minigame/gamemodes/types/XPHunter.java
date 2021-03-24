@@ -1,6 +1,7 @@
 package me.infinityz.minigame.gamemodes.types;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -16,7 +17,7 @@ public class XPHunter extends IGamemode implements Listener {
     private UHC instance;
 
     public XPHunter(UHC instance) {
-        super("Experience Hunter", "Get experience to get more red hearts.");
+        super("Experience Hunter", "Get experience to get more red hearts.", Material.EXPERIENCE_BOTTLE);
         this.instance = instance;
     }
 

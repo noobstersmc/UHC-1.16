@@ -2,6 +2,7 @@ package me.infinityz.minigame.gamemodes.types;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -25,7 +26,7 @@ public class FallOut extends IGamemode implements Listener {
     private String permissionDebug = "uhc.configchanges.see";
 
     public FallOut(UHC instance) {
-        super("FallOut", "Players that stay above Y=40 periodically recieve damage after border time.");
+        super("FallOut", "Players that stay above Y=40 periodically recieve damage after border time.", Material.BEDROCK);
         this.instance = instance;
         this.instance.getCommandManager().registerCommand(new FallOutCMD());
     }

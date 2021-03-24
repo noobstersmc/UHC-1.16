@@ -25,7 +25,7 @@ public class MonstersInc extends IGamemode implements Listener {
     private final List<Location> doorLocs;
 
     public MonstersInc(UHC instance) {
-        super("MonstersInc", "All doors are linked as portals.");
+        super("MonstersInc", "All doors are linked as portals.", Material.WARPED_DOOR);
         this.instance = instance;
         doorLocs = new ArrayList<>();
     }

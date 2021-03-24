@@ -65,7 +65,7 @@ public class UHCMeetup extends IGamemode implements Listener {
             + ChatColor.of("#2cc36b") + "] ";
 
     public UHCMeetup(UHC instance) {
-        super("UHC Meetup", "An UHC Meetup as a gamemode.");
+        super("UHC Meetup", "An UHC Meetup as a gamemode.", Material.EMERALD);
         this.instance = instance;
         instance.getCommandManager().registerCommand(new UHCMeetupCMD());
     }

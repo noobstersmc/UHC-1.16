@@ -1,5 +1,6 @@
 package me.infinityz.minigame.gamemodes.types;
 
+import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLevelChangeEvent;
@@ -11,7 +12,7 @@ public class BloodExperience extends IGamemode implements Listener {
     private UHC instance;
 
     public BloodExperience(UHC instance) {
-        super("BloodExperience", "Enchants & anvils with a pinch of damage, for each level consumed the player will take half a heart of damage.");
+        super("BloodExperience", "Enchants & anvils with a pinch of damage, for each level consumed the player will take half a heart of damage.", Material.EXPERIENCE_BOTTLE);
         this.instance = instance;
     }
 

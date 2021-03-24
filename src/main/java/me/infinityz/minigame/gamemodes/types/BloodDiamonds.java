@@ -12,7 +12,7 @@ public class BloodDiamonds extends IGamemode implements Listener {
     private UHC instance;
 
     public BloodDiamonds(UHC instance) {
-        super("BloodDiamonds", "When you mine diamonds you get half a heart of damage.");
+        super("BloodDiamonds", "When you mine diamonds you get half a heart of damage.", Material.DIAMOND_ORE);
         this.instance = instance;
     }
 

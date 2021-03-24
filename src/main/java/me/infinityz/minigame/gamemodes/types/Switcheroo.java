@@ -1,5 +1,6 @@
 package me.infinityz.minigame.gamemodes.types;
 
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -14,7 +15,7 @@ public class Switcheroo extends IGamemode implements Listener {
     private UHC instance;
 
     public Switcheroo(UHC instance) {
-        super("Switcheroo", "When you shoot someone else you swap positions.");
+        super("Switcheroo", "When you shoot someone else you swap positions.", Material.ENDER_PEARL);
         this.instance = instance;
     }
 

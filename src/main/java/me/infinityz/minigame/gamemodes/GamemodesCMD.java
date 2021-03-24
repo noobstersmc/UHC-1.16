@@ -45,7 +45,7 @@ public class GamemodesCMD extends BaseCommand {
                         senderName + ChatColor.GREEN + "Scenario " + gamemode.getName() + " has been disabled.");
                 gamemode.callDisable();
             }
-        } else {
+        }else if(scenario != null){
             sender.sendMessage(ChatColor.RED + "Scenario " + scenario + " doesn't exist");
         }
     }

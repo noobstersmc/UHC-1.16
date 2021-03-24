@@ -1,5 +1,6 @@
 package me.infinityz.minigame.gamemodes.types;
 
+import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -12,7 +13,7 @@ public class BloodHunter extends IGamemode implements Listener {
     private UHC instance;
 
     public BloodHunter(UHC instance) {
-        super("BloodHunter", "Players get 1 extra red heart for each kill.");
+        super("BloodHunter", "Players get 1 extra red heart for each kill.", Material.DIAMOND_SWORD);
         this.instance = instance;
     }
 

@@ -1,6 +1,7 @@
 package me.infinityz.minigame.gamemodes.types;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -16,7 +17,7 @@ public class AdvancementHunter extends IGamemode implements Listener {
     private UHC instance;
 
     public AdvancementHunter(UHC instance) {
-        super("Advancement Hunter", "The game starts with 1 red heart, players will get 1 extra for each advancement completed.");
+        super("Advancement Hunter", "The game starts with 1 red heart, players will get 1 extra for each advancement completed.", Material.KNOWLEDGE_BOOK);
         this.instance = instance;
     }
 

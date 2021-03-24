@@ -1,5 +1,6 @@
 package me.infinityz.minigame.gamemodes.types;
 
+import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -16,7 +17,7 @@ public class SwordLess extends IGamemode implements Listener {
     private UHC instance;
 
     public SwordLess(UHC instance) {
-        super("SwordLess", "Swords are disabled.");
+        super("SwordLess", "Swords are disabled.", Material.NETHERITE_SWORD);
         this.instance = instance;
     }
 

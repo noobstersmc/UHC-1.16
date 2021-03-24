@@ -2,10 +2,11 @@ package me.infinityz.minigame.gui;
 
 import org.bukkit.entity.Player;
 
+import lombok.Getter;
 import net.noobsters.kern.paper.guis.RapidInv;
 
 public abstract class CustomGui {
-    RapidInv gui;
+    @Getter RapidInv gui;
 
     public CustomGui(RapidInv gui){
         this.gui = gui;

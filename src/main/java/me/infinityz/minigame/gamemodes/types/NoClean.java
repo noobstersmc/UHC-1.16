@@ -38,7 +38,7 @@ public class NoClean extends IGamemode implements Listener {
     private static String NO_CLEAN_SAFELOOT = ChatColor.RED + "Don't disturb %s safe loot is enabled.";
 
     public NoClean(UHC instance) {
-        super("No Clean", "Limpiar es inmoral.");
+        super("No Clean", "Limpiar es inmoral.", Material.PAPER);
         this.instance = instance;
     }
 

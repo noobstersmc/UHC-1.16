@@ -3,6 +3,7 @@ package me.infinityz.minigame.gamemodes.types;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -29,7 +30,7 @@ public class SuperHeroes extends IGamemode implements Listener {
 
     public SuperHeroes(UHC instance) {
         super("SuperHeroes",
-                "Players get random super power, each power controls a potion effect.");
+                "Players get random super power, each power controls a potion effect.", Material.BEACON);
         this.instance = instance;
         this.instance.getCommandManager().registerCommand(new SuperHeroesCMD());
     }

@@ -1,6 +1,7 @@
 package me.infinityz.minigame.gamemodes.types;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
@@ -13,7 +14,7 @@ public class PermaGlow extends IGamemode implements Listener {
     private boolean glow = false;
 
     public PermaGlow(UHC instance) {
-        super("PermaGlow", "Every time a player dies glowing changes.");
+        super("PermaGlow", "Every time a player dies glowing changes.", Material.SPECTRAL_ARROW);
         this.instance = instance;
     }
 

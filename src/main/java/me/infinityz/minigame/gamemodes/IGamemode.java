@@ -1,6 +1,7 @@
 package me.infinityz.minigame.gamemodes;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -13,11 +14,14 @@ import me.infinityz.minigame.gamemodes.events.GamemodeEnabledEvent;
 public abstract class IGamemode {
     private @Getter @Setter String name;
     private @Getter @Setter String description;
+    private @Getter @Setter Material icon;
+    private @Getter @Setter int iconCount = 1;
     private @Getter @Setter boolean enabled = false;
 
-    public IGamemode(String name, String description) {
+    public IGamemode(String name, String description, Material icon) {
         this.name = name;
         this.description = description;
+        this.icon = icon;
     }
 
     @Override

@@ -2,6 +2,7 @@ package me.infinityz.minigame.gamemodes.types;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.World.Environment;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.EventHandler;
@@ -25,7 +26,7 @@ public class GoToHell extends IGamemode implements Listener {
     private String permissionDebug = "uhc.configchanges.see";
 
     public GoToHell(UHC instance) {
-        super("Go to Hell", "Players that stay in the overworld will periodically recieve damage after border time.");
+        super("Go to Hell", "Players that stay in the overworld will periodically recieve damage after border time.", Material.CRIMSON_NYLIUM);
         this.instance = instance;
         this.instance.getCommandManager().registerCommand(new GoToHellCMD());
     }

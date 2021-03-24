@@ -1,5 +1,6 @@
 package me.infinityz.minigame.gamemodes.types;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -16,7 +17,7 @@ public class Cripple extends IGamemode implements Listener {
 
     public Cripple(UHC instance) {
         super("Cripple",
-                "If a player take fall damage will receive slowness for 30 seconds.");
+                "If a player take fall damage will receive slowness for 30 seconds.", Material.TURTLE_HELMET);
         this.instance = instance;
 
     }

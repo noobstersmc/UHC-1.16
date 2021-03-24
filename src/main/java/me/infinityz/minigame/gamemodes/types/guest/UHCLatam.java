@@ -33,7 +33,7 @@ public class UHCLatam extends IGamemode implements Listener {
     private AdvancementAPI advancement;
 
     public UHCLatam(UHC instance) {
-        super("UHC Latam", "T2");
+        super("UHC Latam", "T2", Material.ENCHANTED_GOLDEN_APPLE);
         this.instance = instance;
         this.advancement = AdvancementAPI.builder(new NamespacedKey(instance, "uhc-latam")).frame(FrameType.CHALLENGE)
                 .background("minecraft:textures/block/blackstone_top.png").icon("golden_apple").title("¡UHC Latam T2!")

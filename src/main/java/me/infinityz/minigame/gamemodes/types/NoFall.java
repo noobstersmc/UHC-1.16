@@ -1,5 +1,6 @@
 package me.infinityz.minigame.gamemodes.types;
 
+import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -12,7 +13,7 @@ public class NoFall extends IGamemode implements Listener {
     private UHC instance;
 
     public NoFall(UHC instance) {
-        super("NoFall", "Fall damage is disabled.");
+        super("NoFall", "Fall damage is disabled.", Material.PHANTOM_MEMBRANE);
         this.instance = instance;
     }
 
