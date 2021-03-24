@@ -1,5 +1,6 @@
 package me.infinityz.minigame.gui;
 
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
@@ -27,11 +28,13 @@ public class GuiManager implements Listener {
     @EventHandler
     public void scenarioEnable(GamemodeEnabledEvent e) {
         enabledScenariosGui.update();
+        Bukkit.broadcastMessage("SCEN ENABLED");
     }
 
     @EventHandler
     public void scenarioDisable(GamemodeDisabledEvent e) {
         enabledScenariosGui.update();
+        Bukkit.broadcastMessage("SCEN DISABLED");
     }
 
 }

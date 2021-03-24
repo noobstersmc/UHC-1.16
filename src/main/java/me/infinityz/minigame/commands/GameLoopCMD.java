@@ -37,7 +37,7 @@ public class GameLoopCMD extends BaseCommand {
         game.setPvpTime(newPvpTime * 60);
         
         var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
-        Bukkit.broadcastMessage(senderName + ChatColor.GREEN + "PvP will be enabled at " + newPvpTime + " minutes after start.");
+        Bukkit.broadcast(senderName + ChatColor.YELLOW + "PvP will be enabled at " + newPvpTime + " minutes after start.", permissionDebug);
     }
 
     @Subcommand("healtime")
@@ -61,7 +61,7 @@ public class GameLoopCMD extends BaseCommand {
 
         game.setBorderTime(newBorderTime * 60);
         var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
-        Bukkit.broadcastMessage(senderName + ChatColor.GREEN + "Border will start to move to the center at " + newBorderTime + " minutes after start.");
+        Bukkit.broadcast(senderName + ChatColor. YELLOW + "Border will start to move to the center at " + newBorderTime + " minutes after start.", permissionDebug);
     }
 
     @Subcommand("bordercentertime")

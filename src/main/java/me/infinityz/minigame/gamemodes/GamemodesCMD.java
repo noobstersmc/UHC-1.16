@@ -22,6 +22,7 @@ import net.md_5.bungee.api.ChatColor;
 @RequiredArgsConstructor
 public class GamemodesCMD extends BaseCommand {
     private @NonNull UHC instance;
+    private String permissionDebug = "uhc.configchanges.see";
 
     @Default
     @CommandPermission("uhc.scenarios")
@@ -37,12 +38,12 @@ public class GamemodesCMD extends BaseCommand {
         var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
         if (gamemode != null) {
             if (!gamemode.isEnabled()) {
-                Bukkit.broadcastMessage(
-                        senderName + ChatColor.GREEN + "Scenario " + gamemode.getName() + " has been enabled.");
+                Bukkit.broadcast(
+                        senderName + ChatColor.YELLOW + "Scenario " + gamemode.getName() + " has been enabled.", permissionDebug);
                 gamemode.callEnable();
             } else {
-                Bukkit.broadcastMessage(
-                        senderName + ChatColor.GREEN + "Scenario " + gamemode.getName() + " has been disabled.");
+                Bukkit.broadcast(
+                        senderName + ChatColor.YELLOW + "Scenario " + gamemode.getName() + " has been disabled.", permissionDebug);
                 gamemode.callDisable();
             }
         }else if(scenario != null){
