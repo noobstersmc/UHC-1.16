@@ -21,5 +21,7 @@ public abstract class CustomGui {
     public void open(Player player){
         gui.open(player);
     }
+
+    public abstract void update();
     
 }

@@ -1,0 +1,21 @@
+package me.infinityz.minigame.gamemodes.events;
+
+import lombok.NonNull;
+
+import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
+
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import me.infinityz.minigame.gamemodes.IGamemode;
+
+@RequiredArgsConstructor
+public class GamemodeEnabledEvent extends Event{
+    /*
+     * Methods Required by BukkitAPI
+     */
+    private @Getter static final HandlerList HandlerList = new HandlerList();
+    private @Getter final HandlerList Handlers = HandlerList;
+    private @Getter @NonNull IGamemode gamemode;
+
+}

@@ -9,7 +9,7 @@ import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
-import co.aikar.commands.annotation.HelpCommand;
+import co.aikar.commands.annotation.Optional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import me.infinityz.minigame.UHC;
@@ -23,16 +23,16 @@ import net.md_5.bungee.api.ChatColor;
 public class GamemodesCMD extends BaseCommand {
     private @NonNull UHC instance;
 
-    @HelpCommand
-    public void command(Player sender) {
-        /* SCENARIOS ENABLED GUI*/
-        instance.getGuiManager().getEnabledScenariosGui().open(sender);
-    }
-
-    @CommandPermission("uhc.scenarios")
     @Default
+    @CommandPermission("uhc.scenarios")
     @CommandCompletion("@scenarios")
-    public void onEnable(CommandSender sender, String scenario) {
+    public void onEnable(CommandSender sender, @Optional String scenario) {
+
+        if(scenario ==  null && sender instanceof Player){
+            /* SCENARIOS ENABLED GUI*/
+            instance.getGuiManager().getEnabledScenariosGui().open((Player) sender);
+        }
+
         var gamemode = getScenarioFromName(scenario);
         var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
         if(gamemode != null){

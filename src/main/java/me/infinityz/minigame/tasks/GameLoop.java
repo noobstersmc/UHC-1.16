@@ -30,6 +30,7 @@ import me.infinityz.minigame.events.UHCPlayerDequalificationEvent;
 import me.infinityz.minigame.game.Game;
 import me.infinityz.minigame.gamemodes.types.FallOut;
 import me.infinityz.minigame.gamemodes.types.GoToHell;
+import me.infinityz.minigame.gamemodes.types.UHCRun;
 import me.infinityz.minigame.players.UHCPlayer;
 import net.md_5.bungee.api.ChatColor;
 
@@ -76,7 +77,8 @@ public class GameLoop extends BukkitRunnable {
                             worlds.setGameRule(GameRule.DO_INSOMNIA, false);
                             worlds.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
                             worlds.setTime(5000);
-                            if(!instance.getGamemodeManager().isScenarioEnable(FallOut.class)) instance.getGame().setAntiMining(true);
+                            if(!instance.getGamemodeManager().isScenarioEnable(FallOut.class) && !instance.getGamemodeManager().isScenarioEnable(UHCRun.class)) 
+                                instance.getGame().setAntiMining(true);
                         });
                         Bukkit.getPluginManager().callEvent(new NetherDisabledEvent());
                         instance.getGame().setNether(false);

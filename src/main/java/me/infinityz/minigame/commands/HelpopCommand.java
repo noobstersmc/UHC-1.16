@@ -69,7 +69,7 @@ public class HelpopCommand extends BaseCommand {
     }
 
     public String thanks(String player){
-        switch (random.nextInt(8)) {
+        switch (random.nextInt(9)) {
             case 1: return player + ": Gracias por hostear papi";
             case 2: return player + ": Ty4Hosting!";
             case 3: return player + ": Thank you for the host!";
@@ -77,6 +77,7 @@ public class HelpopCommand extends BaseCommand {
             case 5: return player + ": Gracias por hostear!";
             case 6: return player + ": Thanks god for this UHC";
             case 7: return player + ": Merci pour l’host!";
+            case 8: return player + ": Gracias por hostear mami";
     
             default: return player + ": Thanks for hosting!";
             

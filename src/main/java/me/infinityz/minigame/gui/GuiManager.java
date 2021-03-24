@@ -1,5 +1,6 @@
 package me.infinityz.minigame.gui;
 
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import lombok.Getter;
@@ -17,7 +18,17 @@ public class GuiManager implements Listener {
     public GuiManager(UHC instance) {
         this.instance = instance;
 
-        enabledScenariosGui = new EnabledScenarios(new RapidInv(9*2, "Enabled Scenarios"));
+        enabledScenariosGui = new EnabledScenarios(new RapidInv(9 * 2, "Enabled Scenarios"));
+
+    }
+
+    @EventHandler
+    public void scenarioEnable() {
+
+    }
+
+    @EventHandler
+    public void scenarioDisable() {
 
     }
 
