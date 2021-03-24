@@ -14,7 +14,7 @@ public class PermaGlow extends IGamemode implements Listener {
     private boolean glow = false;
 
     public PermaGlow(UHC instance) {
-        super("PermaGlow", "Every time a player dies glowing changes.", Material.SPECTRAL_ARROW);
+        super("PermaGlow", "Every time a player dies, glowing changes.", Material.SPECTRAL_ARROW);
         this.instance = instance;
     }
 

@@ -48,7 +48,7 @@ public class DamageCycle extends IGamemode implements Listener {
 
     public DamageCycle(UHC instance) {
         super("Damage Cycle",
-                "Every 5 minutes a damage type will be choosed randomly, if you take that type of damage you died.", Material.CLOCK);
+                "Every 5 minutes a damage type will be choosed randomly,\nIf a player take that type of damage died.", Material.CLOCK);
         this.instance = instance;
         this.instance.getCommandManager().registerCommand(new DamageCycleCMD());
     }

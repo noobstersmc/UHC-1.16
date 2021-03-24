@@ -1,5 +1,6 @@
 package me.infinityz.minigame.gui.types;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 
 import fr.mrmicky.fastinv.ItemBuilder;
@@ -32,7 +33,9 @@ public class EnabledScenarios extends CustomGui {
         } else {
             // add them
             int i = 0;
+            int size = gui.getInventory().getContents().length;
             for (var gm : gamemodes) {
+                if(i >= size) break;
                 gui.setItem(i, gm.getAsIcon());
                 i++;
             }

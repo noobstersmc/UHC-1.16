@@ -37,6 +37,7 @@ import net.md_5.bungee.api.ChatColor;
 @CommandAlias("team|teams")
 public class TeamCMD extends BaseCommand {
     UHC instance;
+    private String permissionDebug = "uhc.configchanges.see";
 
     public TeamCMD(UHC instance) {
         this.instance = instance;
@@ -298,8 +299,9 @@ public class TeamCMD extends BaseCommand {
     @Subcommand("friendlyfire|fire")
     public void friendlyFire(CommandSender sender) {
         var bool = instance.getTeamManger().isFriendlyFire();
-        sender.sendMessage("Friendly Fire set to " + !bool);
         instance.getTeamManger().setFriendlyFire(!bool);
+        var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
+        Bukkit.broadcast(senderName + ChatColor.YELLOW + "Friendly fire set to " + bool, permissionDebug);
     }
 
     @Subcommand("chat|tc")
@@ -478,9 +480,11 @@ public class TeamCMD extends BaseCommand {
         } else {
             instance.getTeamManger().setTeamManagement(bool);
         }
-        sender.sendMessage(ChatColor.of("#DABC12") + "Team management has been set to "
-                + instance.getTeamManger().isTeamManagement());
+        var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
+        Bukkit.broadcast(senderName + ChatColor.YELLOW + "Team management has been set to " + instance.getTeamManger().isTeamManagement(), permissionDebug);
+
     }
+
     @CommandPermission("uhc.team.gcolor")
     @Subcommand("gcolor|globalcolor|broadcastcolor")
     @CommandCompletion("@bool")
@@ -525,6 +529,7 @@ public class TeamCMD extends BaseCommand {
                 Collections.shuffle(playersWithoutTeam);
                 final var playersWithoutTeamAmount = playersWithoutTeam.size();
                 var teamsNeed = (int) Math.ceil(playersWithoutTeamAmount / teamSize) + 1;
+
                 sender.sendMessage(ChatColor.GREEN + "Creating " + teamsNeed + " random teams of " + teamSize + " for "
                         + playersWithoutTeamAmount + " players!");
                 // Have it inside a try to that it finishes when error is encountered.
@@ -554,8 +559,9 @@ public class TeamCMD extends BaseCommand {
     @Syntax("<number> - Team size to be set")
     @Subcommand("size|limit|lim")
     public void teamSize(CommandSender sender, @Conditions("limits:min=1,max=100") Integer number) {
-        sender.sendMessage(ChatColor.of("#DABC12") + "Team size has been set from "
-                + instance.getTeamManger().getTeamSize() + " to " + number);
+
+        var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
+        Bukkit.broadcast(senderName + ChatColor.YELLOW + "Team size has been set from " + instance.getTeamManger().getTeamSize() + " to " + number, permissionDebug);
         instance.getTeamManger().setTeamSize(number);
     }
 

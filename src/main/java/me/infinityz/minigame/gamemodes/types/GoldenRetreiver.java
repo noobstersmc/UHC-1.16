@@ -15,7 +15,7 @@ public class GoldenRetreiver extends IGamemode implements Listener {
     private UHC instance;
 
     public GoldenRetreiver(UHC instance) {
-        super("GoldenRetreiver", "Players drop GoldenHeads.", Material.GOLDEN_APPLE);
+        super("GoldenRetreiver", "Players drop Golden Heads.", Material.GOLDEN_APPLE);
         this.instance = instance;
     }
 

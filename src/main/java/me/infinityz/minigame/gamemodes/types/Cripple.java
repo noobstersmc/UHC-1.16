@@ -17,7 +17,7 @@ public class Cripple extends IGamemode implements Listener {
 
     public Cripple(UHC instance) {
         super("Cripple",
-                "If a player take fall damage will receive slowness for 30 seconds.", Material.TURTLE_HELMET);
+                "If a player take fall damage\nwill receive slowness for 30 seconds.", Material.TURTLE_HELMET);
         this.instance = instance;
 
     }

@@ -9,7 +9,7 @@ import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
-import co.aikar.commands.annotation.Optional;
+import co.aikar.commands.annotation.Subcommand;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import me.infinityz.minigame.UHC;
@@ -25,26 +25,34 @@ public class GamemodesCMD extends BaseCommand {
     private String permissionDebug = "uhc.configchanges.see";
 
     @Default
+    public void scenarios(CommandSender sender) {
+        /* SCENARIOS ENABLED GUI */
+        instance.getGuiManager().getEnabledScenariosGui().open((Player) sender);
+    }
+
+    @Subcommand("toggle")
     @CommandPermission("uhc.scenarios")
     @CommandCompletion("@scenarios")
-    public void onEnable(CommandSender sender, @Optional String scenario) {
-
-        if (scenario == null && sender instanceof Player) {
-            /* SCENARIOS ENABLED GUI */
-            instance.getGuiManager().getEnabledScenariosGui().open((Player) sender);
-        }
-
+    public void onEnable(CommandSender sender, String scenario) {
         var gamemode = getScenarioFromName(scenario);
         var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
         if (gamemode != null) {
             if (!gamemode.isEnabled()) {
-                Bukkit.broadcast(
+                if(!gamemode.callEnable()){
+                    sender.sendMessage(ChatColor.RED + "Couldn't enable " + gamemode.getName() + ".");
+                }else{
+                    Bukkit.broadcast(
                         senderName + ChatColor.YELLOW + "Scenario " + gamemode.getName() + " has been enabled.", permissionDebug);
-                gamemode.callEnable();
+                }
+
             } else {
-                Bukkit.broadcast(
+                if(!gamemode.callDisable()){
+                    sender.sendMessage(ChatColor.RED + "Couldn't disable " + gamemode.getName() + ".");
+                }else{
+                    Bukkit.broadcast(
                         senderName + ChatColor.YELLOW + "Scenario " + gamemode.getName() + " has been disabled.", permissionDebug);
-                gamemode.callDisable();
+                }
+
             }
         }else if(scenario != null){
             sender.sendMessage(ChatColor.RED + "Scenario " + scenario + " doesn't exist");

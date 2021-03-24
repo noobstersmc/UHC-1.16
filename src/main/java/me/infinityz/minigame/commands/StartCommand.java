@@ -189,7 +189,7 @@ public class StartCommand extends BaseCommand {
         chain.sync(() -> {
 
             if (instance.getTeamManger().isTeamManagement()) {
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "team man false");
+                instance.getTeamManger().setTeamManagement(false);
             }
     
             if (instance.getTeamManger().getTeamSize() > 1) {

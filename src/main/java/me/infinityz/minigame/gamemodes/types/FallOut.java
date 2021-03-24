@@ -26,7 +26,7 @@ public class FallOut extends IGamemode implements Listener {
     private String permissionDebug = "uhc.configchanges.see";
 
     public FallOut(UHC instance) {
-        super("FallOut", "Players that stay above Y=40 periodically recieve damage after border time.", Material.BEDROCK);
+        super("FallOut", "Players that stay above Y=40 periodically\nrecieve damage after border time.", Material.BEDROCK);
         this.instance = instance;
         this.instance.getCommandManager().registerCommand(new FallOutCMD());
     }

@@ -30,7 +30,7 @@ public class SuperHeroes extends IGamemode implements Listener {
 
     public SuperHeroes(UHC instance) {
         super("SuperHeroes",
-                "Players get random super power, each power controls a potion effect.", Material.BEACON);
+                "Players get random super power,\neach power controls a potion effect.", Material.BEACON);
         this.instance = instance;
         this.instance.getCommandManager().registerCommand(new SuperHeroesCMD());
     }

@@ -26,7 +26,7 @@ public class GoToHell extends IGamemode implements Listener {
     private String permissionDebug = "uhc.configchanges.see";
 
     public GoToHell(UHC instance) {
-        super("Go to Hell", "Players that stay in the overworld will periodically recieve damage after border time.", Material.CRIMSON_NYLIUM);
+        super("Go to Hell", "Players that stay in the overworld will periodically\nrecieve damage after border time.", Material.CRIMSON_NYLIUM);
         this.instance = instance;
         this.instance.getCommandManager().registerCommand(new GoToHellCMD());
     }

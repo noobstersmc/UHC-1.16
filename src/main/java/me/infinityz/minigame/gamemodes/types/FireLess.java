@@ -13,7 +13,7 @@ public class FireLess extends IGamemode implements Listener {
     private UHC instance;
 
     public FireLess(UHC instance) {
-        super("FireLess", "Fire damage is disabled.", Material.FIRE);
+        super("FireLess", "Fire damage is disabled.", Material.BLAZE_POWDER);
         this.instance = instance;
     }
 

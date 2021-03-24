@@ -14,7 +14,7 @@ public class VengefulSpirits extends IGamemode implements Listener {
     private UHC instance;
 
     public VengefulSpirits(UHC instance) {
-        super("VengefulSpirits", "When a player dies below coordinate Y=50 spawns a blaze. Above that coordinate will spawn a Ghast.", Material.GHAST_TEAR);
+        super("VengefulSpirits", "When a player dies below coordinate Y=50 spawns a blaze.\nAbove that coordinate will spawn a Ghast.", Material.GHAST_TEAR);
         this.instance = instance;
     }
 

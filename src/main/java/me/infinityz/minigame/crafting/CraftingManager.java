@@ -87,6 +87,7 @@ public class CraftingManager implements Listener {
             return crafts;
         });
 
+        instance.getServer().getPluginManager().registerEvents(this, instance);
     }
 
     @CommandPermission("crafting.cmd")

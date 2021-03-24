@@ -15,7 +15,7 @@ public class MeetupDoubleLifeBar extends IGamemode implements Listener {
     private UHC instance;
 
     public MeetupDoubleLifeBar(UHC instance) {
-        super("MeetupDoubleLifeBar", "At meetup all players alive receive an extra life bar.", Material.GLISTERING_MELON_SLICE);
+        super("MeetupDoubleLifeBar", "All players will have double life bar at meetup.", Material.GLISTERING_MELON_SLICE);
         this.instance = instance;
     }
 

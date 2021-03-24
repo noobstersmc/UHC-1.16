@@ -27,7 +27,7 @@ public class SkyHigh extends IGamemode implements Listener {
     private String permissionDebug = "uhc.configchanges.see";
 
     public SkyHigh(UHC instance) {
-        super("SkyHigh", "Players that stay below Y=150 periodically recieve damage after border time.", Material.TNT_MINECART);
+        super("SkyHigh", "Players that stay below Y=150 periodically\nrecieve damage after border time.", Material.TNT_MINECART);
         this.instance = instance;
         this.instance.getCommandManager().registerCommand(new SkyHighCMD());
     }

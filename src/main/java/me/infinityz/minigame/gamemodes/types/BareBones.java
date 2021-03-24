@@ -20,7 +20,7 @@ public class BareBones extends IGamemode implements Listener {
     private UHC instance;
 
     public BareBones(UHC instance) {
-        super("BareBones", "Enchants, Diamonds and Gold is disabled. Players interesting items.", Material.BONE);
+        super("BareBones", "Enchants, Diamonds and Gold is disabled.\nPlayers drop Golden Heads, Diamond, String and Arrows.", Material.BONE);
         this.instance = instance;
     }
 

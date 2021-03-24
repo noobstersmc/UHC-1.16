@@ -14,7 +14,7 @@ public class DiamondLess extends IGamemode implements Listener {
     private UHC instance;
 
     public DiamondLess(UHC instance) {
-        super("DiamondLess", "Diamonds are cancelled.", Material.DIAMOND);
+        super("DiamondLess", "Diamonds doesn't exist.", Material.DIAMOND);
         this.instance = instance;
     }
 

@@ -14,7 +14,7 @@ public class ThunderKill extends IGamemode implements Listener {
     private boolean thunder = false;
 
     public ThunderKill(UHC instance) {
-        super("ThunderKill", "Every time a player dies weather changes between day and storm.", Material.TRIDENT);
+        super("ThunderKill", "Every time a player dies weather\nchanges between day and storm.", Material.TRIDENT);
         this.instance = instance;
     }
 

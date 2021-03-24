@@ -18,7 +18,7 @@ public class DoubleGold extends IGamemode implements Listener{
     private UHC instance;
 
     public DoubleGold(UHC instance) {
-        super("DoubleGold", "Gold drop twice.", Material.GOLD_INGOT);
+        super("DoubleGold", "Gold drop twice.", Material.GOLD_ORE);
         setIconCount(2);
         this.instance = instance;
     }

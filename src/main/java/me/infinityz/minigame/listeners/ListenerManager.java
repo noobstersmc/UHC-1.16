@@ -35,11 +35,6 @@ public class ListenerManager {
         Bukkit.getPluginManager().registerEvents(lobby, instance);
         Bukkit.getPluginManager().registerEvents(gracePeriodListeners, instance);
 
-        // Crafting Listeners
-        Bukkit.getPluginManager().registerEvents(instance.getCraftingManager(), instance);
-
-
-
     }
 
     public void unregisterListener(Listener listener) {

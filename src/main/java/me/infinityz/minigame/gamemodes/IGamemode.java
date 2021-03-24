@@ -2,6 +2,7 @@ package me.infinityz.minigame.gamemodes;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
 import fr.mrmicky.fastinv.ItemBuilder;
@@ -36,19 +37,30 @@ public abstract class IGamemode {
 
     public abstract boolean disableScenario();
 
-    public void callEnable() {
-        if (enableScenario())
+    public boolean callEnable() {
+        if (enableScenario()){
             Bukkit.getPluginManager().callEvent(new GamemodeEnabledEvent(this, !Bukkit.isPrimaryThread()));
+            return true;
+        }
+        return false;
     }
 
-    public void callDisable() {
-        if (disableScenario())
+    public boolean callDisable() {
+        if (disableScenario()){
             Bukkit.getPluginManager().callEvent(new GamemodeDisabledEvent(this, !Bukkit.isPrimaryThread()));
+            return true;
+        }
+        return false;
     }
 
     public ItemStack getAsIcon() {
-        return new ItemBuilder(this.getIcon()).name(ChatColor.YELLOW + this.getName())
-                .addLore(ChatColor.WHITE + this.getDescription()).build();
+
+        var descriptionList = description.split("\n");
+        for (int i = 0; i < descriptionList.length; i++) {
+            descriptionList[i] = ChatColor.WHITE + descriptionList[i];
+        }
+        return new ItemBuilder(icon).amount(iconCount).name(ChatColor.YELLOW + name)
+        .addLore(descriptionList).flags(ItemFlag.HIDE_ATTRIBUTES).build();
     }
 
 }
