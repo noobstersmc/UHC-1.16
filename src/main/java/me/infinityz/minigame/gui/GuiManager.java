@@ -22,18 +22,20 @@ public class GuiManager implements Listener {
         this.instance = instance;
 
         enabledScenariosGui = new EnabledScenarios(new RapidInv(9 * 2, "Enabled Scenarios"));
+        //No esta registrado, hijodeputa
+        instance.getServer().getPluginManager().registerEvents(this, instance);
 
     }
 
     @EventHandler
     public void scenarioEnable(GamemodeEnabledEvent e) {
-        enabledScenariosGui.update();
+        //enabledScenariosGui.update();
         Bukkit.broadcastMessage("SCEN ENABLED");
     }
 
     @EventHandler
     public void scenarioDisable(GamemodeDisabledEvent e) {
-        enabledScenariosGui.update();
+        //enabledScenariosGui.update();
         Bukkit.broadcastMessage("SCEN DISABLED");
     }
 
