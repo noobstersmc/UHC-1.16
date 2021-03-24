@@ -2,11 +2,14 @@ package me.infinityz.minigame.gamemodes;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 
+import fr.mrmicky.fastinv.ItemBuilder;
 import lombok.Getter;
 import lombok.Setter;
 import me.infinityz.minigame.gamemodes.events.GamemodeDisabledEvent;
 import me.infinityz.minigame.gamemodes.events.GamemodeEnabledEvent;
+import net.md_5.bungee.api.ChatColor;
 
 /*
 * As of right now, there is really no reason to use abstact here.
@@ -41,6 +44,11 @@ public abstract class IGamemode {
     public void callDisable() {
         if (disableScenario())
             Bukkit.getPluginManager().callEvent(new GamemodeDisabledEvent(this, !Bukkit.isPrimaryThread()));
+    }
+
+    public ItemStack getAsIcon() {
+        return new ItemBuilder(this.getIcon()).name(ChatColor.YELLOW + this.getName())
+                .addLore(ChatColor.WHITE + this.getDescription()).build();
     }
 
 }

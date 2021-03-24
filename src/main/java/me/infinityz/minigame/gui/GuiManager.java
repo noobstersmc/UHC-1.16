@@ -29,13 +29,13 @@ public class GuiManager implements Listener {
 
     @EventHandler
     public void scenarioEnable(GamemodeEnabledEvent e) {
-        //enabledScenariosGui.update();
+        enabledScenariosGui.update();
         Bukkit.broadcastMessage("SCEN ENABLED");
     }
 
     @EventHandler
     public void scenarioDisable(GamemodeDisabledEvent e) {
-        //enabledScenariosGui.update();
+        enabledScenariosGui.update();
         Bukkit.broadcastMessage("SCEN DISABLED");
     }
 
