@@ -16,6 +16,9 @@ buildNumber.properties
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
 
+#Lombok
+lombok.config
+
 ### Gradle & IntelliJ ###
 .gradle/
 /.idea/
