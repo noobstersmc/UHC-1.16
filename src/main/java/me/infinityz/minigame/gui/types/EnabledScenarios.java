@@ -1,6 +1,5 @@
 package me.infinityz.minigame.gui.types;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 
 import fr.mrmicky.fastinv.ItemBuilder;

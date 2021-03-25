@@ -22,16 +22,16 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.InventoryCreativeEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.mrmicky.fastinv.FastInv;
@@ -114,22 +114,12 @@ public class SpectatorListener implements Listener {
     }
 
     @EventHandler
-    public void creative2(EntityInteractEvent e) {
-        var entity = e.getEntity();
-        if (entity instanceof Player) {
-            var player = (Player) entity;
-            if (player.getGameMode() == GameMode.CREATIVE && !player.hasPermission(creativeEdit)) {
-                e.setCancelled(true);
-            }
-        }
-    }
-
-    @EventHandler
-    public void creative2(BlockPlaceEvent e){
+    public void creativeInv(InventoryOpenEvent e) {
         var player = e.getPlayer();
-            if (player.getGameMode() == GameMode.CREATIVE && !player.hasPermission(creativeEdit)) {
-                e.setCancelled(true);
-            }
+        if (player.getGameMode() == GameMode.CREATIVE && !player.hasPermission(creativeEdit) && !(e.getInventory() instanceof PlayerInventory)) {
+            e.setCancelled(true);
+            player.sendMessage(ChatColor.RED + "Please use this action only in spectator mode.");
+        }
     }
 
     @EventHandler
@@ -423,7 +413,7 @@ public class SpectatorListener implements Listener {
 
         var uhcPlayer = playerManager.getPlayer(player.getUniqueId());
 
-        if (!uhcPlayer.isSpecInfo() || e.getPlayer().getGameMode() != GameMode.SPECTATOR)
+        if (uhcPlayer == null || !uhcPlayer.isSpecInfo() || e.getPlayer().getGameMode() != GameMode.SPECTATOR)
             return;
 
         var clicked = (Player) e.getRightClicked();
