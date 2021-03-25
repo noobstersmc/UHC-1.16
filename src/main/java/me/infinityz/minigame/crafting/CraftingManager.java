@@ -24,8 +24,11 @@ import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
+import co.aikar.commands.annotation.Subcommand;
 import lombok.Getter;
 import me.infinityz.minigame.UHC;
+import me.infinityz.minigame.crafting.events.CustomRecipeAddedEvent;
+import me.infinityz.minigame.crafting.events.CustomRecipeRemovedEvent;
 import me.infinityz.minigame.crafting.recipes.CarrotRecipe;
 import me.infinityz.minigame.crafting.recipes.DragonBreath;
 import me.infinityz.minigame.crafting.recipes.ElytraRecipe;
@@ -41,8 +44,8 @@ import net.md_5.bungee.api.ChatColor;
 public class CraftingManager implements Listener {
 
     UHC instance;
-    private @Getter List<CustomRecipe> recipes = new ArrayList<>(); //all recipes that are actually enabled
-    private @Getter HashMap<String, CustomRecipe> optionalRecipes = new HashMap<>(); //all recipes not necesary enabled
+    private @Getter List<CustomRecipe> enabledRecipes = new ArrayList<>(); //all recipes that are actually enabled
+    private @Getter HashMap<String, CustomRecipe> allRecipes = new HashMap<>(); //all recipes not necesary enabled
     //standar
     CarrotRecipe goldCarrot;
     MelonRecipe goldMelon;
@@ -57,29 +60,29 @@ public class CraftingManager implements Listener {
 
         //default
 
-        goldCarrot = new CarrotRecipe(new NamespacedKey(instance, "carrot"), null);
-        goldMelon = new MelonRecipe(new NamespacedKey(instance, "melon"), null);
-        goldenHead = new GoldenHead(new NamespacedKey(instance, "ghead"), null);
+        goldCarrot = new CarrotRecipe(new NamespacedKey(instance, "golden_carrot"), null, "Golden Carrot");
+        goldMelon = new MelonRecipe(new NamespacedKey(instance, "glistering_melon"), null, "Glistering Melon");
+        goldenHead = new GoldenHead(new NamespacedKey(instance, "golden_head"), null, "Golden Head");
 
         Bukkit.addRecipe(goldCarrot.getRecipe());
         Bukkit.addRecipe(goldMelon.getRecipe());
         Bukkit.addRecipe(goldenHead.getRecipe());
 
-        this.recipes.add(goldenHead);
-        this.recipes.add(goldMelon);
-        this.recipes.add(goldCarrot);
+        this.enabledRecipes.add(goldenHead);
+        this.enabledRecipes.add(goldMelon);
+        this.enabledRecipes.add(goldCarrot);
 
         //opcionales
-        optionalRecipes.put("Totem", new TotemRecipe(new NamespacedKey(instance, "Totem"), null));
-        optionalRecipes.put("Dragon_breath", new DragonBreath(new NamespacedKey(instance, "Dragon_breath"), null));
-        optionalRecipes.put("Trident", new TridentRecipe(new NamespacedKey(instance, "Trident"), null));
-        optionalRecipes.put("Saddle", new SaddleRecipe(new NamespacedKey(instance, "Saddle"), null));
-        optionalRecipes.put("Krenzinator", new Krenzinator(new NamespacedKey(instance, "Krenzinator"), null));
-        optionalRecipes.put("Elytra", new ElytraRecipe(new NamespacedKey(instance, "Elytra"), null));
-        optionalRecipes.put("Notch", new NotchRecipe(new NamespacedKey(instance, "Notch"), null));
+        allRecipes.put("totem", new TotemRecipe(new NamespacedKey(instance, "totem"), null, "Totem"));
+        allRecipes.put("dragon_breath", new DragonBreath(new NamespacedKey(instance, "dragon_breath"), null, "Dragon Breath"));
+        allRecipes.put("trident", new TridentRecipe(new NamespacedKey(instance, "trident"), null, "Trident"));
+        allRecipes.put("saddle", new SaddleRecipe(new NamespacedKey(instance, "saddle"), null, "Saddle"));
+        allRecipes.put("krenzinator", new Krenzinator(new NamespacedKey(instance, "krenzinator"), null, "Krenzinator"));
+        allRecipes.put("elytra", new ElytraRecipe(new NamespacedKey(instance, "elytra"), null, "Elytra"));
+        allRecipes.put("notch", new NotchRecipe(new NamespacedKey(instance, "notch"), null, "Notch"));
 
         List<String> crafts = new ArrayList<>();
-        optionalRecipes.keySet().forEach(key->{
+        allRecipes.keySet().forEach(key->{
             crafts.add(key);
         });
 
@@ -90,28 +93,39 @@ public class CraftingManager implements Listener {
         instance.getServer().getPluginManager().registerEvents(this, instance);
     }
 
-    @CommandPermission("crafting.cmd")
     @CommandAlias("crafting")
     public class CraftingCMD extends BaseCommand {
 
         @Default
+        public void crafting(Player sender) {
+            /* CRAFTING ENABLED GUI */
+            instance.getGuiManager().getEnabledCraftingGui().open(sender);
+        }
+
+        @CommandPermission("crafting.cmd")
+        @Subcommand("toggle")
         @CommandCompletion("@crafting")
         public void crafting(CommandSender sender, String craft) {
-            if(optionalRecipes.containsKey(craft)){
-                var customCraft = optionalRecipes.get(craft);
+            if(allRecipes.containsKey(craft)){
+                var customCraft = allRecipes.get(craft);
                 var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
                 if(!customCraft.isEnabled()){
                     customCraft.setEnabled(true);
                     Bukkit.addRecipe(customCraft.getRecipe());
                     Bukkit.getOnlinePlayers().forEach(all -> all.discoverRecipe(customCraft.getNamespacedKey()));
-                    recipes.add(customCraft);
+                    enabledRecipes.add(customCraft);
                     Bukkit.broadcast(senderName + ChatColor.YELLOW + "Craft "+ craft + " enabled.", "uhc.configchanges.see");
+
+                    Bukkit.getPluginManager().callEvent(new CustomRecipeAddedEvent(customCraft));
+
                 }else{
                     customCraft.setEnabled(false);
                     Bukkit.removeRecipe(customCraft.getNamespacedKey());
                     Bukkit.getOnlinePlayers().forEach(all -> all.undiscoverRecipe(customCraft.getNamespacedKey()));
                     removeCraft(craft);
                     Bukkit.broadcast(senderName + ChatColor.YELLOW + "Craft "+ craft + " disabled.", "uhc.configchanges.see");
+
+                    Bukkit.getPluginManager().callEvent(new CustomRecipeRemovedEvent(customCraft));
                 }
             }else{
                 sender.sendMessage(ChatColor.RED + "Craft not available.");
@@ -121,7 +135,7 @@ public class CraftingManager implements Listener {
     }
 
     private boolean removeCraft(String name){
-        var iter = recipes.iterator();
+        var iter = enabledRecipes.iterator();
 
             while (iter.hasNext()) {
                 
@@ -163,7 +177,7 @@ public class CraftingManager implements Listener {
     }
 
     public void discoverCustomRecipes(Player player) {
-        recipes.stream().map(CustomRecipe::getNamespacedKey).forEach(player::discoverRecipe);
+        enabledRecipes.stream().map(CustomRecipe::getNamespacedKey).forEach(player::discoverRecipe);
 
     }
 
@@ -172,7 +186,7 @@ public class CraftingManager implements Listener {
     }
 
     public void restoreRecipes(){
-        recipes.stream().forEach(all->{
+        enabledRecipes.stream().forEach(all->{
             Bukkit.getServer().addRecipe(all.getRecipe());
         });
     }

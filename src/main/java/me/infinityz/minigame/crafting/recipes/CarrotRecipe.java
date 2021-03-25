@@ -10,8 +10,8 @@ import me.infinityz.minigame.crafting.CustomRecipe;
 
 public class CarrotRecipe extends CustomRecipe {
 
-    public CarrotRecipe(NamespacedKey namespacedKey, Recipe name) {
-        super(namespacedKey, name);
+    public CarrotRecipe(NamespacedKey namespacedKey, Recipe craft, String name) {
+        super(namespacedKey, craft, name);
 
         final ItemStack item = new ItemStack(Material.GOLDEN_CARROT);
 

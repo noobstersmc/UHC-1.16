@@ -12,8 +12,8 @@ import net.md_5.bungee.api.ChatColor;
 
 public class GoldenHoney extends CustomRecipe {
 
-    public GoldenHoney(NamespacedKey namespacedKey, Recipe name) {
-        super(namespacedKey, null);
+    public GoldenHoney(NamespacedKey namespacedKey, Recipe craft, String name) {
+        super(namespacedKey, craft, name);
 
         final ItemStack item = new ItemStack(Material.HONEY_BOTTLE);
         final ItemMeta im = item.getItemMeta();

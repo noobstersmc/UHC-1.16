@@ -41,18 +41,21 @@ public class WorldCMD extends BaseCommand {
         Bukkit.dispatchCommand(sender, "chunky world world");
         Bukkit.dispatchCommand(sender, "chunky radius " + instance.getChunkManager().getBorder());
         Bukkit.dispatchCommand(sender, "chunky start");
+        Bukkit.dispatchCommand(sender, "chunky confirm");
 
         if (instance.getGame().isNether()) {
             worldCreateAndLoad(sender, "NETHER", "world_nether", Long.parseLong(UHC.getSEED()));
             Bukkit.dispatchCommand(sender, "chunky world world_nether");
             Bukkit.dispatchCommand(sender, "chunky radius " + instance.getChunkManager().getBorder());
             Bukkit.dispatchCommand(sender, "chunky start");
+            Bukkit.dispatchCommand(sender, "chunky confirm");
         }
         if (instance.getGame().isEnd()) {
             worldCreateAndLoad(sender, "END", "world_end", Long.parseLong(UHC.getSEED()));
             Bukkit.dispatchCommand(sender, "chunky world world_end");
             Bukkit.dispatchCommand(sender, "chunky radius " + instance.getChunkManager().getBorder());
             Bukkit.dispatchCommand(sender, "chunky start");
+            Bukkit.dispatchCommand(sender, "chunky confirm");
         }
 
     }

@@ -10,8 +10,8 @@ import me.infinityz.minigame.crafting.CustomRecipe;
 
 public class ElytraRecipe extends CustomRecipe {
 
-    public ElytraRecipe(NamespacedKey namespacedKey, Recipe name) {
-        super(namespacedKey, null);
+    public ElytraRecipe(NamespacedKey namespacedKey, Recipe craft, String name) {
+        super(namespacedKey, craft, name);
 
         final ItemStack item = new ItemStack(Material.ELYTRA);
 

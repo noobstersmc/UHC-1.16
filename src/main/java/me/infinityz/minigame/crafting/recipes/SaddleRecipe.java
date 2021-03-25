@@ -10,8 +10,8 @@ import me.infinityz.minigame.crafting.CustomRecipe;
 
 public class SaddleRecipe extends CustomRecipe {
 
-    public SaddleRecipe(NamespacedKey namespacedKey, Recipe name) {
-        super(namespacedKey, null);
+    public SaddleRecipe(NamespacedKey namespacedKey, Recipe craft, String name) {
+        super(namespacedKey, craft, name);
 
         final ItemStack item = new ItemStack(Material.SADDLE);
 

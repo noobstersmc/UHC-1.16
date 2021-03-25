@@ -81,7 +81,7 @@ public @RequiredArgsConstructor class ToolCMD extends BaseCommand {
         UHCPlayer uhcPlayer = instance.getPlayerManager().getPlayer(target.getUniqueId());
         uhcPlayer.setSpecInfo(!uhcPlayer.isSpecInfo());
         var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
-        Bukkit.broadcast(senderName + ChatColor.YELLOW + target.getName() + "'s SpecInfo has been set to " + uhcPlayer.isSpecInfo(), permissionDebug);
+        Bukkit.broadcast(senderName + ChatColor.GREEN + target.getName() + "'s SpecInfo has been set to " + uhcPlayer.isSpecInfo(), "host.info");
 
 
     }

@@ -12,8 +12,8 @@ import net.md_5.bungee.api.ChatColor;
 
 public class EnderRespawnRecipe extends CustomRecipe {
 
-    public EnderRespawnRecipe(NamespacedKey namespacedKey, Recipe name) {
-        super(namespacedKey, name);
+    public EnderRespawnRecipe(NamespacedKey namespacedKey, Recipe craft, String name) {
+        super(namespacedKey, craft, name);
 
         final ItemStack respawnCrystal = new ItemStack(Material.END_CRYSTAL);
         final ItemMeta im = respawnCrystal.getItemMeta();

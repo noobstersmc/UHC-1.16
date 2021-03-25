@@ -13,8 +13,8 @@ import net.md_5.bungee.api.ChatColor;
 
 public class GoldenHead extends CustomRecipe {
 
-    public GoldenHead(NamespacedKey namespacedKey, Recipe name) {
-        super(namespacedKey, null);
+    public GoldenHead(NamespacedKey namespacedKey, Recipe craft, String name) {
+        super(namespacedKey, craft, name);
 
         final ItemStack goldenHead = new ItemStack(Material.GOLDEN_APPLE);
         final ItemMeta im = goldenHead.getItemMeta();
@@ -24,7 +24,7 @@ public class GoldenHead extends CustomRecipe {
         final ShapedRecipe recipe = new ShapedRecipe(namespacedKey, goldenHead);
         recipe.shape("AAA", "ABA", "AAA");
         recipe.setIngredient('A', Material.GOLD_INGOT);
-        recipe.setIngredient('B', new RecipeChoice.MaterialChoice(Material.WITHER_SKELETON_SKULL, Material.PLAYER_HEAD,
+        recipe.setIngredient('B', new RecipeChoice.MaterialChoice(Material.PLAYER_HEAD, Material.WITHER_SKELETON_SKULL,
                 Material.SKELETON_SKULL, Material.CREEPER_HEAD, Material.ZOMBIE_HEAD));
 
         setRecipe(recipe);

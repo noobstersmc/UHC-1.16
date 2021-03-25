@@ -10,8 +10,8 @@ import me.infinityz.minigame.crafting.CustomRecipe;
 
 public class NotchRecipe extends CustomRecipe {
 
-    public NotchRecipe(NamespacedKey namespacedKey, Recipe name) {
-        super(namespacedKey, null);
+    public NotchRecipe(NamespacedKey namespacedKey, Recipe craft, String name) {
+        super(namespacedKey, craft, name);
 
         final ItemStack item = new ItemStack(Material.ENCHANTED_GOLDEN_APPLE);
 

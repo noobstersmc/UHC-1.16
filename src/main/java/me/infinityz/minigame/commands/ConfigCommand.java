@@ -23,7 +23,7 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
  * Config COMMAND
  */
 
-@CommandAlias("config")
+@CommandAlias("config|c")
 public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
     private @NonNull UHC instance;
     private String permissionDebug = "uhc.configchanges.see";

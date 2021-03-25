@@ -11,8 +11,8 @@ import me.infinityz.minigame.crafting.CustomRecipe;
 
 public class TridentRecipe extends CustomRecipe {
 
-    public TridentRecipe(NamespacedKey namespacedKey, Recipe name) {
-        super(namespacedKey, null);
+    public TridentRecipe(NamespacedKey namespacedKey, Recipe craft, String name) {
+        super(namespacedKey, craft, name);
 
         final ItemStack item = new ItemStack(Material.TRIDENT);
 

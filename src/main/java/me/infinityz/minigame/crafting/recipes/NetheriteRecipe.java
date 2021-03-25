@@ -10,8 +10,8 @@ import me.infinityz.minigame.crafting.CustomRecipe;
 
 public class NetheriteRecipe extends CustomRecipe {
 
-    public NetheriteRecipe(NamespacedKey namespacedKey, Recipe name) {
-        super(namespacedKey, null);
+    public NetheriteRecipe(NamespacedKey namespacedKey, Recipe craft, String name) {
+        super(namespacedKey, craft, name);
 
         final ShapelessRecipe recipe = new ShapelessRecipe(namespacedKey, new ItemStack(Material.NETHERITE_INGOT, 2));
         recipe.addIngredient(4, Material.NETHERITE_SCRAP);

@@ -13,8 +13,8 @@ import me.infinityz.minigame.crafting.CustomRecipe;
 
 public class DragonBreath extends CustomRecipe {
 
-    public DragonBreath(NamespacedKey namespacedKey, Recipe name) {
-        super(namespacedKey, name);
+    public DragonBreath(NamespacedKey namespacedKey, Recipe craft, String name) {
+        super(namespacedKey, craft, name);
 
         final ItemStack dragonRecipe = new ItemStack(Material.DRAGON_BREATH);
         final ItemStack strengthPot = PotionItemStack(Material.POTION, PotionType.STRENGTH, false, true);

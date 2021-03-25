@@ -10,8 +10,8 @@ import me.infinityz.minigame.crafting.CustomRecipe;
 
 public class Krenzinator extends CustomRecipe {
 
-    public Krenzinator(NamespacedKey namespacedKey, Recipe name) {
-        super(namespacedKey, null);
+    public Krenzinator(NamespacedKey namespacedKey, Recipe craft, String name) {
+        super(namespacedKey, craft, name);
 
         final ShapelessRecipe recipe = new ShapelessRecipe(namespacedKey, new ItemStack(Material.DIAMOND));
         recipe.addIngredient(9, Material.REDSTONE_BLOCK);
