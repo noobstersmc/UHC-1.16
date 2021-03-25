@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.bukkit.NamespacedKey;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemFlag;
@@ -21,16 +21,16 @@ import net.noobsters.kern.paper.guis.RapidInv;
 
 public class EnabledCrafting extends CustomGui {
 
-    HashMap<NamespacedKey, CustomCraftTable> tables = new HashMap<>();
+    HashMap<String, CustomCraftTable> tables = new HashMap<>();
 
     public EnabledCrafting(RapidInv gui) {
         super(gui);
 
-        var allRecipes = UHC.getInstance().getCraftingManager().getAllRecipes();
+        var crafts = UHC.getInstance().getCraftingManager().getAllRecipes().entrySet().stream().collect(Collectors.toList());
 
-        for (var craft : allRecipes.values()) {
-            var name = craft.getName();
-            var recipe = craft.getRecipe();
+        for (var craft : crafts) {
+            var name = craft.getKey();
+            var recipe = craft.getValue().getRecipe();
             List<ItemStack> list = new ArrayList<>();
 
             if (recipe instanceof ShapedRecipe) {
@@ -40,10 +40,8 @@ public class EnabledCrafting extends CustomGui {
                 var shapeLess = (ShapelessRecipe) recipe;
                 list = getShapeLessRecipe(shapeLess);
             }
-            var key = craft.getNamespacedKey();
 
-            tables.put(key,
-                    new CustomCraftTable(new RapidInv(InventoryType.DISPENSER, name + " crafting"), list, this));
+            tables.put(name, new CustomCraftTable(new RapidInv(InventoryType.DISPENSER, name), list));
         }
         update();
 
@@ -52,25 +50,52 @@ public class EnabledCrafting extends CustomGui {
     @Override
     public void update() {
 
-        var crafts = UHC.getInstance().getCraftingManager().getEnabledRecipes();
+        tables.clear();
+        var test = UHC.getInstance().getCraftingManager().getAllRecipes().entrySet().stream().collect(Collectors.toList());
+
+        for (var craft : test) {
+            var name = craft.getKey();
+            var recipe = craft.getValue().getRecipe();
+            List<ItemStack> list = new ArrayList<>();
+
+            if (recipe instanceof ShapedRecipe) {
+                var shaped = (ShapedRecipe) recipe;
+                list = getShapedRecipe(shaped);
+            } else if (recipe instanceof ShapelessRecipe) {
+                var shapeLess = (ShapelessRecipe) recipe;
+                list = getShapeLessRecipe(shapeLess);
+            }
+
+            tables.put(name, new CustomCraftTable(new RapidInv(InventoryType.DISPENSER, name + " crafting"), list));
+        }
+
+        var crafts = UHC.getInstance().getCraftingManager().getAllRecipes().entrySet().stream()
+                .filter(recipe -> recipe.getValue().isEnabled()).collect(Collectors.toList());
+
         var gui = getGui();
         gui.clearAllItems();
-        tables.clear();
 
-        if (!crafts.isEmpty()) {
+        if (crafts.isEmpty()) {
+            var result = new ItemBuilder(Material.CRAFTING_TABLE).name(ChatColor.YELLOW + "Vanilla Crafts")
+                    .flags(ItemFlag.HIDE_ATTRIBUTES).build();
+
+            gui.setItem(0, result, action -> {
+                //tables.get(key).open((Player) action.getWhoClicked()); open config gui
+            });
+
+        } else if (!crafts.isEmpty()) {
             // add them
             int i = 0;
             int size = gui.getInventory().getContents().length;
             for (var craft : crafts) {
                 if (i >= size)
                     break;
-                var name = craft.getName();
-                var key = craft.getNamespacedKey();
-                var result = new ItemBuilder(craft.getRecipe().getResult()).name(ChatColor.YELLOW + name)
+                var name = craft.getKey();
+                var result = new ItemBuilder(craft.getValue().getRecipe().getResult()).name(ChatColor.YELLOW + name)
                         .flags(ItemFlag.HIDE_ATTRIBUTES).build();
 
                 gui.setItem(i, result, action -> {
-                    tables.get(key).open((Player) action.getWhoClicked());
+                    tables.get(name).open((Player) action.getWhoClicked());
                 });
 
                 i++;
@@ -80,8 +105,17 @@ public class EnabledCrafting extends CustomGui {
     }
 
     public List<ItemStack> getShapedRecipe(ShapedRecipe recipe) {
-        // fix
-        return recipe.getIngredientMap().values().stream().collect(Collectors.toList());
+        var choice = recipe.getIngredientMap();
+        var shape = recipe.getShape();
+
+        List<ItemStack> list = new ArrayList<>();
+        for (var line : shape) {
+            for (var slot : line.toCharArray()) {
+                list.add(choice.get(slot));
+            }
+        }
+        
+        return list;
     }
 
     public List<ItemStack> getShapeLessRecipe(ShapelessRecipe recipe) {

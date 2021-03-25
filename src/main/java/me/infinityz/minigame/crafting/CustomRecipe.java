@@ -10,12 +10,9 @@ public abstract class CustomRecipe {
     NamespacedKey namespacedKey;
     Recipe recipe;
     private @Getter @Setter boolean enabled = false;
-    private @Getter @Setter String name;
 
-    public CustomRecipe(NamespacedKey namespacedKey, Recipe recipe, String name){
+    public CustomRecipe(NamespacedKey namespacedKey){
         this.namespacedKey = namespacedKey;
-        this.recipe = recipe;
-        this.name = name;
     }
 
     public NamespacedKey getNamespacedKey() {

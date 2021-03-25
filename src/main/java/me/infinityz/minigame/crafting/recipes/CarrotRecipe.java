@@ -3,15 +3,14 @@ package me.infinityz.minigame.crafting.recipes;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 
 import me.infinityz.minigame.crafting.CustomRecipe;
 
 public class CarrotRecipe extends CustomRecipe {
 
-    public CarrotRecipe(NamespacedKey namespacedKey, Recipe craft, String name) {
-        super(namespacedKey, craft, name);
+    public CarrotRecipe(NamespacedKey namespacedKey) {
+        super(namespacedKey);
 
         final ItemStack item = new ItemStack(Material.GOLDEN_CARROT);
 

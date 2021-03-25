@@ -6,18 +6,17 @@ import java.util.List;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.gui.CustomGui;
 import net.noobsters.kern.paper.guis.RapidInv;
 
 public class CustomCraftTable extends CustomGui {
 
     List<ItemStack> items = new ArrayList<>();
-    EnabledCrafting enabledCrafting;
 
-    public CustomCraftTable(RapidInv gui, List<ItemStack> items, EnabledCrafting enabledCrafting) {
+    public CustomCraftTable(RapidInv gui, List<ItemStack> items) {
         super(gui);
         this.items = items;
-        this.enabledCrafting = enabledCrafting;
         update();
 
     }
@@ -29,7 +28,7 @@ public class CustomCraftTable extends CustomGui {
         for (ItemStack itemStack : items) {
             if(itemStack != null){
                 gui.setItem(i, itemStack, action->{
-                    enabledCrafting.getGui().open((Player) action.getWhoClicked());
+                    UHC.getInstance().getGuiManager().getEnabledCraftingGui().getGui().open((Player) action.getWhoClicked());
                 });
             }
             i++;

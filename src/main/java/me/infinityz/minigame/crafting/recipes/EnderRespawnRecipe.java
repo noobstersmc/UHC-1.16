@@ -3,7 +3,6 @@ package me.infinityz.minigame.crafting.recipes;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -12,8 +11,8 @@ import net.md_5.bungee.api.ChatColor;
 
 public class EnderRespawnRecipe extends CustomRecipe {
 
-    public EnderRespawnRecipe(NamespacedKey namespacedKey, Recipe craft, String name) {
-        super(namespacedKey, craft, name);
+    public EnderRespawnRecipe(NamespacedKey namespacedKey) {
+        super(namespacedKey);
 
         final ItemStack respawnCrystal = new ItemStack(Material.END_CRYSTAL);
         final ItemMeta im = respawnCrystal.getItemMeta();
