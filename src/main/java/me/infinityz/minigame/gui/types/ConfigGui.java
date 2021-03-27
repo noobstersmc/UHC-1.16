@@ -160,11 +160,10 @@ public class ConfigGui extends CustomGui {
         var gui = getGui();
         var game = instance.getGame();
         var item = new ItemBuilder(Material.POTION).name(ChatColor.YELLOW + "Potions")
-            .addLore((game.isPotions() ? ChatColor.GREEN : ChatColor.RED) + "" + game.isPotions()).flags(ItemFlag.HIDE_ATTRIBUTES).build();
-
-        PotionMeta meta = (PotionMeta) item.getItemMeta();
-        meta.setBasePotionData(new PotionData(PotionType.JUMP, false, false));
-        item.setItemMeta(meta);
+            .addLore((game.isPotions() ? ChatColor.GREEN : ChatColor.RED) + "" + game.isPotions()).flags(ItemFlag.HIDE_ATTRIBUTES).meta(meta->{
+                var met = (PotionMeta) meta;
+                met.setBasePotionData(new PotionData(PotionType.JUMP, false, false));
+            }).build();
 
         gui.setItem(9, item, action->{
             if(action.getClick() == ClickType.RIGHT && action.getWhoClicked().hasPermission(permissionConfig)){

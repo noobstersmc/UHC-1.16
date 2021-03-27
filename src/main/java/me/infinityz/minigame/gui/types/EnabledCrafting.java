@@ -50,25 +50,6 @@ public class EnabledCrafting extends CustomGui {
     @Override
     public void update() {
 
-        tables.clear();
-        var test = UHC.getInstance().getCraftingManager().getAllRecipes().entrySet().stream().collect(Collectors.toList());
-
-        for (var craft : test) {
-            var name = craft.getKey();
-            var recipe = craft.getValue().getRecipe();
-            List<ItemStack> list = new ArrayList<>();
-
-            if (recipe instanceof ShapedRecipe) {
-                var shaped = (ShapedRecipe) recipe;
-                list = getShapedRecipe(shaped);
-            } else if (recipe instanceof ShapelessRecipe) {
-                var shapeLess = (ShapelessRecipe) recipe;
-                list = getShapeLessRecipe(shapeLess);
-            }
-
-            tables.put(name, new CustomCraftTable(new RapidInv(InventoryType.DISPENSER, name + " crafting"), list));
-        }
-
         var crafts = UHC.getInstance().getCraftingManager().getAllRecipes().entrySet().stream()
                 .filter(recipe -> recipe.getValue().isEnabled()).collect(Collectors.toList());
 
