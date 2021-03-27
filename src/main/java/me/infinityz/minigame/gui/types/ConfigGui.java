@@ -99,7 +99,7 @@ public class ConfigGui extends CustomGui {
     public void updateTears(){
         var gui = getGui();
         var game = instance.getGame();
-        var item = new ItemBuilder(Material.GHAST_TEAR).name(ChatColor.YELLOW + "Ghast tear")
+        var item = new ItemBuilder(Material.GHAST_TEAR).name(ChatColor.YELLOW + "Ghast tears")
             .addLore((game.isTears() ? ChatColor.GREEN : ChatColor.RED) + "" + game.isTears()).build();
 
         gui.setItem(12, item, action->{
@@ -159,11 +159,8 @@ public class ConfigGui extends CustomGui {
     public void updatePotions(){
         var gui = getGui();
         var game = instance.getGame();
-        var item = new ItemBuilder(Material.POTION).name(ChatColor.YELLOW + "Potions")
-            .addLore((game.isPotions() ? ChatColor.GREEN : ChatColor.RED) + "" + game.isPotions()).flags(ItemFlag.HIDE_ATTRIBUTES).meta(meta->{
-                var met = (PotionMeta) meta;
-                met.setBasePotionData(new PotionData(PotionType.JUMP, false, false));
-            }).build();
+        var item = new ItemBuilder(Material.BREWING_STAND).name(ChatColor.YELLOW + "Potions")
+            .addLore((game.isPotions() ? ChatColor.GREEN : ChatColor.RED) + "" + game.isPotions()).flags(ItemFlag.HIDE_ATTRIBUTES).build();
 
         gui.setItem(9, item, action->{
             if(action.getClick() == ClickType.RIGHT && action.getWhoClicked().hasPermission(permissionConfig)){
@@ -183,11 +180,9 @@ public class ConfigGui extends CustomGui {
         var gui = getGui();
         var game = instance.getGame();
         var item = new ItemBuilder(Material.SPLASH_POTION).name(ChatColor.YELLOW + "Nerfed strength 50%")
-            .addLore((game.isStrengthNerf() ? ChatColor.GREEN : ChatColor.RED) + "" + game.isStrengthNerf()).flags(ItemFlag.HIDE_ATTRIBUTES).build();
+            .addLore((game.isStrengthNerf() ? ChatColor.GREEN : ChatColor.RED) + "" + game.isStrengthNerf())
+                .meta(PotionMeta.class, meta-> meta.setBasePotionData(new PotionData(PotionType.STRENGTH, false, false))).flags(ItemFlag.HIDE_POTION_EFFECTS).build();
 
-        PotionMeta meta = (PotionMeta) item.getItemMeta();
-        meta.setBasePotionData(new PotionData(PotionType.STRENGTH, false, false));
-        item.setItemMeta(meta);
 
         gui.setItem(8, item, action->{
             if(action.getClick() == ClickType.RIGHT && action.getWhoClicked().hasPermission(permissionConfig)){
@@ -207,11 +202,8 @@ public class ConfigGui extends CustomGui {
         var gui = getGui();
         var game = instance.getGame();
         var item = new ItemBuilder(Material.POTION).name(ChatColor.YELLOW + "Strength")
-            .addLore((game.isStrength() ? ChatColor.GREEN : ChatColor.RED) + "" + game.isStrength()).flags(ItemFlag.HIDE_ATTRIBUTES).build();
-
-        PotionMeta meta = (PotionMeta) item.getItemMeta();
-        meta.setBasePotionData(new PotionData(PotionType.STRENGTH, false, false));
-        item.setItemMeta(meta);
+            .addLore((game.isStrength() ? ChatColor.GREEN : ChatColor.RED) + "" + game.isStrength())
+                .meta(PotionMeta.class, meta-> meta.setBasePotionData(new PotionData(PotionType.STRENGTH, false, false))).flags(ItemFlag.HIDE_POTION_EFFECTS).build();
 
         gui.setItem(7, item, action->{
             if(action.getClick() == ClickType.RIGHT && action.getWhoClicked().hasPermission(permissionConfig)){

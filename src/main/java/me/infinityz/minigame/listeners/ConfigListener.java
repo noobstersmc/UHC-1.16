@@ -48,17 +48,17 @@ public class ConfigListener implements Listener {
         this.instance = instance;
     }
 
-    public int randomN(Integer i){
+    public int randomN(Integer i) {
         var rand = random.nextInt(i);
-        if(rand != 0) return rand;
+        if (rand != 0)
+            return rand;
         return i;
     }
 
-    
-
     @EventHandler
     public void onItemSpawn(ItemSpawnEvent e) {
-        if(instance.getGame().isTears()) return;
+        if (instance.getGame().isTears())
+            return;
         var stack = e.getEntity().getItemStack();
         var type = stack.getType();
         if (type == Material.GHAST_TEAR) {
@@ -74,42 +74,34 @@ public class ConfigListener implements Listener {
     }
 
     @EventHandler
-    public void brewing(BrewingStandFuelEvent e){
-        if(!instance.getGame().isPotions()){
+    public void brewing(BrewingStandFuelEvent e) {
+        if (!instance.getGame().isPotions()) {
             e.setCancelled(true);
         }
     }
 
     @EventHandler
-    public void trade(InventoryOpenEvent e){
+    public void trade(InventoryOpenEvent e) {
         var inv = e.getInventory();
-        if(inv.getType() == InventoryType.MERCHANT && !instance.getGame().isTrades()){
+        if (inv.getType() == InventoryType.MERCHANT && !instance.getGame().isTrades()) {
             e.setCancelled(true);
             e.getPlayer().sendMessage(ChatColor.RED + "Trading is disabled.");
         }
     }
 
     @EventHandler
-    public void horses(EntityMountEvent e){
+    public void horses(EntityMountEvent e) {
         var entity = e.getMount();
         var player = e.getEntity();
-        if(!instance.getGame().isHorses() && entity instanceof Horse && player instanceof Player){
-            e.setCancelled(true);   
-            player.sendMessage(ChatColor.RED + "Horses are disabled."); 
-        }
-    }
-
-    @EventHandler
-    public void strength(BrewEvent e){
-        if(instance.getGame().isStrength()) return;
-        if(e.getContents().getIngredient().getType() ==  Material.BLAZE_POWDER){
+        if (!instance.getGame().isHorses() && entity instanceof Horse && player instanceof Player) {
             e.setCancelled(true);
+            player.sendMessage(ChatColor.RED + "Horses are disabled.");
         }
     }
 
     @EventHandler
-    public void beds(BlockPlaceEvent e){
-        if(!instance.getGame().isBeds() && e.getBlock().getType().toString().contains("BED")){
+    public void beds(BlockPlaceEvent e) {
+        if (!instance.getGame().isBeds() && e.getBlock().getType().toString().contains("BED")) {
             e.setCancelled(true);
             e.getPlayer().sendMessage(ChatColor.RED + "Beds are disabled.");
         }
@@ -117,7 +109,8 @@ public class ConfigListener implements Listener {
 
     @EventHandler
     public void onDamage(EntityDamageEvent e) {
-        if(instance.getGame().isItemsBurn()) return;
+        if (instance.getGame().isItemsBurn())
+            return;
         if (e.getEntityType() == EntityType.DROPPED_ITEM && (e.getCause() == EntityDamageEvent.DamageCause.FIRE
                 || e.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK
                 || e.getCause() == EntityDamageEvent.DamageCause.LAVA)) {
@@ -163,7 +156,8 @@ public class ConfigListener implements Listener {
         var block = e.getBlock();
         if (block.getType() == Material.GRAVEL && Math.random() <= (instance.getGame().getFlintRate() / 100)) {
             e.setDropItems(false);
-            Bukkit.getWorld(block.getWorld().getName().toString()).dropItemNaturally(block.getLocation(), new ItemStack(Material.FLINT));
+            Bukkit.getWorld(block.getWorld().getName().toString()).dropItemNaturally(block.getLocation(),
+                    new ItemStack(Material.FLINT));
         }
 
     }
@@ -171,6 +165,87 @@ public class ConfigListener implements Listener {
     /**
      * Strength nerf
      */
+
+    @EventHandler
+    public void strength(BrewEvent e) {
+        if (!instance.getGame().isStrength() && e.getContents().getIngredient().getType() == Material.BLAZE_POWDER) {
+            e.setCancelled(true);
+            return;
+        }
+        /*
+        if (instance.getGame().isStrengthNerf()) {
+            var storage = e.getContents().getStorageContents();
+            ItemStack[] potions = {};
+            for (int i = 0; i < storage.length; i++) {
+                var potion = storage[i];
+                if(potion.getItemMeta() instanceof PotionMeta){
+                    PotionMeta potionMeta = (PotionMeta) potion.getItemMeta();
+
+                final var type = potionMeta.getBasePotionData().getType();
+
+                if (type == PotionType.STRENGTH) {
+                    final var upgraded = potionMeta.getBasePotionData().isUpgraded();
+                    final var extended = potionMeta.getBasePotionData().isExtended();
+
+                    final String[] lore = {};
+
+                    switch (potion.getType()) {
+
+                        case LINGERING_POTION:{
+                            if(upgraded){
+                                lore[0] = ChatColor.BLUE + "Strength II (0:22)";
+                                lore[1] = "";
+                                lore[2] = ChatColor.DARK_PURPLE + "When Applied:";
+                                lore[3] = ChatColor.BLUE + "+3 Attack Damage";
+                            }else if(extended){
+                                lore[0] = ChatColor.BLUE + "Strength (2:00)";
+                                lore[1] = "";
+                                lore[2] = ChatColor.DARK_PURPLE + "When Applied:";
+                                lore[3] = ChatColor.BLUE + "+1.5 Attack Damage";
+                            }else{
+                                lore[0] = ChatColor.BLUE + "Strength (0:45)";
+                                lore[1] = "";
+                                lore[2] = ChatColor.DARK_PURPLE + "When Applied:";
+                                lore[3] = ChatColor.BLUE + "+1.5 Attack Damage";
+                            }
+                        }break;
+
+                        default:{
+                            if(upgraded){
+                                lore[0] = ChatColor.BLUE + "Strength II (1:30)";
+                                lore[1] = "";
+                                lore[2] = ChatColor.DARK_PURPLE + "When Applied:";
+                                lore[3] = ChatColor.BLUE + "+3 Attack Damage";
+                            }else if(extended){
+                                lore[0] = ChatColor.BLUE + "Strength (8:00)";
+                                lore[1] = "";
+                                lore[2] = ChatColor.DARK_PURPLE + "When Applied:";
+                                lore[3] = ChatColor.BLUE + "+1.5 Attack Damage";
+                            }else{
+                                lore[0] = ChatColor.BLUE + "Strength (3:00)";
+                                lore[1] = "";
+                                lore[2] = ChatColor.DARK_PURPLE + "When Applied:";
+                                lore[3] = ChatColor.BLUE + "+1.5 Attack Damage";
+                            }
+                        }break;
+
+                        }
+
+                    var item = new ItemBuilder(potion.getType()).addLore(lore)
+                            .meta(PotionMeta.class,
+                                    meta -> meta.setBasePotionData(new PotionData(type, extended, upgraded)))
+                            .flags(ItemFlag.HIDE_POTION_EFFECTS).build();
+
+                    potions[i] = item;
+                }
+                }
+
+            }
+            e.getContents().setStorageContents(potions);
+        }*/
+
+    }
+
     @EventHandler
     public void strengthFix(EntityDamageByEntityEvent e) {
         if (e.getDamager().getType() != EntityType.PLAYER || !instance.getGame().isStrengthNerf())
@@ -232,7 +307,7 @@ public class ConfigListener implements Listener {
     /*
      * BED NERF
      */
-    
+
     @EventHandler
     public void nerfBedExplosion(PlayerBedEnterEvent e) {
         if (instance.getGame().isBedsNerf() && e.getBed().getWorld().getEnvironment() == Environment.NETHER) {
@@ -243,6 +318,5 @@ public class ConfigListener implements Listener {
         }
 
     }
-
 
 }
