@@ -1,5 +1,7 @@
 package me.infinityz.minigame.commands;
 
+import java.text.DecimalFormat;
+
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
 import org.bukkit.command.CommandSender;
@@ -27,9 +29,13 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
     private @NonNull UHC instance;
     private String permissionDebug = "uhc.configchanges.see";
+    DecimalFormat numberFormat = new DecimalFormat("#0.0"); 
 
     @Default
     public void configCMD(CommandSender sender) {
+        var gui = instance.getGuiManager().getConfigGui();
+        gui.open((Player) sender);
+
         var color = ChatColor.of("#5EA95F");
         var color2 = ChatColor.of("#776FC4");
         var color3 = ChatColor.of("#A40A0A") + "" + ChatColor.BOLD;
@@ -83,16 +89,16 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
     }
 
     @CommandPermission("uhc.config.cmd")
-    @Subcommand("tears-drop-gold")
-    @CommandAlias("tears-drop-gold")
+    @Subcommand("tears")
+    @CommandAlias("tears")
     @CommandCompletion("@bool")
     public void tearsNerf(CommandSender sender, @Optional Boolean bool) {
         if (bool == null)
-            bool = !instance.getGame().isTearsDropGold();
+            bool = !instance.getGame().isTears();
 
-        instance.getGame().setTearsDropGold(bool);
+        instance.getGame().setTears(bool);
         var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
-        Bukkit.broadcast(senderName + ChatColor.YELLOW + "Tears drop gold has been set to: " + bool, permissionDebug);
+        Bukkit.broadcast(senderName + ChatColor.YELLOW + "Tears has been set to: " + bool, permissionDebug);
     }
 
     @CommandPermission("uhc.config.cmd")
@@ -200,9 +206,11 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
     @CommandAlias("apple-rate")
     public void changeApplerate(CommandSender sender, Double rate) {
         var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
+        var from = numberFormat.format(instance.getGame().getAppleRate());
+        var to = numberFormat.format(rate);
         Bukkit.broadcast(senderName + ChatColor.YELLOW + 
-                "Applerate has been changed from " + instance.getGame().getApplerate() + "% to " + rate + "%", permissionDebug);
-        instance.getGame().setApplerate(rate);
+                "Applerate has been changed from " + from + "% to " + to + "%", permissionDebug);
+        instance.getGame().setAppleRate(rate);
     }
 
     @CommandPermission("uhc.config.cmd")
@@ -210,9 +218,11 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
     @CommandAlias("flint-rate")
     public void changeFlintRate(CommandSender sender, Double rate) {
         var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
+        var from = numberFormat.format(instance.getGame().getFlintRate());
+        var to = numberFormat.format(rate);
         Bukkit.broadcast(senderName + ChatColor.YELLOW + 
-                "Flint Rate has been changed from " + instance.getGame().getFlintrate() + "% to " + rate + "%", permissionDebug);
-        instance.getGame().setFlintrate(rate);
+                "Flint Rate has been changed from " + from + "% to " + to + "%", permissionDebug);
+        instance.getGame().setFlintRate(rate);
     }
 
     @CommandPermission("staff.perm")
@@ -235,6 +245,19 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
         instance.getGame().setBeds(bool);
         var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
         Bukkit.broadcast(senderName + ChatColor.YELLOW + "Beds has been set to: " + bool, permissionDebug);
+    }
+
+    @CommandPermission("uhc.config.cmd")
+    @Subcommand("trident")
+    @CommandAlias("trident")
+    @CommandCompletion("@bool")
+    public void changeTrident(CommandSender sender, @Optional Boolean bool) {
+        if (bool == null)
+            bool = !instance.getGame().isTrident();
+
+        instance.getGame().setTrident(bool);
+        var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
+        Bukkit.broadcast(senderName + ChatColor.YELLOW + "Trident 100% drop has been set to: " + bool, permissionDebug);
     }
 
     @CommandPermission("uhc.config.cmd")

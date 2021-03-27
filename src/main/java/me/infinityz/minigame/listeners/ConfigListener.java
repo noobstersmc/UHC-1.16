@@ -58,7 +58,7 @@ public class ConfigListener implements Listener {
 
     @EventHandler
     public void onItemSpawn(ItemSpawnEvent e) {
-        if(!instance.getGame().isTearsDropGold()) return;
+        if(instance.getGame().isTears()) return;
         var stack = e.getEntity().getItemStack();
         var type = stack.getType();
         if (type == Material.GHAST_TEAR) {
@@ -145,9 +145,9 @@ public class ConfigListener implements Listener {
      */
     @EventHandler
     public void onLeaf(LeavesDecayEvent e) {
-        if (instance.getGame().getApplerate() == 0.5)
+        if (instance.getGame().getAppleRate() == 0.5)
             return;
-        if (Math.random() <= (instance.getGame().getApplerate() / 100)) {
+        if (Math.random() <= (instance.getGame().getAppleRate() / 100)) {
             e.getBlock().setType(Material.AIR);
             e.getBlock().getLocation().getWorld().dropItemNaturally(e.getBlock().getLocation(),
                     new ItemStack(Material.APPLE));
@@ -161,7 +161,7 @@ public class ConfigListener implements Listener {
     @EventHandler
     public void onFlint(BlockBreakEvent e) {
         var block = e.getBlock();
-        if (block.getType() == Material.GRAVEL && Math.random() <= (instance.getGame().getFlintrate() / 100)) {
+        if (block.getType() == Material.GRAVEL && Math.random() <= (instance.getGame().getFlintRate() / 100)) {
             e.setDropItems(false);
             Bukkit.getWorld(block.getWorld().getName().toString()).dropItemNaturally(block.getLocation(), new ItemStack(Material.FLINT));
         }
@@ -201,7 +201,7 @@ public class ConfigListener implements Listener {
 
     @EventHandler
     public void onDrownedDeath(EntityDeathEvent e) {
-        if (e.getEntity().getType() != EntityType.DROWNED)
+        if (!instance.getGame().isTrident() || e.getEntity().getType() != EntityType.DROWNED)
             return;
         var drowned = (Drowned) e.getEntity();
         var equipment = drowned.getEquipment();

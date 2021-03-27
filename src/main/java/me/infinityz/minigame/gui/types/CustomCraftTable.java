@@ -3,6 +3,8 @@ package me.infinityz.minigame.gui.types;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -28,7 +30,9 @@ public class CustomCraftTable extends CustomGui {
         for (ItemStack itemStack : items) {
             if(itemStack != null){
                 gui.setItem(i, itemStack, action->{
-                    UHC.getInstance().getGuiManager().getEnabledCraftingGui().getGui().open((Player) action.getWhoClicked());
+                    var player = (Player) action.getWhoClicked();
+                    player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
+                    UHC.getInstance().getGuiManager().getEnabledCraftingGui().getGui().open(player);
                 });
             }
             i++;

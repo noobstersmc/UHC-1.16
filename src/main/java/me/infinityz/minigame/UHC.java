@@ -238,6 +238,9 @@ public class UHC extends JavaPlugin {
 
         commandManager.registerCommand(new InventoriesCMD());
 
+        /* Initiliaze the game data */
+        game = new Game();
+
         /*
          * Initilialize all the managers
          */
@@ -253,8 +256,6 @@ public class UHC extends JavaPlugin {
         borderManager = new BorderManager(this);
         guiManager = new GuiManager(this);
 
-        /* Initiliaze the game data */
-        game = new Game();
         portalListeners = new PortalListeners(this);
         /* Install the config */
         processConfig();

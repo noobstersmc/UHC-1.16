@@ -37,7 +37,7 @@ public class LuckyLeaves extends IGamemode implements Listener {
 
     @EventHandler
     public void onLeaf(LeavesDecayEvent e) {
-        if (Math.random() <= ((instance.getGame().getApplerate()/2) / 100)) {
+        if (Math.random() <= ((instance.getGame().getAppleRate()/2) / 100)) {
             e.getBlock().setType(Material.AIR);
             e.getBlock().getLocation().getWorld().dropItemNaturally(e.getBlock().getLocation(),
                     new ItemStack(Material.GOLDEN_APPLE));

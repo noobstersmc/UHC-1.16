@@ -21,6 +21,7 @@ import lombok.Setter;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.condor.CondorAPI;
 import me.infinityz.minigame.enums.Stage;
+import me.infinityz.minigame.events.ConfigChangeEvent;
 import me.infinityz.minigame.gamemodes.types.UHCMeetup;
 import me.infinityz.minigame.gamemodes.types.UHCRun;
 import net.md_5.bungee.api.ChatColor;
@@ -77,8 +78,8 @@ public class Game {
     private boolean end = false;
     private boolean advancements = false;
     private boolean potions = true;
-    private double applerate = 0.80;
-    private double flintrate = 3.00;
+    private double appleRate = 0.80f;
+    private double flintRate = 3.00f;
     private int maxDisconnectTime = 600;
     /*Game Nerfs && Buffers*/
     private boolean beds = true;
@@ -87,9 +88,10 @@ public class Game {
     private boolean strengthNerf = true;
     private boolean criticalNerf = true;
     private boolean bedsNerf = true;
-    private boolean tearsDropGold = false;
+    private boolean tears = true;
     private boolean trades = true;
     private boolean horses = true;
+    private boolean trident = true;
     /* Game Loop */
     private int borderSize = 3000;
     private int borderCenter = 200;
@@ -239,6 +241,93 @@ public class Game {
 
     int getPlayersAlive(UHC instance) {
         return instance.getPlayerManager().getAlivePlayers();
+    }
+
+    public enum ConfigType {
+        APPLE_RATE,
+        FLINT_RATE,
+        NETHER,
+        ADVANCEMENTS,
+        HORSES,
+        BEDS,
+        BEDS_NERF,
+        POTIONS,
+        STRENGTH,
+        STRENGTH_NERF,
+        TRADES,
+        ITEMS_BURN,
+        TRIDENT,
+        TEARS
+    }
+
+    public void setAppleRate(double appleRate){
+        this.appleRate = appleRate;
+        Bukkit.getPluginManager().callEvent(new ConfigChangeEvent(ConfigType.APPLE_RATE));
+    }
+
+    public void setFlintRate(double flintRate){
+        this.flintRate = flintRate;
+        Bukkit.getPluginManager().callEvent(new ConfigChangeEvent(ConfigType.FLINT_RATE));
+    }
+
+    public void setNether(boolean nether){
+        this.nether = nether;
+        Bukkit.getPluginManager().callEvent(new ConfigChangeEvent(ConfigType.NETHER));
+    }
+
+    public void setAdvancements(boolean advancements){
+        this.advancements = advancements;
+        Bukkit.getPluginManager().callEvent(new ConfigChangeEvent(ConfigType.ADVANCEMENTS));
+    }
+
+    public void setHorses(boolean horses){
+        this.horses = horses;
+        Bukkit.getPluginManager().callEvent(new ConfigChangeEvent(ConfigType.HORSES));
+    }
+
+    public void setBeds(boolean beds){
+        this.beds = beds;
+        Bukkit.getPluginManager().callEvent(new ConfigChangeEvent(ConfigType.BEDS));
+    }
+
+    public void setBedsNerf(boolean bedsNerf){
+        this.bedsNerf = bedsNerf;
+        Bukkit.getPluginManager().callEvent(new ConfigChangeEvent(ConfigType.BEDS_NERF));
+    }
+
+    public void setPotions(boolean potions){
+        this.potions = potions;
+        Bukkit.getPluginManager().callEvent(new ConfigChangeEvent(ConfigType.POTIONS));
+    }
+
+    public void setStrength(boolean strength){
+        this.strength = strength;
+        Bukkit.getPluginManager().callEvent(new ConfigChangeEvent(ConfigType.STRENGTH));
+    }
+
+    public void setStrengthNerf(boolean strengthNerf){
+        this.strengthNerf = strengthNerf;
+        Bukkit.getPluginManager().callEvent(new ConfigChangeEvent(ConfigType.STRENGTH_NERF));
+    }
+
+    public void setTrades(boolean trades){
+        this.trades = trades;
+        Bukkit.getPluginManager().callEvent(new ConfigChangeEvent(ConfigType.TRADES));
+    }
+
+    public void setItemsBurn(boolean itemsBurn){
+        this.itemsBurn = itemsBurn;
+        Bukkit.getPluginManager().callEvent(new ConfigChangeEvent(ConfigType.ITEMS_BURN));
+    }
+
+    public void setTrident(boolean trident){
+        this.trident = trident;
+        Bukkit.getPluginManager().callEvent(new ConfigChangeEvent(ConfigType.TRIDENT));
+    }
+
+    public void setTears(boolean tears){
+        this.tears = tears;
+        Bukkit.getPluginManager().callEvent(new ConfigChangeEvent(ConfigType.TEARS));
     }
 
 }

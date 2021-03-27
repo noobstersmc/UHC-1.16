@@ -98,16 +98,16 @@ public class GlobalListener implements Listener {
     }
 
     @EventHandler
-    public void login(PlayerLoginEvent e){
+    public void login(PlayerLoginEvent e) {
         var player = e.getPlayer();
-        if(player.hasPermission("staff.perm") || player.hasPermission("group.host"))
+        if (player.hasPermission("staff.perm") || player.hasPermission("group.host"))
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "whitelist add " + player.getName().toString());
     }
 
     @EventHandler
     public void joinMessage(PlayerJoinEvent e) {
         var player = e.getPlayer();
-        
+
         e.setJoinMessage("");
 
         player.setPlayerListHeader(Game.getTablistHeader());
@@ -129,14 +129,17 @@ public class GlobalListener implements Listener {
      */
     @EventHandler
     public void onNetherDisabled(NetherDisabledEvent e) {
-        var worldToTeleport = Bukkit.getWorld("world");
-        var radius = (int) worldToTeleport.getWorldBorder().getSize() / 2;
-        // Teleport all players currently in the nether to the overworld.
-        Bukkit.getOnlinePlayers().stream().filter(player -> player.getWorld().getEnvironment() == Environment.NETHER)
-                .forEach(netherPlayer -> netherPlayer.teleportAsync(
-                        ChunksManager.centerLocation(ChunksManager.findScatterLocation(worldToTeleport, radius))));
-        // Mensaje para todos.
-        Bukkit.broadcastMessage(ChatColor.of("#2be49c") + "The Nether has been disabled.");
+        if (instance.getGameStage() == Stage.INGAME) {
+            var worldToTeleport = Bukkit.getWorld("world");
+            var radius = (int) worldToTeleport.getWorldBorder().getSize() / 2;
+            // Teleport all players currently in the nether to the overworld.
+            Bukkit.getOnlinePlayers().stream()
+                    .filter(player -> player.getWorld().getEnvironment() == Environment.NETHER)
+                    .forEach(netherPlayer -> netherPlayer.teleportAsync(
+                            ChunksManager.centerLocation(ChunksManager.findScatterLocation(worldToTeleport, radius))));
+            // Mensaje para todos.
+            Bukkit.broadcastMessage(ChatColor.of("#2be49c") + "The Nether has been disabled.");
+        }
 
     }
 
@@ -197,7 +200,7 @@ public class GlobalListener implements Listener {
 
     }
 
-    public void showRules(){
+    public void showRules() {
         var rules = instance.getGame().getRules();
         var count = 0;
         var chain = UHC.newChain().sync(() -> {
@@ -206,7 +209,7 @@ public class GlobalListener implements Listener {
         });
 
         while (count <= rules.length) {
-            if(count == rules.length){
+            if (count == rules.length) {
                 chain.delay(60).sync(() -> {
                     Bukkit.broadcastMessage("");
                     Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "globalmute false");
