@@ -86,8 +86,20 @@ public class ConfigGui extends CustomGui {
             if(action.getClick() == ClickType.RIGHT && action.getWhoClicked().hasPermission(permissionConfig)){
 
                 var player = (Player) action.getWhoClicked();
-                Bukkit.dispatchCommand(player, "config trades "+ !instance.getGame().isTrades());
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, SoundCategory.VOICE, 1.0f, 0.1f);
+                
+                var confirmationGui = new ConfirmationGui(new RapidInv(InventoryType.HOPPER, "Confirmation"), 
+                
+                confirm ->{
+                    Bukkit.dispatchCommand(player, "config trades "+ !instance.getGame().isTrades());
+                    gui.open(player);
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_FLUTE, SoundCategory.VOICE, 1.0f, 1);
+                }, deny->{
+                    gui.open(player);
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO, 1, 0.6f);
+                });
+
+                confirmationGui.open(player);
                 
             }else{
                 //gui principal
@@ -106,8 +118,20 @@ public class ConfigGui extends CustomGui {
             if(action.getClick() == ClickType.RIGHT && action.getWhoClicked().hasPermission(permissionConfig)){
 
                 var player = (Player) action.getWhoClicked();
-                Bukkit.dispatchCommand(player, "config tears "+ !instance.getGame().isTears());
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, SoundCategory.VOICE, 1.0f, 0.1f);
+                
+                var confirmationGui = new ConfirmationGui(new RapidInv(InventoryType.HOPPER, "Confirmation"), 
+                
+                confirm ->{
+                    Bukkit.dispatchCommand(player, "config tears "+ !instance.getGame().isTears());
+                    gui.open(player);
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_FLUTE, SoundCategory.VOICE, 1.0f, 1);
+                }, deny->{
+                    gui.open(player);
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO, 1, 0.6f);
+                });
+
+                confirmationGui.open(player);
                 
             }else{
                 //gui principal
@@ -126,8 +150,21 @@ public class ConfigGui extends CustomGui {
             if(action.getClick() == ClickType.RIGHT && action.getWhoClicked().hasPermission(permissionConfig)){
 
                 var player = (Player) action.getWhoClicked();
-                Bukkit.dispatchCommand(player, "config items-burn "+ !instance.getGame().isItemsBurn());
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, SoundCategory.VOICE, 1.0f, 0.1f);
+                
+                var confirmationGui = new ConfirmationGui(new RapidInv(InventoryType.HOPPER, "Confirmation"), 
+                
+                confirm ->{
+                    Bukkit.dispatchCommand(player, "config items-burn "+ !instance.getGame().isItemsBurn());
+                    gui.open(player);
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_FLUTE, SoundCategory.VOICE, 1.0f, 1);
+                }, deny->{
+                    gui.open(player);
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO, 1, 0.6f);
+                });
+
+                confirmationGui.open(player);
+                
                 
             }else{
                 //gui principal
@@ -146,8 +183,20 @@ public class ConfigGui extends CustomGui {
             if(action.getClick() == ClickType.RIGHT && action.getWhoClicked().hasPermission(permissionConfig)){
 
                 var player = (Player) action.getWhoClicked();
-                Bukkit.dispatchCommand(player, "config trident "+ !instance.getGame().isTrident());
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, SoundCategory.VOICE, 1.0f, 0.1f);
+                
+                var confirmationGui = new ConfirmationGui(new RapidInv(InventoryType.HOPPER, "Confirmation"), 
+                
+                confirm ->{
+                    Bukkit.dispatchCommand(player, "config trident "+ !instance.getGame().isTrident());
+                    gui.open(player);
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_FLUTE, SoundCategory.VOICE, 1.0f, 1);
+                }, deny->{
+                    gui.open(player);
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO, 1, 0.6f);
+                });
+
+                confirmationGui.open(player);
                 
             }else{
                 //gui principal
@@ -166,8 +215,20 @@ public class ConfigGui extends CustomGui {
             if(action.getClick() == ClickType.RIGHT && action.getWhoClicked().hasPermission(permissionConfig)){
 
                 var player = (Player) action.getWhoClicked();
-                Bukkit.dispatchCommand(player, "config potions "+ !instance.getGame().isPotions());
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, SoundCategory.VOICE, 1.0f, 0.1f);
+                
+                var confirmationGui = new ConfirmationGui(new RapidInv(InventoryType.HOPPER, "Confirmation"), 
+                
+                confirm ->{
+                    Bukkit.dispatchCommand(player, "config potions "+ !instance.getGame().isPotions());
+                    gui.open(player);
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_FLUTE, SoundCategory.VOICE, 1.0f, 1);
+                }, deny->{
+                    gui.open(player);
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO, 1, 0.6f);
+                });
+
+                confirmationGui.open(player);
                 
             }else{
                 //gui principal
@@ -188,8 +249,20 @@ public class ConfigGui extends CustomGui {
             if(action.getClick() == ClickType.RIGHT && action.getWhoClicked().hasPermission(permissionConfig)){
 
                 var player = (Player) action.getWhoClicked();
-                Bukkit.dispatchCommand(player, "config strength-nerf "+ !instance.getGame().isStrengthNerf());
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, SoundCategory.VOICE, 1.0f, 0.1f);
+                
+                var confirmationGui = new ConfirmationGui(new RapidInv(InventoryType.HOPPER, "Confirmation"), 
+                
+                confirm ->{
+                    Bukkit.dispatchCommand(player, "config strength-nerf "+ !instance.getGame().isStrengthNerf());
+                    gui.open(player);
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_FLUTE, SoundCategory.VOICE, 1.0f, 1);
+                }, deny->{
+                    gui.open(player);
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO, 1, 0.6f);
+                });
+
+                confirmationGui.open(player);
                 
             }else{
                 //gui principal
@@ -209,8 +282,20 @@ public class ConfigGui extends CustomGui {
             if(action.getClick() == ClickType.RIGHT && action.getWhoClicked().hasPermission(permissionConfig)){
 
                 var player = (Player) action.getWhoClicked();
-                Bukkit.dispatchCommand(player, "config strength "+ !instance.getGame().isStrength());
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, SoundCategory.VOICE, 1.0f, 0.1f);
+                
+                var confirmationGui = new ConfirmationGui(new RapidInv(InventoryType.HOPPER, "Confirmation"), 
+                
+                confirm ->{
+                    Bukkit.dispatchCommand(player, "config strength "+ !instance.getGame().isStrength());
+                    gui.open(player);
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_FLUTE, SoundCategory.VOICE, 1.0f, 1);
+                }, deny->{
+                    gui.open(player);
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO, 1, 0.6f);
+                });
+
+                confirmationGui.open(player);
                 
             }else{
                 //gui principal
@@ -229,8 +314,20 @@ public class ConfigGui extends CustomGui {
             if(action.getClick() == ClickType.RIGHT && action.getWhoClicked().hasPermission(permissionConfig)){
 
                 var player = (Player) action.getWhoClicked();
-                Bukkit.dispatchCommand(player, "config beds-nerf "+ !instance.getGame().isBedsNerf());
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, SoundCategory.VOICE, 1.0f, 0.1f);
+                
+                var confirmationGui = new ConfirmationGui(new RapidInv(InventoryType.HOPPER, "Confirmation"), 
+                
+                confirm ->{
+                    Bukkit.dispatchCommand(player, "config beds-nerf "+ !instance.getGame().isBedsNerf());
+                    gui.open(player);
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_FLUTE, SoundCategory.VOICE, 1.0f, 1);
+                }, deny->{
+                    gui.open(player);
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO, 1, 0.6f);
+                });
+
+                confirmationGui.open(player);
                 
             }else{
                 //gui principal
@@ -249,8 +346,20 @@ public class ConfigGui extends CustomGui {
             if(action.getClick() == ClickType.RIGHT && action.getWhoClicked().hasPermission(permissionConfig)){
 
                 var player = (Player) action.getWhoClicked();
-                Bukkit.dispatchCommand(player, "config beds "+ !instance.getGame().isBeds());
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, SoundCategory.VOICE, 1.0f, 0.1f);
+                
+                var confirmationGui = new ConfirmationGui(new RapidInv(InventoryType.HOPPER, "Confirmation"), 
+                
+                confirm ->{
+                    Bukkit.dispatchCommand(player, "config beds "+ !instance.getGame().isBeds());
+                    gui.open(player);
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_FLUTE, SoundCategory.VOICE, 1.0f, 1);
+                }, deny->{
+                    gui.open(player);
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO, 1, 0.6f);
+                });
+
+                confirmationGui.open(player);
                 
             }else{
                 //gui principal
@@ -269,8 +378,20 @@ public class ConfigGui extends CustomGui {
             if(action.getClick() == ClickType.RIGHT && action.getWhoClicked().hasPermission(permissionConfig)){
 
                 var player = (Player) action.getWhoClicked();
-                Bukkit.dispatchCommand(player, "config horses "+ !instance.getGame().isHorses());
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, SoundCategory.VOICE, 1.0f, 0.1f);
+                
+                var confirmationGui = new ConfirmationGui(new RapidInv(InventoryType.HOPPER, "Confirmation"), 
+                
+                confirm ->{
+                    Bukkit.dispatchCommand(player, "config horses "+ !instance.getGame().isHorses());
+                    gui.open(player);
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_FLUTE, SoundCategory.VOICE, 1.0f, 1);
+                }, deny->{
+                    gui.open(player);
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO, 1, 0.6f);
+                });
+
+                confirmationGui.open(player);
                 
             }else{
                 //gui principal
@@ -289,8 +410,20 @@ public class ConfigGui extends CustomGui {
             if(action.getClick() == ClickType.RIGHT && action.getWhoClicked().hasPermission(permissionConfig)){
 
                 var player = (Player) action.getWhoClicked();
-                Bukkit.dispatchCommand(player, "config advancements "+ !instance.getGame().isAdvancements());
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, SoundCategory.VOICE, 1.0f, 0.1f);
+                
+                var confirmationGui = new ConfirmationGui(new RapidInv(InventoryType.HOPPER, "Confirmation"), 
+                
+                confirm ->{
+                    Bukkit.dispatchCommand(player, "config advancements "+ !instance.getGame().isAdvancements());
+                    gui.open(player);
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_FLUTE, SoundCategory.VOICE, 1.0f, 1);
+                }, deny->{
+                    gui.open(player);
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO, 1, 0.6f);
+                });
+
+                confirmationGui.open(player);
                 
             }else{
                 //gui principal
@@ -309,8 +442,20 @@ public class ConfigGui extends CustomGui {
             if(action.getClick() == ClickType.RIGHT && action.getWhoClicked().hasPermission(permissionConfig)){
 
                 var player = (Player) action.getWhoClicked();
-                Bukkit.dispatchCommand(player, "config nether "+ !instance.getGame().isNether());
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, SoundCategory.VOICE, 1.0f, 0.1f);
+                
+                var confirmationGui = new ConfirmationGui(new RapidInv(InventoryType.HOPPER, "Confirmation"), 
+                
+                confirm ->{
+                    Bukkit.dispatchCommand(player, "config nether "+ !instance.getGame().isNether());
+                    gui.open(player);
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_FLUTE, SoundCategory.VOICE, 1.0f, 1);
+                }, deny->{
+                    gui.open(player);
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO, 1, 0.6f);
+                });
+
+                confirmationGui.open(player);
                 
             }else{
                 //gui principal
