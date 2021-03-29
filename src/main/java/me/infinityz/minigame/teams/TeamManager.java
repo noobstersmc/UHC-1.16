@@ -18,6 +18,8 @@ import gnu.trove.map.hash.THashMap;
 import lombok.Getter;
 import lombok.Setter;
 import me.infinityz.minigame.UHC;
+import me.infinityz.minigame.events.ConfigChangeEvent;
+import me.infinityz.minigame.game.Game.ConfigType;
 import me.infinityz.minigame.players.UHCPlayer;
 import me.infinityz.minigame.teams.commands.TeamCMD;
 import me.infinityz.minigame.teams.events.TeamInviteExpireEvent;
@@ -39,7 +41,7 @@ public class TeamManager {
             .removalListener((key, value, cause) -> Bukkit.getPluginManager()
                     .callEvent(new TeamInviteExpireEvent((TeamInvite) value, cause, true)))
             .expireAfterWrite(10, TimeUnit.SECONDS).build(entry -> new TeamInvite(null, null, null));
-    private @Getter @Setter int teamSize = 1;
+    private @Getter int teamSize = 1;
     private @Getter @Setter boolean teamManagement = false;
     private @Getter @Setter boolean broacastColor = true;
     private @Getter @Setter boolean showPrefix = true;
@@ -74,6 +76,11 @@ public class TeamManager {
 
     public boolean isTeams() {
         return teamSize > 1;
+    }
+
+    public void setTeamSize(int teamSize){
+        this.teamSize = teamSize;
+        Bukkit.getPluginManager().callEvent(new ConfigChangeEvent(ConfigType.TEAM_SIZE));
     }
 
     public TeamInvite getTeamInviteForSender(UUID sender) {

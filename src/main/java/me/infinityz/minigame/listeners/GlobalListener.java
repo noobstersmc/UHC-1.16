@@ -3,6 +3,7 @@ package me.infinityz.minigame.listeners;
 import java.util.stream.Collectors;
 
 import com.destroystokyo.paper.event.player.PlayerAdvancementCriterionGrantEvent;
+import com.destroystokyo.paper.event.player.PlayerRecipeBookClickEvent;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -46,6 +47,12 @@ public class GlobalListener implements Listener {
 
     public GlobalListener(UHC instance) {
         this.instance = instance;
+    }
+
+    @EventHandler
+    public void onDiscoverBook(PlayerRecipeBookClickEvent e){
+        e.setCancelled(true);
+        instance.getGuiManager().getMainGui().open(e.getPlayer());
     }
 
     @EventHandler

@@ -2,6 +2,7 @@ package me.infinityz.minigame.gui;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryType;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -11,19 +12,14 @@ import me.infinityz.minigame.crafting.events.CustomRecipeRemovedEvent;
 import me.infinityz.minigame.events.ConfigChangeEvent;
 import me.infinityz.minigame.gamemodes.events.GamemodeDisabledEvent;
 import me.infinityz.minigame.gamemodes.events.GamemodeEnabledEvent;
-import me.infinityz.minigame.gui.types.ConfigGui;
-import me.infinityz.minigame.gui.types.EnabledCrafting;
-import me.infinityz.minigame.gui.types.EnabledScenarios;
+import me.infinityz.minigame.gui.types.MainGui;
 import net.noobsters.kern.paper.guis.RapidInv;
 
 public class GuiManager implements Listener {
 
     UHC instance;
 
-    private @Getter @Setter EnabledScenarios enabledScenariosGui = new EnabledScenarios(new RapidInv(9 * 2, "Scenarios"));
-    private @Getter @Setter EnabledCrafting enabledCraftingGui = new EnabledCrafting(new RapidInv(9 * 2, "Crafting"));
-    private @Getter @Setter ConfigGui configGui = new ConfigGui(new RapidInv(9 * 2, "Config"));
-
+    private @Getter @Setter MainGui mainGui = new MainGui(new RapidInv(InventoryType.HOPPER, "UHC Game"));
 
     public GuiManager(UHC instance) {
         this.instance = instance;
@@ -33,28 +29,52 @@ public class GuiManager implements Listener {
 
     @EventHandler
     public void scenarioEnable(GamemodeEnabledEvent e) {
-        enabledScenariosGui.update();
+        mainGui.getEnabledScenariosGui().update();
+        mainGui.updateGame();
     }
 
     @EventHandler
     public void scenarioDisable(GamemodeDisabledEvent e) {
-        enabledScenariosGui.update();
+        mainGui.getEnabledScenariosGui().update();
+        mainGui.updateGame();
     }
 
     @EventHandler
     public void craftAdded(CustomRecipeAddedEvent e){
-        enabledCraftingGui.update();
+        mainGui.getEnabledCraftingGui().update();
+        mainGui.updateCrafting();
     }
 
     @EventHandler
     public void craftRemoved(CustomRecipeRemovedEvent e){
-        enabledCraftingGui.update();
+        mainGui.getEnabledCraftingGui().update();
+        mainGui.updateCrafting();
     }
 
     @EventHandler
     public void configChange(ConfigChangeEvent e){
+        mainGui.updateSettings();
+        mainGui.updateGameLoop();
+        var configGui = mainGui.getConfigGui();
+        var gameLoopGui = mainGui.getGameLoopGui();
         switch (e.getConfigType()) {
-            
+
+            case PVP_TIME: gameLoopGui.updatePvpTime();
+                break;
+            case HEAL_TIME: gameLoopGui.updateHealTime();
+                break;
+            case BORDER_TIME: gameLoopGui.updateBorderTime();
+                break;
+            case BORDER_SIZE: gameLoopGui.updateBorderSize();
+                break;
+            case BORDER_CENTER_TIME: gameLoopGui.updateBorderCenterTime();
+                break;
+            case TEAM_SIZE: mainGui.updateGame();
+                break;
+            case SLOTS:
+            case HOSTNAME:
+            case GAME: mainGui.updateInfo();
+                break;
             case APPLE_RATE: configGui.updateAppleRate();
                 break;
             case FLINT_RATE: configGui.updateFlintRate();

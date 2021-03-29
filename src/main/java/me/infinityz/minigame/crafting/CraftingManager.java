@@ -92,7 +92,7 @@ public class CraftingManager implements Listener {
         @Default
         public void crafting(Player sender) {
             /* CRAFTING ENABLED GUI */
-            instance.getGuiManager().getEnabledCraftingGui().open(sender);
+            instance.getGuiManager().getMainGui().open(sender);
         }
 
         @CommandPermission("crafting.cmd")

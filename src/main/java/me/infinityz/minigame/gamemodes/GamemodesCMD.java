@@ -27,7 +27,7 @@ public class GamemodesCMD extends BaseCommand {
     @Default
     public void scenarios(CommandSender sender) {
         /* SCENARIOS ENABLED GUI */
-        instance.getGuiManager().getEnabledScenariosGui().open((Player) sender);
+        instance.getGuiManager().getMainGui().getEnabledScenariosGui().open((Player) sender);
     }
 
     @Subcommand("toggle")

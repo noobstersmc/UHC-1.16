@@ -130,7 +130,7 @@ public class GameLoopCMD extends BaseCommand {
         instance.getGame().setBorderSize(newBorderSize);
         Bukkit.getWorlds().forEach(it -> it.getWorldBorder().setSize(newBorderSize));
         var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
-        Bukkit.broadcast(senderName + ChatColor.YELLOW + "Border size changed " + newBorderSize + " blocks of diameter.", permissionDebug);
+        Bukkit.broadcast(senderName + ChatColor.YELLOW + "Border size changed to " + newBorderSize + " blocks of diameter.", permissionDebug);
     }
 
     @Subcommand("finalbordertime")

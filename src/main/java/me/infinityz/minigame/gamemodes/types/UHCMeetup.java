@@ -94,7 +94,7 @@ public class UHCMeetup extends IGamemode implements Listener {
         game.setBorderCenter(100);
         game.setDMgrace(120);
         game.setAntiMining(true);
-        game.setUhcslots(meetupSlots);
+        game.setUhcSlots(meetupSlots);
 
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "bordersize 300");
 

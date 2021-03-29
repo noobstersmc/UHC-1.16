@@ -6,7 +6,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -21,7 +24,9 @@ import net.noobsters.kern.paper.guis.RapidInv;
 
 public class EnabledCrafting extends CustomGui {
 
+    UHC instance = UHC.getInstance();
     HashMap<String, CustomCraftTable> tables = new HashMap<>();
+    String permissionConfig = "uhc.config.cmd";
 
     public EnabledCrafting(RapidInv gui) {
         super(gui);
@@ -50,7 +55,7 @@ public class EnabledCrafting extends CustomGui {
     @Override
     public void update() {
 
-        var crafts = UHC.getInstance().getCraftingManager().getAllRecipes().entrySet().stream()
+        var crafts = instance.getCraftingManager().getAllRecipes().entrySet().stream()
                 .filter(recipe -> recipe.getValue().isEnabled()).collect(Collectors.toList());
 
         var gui = getGui();
@@ -60,8 +65,11 @@ public class EnabledCrafting extends CustomGui {
             var result = new ItemBuilder(Material.CRAFTING_TABLE).name(ChatColor.YELLOW + "Vanilla Crafts")
                     .flags(ItemFlag.HIDE_ATTRIBUTES).build();
 
-            gui.setItem(0, result, action -> {
-                //tables.get(key).open((Player) action.getWhoClicked()); open config gui
+            gui.setItem(0, result, action->{
+                var player = (Player) action.getWhoClicked();
+                instance.getGuiManager().getMainGui().open(player);
+                player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
+                
             });
 
         } else if (!crafts.isEmpty()) {
@@ -75,9 +83,17 @@ public class EnabledCrafting extends CustomGui {
                 var result = new ItemBuilder(craft.getValue().getRecipe().getResult()).name(ChatColor.YELLOW + name)
                         .flags(ItemFlag.HIDE_ATTRIBUTES).build();
 
-                gui.setItem(i, result, action -> {
-                    tables.get(name).open((Player) action.getWhoClicked());
+                gui.setItem(i, result, action->{
+                    var player = (Player) action.getWhoClicked();
+                    if(action.getClick() == ClickType.RIGHT){
+                        tables.get(name).open(player);
+                    }else{
+                        instance.getGuiManager().getMainGui().open(player);
+                        player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
+                    }
+                    
                 });
+                
 
                 i++;
             }

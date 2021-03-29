@@ -57,19 +57,18 @@ public class Game {
     private String UHCWorld = "world";
     private boolean whitelistEnabled = false;
     private HashMap<String, String> whitelist = new HashMap<>();
-    private String[] rules = new String[] { 
-        ChatColor.YELLOW + "UHC RULES:",
-        ChatColor.AQUA + "1. " + ChatColor.WHITE + "Stalking is not allowed. ",
-        ChatColor.AQUA + "2. " + ChatColor.WHITE + "Stealing is not allowed. ",
-        ChatColor.AQUA + "3. " + ChatColor.WHITE + "iPvP is not allowed. ",
-        ChatColor.AQUA + "4. " + ChatColor.WHITE + "Nether portal camping is not allowed.",
-        ChatColor.AQUA + "5. " + ChatColor.WHITE + "Nether portal trapping is not allowed.",
-        ChatColor.AQUA + "6. " + ChatColor.WHITE + "CrossTeam, Truce or Teaming someone else is not your team is not allowed.",
-        ChatColor.AQUA + "7. " + ChatColor.WHITE + "Meetup starts when border reaches 500 blocks of radius.",
-        ChatColor.AQUA + "8. " + ChatColor.WHITE + "SkyBases are not allowed at meetup.",
-        ChatColor.AQUA + "9. " + ChatColor.WHITE + "Mining is not allowed at meetup.",
-        ChatColor.AQUA + "Good Luck!"
-    };
+    private String[] rules = new String[] { ChatColor.YELLOW + "UHC RULES:",
+            ChatColor.AQUA + "1. " + ChatColor.WHITE + "Stalking is not allowed. ",
+            ChatColor.AQUA + "2. " + ChatColor.WHITE + "Stealing is not allowed. ",
+            ChatColor.AQUA + "3. " + ChatColor.WHITE + "iPvP is not allowed. ",
+            ChatColor.AQUA + "4. " + ChatColor.WHITE + "Nether portal camping is not allowed.",
+            ChatColor.AQUA + "5. " + ChatColor.WHITE + "Nether portal trapping is not allowed.",
+            ChatColor.AQUA + "6. " + ChatColor.WHITE
+                    + "CrossTeam, Truce or Teaming someone else is not your team is not allowed.",
+            ChatColor.AQUA + "7. " + ChatColor.WHITE + "Meetup starts when border reaches 500 blocks of radius.",
+            ChatColor.AQUA + "8. " + ChatColor.WHITE + "SkyBases are not allowed at meetup.",
+            ChatColor.AQUA + "9. " + ChatColor.WHITE + "Mining is not allowed at meetup.",
+            ChatColor.AQUA + "Good Luck!" };
     /* Game config */
     private boolean autoDestruction = true;
     private boolean deathMatch = false;
@@ -81,12 +80,11 @@ public class Game {
     private double appleRate = 0.80f;
     private double flintRate = 3.00f;
     private int maxDisconnectTime = 600;
-    /*Game Nerfs && Buffers*/
+    /* Game Nerfs && Buffers */
     private boolean beds = true;
     private boolean strength = true;
     private boolean itemsBurn = true;
     private boolean strengthNerf = true;
-    private boolean criticalNerf = true;
     private boolean bedsNerf = true;
     private boolean tears = true;
     private boolean trades = true;
@@ -113,7 +111,7 @@ public class Game {
     int spectators;
     int playersOnline;
     String teamSize;
-    String hostname;
+    String hostname = "Noobsters";
     String ip = obtainPublicIP() + ":" + Bukkit.getServer().getPort();
 
     @Override
@@ -246,86 +244,142 @@ public class Game {
     public enum ConfigType {
         APPLE_RATE,
         FLINT_RATE,
-        NETHER,
-        ADVANCEMENTS,
-        HORSES,
-        BEDS,
-        BEDS_NERF,
-        POTIONS,
-        STRENGTH,
-        STRENGTH_NERF,
+        NETHER, 
+        ADVANCEMENTS, 
+        HORSES, BEDS, 
+        BEDS_NERF, 
+        POTIONS, 
+        STRENGTH, 
+        STRENGTH_NERF, 
         TRADES,
-        ITEMS_BURN,
-        TRIDENT,
-        TEARS
+        ITEMS_BURN, 
+        TRIDENT, 
+        TEARS,
+
+        GAME, 
+        HOSTNAME, 
+        SLOTS, 
+        TEAM_SIZE, 
+        BORDER_SIZE, 
+        BORDER_CENTER, 
+        BORDER_TIME, 
+        BORDER_CENTER_TIME,
+        PVP_TIME,
+        HEAL_TIME
     }
 
-    public void setAppleRate(double appleRate){
+    //change privategame to enum
+    public void setPrivateGame(boolean privateGame) {
+        this.privateGame = privateGame;
+        Bukkit.getPluginManager().callEvent(new ConfigChangeEvent(ConfigType.GAME));
+    }
+
+    public void setHostname(String hostname) {
+        this.hostname = hostname;
+        Bukkit.getPluginManager().callEvent(new ConfigChangeEvent(ConfigType.HOSTNAME));
+    }
+
+    public void setUhcSlots(int uhcslots) {
+        this.uhcslots = uhcslots;
+        Bukkit.getPluginManager().callEvent(new ConfigChangeEvent(ConfigType.SLOTS));
+    }
+
+    public void setBorderSize(int borderSize) {
+        this.borderSize = borderSize;
+        Bukkit.getPluginManager().callEvent(new ConfigChangeEvent(ConfigType.BORDER_SIZE));
+    }
+
+    public void setBorderCenter(int borderCenter) {
+        this.borderCenter = borderCenter;
+        Bukkit.getPluginManager().callEvent(new ConfigChangeEvent(ConfigType.BORDER_CENTER));
+    }
+
+    public void setBorderTime(int borderTime) {
+        this.borderTime = borderTime;
+        Bukkit.getPluginManager().callEvent(new ConfigChangeEvent(ConfigType.BORDER_TIME));
+    }
+
+    public void setBorderCenterTime(int borderCenterTime) {
+        this.borderCenterTime = borderCenterTime;
+        Bukkit.getPluginManager().callEvent(new ConfigChangeEvent(ConfigType.BORDER_CENTER_TIME));
+    }
+
+    public void setPvpTime(int pvpTime) {
+        this.pvpTime = pvpTime;
+        Bukkit.getPluginManager().callEvent(new ConfigChangeEvent(ConfigType.PVP_TIME));
+    }
+
+    public void setHealTime(int healTime) {
+        this.healTime = healTime;
+        Bukkit.getPluginManager().callEvent(new ConfigChangeEvent(ConfigType.HEAL_TIME));
+    }
+
+    public void setAppleRate(double appleRate) {
         this.appleRate = appleRate;
         Bukkit.getPluginManager().callEvent(new ConfigChangeEvent(ConfigType.APPLE_RATE));
     }
 
-    public void setFlintRate(double flintRate){
+    public void setFlintRate(double flintRate) {
         this.flintRate = flintRate;
         Bukkit.getPluginManager().callEvent(new ConfigChangeEvent(ConfigType.FLINT_RATE));
     }
 
-    public void setNether(boolean nether){
+    public void setNether(boolean nether) {
         this.nether = nether;
         Bukkit.getPluginManager().callEvent(new ConfigChangeEvent(ConfigType.NETHER));
     }
 
-    public void setAdvancements(boolean advancements){
+    public void setAdvancements(boolean advancements) {
         this.advancements = advancements;
         Bukkit.getPluginManager().callEvent(new ConfigChangeEvent(ConfigType.ADVANCEMENTS));
     }
 
-    public void setHorses(boolean horses){
+    public void setHorses(boolean horses) {
         this.horses = horses;
         Bukkit.getPluginManager().callEvent(new ConfigChangeEvent(ConfigType.HORSES));
     }
 
-    public void setBeds(boolean beds){
+    public void setBeds(boolean beds) {
         this.beds = beds;
         Bukkit.getPluginManager().callEvent(new ConfigChangeEvent(ConfigType.BEDS));
     }
 
-    public void setBedsNerf(boolean bedsNerf){
+    public void setBedsNerf(boolean bedsNerf) {
         this.bedsNerf = bedsNerf;
         Bukkit.getPluginManager().callEvent(new ConfigChangeEvent(ConfigType.BEDS_NERF));
     }
 
-    public void setPotions(boolean potions){
+    public void setPotions(boolean potions) {
         this.potions = potions;
         Bukkit.getPluginManager().callEvent(new ConfigChangeEvent(ConfigType.POTIONS));
     }
 
-    public void setStrength(boolean strength){
+    public void setStrength(boolean strength) {
         this.strength = strength;
         Bukkit.getPluginManager().callEvent(new ConfigChangeEvent(ConfigType.STRENGTH));
     }
 
-    public void setStrengthNerf(boolean strengthNerf){
+    public void setStrengthNerf(boolean strengthNerf) {
         this.strengthNerf = strengthNerf;
         Bukkit.getPluginManager().callEvent(new ConfigChangeEvent(ConfigType.STRENGTH_NERF));
     }
 
-    public void setTrades(boolean trades){
+    public void setTrades(boolean trades) {
         this.trades = trades;
         Bukkit.getPluginManager().callEvent(new ConfigChangeEvent(ConfigType.TRADES));
     }
 
-    public void setItemsBurn(boolean itemsBurn){
+    public void setItemsBurn(boolean itemsBurn) {
         this.itemsBurn = itemsBurn;
         Bukkit.getPluginManager().callEvent(new ConfigChangeEvent(ConfigType.ITEMS_BURN));
     }
 
-    public void setTrident(boolean trident){
+    public void setTrident(boolean trident) {
         this.trident = trident;
         Bukkit.getPluginManager().callEvent(new ConfigChangeEvent(ConfigType.TRIDENT));
     }
 
-    public void setTears(boolean tears){
+    public void setTears(boolean tears) {
         this.tears = tears;
         Bukkit.getPluginManager().callEvent(new ConfigChangeEvent(ConfigType.TEARS));
     }

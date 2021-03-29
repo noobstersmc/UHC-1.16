@@ -33,7 +33,7 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
 
     @Default
     public void configCMD(CommandSender sender) {
-        var gui = instance.getGuiManager().getConfigGui();
+        var gui = instance.getGuiManager().getMainGui();
         gui.open((Player) sender);
 
         var color = ChatColor.of("#5EA95F");
@@ -132,7 +132,7 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "whitelist off");
         }
         var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
-        Bukkit.broadcast(senderName + ChatColor.YELLOW + "Private Game changed to: " + bool, permissionDebug);
+        Bukkit.broadcast(senderName + ChatColor.YELLOW + "Game changed to: " + (bool ? "Private" : "Public"), permissionDebug);
     }
 
     @CommandPermission("uhc.config.cmd")
@@ -229,7 +229,7 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
     @Subcommand("setslots")
     @CommandAlias("slots||setslots||maxslots")
     public void changeSlots(CommandSender sender, Integer newSlots) {
-        instance.getGame().setUhcslots(newSlots);
+        instance.getGame().setUhcSlots(newSlots);
         var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
         Bukkit.broadcast(senderName + ChatColor.YELLOW + "Slots set to: " + newSlots, permissionDebug);
     }

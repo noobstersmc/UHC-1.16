@@ -36,9 +36,11 @@ public class ConfigGui extends CustomGui {
             var player = (Player) action.getWhoClicked();
             if(instance.getGame().getAppleRate() != appleRateSwitch.getValue()){
                 Bukkit.dispatchCommand(player, "config apple-rate "+ appleRateSwitch.getValue());
+                player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_FLUTE, SoundCategory.VOICE, 1.0f, 1);
+            }else{
+                player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
             }
             getGui().open(player);
-            player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
             
         });
 
@@ -47,9 +49,11 @@ public class ConfigGui extends CustomGui {
             var player = (Player) action.getWhoClicked();
             if(instance.getGame().getFlintRate() != flintRateSwitch.getValue()){
                 Bukkit.dispatchCommand(player, "config flint-rate "+ flintRateSwitch.getValue());
+                player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_FLUTE, SoundCategory.VOICE, 1.0f, 1);
+            }else{
+                player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
             }
             getGui().open(player);
-            player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
             
         });
 
@@ -83,12 +87,12 @@ public class ConfigGui extends CustomGui {
             .addLore((game.isTrades() ? ChatColor.GREEN : ChatColor.RED) + "" + game.isTrades()).build();
 
         gui.setItem(13, item, action->{
-            if(action.getClick() == ClickType.RIGHT && action.getWhoClicked().hasPermission(permissionConfig)){
+            var player = (Player) action.getWhoClicked();
+            if(action.getClick() == ClickType.RIGHT && player.hasPermission(permissionConfig)){
 
-                var player = (Player) action.getWhoClicked();
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, SoundCategory.VOICE, 1.0f, 0.1f);
                 
-                var confirmationGui = new ConfirmationGui(new RapidInv(InventoryType.HOPPER, "Confirmation"), 
+                var confirmationGui = new ConfirmationGui(new RapidInv(InventoryType.HOPPER, "Toggle trades"), 
                 
                 confirm ->{
                     Bukkit.dispatchCommand(player, "config trades "+ !instance.getGame().isTrades());
@@ -102,7 +106,8 @@ public class ConfigGui extends CustomGui {
                 confirmationGui.open(player);
                 
             }else{
-                //gui principal
+                instance.getGuiManager().getMainGui().open(player);
+                player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
             }
         });
 
@@ -114,13 +119,14 @@ public class ConfigGui extends CustomGui {
         var item = new ItemBuilder(Material.GHAST_TEAR).name(ChatColor.YELLOW + "Ghast tears")
             .addLore((game.isTears() ? ChatColor.GREEN : ChatColor.RED) + "" + game.isTears()).build();
 
+            
         gui.setItem(12, item, action->{
-            if(action.getClick() == ClickType.RIGHT && action.getWhoClicked().hasPermission(permissionConfig)){
+            var player = (Player) action.getWhoClicked();
+            if(action.getClick() == ClickType.RIGHT && player.hasPermission(permissionConfig)){
 
-                var player = (Player) action.getWhoClicked();
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, SoundCategory.VOICE, 1.0f, 0.1f);
                 
-                var confirmationGui = new ConfirmationGui(new RapidInv(InventoryType.HOPPER, "Confirmation"), 
+                var confirmationGui = new ConfirmationGui(new RapidInv(InventoryType.HOPPER, "Toggle ghast tears"), 
                 
                 confirm ->{
                     Bukkit.dispatchCommand(player, "config tears "+ !instance.getGame().isTears());
@@ -134,7 +140,8 @@ public class ConfigGui extends CustomGui {
                 confirmationGui.open(player);
                 
             }else{
-                //gui principal
+                instance.getGuiManager().getMainGui().open(player);
+                player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
             }
         });
 
@@ -147,12 +154,12 @@ public class ConfigGui extends CustomGui {
             .addLore((game.isItemsBurn() ? ChatColor.GREEN : ChatColor.RED) + "" + game.isItemsBurn()).build();
 
         gui.setItem(11, item, action->{
-            if(action.getClick() == ClickType.RIGHT && action.getWhoClicked().hasPermission(permissionConfig)){
+            var player = (Player) action.getWhoClicked();
+            if(action.getClick() == ClickType.RIGHT && player.hasPermission(permissionConfig)){
 
-                var player = (Player) action.getWhoClicked();
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, SoundCategory.VOICE, 1.0f, 0.1f);
                 
-                var confirmationGui = new ConfirmationGui(new RapidInv(InventoryType.HOPPER, "Confirmation"), 
+                var confirmationGui = new ConfirmationGui(new RapidInv(InventoryType.HOPPER, "Toggle items burn"), 
                 
                 confirm ->{
                     Bukkit.dispatchCommand(player, "config items-burn "+ !instance.getGame().isItemsBurn());
@@ -167,7 +174,8 @@ public class ConfigGui extends CustomGui {
                 
                 
             }else{
-                //gui principal
+                instance.getGuiManager().getMainGui().open(player);
+                player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
             }
         });
 
@@ -180,12 +188,12 @@ public class ConfigGui extends CustomGui {
             .addLore(ChatColor.GREEN + (game.isTrident() ? "100% drop" : "Vanilla")).flags(ItemFlag.HIDE_ATTRIBUTES).build();
 
         gui.setItem(10, item, action->{
-            if(action.getClick() == ClickType.RIGHT && action.getWhoClicked().hasPermission(permissionConfig)){
+            var player = (Player) action.getWhoClicked();
+            if(action.getClick() == ClickType.RIGHT && player.hasPermission(permissionConfig)){
 
-                var player = (Player) action.getWhoClicked();
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, SoundCategory.VOICE, 1.0f, 0.1f);
                 
-                var confirmationGui = new ConfirmationGui(new RapidInv(InventoryType.HOPPER, "Confirmation"), 
+                var confirmationGui = new ConfirmationGui(new RapidInv(InventoryType.HOPPER, "Change trident rate"), 
                 
                 confirm ->{
                     Bukkit.dispatchCommand(player, "config trident "+ !instance.getGame().isTrident());
@@ -199,7 +207,8 @@ public class ConfigGui extends CustomGui {
                 confirmationGui.open(player);
                 
             }else{
-                //gui principal
+                instance.getGuiManager().getMainGui().open(player);
+                player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
             }
         });
 
@@ -212,12 +221,12 @@ public class ConfigGui extends CustomGui {
             .addLore((game.isPotions() ? ChatColor.GREEN : ChatColor.RED) + "" + game.isPotions()).flags(ItemFlag.HIDE_ATTRIBUTES).build();
 
         gui.setItem(9, item, action->{
-            if(action.getClick() == ClickType.RIGHT && action.getWhoClicked().hasPermission(permissionConfig)){
+            var player = (Player) action.getWhoClicked();
+            if(action.getClick() == ClickType.RIGHT && player.hasPermission(permissionConfig)){
 
-                var player = (Player) action.getWhoClicked();
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, SoundCategory.VOICE, 1.0f, 0.1f);
                 
-                var confirmationGui = new ConfirmationGui(new RapidInv(InventoryType.HOPPER, "Confirmation"), 
+                var confirmationGui = new ConfirmationGui(new RapidInv(InventoryType.HOPPER, "Toggle potions"), 
                 
                 confirm ->{
                     Bukkit.dispatchCommand(player, "config potions "+ !instance.getGame().isPotions());
@@ -231,7 +240,8 @@ public class ConfigGui extends CustomGui {
                 confirmationGui.open(player);
                 
             }else{
-                //gui principal
+                instance.getGuiManager().getMainGui().open(player);
+                player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
             }
         });
 
@@ -246,12 +256,12 @@ public class ConfigGui extends CustomGui {
 
 
         gui.setItem(8, item, action->{
-            if(action.getClick() == ClickType.RIGHT && action.getWhoClicked().hasPermission(permissionConfig)){
+            var player = (Player) action.getWhoClicked();
+            if(action.getClick() == ClickType.RIGHT && player.hasPermission(permissionConfig)){
 
-                var player = (Player) action.getWhoClicked();
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, SoundCategory.VOICE, 1.0f, 0.1f);
                 
-                var confirmationGui = new ConfirmationGui(new RapidInv(InventoryType.HOPPER, "Confirmation"), 
+                var confirmationGui = new ConfirmationGui(new RapidInv(InventoryType.HOPPER, "Change strength nerf"), 
                 
                 confirm ->{
                     Bukkit.dispatchCommand(player, "config strength-nerf "+ !instance.getGame().isStrengthNerf());
@@ -265,7 +275,8 @@ public class ConfigGui extends CustomGui {
                 confirmationGui.open(player);
                 
             }else{
-                //gui principal
+                instance.getGuiManager().getMainGui().open(player);
+                player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
             }
         });
 
@@ -279,12 +290,12 @@ public class ConfigGui extends CustomGui {
                 .meta(PotionMeta.class, meta-> meta.setBasePotionData(new PotionData(PotionType.STRENGTH, false, false))).flags(ItemFlag.HIDE_POTION_EFFECTS).build();
 
         gui.setItem(7, item, action->{
-            if(action.getClick() == ClickType.RIGHT && action.getWhoClicked().hasPermission(permissionConfig)){
+            var player = (Player) action.getWhoClicked();
+            if(action.getClick() == ClickType.RIGHT && player.hasPermission(permissionConfig)){
 
-                var player = (Player) action.getWhoClicked();
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, SoundCategory.VOICE, 1.0f, 0.1f);
                 
-                var confirmationGui = new ConfirmationGui(new RapidInv(InventoryType.HOPPER, "Confirmation"), 
+                var confirmationGui = new ConfirmationGui(new RapidInv(InventoryType.HOPPER, "Toggle strength"), 
                 
                 confirm ->{
                     Bukkit.dispatchCommand(player, "config strength "+ !instance.getGame().isStrength());
@@ -298,7 +309,8 @@ public class ConfigGui extends CustomGui {
                 confirmationGui.open(player);
                 
             }else{
-                //gui principal
+                instance.getGuiManager().getMainGui().open(player);
+                player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
             }
         });
 
@@ -311,12 +323,12 @@ public class ConfigGui extends CustomGui {
             .addLore((game.isBedsNerf() ? ChatColor.GREEN : ChatColor.RED) + "" + game.isBedsNerf()).build();
 
         gui.setItem(6, item, action->{
-            if(action.getClick() == ClickType.RIGHT && action.getWhoClicked().hasPermission(permissionConfig)){
+            var player = (Player) action.getWhoClicked();
+            if(action.getClick() == ClickType.RIGHT && player.hasPermission(permissionConfig)){
 
-                var player = (Player) action.getWhoClicked();
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, SoundCategory.VOICE, 1.0f, 0.1f);
                 
-                var confirmationGui = new ConfirmationGui(new RapidInv(InventoryType.HOPPER, "Confirmation"), 
+                var confirmationGui = new ConfirmationGui(new RapidInv(InventoryType.HOPPER, "Change nerfed bed explosion"), 
                 
                 confirm ->{
                     Bukkit.dispatchCommand(player, "config beds-nerf "+ !instance.getGame().isBedsNerf());
@@ -330,7 +342,8 @@ public class ConfigGui extends CustomGui {
                 confirmationGui.open(player);
                 
             }else{
-                //gui principal
+                instance.getGuiManager().getMainGui().open(player);
+                player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
             }
         });
 
@@ -343,12 +356,12 @@ public class ConfigGui extends CustomGui {
             .addLore((game.isBeds() ? ChatColor.GREEN : ChatColor.RED) + "" + game.isBeds()).build();
 
         gui.setItem(5, item, action->{
-            if(action.getClick() == ClickType.RIGHT && action.getWhoClicked().hasPermission(permissionConfig)){
+            var player = (Player) action.getWhoClicked();
+            if(action.getClick() == ClickType.RIGHT && player.hasPermission(permissionConfig)){
 
-                var player = (Player) action.getWhoClicked();
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, SoundCategory.VOICE, 1.0f, 0.1f);
                 
-                var confirmationGui = new ConfirmationGui(new RapidInv(InventoryType.HOPPER, "Confirmation"), 
+                var confirmationGui = new ConfirmationGui(new RapidInv(InventoryType.HOPPER, "Toggle beds"), 
                 
                 confirm ->{
                     Bukkit.dispatchCommand(player, "config beds "+ !instance.getGame().isBeds());
@@ -362,7 +375,8 @@ public class ConfigGui extends CustomGui {
                 confirmationGui.open(player);
                 
             }else{
-                //gui principal
+                instance.getGuiManager().getMainGui().open(player);
+                player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
             }
         });
 
@@ -375,12 +389,12 @@ public class ConfigGui extends CustomGui {
             .addLore((game.isHorses() ? ChatColor.GREEN : ChatColor.RED) + "" + game.isHorses()).build();
 
         gui.setItem(4, item, action->{
-            if(action.getClick() == ClickType.RIGHT && action.getWhoClicked().hasPermission(permissionConfig)){
+            var player = (Player) action.getWhoClicked();
+            if(action.getClick() == ClickType.RIGHT && player.hasPermission(permissionConfig)){
 
-                var player = (Player) action.getWhoClicked();
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, SoundCategory.VOICE, 1.0f, 0.1f);
                 
-                var confirmationGui = new ConfirmationGui(new RapidInv(InventoryType.HOPPER, "Confirmation"), 
+                var confirmationGui = new ConfirmationGui(new RapidInv(InventoryType.HOPPER, "Toggle horses"), 
                 
                 confirm ->{
                     Bukkit.dispatchCommand(player, "config horses "+ !instance.getGame().isHorses());
@@ -394,7 +408,8 @@ public class ConfigGui extends CustomGui {
                 confirmationGui.open(player);
                 
             }else{
-                //gui principal
+                instance.getGuiManager().getMainGui().open(player);
+                player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
             }
         });
 
@@ -407,12 +422,12 @@ public class ConfigGui extends CustomGui {
             .addLore((game.isAdvancements() ? ChatColor.GREEN : ChatColor.RED) + "" + game.isAdvancements()).build();
 
         gui.setItem(3, item, action->{
-            if(action.getClick() == ClickType.RIGHT && action.getWhoClicked().hasPermission(permissionConfig)){
+            var player = (Player) action.getWhoClicked();
+            if(action.getClick() == ClickType.RIGHT && player.hasPermission(permissionConfig)){
 
-                var player = (Player) action.getWhoClicked();
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, SoundCategory.VOICE, 1.0f, 0.1f);
                 
-                var confirmationGui = new ConfirmationGui(new RapidInv(InventoryType.HOPPER, "Confirmation"), 
+                var confirmationGui = new ConfirmationGui(new RapidInv(InventoryType.HOPPER, "Toggle advancements"), 
                 
                 confirm ->{
                     Bukkit.dispatchCommand(player, "config advancements "+ !instance.getGame().isAdvancements());
@@ -426,7 +441,8 @@ public class ConfigGui extends CustomGui {
                 confirmationGui.open(player);
                 
             }else{
-                //gui principal
+                instance.getGuiManager().getMainGui().open(player);
+                player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
             }
         });
 
@@ -439,12 +455,12 @@ public class ConfigGui extends CustomGui {
             .addLore((game.isNether() ? ChatColor.GREEN : ChatColor.RED) + "" + instance.getGame().isNether()).build();
 
         gui.setItem(2, item, action->{
-            if(action.getClick() == ClickType.RIGHT && action.getWhoClicked().hasPermission(permissionConfig)){
+            var player = (Player) action.getWhoClicked();
+            if(action.getClick() == ClickType.RIGHT && player.hasPermission(permissionConfig)){
 
-                var player = (Player) action.getWhoClicked();
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, SoundCategory.VOICE, 1.0f, 0.1f);
                 
-                var confirmationGui = new ConfirmationGui(new RapidInv(InventoryType.HOPPER, "Confirmation"), 
+                var confirmationGui = new ConfirmationGui(new RapidInv(InventoryType.HOPPER, "Toggle nether"), 
                 
                 confirm ->{
                     Bukkit.dispatchCommand(player, "config nether "+ !instance.getGame().isNether());
@@ -458,7 +474,8 @@ public class ConfigGui extends CustomGui {
                 confirmationGui.open(player);
                 
             }else{
-                //gui principal
+                instance.getGuiManager().getMainGui().open(player);
+                player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
             }
         });
 
@@ -470,14 +487,16 @@ public class ConfigGui extends CustomGui {
         var item = new ItemBuilder(Material.FLINT).name(ChatColor.YELLOW + "Flint rate").addLore(ChatColor.GREEN + "" + formatted + "%").build();
 
         gui.setItem(1, item, action ->{
-            if(action.getClick() == ClickType.RIGHT && action.getWhoClicked().hasPermission(permissionConfig)){
+            var player = (Player) action.getWhoClicked();
+            if(action.getClick() == ClickType.RIGHT && player.hasPermission(permissionConfig)){
 
                 flintRateSwitch.setValue(instance.getGame().getFlintRate());
                 flintRateSwitch.update();
-                flintRateSwitch.open((Player) action.getWhoClicked());
+                flintRateSwitch.open(player);
                 
             }else{
-                //gui principal
+                instance.getGuiManager().getMainGui().open(player);
+                player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
             }
         });
     }
@@ -488,14 +507,16 @@ public class ConfigGui extends CustomGui {
         var item = new ItemBuilder(Material.APPLE).name(ChatColor.YELLOW + "Apple rate").addLore(ChatColor.GREEN + "" + formatted + "%").build();
 
         gui.setItem(0, item, action ->{
-            if(action.getClick() == ClickType.RIGHT && action.getWhoClicked().hasPermission(permissionConfig)){
+            var player = (Player) action.getWhoClicked();
+            if(action.getClick() == ClickType.RIGHT && player.hasPermission(permissionConfig)){
 
                 appleRateSwitch.setValue(instance.getGame().getAppleRate());
                 appleRateSwitch.update();
-                appleRateSwitch.open((Player) action.getWhoClicked());
+                appleRateSwitch.open(player);
                 
             }else{
-                //gui principal
+                instance.getGuiManager().getMainGui().open(player);
+                player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
             }
         });
     }

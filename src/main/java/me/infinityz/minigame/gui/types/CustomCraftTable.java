@@ -14,6 +14,7 @@ import net.noobsters.kern.paper.guis.RapidInv;
 
 public class CustomCraftTable extends CustomGui {
 
+    UHC instance = UHC.getInstance();
     List<ItemStack> items = new ArrayList<>();
 
     public CustomCraftTable(RapidInv gui, List<ItemStack> items) {
@@ -32,7 +33,7 @@ public class CustomCraftTable extends CustomGui {
                 gui.setItem(i, itemStack, action->{
                     var player = (Player) action.getWhoClicked();
                     player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
-                    UHC.getInstance().getGuiManager().getEnabledCraftingGui().getGui().open(player);
+                    instance.getGuiManager().getMainGui().getEnabledCraftingGui().getGui().open(player);
                 });
             }
             i++;
