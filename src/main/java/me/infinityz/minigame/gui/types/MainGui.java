@@ -43,16 +43,16 @@ public class MainGui extends CustomGui {
 
         var listCount = instance.getGamemodeManager().getGamemodesList().size();
         if (listCount <= 53) {
-            scenarioPages.add(new ScenariosToggleGui(new RapidInv(9 * 6, "Scenarios")));
+            scenarioPages.add(new ScenariosToggleGui(new RapidInv(9 * 2, "Scenarios")));
         } else {
             var count = (int) listCount / 53;
             if (listCount % 53 == 0) {
                 for (int i = 0; i < count; i++) {
-                    scenarioPages.add(new ScenariosToggleGui(new RapidInv(9 * 6, "Scenarios")));
+                    scenarioPages.add(new ScenariosToggleGui(new RapidInv(9 * 2, "Scenarios")));
                 }
             } else {
                 for (int i = 0; i < count + 1; i++) {
-                    scenarioPages.add(new ScenariosToggleGui(new RapidInv(9 * 6, "Scenarios")));
+                    scenarioPages.add(new ScenariosToggleGui(new RapidInv(9 * 2, "Scenarios")));
                 }
             }
         }
@@ -67,7 +67,6 @@ public class MainGui extends CustomGui {
         updateGame();
         updateSettings();
         updateInfo();
-        setUpScenarioPages();
     }
 
     public void setUpScenarioPages() {
@@ -77,7 +76,7 @@ public class MainGui extends CustomGui {
         if (scenarioPages.size() == 1) {
             var page = scenarioPages.get(0).getRapidInv().getInventory().getContents();
             var gui = scenarioPages.get(0);
-            for (int i = 0; i < page.length; i++) {
+            for (int i = 1; i < igamemodes.size(); i++) {
                 var gamemode = igamemodes.get(i);
                 gui.addScenario(gamemode);
             }
@@ -89,6 +88,7 @@ public class MainGui extends CustomGui {
 
                 var arrow = new ItemBuilder(Material.TIPPED_ARROW).name(ChatColor.GREEN + "Next page").flags(ItemFlag.HIDE_POTION_EFFECTS)
                 .meta(PotionMeta.class, meta -> meta.setColor(Color.fromRGB(0, 0, 0))).build();
+
                 final var n = i;
                 gui.getRapidInv().setItem(53, arrow, action ->{
                     var player = (Player) action.getWhoClicked();
