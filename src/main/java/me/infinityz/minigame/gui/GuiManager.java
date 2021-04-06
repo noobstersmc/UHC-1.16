@@ -31,12 +31,14 @@ public class GuiManager implements Listener {
     public void scenarioEnable(GamemodeEnabledEvent e) {
         mainGui.getEnabledScenariosGui().update();
         mainGui.updateGame();
+        mainGui.updateScenarioPages();
     }
 
     @EventHandler
     public void scenarioDisable(GamemodeDisabledEvent e) {
         mainGui.getEnabledScenariosGui().update();
         mainGui.updateGame();
+        mainGui.updateScenarioPages();
     }
 
     @EventHandler

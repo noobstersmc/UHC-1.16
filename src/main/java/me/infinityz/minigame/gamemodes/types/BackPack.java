@@ -27,7 +27,7 @@ public class BackPack extends IGamemode implements Listener {
 
     @Override
     public boolean enableScenario() {
-        if (isEnabled())
+        if (isEnabled() || !instance.getTeamManger().isTeams())
             return false;
         instance.getListenerManager().registerListener(this);
         instance.getTeamManger().getTeamMap().values().forEach(Team::createTeamInventory);
@@ -37,7 +37,7 @@ public class BackPack extends IGamemode implements Listener {
 
     @Override
     public boolean disableScenario() {
-        if (!isEnabled())
+        if (!isEnabled() || !instance.getTeamManger().isTeams())
             return false;
         instance.getTeamManger().getTeamMap().values().forEach(Team::destroyTeamInventory);
         instance.getListenerManager().unregisterListener(this);

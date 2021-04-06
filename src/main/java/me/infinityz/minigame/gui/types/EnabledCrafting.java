@@ -48,6 +48,13 @@ public class EnabledCrafting extends CustomGui {
 
             tables.put(name, new CustomCraftTable(new RapidInv(InventoryType.DISPENSER, name), list));
         }
+
+        gui.setItem(17, new ItemBuilder(Material.KNOWLEDGE_BOOK).name(ChatColor.GREEN + "UHC Game").build(), action -> {
+            var player = (Player) action.getWhoClicked();
+            instance.getGuiManager().getMainGui().open((Player) action.getWhoClicked());
+            player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
+        });
+        
         update();
 
     }

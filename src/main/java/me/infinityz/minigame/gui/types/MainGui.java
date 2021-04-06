@@ -10,6 +10,7 @@ import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryType;
@@ -33,7 +34,8 @@ public class MainGui extends CustomGui {
     private @Getter @Setter EnabledCrafting enabledCraftingGui = new EnabledCrafting(new RapidInv(9 * 2, "Crafting"));
     private @Getter @Setter ConfigGui configGui = new ConfigGui(new RapidInv(9 * 2, "Settings"));
     private @Getter @Setter GameLoopGui gameLoopGui = new GameLoopGui(new RapidInv(9 * 2, "Game Loop"));
-    private @Getter @Setter List<ScenariosToggleGui> scenarioPages = new ArrayList<>();
+    private @Getter @Setter List<RapidInv> scenarioPages = new ArrayList<>();
+    private @Getter @Setter RapidInv toggleCraftingGui = new RapidInv(9 * 2, "Crafting");
     String permissionConfig = "uhc.config.cmd";
     String color1 = "" + ChatColor.of("#eb9c4c");
     DecimalFormat numberFormat = new DecimalFormat("#0.0");
@@ -42,19 +44,50 @@ public class MainGui extends CustomGui {
         super(gui);
 
         var listCount = instance.getGamemodeManager().getGamemodesList().size();
-        if (listCount <= 53) {
-            scenarioPages.add(new ScenariosToggleGui(new RapidInv(9 * 2, "Scenarios")));
-        } else {
-            var count = (int) listCount / 53;
-            if (listCount % 53 == 0) {
-                for (int i = 0; i < count; i++) {
-                    scenarioPages.add(new ScenariosToggleGui(new RapidInv(9 * 2, "Scenarios")));
-                }
-            } else {
-                for (int i = 0; i < count + 1; i++) {
-                    scenarioPages.add(new ScenariosToggleGui(new RapidInv(9 * 2, "Scenarios")));
-                }
-            }
+
+        int count = (int) listCount / 52;
+        float countFloat = (float) listCount / 52;
+        if (countFloat-count != 0) {
+            
+            count++;
+        }
+
+        for (int i = 0; i < count; i++) {
+            var page = new RapidInv(9 * 6, "Scenarios");
+
+            page.setItem(0, new ItemBuilder(Material.KNOWLEDGE_BOOK).name(ChatColor.GREEN + "UHC Game").build(),
+                    action -> {
+                        var player = (Player) action.getWhoClicked();
+                        instance.getGuiManager().getMainGui().open((Player) action.getWhoClicked());
+                        player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE,
+                                SoundCategory.VOICE, 1.0f, 1.0f);
+                    });
+
+            scenarioPages.add(page);
+        }
+
+        for (int i = 0; i < scenarioPages.size(); i++) {
+            var page = scenarioPages.get(i);
+            var arrow = new ItemBuilder(Material.TIPPED_ARROW).name(ChatColor.GREEN + "Next page")
+                    .flags(ItemFlag.HIDE_POTION_EFFECTS)
+                    .meta(PotionMeta.class, meta -> meta.setColor(Color.fromRGB(0, 0, 0))).build();
+
+                    
+            var nextPage = scenarioPages.get(0);
+
+            if(i+1 >= scenarioPages.size()) nextPage = scenarioPages.get(0);
+            else nextPage = scenarioPages.get(i+1);
+            
+
+            final var next = nextPage;
+
+            page.setItem(53, arrow, action -> {
+                var player = (Player) action.getWhoClicked();
+                next.open(player);
+                player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, SoundCategory.VOICE,
+                        1.0f, 0.1f);
+            });
+
         }
 
         update();
@@ -67,50 +100,43 @@ public class MainGui extends CustomGui {
         updateGame();
         updateSettings();
         updateInfo();
+        updateScenarioPages();
     }
 
-    public void setUpScenarioPages() {
+    public void updateToggleCraftingGui(){
+        var gui = toggleCraftingGui;
+        
+    }
+
+    public void updateScenarioPages() {
 
         var igamemodes = instance.getGamemodeManager().getGamemodesList().stream().collect(Collectors.toList());
+        var gm = 0;
+        for (int i = 0; i < scenarioPages.size(); i++) {
 
-        if (scenarioPages.size() == 1) {
-            var page = scenarioPages.get(0).getRapidInv().getInventory().getContents();
-            var gui = scenarioPages.get(0);
-            for (int i = 1; i < igamemodes.size(); i++) {
-                var gamemode = igamemodes.get(i);
-                gui.addScenario(gamemode);
-            }
-        }else {
-            var gamemodeCount = 0;
-            for (int i = 0; i < scenarioPages.size(); i++) {
-                var page = scenarioPages.get(i).getRapidInv().getInventory().getContents();
-                var gui = scenarioPages.get(i);
+            var page = scenarioPages.get(i);
+            for (int slot = 1; slot < 53; slot++) {
 
-                var arrow = new ItemBuilder(Material.TIPPED_ARROW).name(ChatColor.GREEN + "Next page").flags(ItemFlag.HIDE_POTION_EFFECTS)
-                .meta(PotionMeta.class, meta -> meta.setColor(Color.fromRGB(0, 0, 0))).build();
+                if(gm >= igamemodes.size()) return;
 
-                final var n = i;
-                gui.getRapidInv().setItem(53, arrow, action ->{
+                var gamemode = igamemodes.get(gm);
+                
+                var icon = gamemode.getAsIcon();
+                if (gamemode.isEnabled())
+                    icon.enchant(Enchantment.MENDING).flags(ItemFlag.HIDE_ENCHANTS);
+
+                icon.addLore(gamemode.isEnabled() ? ChatColor.GREEN + "Enabled" : ChatColor.RED + "Disabled");
+                
+                page.setItem(slot, icon.build(), action -> {
                     var player = (Player) action.getWhoClicked();
-                    if(n == scenarioPages.size()){
-                        var nextPage = scenarioPages.get(0);
-                        nextPage.open(player);
-                        
-                    }else{
-                        var nextPage = scenarioPages.get(n+1).getRapidInv();
-                        nextPage.open(player);
-                        
-                    }
-                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, SoundCategory.VOICE, 1.0f, 0.1f);
+                    Bukkit.dispatchCommand(player, "scenario toggle " + gamemode.getName());
+                    
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, SoundCategory.VOICE, 1.0f,
+                            0.1f);
                 });
-
-                for (int j = 1; j < 53; j++) {
-                    //gui.addScenario(igamemodes.get(gamemodeCount));
-                    gamemodeCount++;
-                }
+                gm++;
             }
         }
-
     }
 
     public void updateGameLoop() {

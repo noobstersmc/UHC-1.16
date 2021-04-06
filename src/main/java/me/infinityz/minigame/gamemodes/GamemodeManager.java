@@ -5,44 +5,68 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import gnu.trove.set.hash.THashSet;
 import lombok.Getter;
 import lombok.Setter;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.gamemodes.types.AdvancementHunter;
 import me.infinityz.minigame.gamemodes.types.BackPack;
+import me.infinityz.minigame.gamemodes.types.BareBones;
+import me.infinityz.minigame.gamemodes.types.BleedingSweets;
 import me.infinityz.minigame.gamemodes.types.BloodDiamonds;
+import me.infinityz.minigame.gamemodes.types.BloodExperience;
 import me.infinityz.minigame.gamemodes.types.BloodHunter;
 import me.infinityz.minigame.gamemodes.types.BowLess;
+import me.infinityz.minigame.gamemodes.types.ChickenFight;
+import me.infinityz.minigame.gamemodes.types.ColdWeapons;
+import me.infinityz.minigame.gamemodes.types.Cripple;
+import me.infinityz.minigame.gamemodes.types.CrossBowLess;
 import me.infinityz.minigame.gamemodes.types.Cutclean;
+import me.infinityz.minigame.gamemodes.types.DamageCycle;
+import me.infinityz.minigame.gamemodes.types.DiamondLess;
 import me.infinityz.minigame.gamemodes.types.DoubleGold;
+import me.infinityz.minigame.gamemodes.types.DoubleLifeBar;
 import me.infinityz.minigame.gamemodes.types.DoubleOres;
-import me.infinityz.minigame.gamemodes.types.EnderRespawn;
 import me.infinityz.minigame.gamemodes.types.EnderRespawnLeader;
+import me.infinityz.minigame.gamemodes.types.FallOut;
+import me.infinityz.minigame.gamemodes.types.FastGetaway;
 import me.infinityz.minigame.gamemodes.types.FastLeaves;
+import me.infinityz.minigame.gamemodes.types.FastSmelting;
 import me.infinityz.minigame.gamemodes.types.FireLess;
 import me.infinityz.minigame.gamemodes.types.FlorPoderosa;
 import me.infinityz.minigame.gamemodes.types.GoToHell;
 import me.infinityz.minigame.gamemodes.types.GoldenRetreiver;
 import me.infinityz.minigame.gamemodes.types.GoneFishing;
+import me.infinityz.minigame.gamemodes.types.HasteyBabies;
 import me.infinityz.minigame.gamemodes.types.HasteyBoys;
+import me.infinityz.minigame.gamemodes.types.HasteyBoysPlus;
+import me.infinityz.minigame.gamemodes.types.HeavyPockets;
 import me.infinityz.minigame.gamemodes.types.InfiniteEnchanter;
 import me.infinityz.minigame.gamemodes.types.Limits;
 import me.infinityz.minigame.gamemodes.types.LuckyLeaves;
+import me.infinityz.minigame.gamemodes.types.MeetupDoubleLifeBar;
 import me.infinityz.minigame.gamemodes.types.MetaGame;
+import me.infinityz.minigame.gamemodes.types.Metrallesta;
+import me.infinityz.minigame.gamemodes.types.MonstersInc;
 import me.infinityz.minigame.gamemodes.types.NineSlots;
 import me.infinityz.minigame.gamemodes.types.NoClean;
 import me.infinityz.minigame.gamemodes.types.NoFall;
+import me.infinityz.minigame.gamemodes.types.PermaGlow;
+import me.infinityz.minigame.gamemodes.types.Popeye;
 import me.infinityz.minigame.gamemodes.types.ShieldLess;
 import me.infinityz.minigame.gamemodes.types.SkyHigh;
+import me.infinityz.minigame.gamemodes.types.Soup;
+import me.infinityz.minigame.gamemodes.types.SuperHeroes;
 import me.infinityz.minigame.gamemodes.types.Switcheroo;
 import me.infinityz.minigame.gamemodes.types.SwordLess;
+import me.infinityz.minigame.gamemodes.types.ThunderKill;
 import me.infinityz.minigame.gamemodes.types.TiempoBomba;
 import me.infinityz.minigame.gamemodes.types.Timber;
 import me.infinityz.minigame.gamemodes.types.TripleOres;
 import me.infinityz.minigame.gamemodes.types.UHCMeetup;
 import me.infinityz.minigame.gamemodes.types.UHCRun;
 import me.infinityz.minigame.gamemodes.types.UnDamaxe;
+import me.infinityz.minigame.gamemodes.types.VengefulSpirits;
+import me.infinityz.minigame.gamemodes.types.XPHunter;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -51,16 +75,18 @@ import net.md_5.bungee.api.chat.hover.content.Text;
 
 public class GamemodeManager {
     UHC instance;
-    private @Getter THashSet<IGamemode> gamemodesList = new THashSet<>();
+    private @Getter List<IGamemode> gamemodesList = new ArrayList<>();
     private @Getter @Setter int extraOreAmount = 0;
     private @Getter @Setter int extraGold = 0;
 
     public GamemodeManager(UHC instance) {
         this.instance = instance;
+        // Scenarios pack
+        registerGamemode(new UHCRun(instance, this));
+        registerGamemode(new MetaGame(instance));
         // Scenarios
         registerGamemode(new Cutclean(instance));
-        registerGamemode(new EnderRespawnLeader(instance));
-        registerGamemode(new EnderRespawn(instance));
+        //registerGamemode(new EnderRespawn(instance));
         // registerGamemode(new Moles(instance));
         registerGamemode(new GoToHell(instance));
         registerGamemode(new BowLess(instance));
@@ -90,7 +116,7 @@ public class GamemodeManager {
         registerGamemode(new FastLeaves());
         registerGamemode(new NineSlots(instance));
         registerGamemode(new DoubleGold(instance));
-        /*registerGamemode(new ThunderKill(instance));
+        registerGamemode(new ThunderKill(instance));
         registerGamemode(new XPHunter(instance));
         registerGamemode(new FastSmelting(instance));
         registerGamemode(new MonstersInc(instance));
@@ -112,19 +138,19 @@ public class GamemodeManager {
         registerGamemode(new Cripple(instance));
         registerGamemode(new FastGetaway(instance));
         registerGamemode(new VengefulSpirits(instance));
-        registerGamemode(new FallOut(instance));*/
+        registerGamemode(new FallOut(instance));
+        registerGamemode(new Soup(instance));
+        registerGamemode(new ChickenFight(instance));
+        registerGamemode(new EnderRespawnLeader(instance));
+        registerGamemode(new BleedingSweets(instance));
 
         // Invitados
         //registerGamemode(new UHCVandalico(instance));
         //registerGamemode(new UHCLatam(instance));
         //registerGamemode(new UHCGuest(instance));
 
-        // Scenarios pack
-        registerGamemode(new UHCRun(instance, this));
-        registerGamemode(new MetaGame(instance));
-
         // mode
-        registerGamemode(new UHCMeetup(instance));
+        //registerGamemode(new UHCMeetup(instance));
 
         instance.getCommandManager().getCommandCompletions().registerAsyncCompletion("scenarios",
                 c -> gamemodesList.stream().map(IGamemode::getName).collect(Collectors.toList()));

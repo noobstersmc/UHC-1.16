@@ -38,7 +38,7 @@ public class ColdWeapons extends IGamemode implements Listener {
         if (!isEnabled())
             return false;
 
-        instance.getListenerManager().registerListener(this);
+        instance.getListenerManager().unregisterListener(this);
 
         setEnabled(false);
         return true;

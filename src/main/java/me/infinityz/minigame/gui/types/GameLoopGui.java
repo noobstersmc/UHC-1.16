@@ -33,76 +33,87 @@ public class GameLoopGui extends CustomGui {
         super(gui);
 
         pvpSwitch.setUpLimit(60);
-        var sword = new ItemBuilder(Material.IRON_SWORD).name(ChatColor.YELLOW + "PvP time").lore(ChatColor.GREEN + "Confirm").flags(ItemFlag.HIDE_ATTRIBUTES).build();
-        pvpSwitch.getGui().setItem(2, sword, action->{
+        var sword = new ItemBuilder(Material.IRON_SWORD).name(ChatColor.YELLOW + "PvP time")
+                .lore(ChatColor.GREEN + "Confirm").flags(ItemFlag.HIDE_ATTRIBUTES).build();
+        pvpSwitch.getGui().setItem(2, sword, action -> {
             var player = (Player) action.getWhoClicked();
-            if(instance.getGame().getPvpTime() != pvpSwitch.getValue()){
-                Bukkit.dispatchCommand(player, "gameloop pvptime "+ pvpSwitch.getValue());
+            if (instance.getGame().getPvpTime() != pvpSwitch.getValue()) {
+                Bukkit.dispatchCommand(player, "gameloop pvptime " + pvpSwitch.getValue());
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_FLUTE, SoundCategory.VOICE, 1.0f, 1);
-            }else{
+            } else {
                 player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
             }
             getGui().open(player);
-            
+
         });
 
         healSwitch.setUpLimit(60);
         var heal = new ItemBuilder(Material.SPLASH_POTION).name(ChatColor.YELLOW + "Heal time")
-        .meta(PotionMeta.class, meta-> meta.setBasePotionData(new PotionData(PotionType.INSTANT_HEAL, false, false)))
-        .flags(ItemFlag.HIDE_POTION_EFFECTS).lore(ChatColor.GREEN + "Confirm").build();
-        
-        healSwitch.getGui().setItem(2, heal, action->{
+                .meta(PotionMeta.class,
+                        meta -> meta.setBasePotionData(new PotionData(PotionType.INSTANT_HEAL, false, false)))
+                .flags(ItemFlag.HIDE_POTION_EFFECTS).lore(ChatColor.GREEN + "Confirm").build();
+
+        healSwitch.getGui().setItem(2, heal, action -> {
             var player = (Player) action.getWhoClicked();
-            if(instance.getGame().getHealTime() != healSwitch.getValue()){
-                Bukkit.dispatchCommand(player, "gameloop healtime "+ healSwitch.getValue());
+            if (instance.getGame().getHealTime() != healSwitch.getValue()) {
+                Bukkit.dispatchCommand(player, "gameloop healtime " + healSwitch.getValue());
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_FLUTE, SoundCategory.VOICE, 1.0f, 1);
-            }else{
+            } else {
                 player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
             }
             getGui().open(player);
-            
+
         });
 
         borderSizeSwitch.setUpLimit(6000);
-        var borderSize = new ItemBuilder(Material.BEDROCK).name(ChatColor.YELLOW + "Border size").lore(ChatColor.GREEN + "Confirm").build();
-        borderSizeSwitch.getGui().setItem(2, borderSize, action->{
+        var borderSize = new ItemBuilder(Material.BEDROCK).name(ChatColor.YELLOW + "Border size")
+                .lore(ChatColor.GREEN + "Confirm").build();
+        borderSizeSwitch.getGui().setItem(2, borderSize, action -> {
             var player = (Player) action.getWhoClicked();
-            if(instance.getGame().getBorderSize() != borderSizeSwitch.getValue()){
-                Bukkit.dispatchCommand(player, "gameloop bordersize "+ borderSizeSwitch.getValue());
+            if (instance.getGame().getBorderSize() != borderSizeSwitch.getValue()) {
+                Bukkit.dispatchCommand(player, "gameloop bordersize " + borderSizeSwitch.getValue());
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_FLUTE, SoundCategory.VOICE, 1.0f, 1);
-            }else{
+            } else {
                 player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
             }
             getGui().open(player);
-            
+
         });
 
-        borderTimeSwitch.setUpLimit(60*3);
-        var bordertime = new ItemBuilder(Material.CLOCK).name(ChatColor.YELLOW + "Border time").lore(ChatColor.GREEN + "Confirm").build();
-        borderTimeSwitch.getGui().setItem(2, bordertime, action->{
+        borderTimeSwitch.setUpLimit(60 * 3);
+        var bordertime = new ItemBuilder(Material.CLOCK).name(ChatColor.YELLOW + "Border time")
+                .lore(ChatColor.GREEN + "Confirm").build();
+        borderTimeSwitch.getGui().setItem(2, bordertime, action -> {
             var player = (Player) action.getWhoClicked();
-            if(instance.getGame().getBorderTime() != borderTimeSwitch.getValue()){
-                Bukkit.dispatchCommand(player, "gameloop bordertime "+ borderTimeSwitch.getValue());
+            if (instance.getGame().getBorderTime() != borderTimeSwitch.getValue()) {
+                Bukkit.dispatchCommand(player, "gameloop bordertime " + borderTimeSwitch.getValue());
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_FLUTE, SoundCategory.VOICE, 1.0f, 1);
-            }else{
+            } else {
                 player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
             }
             getGui().open(player);
-            
+
         });
 
         borderCenterTimeSwitch.setUpLimit(6000);
-        var bordercentertime = new ItemBuilder(Material.CLOCK).name(ChatColor.YELLOW + "Border to center time").lore(ChatColor.GREEN + "Confirm").build();
-        borderCenterTimeSwitch.getGui().setItem(2, bordercentertime, action->{
+        var bordercentertime = new ItemBuilder(Material.CLOCK).name(ChatColor.YELLOW + "Border to center time")
+                .lore(ChatColor.GREEN + "Confirm").build();
+        borderCenterTimeSwitch.getGui().setItem(2, bordercentertime, action -> {
             var player = (Player) action.getWhoClicked();
-            if(instance.getGame().getBorderSize() != borderCenterTimeSwitch.getValue()){
-                Bukkit.dispatchCommand(player, "gameloop bordercentertime "+ borderCenterTimeSwitch.getValue());
+            if (instance.getGame().getBorderSize() != borderCenterTimeSwitch.getValue()) {
+                Bukkit.dispatchCommand(player, "gameloop bordercentertime " + borderCenterTimeSwitch.getValue());
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_FLUTE, SoundCategory.VOICE, 1.0f, 1);
-            }else{
+            } else {
                 player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
             }
             getGui().open(player);
-            
+
+        });
+
+        gui.setItem(17, new ItemBuilder(Material.KNOWLEDGE_BOOK).name(ChatColor.GREEN + "UHC Game").build(), action -> {
+            var player = (Player) action.getWhoClicked();
+            instance.getGuiManager().getMainGui().open((Player) action.getWhoClicked());
+            player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
         });
 
         update();
@@ -119,102 +130,103 @@ public class GameLoopGui extends CustomGui {
 
     }
 
-    public void updatePvpTime(){
+    public void updatePvpTime() {
         var gui = getGui();
         var item = new ItemBuilder(Material.IRON_SWORD).name(ChatColor.YELLOW + "PvP time")
-            .lore(ChatColor.WHITE + "At " + instance.getGame().getPvpTime()/60 + " minutes").flags(ItemFlag.HIDE_ATTRIBUTES).build();
-        gui.setItem(0, item, action->{
+                .lore(ChatColor.WHITE + "At " + instance.getGame().getPvpTime() / 60 + " minutes")
+                .flags(ItemFlag.HIDE_ATTRIBUTES).build();
+        gui.setItem(0, item, action -> {
             var player = (Player) action.getWhoClicked();
-            if(action.getClick() == ClickType.RIGHT && player.hasPermission(permissionConfig)){
+            if (action.getClick() == ClickType.RIGHT && player.hasPermission(permissionConfig)) {
 
-                pvpSwitch.setValue(instance.getGame().getPvpTime()/60);
+                pvpSwitch.setValue(instance.getGame().getPvpTime() / 60);
                 pvpSwitch.update();
                 pvpSwitch.open(player);
-                
-            }else{
+
+            } else {
                 instance.getGuiManager().getMainGui().open(player);
                 player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
             }
         });
     }
 
-    public void updateHealTime(){
+    public void updateHealTime() {
         var gui = getGui();
         var item = new ItemBuilder(Material.SPLASH_POTION).name(ChatColor.YELLOW + "Heal time")
-        .meta(PotionMeta.class, meta-> meta.setBasePotionData(new PotionData(PotionType.INSTANT_HEAL, false, false)))
-        .flags(ItemFlag.HIDE_POTION_EFFECTS).lore(ChatColor.WHITE + "At " + instance.getGame().getHealTime()/60 + " minutes").build();
-        gui.setItem(1, item, action->{
+                .meta(PotionMeta.class,
+                        meta -> meta.setBasePotionData(new PotionData(PotionType.INSTANT_HEAL, false, false)))
+                .flags(ItemFlag.HIDE_POTION_EFFECTS)
+                .lore(ChatColor.WHITE + "At " + instance.getGame().getHealTime() / 60 + " minutes").build();
+        gui.setItem(1, item, action -> {
             var player = (Player) action.getWhoClicked();
-            if(action.getClick() == ClickType.RIGHT && player.hasPermission(permissionConfig)){
+            if (action.getClick() == ClickType.RIGHT && player.hasPermission(permissionConfig)) {
 
-                healSwitch.setValue(instance.getGame().getHealTime()/60);
+                healSwitch.setValue(instance.getGame().getHealTime() / 60);
                 healSwitch.update();
                 healSwitch.open(player);
-                
-            }else{
+
+            } else {
                 instance.getGuiManager().getMainGui().open(player);
                 player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
             }
         });
     }
 
-    public void updateBorderSize(){
+    public void updateBorderSize() {
         var gui = getGui();
         var item = new ItemBuilder(Material.BEDROCK).name(ChatColor.YELLOW + "Border size")
-            .lore(ChatColor.WHITE + "" + instance.getGame().getBorderSize()/2 + " blocks of radius").build();
-        gui.setItem(2, item, action->{
+                .lore(ChatColor.WHITE + "" + instance.getGame().getBorderSize() / 2 + " blocks of radius").build();
+        gui.setItem(2, item, action -> {
             var player = (Player) action.getWhoClicked();
-            if(action.getClick() == ClickType.RIGHT && player.hasPermission(permissionConfig)){
+            if (action.getClick() == ClickType.RIGHT && player.hasPermission(permissionConfig)) {
 
                 borderSizeSwitch.setValue(instance.getGame().getBorderSize());
                 borderSizeSwitch.update();
                 borderSizeSwitch.open(player);
-                
-            }else{
+
+            } else {
                 instance.getGuiManager().getMainGui().open(player);
                 player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
             }
         });
     }
 
-    public void updateBorderTime(){
+    public void updateBorderTime() {
         var gui = getGui();
         var item = new ItemBuilder(Material.CLOCK).name(ChatColor.YELLOW + "Border time")
-            .lore(ChatColor.WHITE + "At " + instance.getGame().getBorderTime()/60 + " minutes").build();
-        gui.setItem(3, item, action->{
+                .lore(ChatColor.WHITE + "At " + instance.getGame().getBorderTime() / 60 + " minutes").build();
+        gui.setItem(3, item, action -> {
             var player = (Player) action.getWhoClicked();
-            if(action.getClick() == ClickType.RIGHT && player.hasPermission(permissionConfig)){
+            if (action.getClick() == ClickType.RIGHT && player.hasPermission(permissionConfig)) {
 
-                borderTimeSwitch.setValue(instance.getGame().getBorderTime()/60);
+                borderTimeSwitch.setValue(instance.getGame().getBorderTime() / 60);
                 borderTimeSwitch.update();
                 borderTimeSwitch.open(player);
-                
-            }else{
+
+            } else {
                 instance.getGuiManager().getMainGui().open(player);
                 player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
             }
         });
     }
 
-    public void updateBorderCenterTime(){
+    public void updateBorderCenterTime() {
         var gui = getGui();
         var item = new ItemBuilder(Material.CLOCK).name(ChatColor.YELLOW + "Border to center time")
-            .lore(ChatColor.WHITE + "At " + instance.getGame().getBorderTime()/60 + " minutes").build();
-        gui.setItem(4, item, action->{
+                .lore(ChatColor.WHITE + "At " + instance.getGame().getBorderTime() / 60 + " minutes").build();
+        gui.setItem(4, item, action -> {
             var player = (Player) action.getWhoClicked();
-            if(action.getClick() == ClickType.RIGHT && player.hasPermission(permissionConfig)){
+            if (action.getClick() == ClickType.RIGHT && player.hasPermission(permissionConfig)) {
 
-                borderCenterTimeSwitch.setValue(instance.getGame().getBorderCenterTime()/60);
+                borderCenterTimeSwitch.setValue(instance.getGame().getBorderCenterTime() / 60);
                 borderCenterTimeSwitch.update();
                 borderCenterTimeSwitch.open(player);
-                
-            }else{
+
+            } else {
                 instance.getGuiManager().getMainGui().open(player);
                 player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
             }
         });
     }
-
-
 
 }
