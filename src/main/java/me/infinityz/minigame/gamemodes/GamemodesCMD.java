@@ -30,6 +30,12 @@ public class GamemodesCMD extends BaseCommand {
         instance.getGuiManager().getMainGui().getEnabledScenariosGui().open((Player) sender);
     }
 
+    @Subcommand("all")
+    public void allList(Player sender) {
+        instance.getGuiManager().getMainGui().getScenarioPages().get(0).open(sender);
+    }
+
+
     @Subcommand("toggle")
     @CommandPermission("uhc.scenarios")
     @CommandCompletion("@scenarios")

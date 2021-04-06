@@ -5,7 +5,6 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.meta.PotionMeta;
@@ -137,15 +136,12 @@ public class GameLoopGui extends CustomGui {
                 .flags(ItemFlag.HIDE_ATTRIBUTES).build();
         gui.setItem(0, item, action -> {
             var player = (Player) action.getWhoClicked();
-            if (action.getClick() == ClickType.RIGHT && player.hasPermission(permissionConfig)) {
+            if (player.hasPermission(permissionConfig)) {
 
                 pvpSwitch.setValue(instance.getGame().getPvpTime() / 60);
                 pvpSwitch.update();
                 pvpSwitch.open(player);
 
-            } else {
-                instance.getGuiManager().getMainGui().open(player);
-                player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
             }
         });
     }
@@ -159,15 +155,12 @@ public class GameLoopGui extends CustomGui {
                 .lore(ChatColor.WHITE + "At " + instance.getGame().getHealTime() / 60 + " minutes").build();
         gui.setItem(1, item, action -> {
             var player = (Player) action.getWhoClicked();
-            if (action.getClick() == ClickType.RIGHT && player.hasPermission(permissionConfig)) {
+            if (player.hasPermission(permissionConfig)) {
 
                 healSwitch.setValue(instance.getGame().getHealTime() / 60);
                 healSwitch.update();
                 healSwitch.open(player);
 
-            } else {
-                instance.getGuiManager().getMainGui().open(player);
-                player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
             }
         });
     }
@@ -178,15 +171,12 @@ public class GameLoopGui extends CustomGui {
                 .lore(ChatColor.WHITE + "" + instance.getGame().getBorderSize() / 2 + " blocks of radius").build();
         gui.setItem(2, item, action -> {
             var player = (Player) action.getWhoClicked();
-            if (action.getClick() == ClickType.RIGHT && player.hasPermission(permissionConfig)) {
+            if (player.hasPermission(permissionConfig)) {
 
                 borderSizeSwitch.setValue(instance.getGame().getBorderSize());
                 borderSizeSwitch.update();
                 borderSizeSwitch.open(player);
 
-            } else {
-                instance.getGuiManager().getMainGui().open(player);
-                player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
             }
         });
     }
@@ -197,15 +187,12 @@ public class GameLoopGui extends CustomGui {
                 .lore(ChatColor.WHITE + "At " + instance.getGame().getBorderTime() / 60 + " minutes").build();
         gui.setItem(3, item, action -> {
             var player = (Player) action.getWhoClicked();
-            if (action.getClick() == ClickType.RIGHT && player.hasPermission(permissionConfig)) {
+            if (player.hasPermission(permissionConfig)) {
 
                 borderTimeSwitch.setValue(instance.getGame().getBorderTime() / 60);
                 borderTimeSwitch.update();
                 borderTimeSwitch.open(player);
 
-            } else {
-                instance.getGuiManager().getMainGui().open(player);
-                player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
             }
         });
     }
@@ -216,15 +203,12 @@ public class GameLoopGui extends CustomGui {
                 .lore(ChatColor.WHITE + "At " + instance.getGame().getBorderTime() / 60 + " minutes").build();
         gui.setItem(4, item, action -> {
             var player = (Player) action.getWhoClicked();
-            if (action.getClick() == ClickType.RIGHT && player.hasPermission(permissionConfig)) {
+            if (player.hasPermission(permissionConfig)) {
 
                 borderCenterTimeSwitch.setValue(instance.getGame().getBorderCenterTime() / 60);
                 borderCenterTimeSwitch.update();
                 borderCenterTimeSwitch.open(player);
 
-            } else {
-                instance.getGuiManager().getMainGui().open(player);
-                player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
             }
         });
     }

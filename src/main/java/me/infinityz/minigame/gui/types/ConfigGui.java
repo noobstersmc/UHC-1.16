@@ -7,7 +7,6 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.meta.PotionMeta;
@@ -94,7 +93,7 @@ public class ConfigGui extends CustomGui {
 
         gui.setItem(13, item, action->{
             var player = (Player) action.getWhoClicked();
-            if(action.getClick() == ClickType.RIGHT && player.hasPermission(permissionConfig)){
+            if(player.hasPermission(permissionConfig)){
 
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, SoundCategory.VOICE, 1.0f, 0.1f);
                 
@@ -111,9 +110,6 @@ public class ConfigGui extends CustomGui {
 
                 confirmationGui.open(player);
                 
-            }else{
-                instance.getGuiManager().getMainGui().open(player);
-                player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
             }
         });
 
@@ -128,7 +124,7 @@ public class ConfigGui extends CustomGui {
             
         gui.setItem(12, item, action->{
             var player = (Player) action.getWhoClicked();
-            if(action.getClick() == ClickType.RIGHT && player.hasPermission(permissionConfig)){
+            if(player.hasPermission(permissionConfig)){
 
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, SoundCategory.VOICE, 1.0f, 0.1f);
                 
@@ -145,9 +141,6 @@ public class ConfigGui extends CustomGui {
 
                 confirmationGui.open(player);
                 
-            }else{
-                instance.getGuiManager().getMainGui().open(player);
-                player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
             }
         });
 
@@ -161,7 +154,7 @@ public class ConfigGui extends CustomGui {
 
         gui.setItem(11, item, action->{
             var player = (Player) action.getWhoClicked();
-            if(action.getClick() == ClickType.RIGHT && player.hasPermission(permissionConfig)){
+            if(player.hasPermission(permissionConfig)){
 
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, SoundCategory.VOICE, 1.0f, 0.1f);
                 
@@ -179,9 +172,6 @@ public class ConfigGui extends CustomGui {
                 confirmationGui.open(player);
                 
                 
-            }else{
-                instance.getGuiManager().getMainGui().open(player);
-                player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
             }
         });
 
@@ -195,7 +185,7 @@ public class ConfigGui extends CustomGui {
 
         gui.setItem(10, item, action->{
             var player = (Player) action.getWhoClicked();
-            if(action.getClick() == ClickType.RIGHT && player.hasPermission(permissionConfig)){
+            if(player.hasPermission(permissionConfig)){
 
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, SoundCategory.VOICE, 1.0f, 0.1f);
                 
@@ -212,9 +202,6 @@ public class ConfigGui extends CustomGui {
 
                 confirmationGui.open(player);
                 
-            }else{
-                instance.getGuiManager().getMainGui().open(player);
-                player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
             }
         });
 
@@ -228,7 +215,7 @@ public class ConfigGui extends CustomGui {
 
         gui.setItem(9, item, action->{
             var player = (Player) action.getWhoClicked();
-            if(action.getClick() == ClickType.RIGHT && player.hasPermission(permissionConfig)){
+            if(player.hasPermission(permissionConfig)){
 
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, SoundCategory.VOICE, 1.0f, 0.1f);
                 
@@ -245,9 +232,6 @@ public class ConfigGui extends CustomGui {
 
                 confirmationGui.open(player);
                 
-            }else{
-                instance.getGuiManager().getMainGui().open(player);
-                player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
             }
         });
 
@@ -263,7 +247,7 @@ public class ConfigGui extends CustomGui {
 
         gui.setItem(8, item, action->{
             var player = (Player) action.getWhoClicked();
-            if(action.getClick() == ClickType.RIGHT && player.hasPermission(permissionConfig)){
+            if(player.hasPermission(permissionConfig)){
 
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, SoundCategory.VOICE, 1.0f, 0.1f);
                 
@@ -280,9 +264,6 @@ public class ConfigGui extends CustomGui {
 
                 confirmationGui.open(player);
                 
-            }else{
-                instance.getGuiManager().getMainGui().open(player);
-                player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
             }
         });
 
@@ -297,7 +278,7 @@ public class ConfigGui extends CustomGui {
 
         gui.setItem(7, item, action->{
             var player = (Player) action.getWhoClicked();
-            if(action.getClick() == ClickType.RIGHT && player.hasPermission(permissionConfig)){
+            if(player.hasPermission(permissionConfig)){
 
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, SoundCategory.VOICE, 1.0f, 0.1f);
                 
@@ -314,9 +295,6 @@ public class ConfigGui extends CustomGui {
 
                 confirmationGui.open(player);
                 
-            }else{
-                instance.getGuiManager().getMainGui().open(player);
-                player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
             }
         });
 
@@ -330,7 +308,7 @@ public class ConfigGui extends CustomGui {
 
         gui.setItem(6, item, action->{
             var player = (Player) action.getWhoClicked();
-            if(action.getClick() == ClickType.RIGHT && player.hasPermission(permissionConfig)){
+            if(player.hasPermission(permissionConfig)){
 
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, SoundCategory.VOICE, 1.0f, 0.1f);
                 
@@ -347,9 +325,6 @@ public class ConfigGui extends CustomGui {
 
                 confirmationGui.open(player);
                 
-            }else{
-                instance.getGuiManager().getMainGui().open(player);
-                player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
             }
         });
 
@@ -363,7 +338,7 @@ public class ConfigGui extends CustomGui {
 
         gui.setItem(5, item, action->{
             var player = (Player) action.getWhoClicked();
-            if(action.getClick() == ClickType.RIGHT && player.hasPermission(permissionConfig)){
+            if(player.hasPermission(permissionConfig)){
 
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, SoundCategory.VOICE, 1.0f, 0.1f);
                 
@@ -380,9 +355,6 @@ public class ConfigGui extends CustomGui {
 
                 confirmationGui.open(player);
                 
-            }else{
-                instance.getGuiManager().getMainGui().open(player);
-                player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
             }
         });
 
@@ -396,7 +368,7 @@ public class ConfigGui extends CustomGui {
 
         gui.setItem(4, item, action->{
             var player = (Player) action.getWhoClicked();
-            if(action.getClick() == ClickType.RIGHT && player.hasPermission(permissionConfig)){
+            if(player.hasPermission(permissionConfig)){
 
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, SoundCategory.VOICE, 1.0f, 0.1f);
                 
@@ -413,9 +385,6 @@ public class ConfigGui extends CustomGui {
 
                 confirmationGui.open(player);
                 
-            }else{
-                instance.getGuiManager().getMainGui().open(player);
-                player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
             }
         });
 
@@ -429,7 +398,7 @@ public class ConfigGui extends CustomGui {
 
         gui.setItem(3, item, action->{
             var player = (Player) action.getWhoClicked();
-            if(action.getClick() == ClickType.RIGHT && player.hasPermission(permissionConfig)){
+            if(player.hasPermission(permissionConfig)){
 
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, SoundCategory.VOICE, 1.0f, 0.1f);
                 
@@ -446,9 +415,6 @@ public class ConfigGui extends CustomGui {
 
                 confirmationGui.open(player);
                 
-            }else{
-                instance.getGuiManager().getMainGui().open(player);
-                player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
             }
         });
 
@@ -462,7 +428,7 @@ public class ConfigGui extends CustomGui {
 
         gui.setItem(2, item, action->{
             var player = (Player) action.getWhoClicked();
-            if(action.getClick() == ClickType.RIGHT && player.hasPermission(permissionConfig)){
+            if(player.hasPermission(permissionConfig)){
 
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, SoundCategory.VOICE, 1.0f, 0.1f);
                 
@@ -479,9 +445,6 @@ public class ConfigGui extends CustomGui {
 
                 confirmationGui.open(player);
                 
-            }else{
-                instance.getGuiManager().getMainGui().open(player);
-                player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
             }
         });
 
@@ -494,15 +457,12 @@ public class ConfigGui extends CustomGui {
 
         gui.setItem(1, item, action ->{
             var player = (Player) action.getWhoClicked();
-            if(action.getClick() == ClickType.RIGHT && player.hasPermission(permissionConfig)){
+            if(player.hasPermission(permissionConfig)){
 
                 flintRateSwitch.setValue(instance.getGame().getFlintRate());
                 flintRateSwitch.update();
                 flintRateSwitch.open(player);
                 
-            }else{
-                instance.getGuiManager().getMainGui().open(player);
-                player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
             }
         });
     }
@@ -514,15 +474,12 @@ public class ConfigGui extends CustomGui {
 
         gui.setItem(0, item, action ->{
             var player = (Player) action.getWhoClicked();
-            if(action.getClick() == ClickType.RIGHT && player.hasPermission(permissionConfig)){
+            if(player.hasPermission(permissionConfig)){
 
                 appleRateSwitch.setValue(instance.getGame().getAppleRate());
                 appleRateSwitch.update();
                 appleRateSwitch.open(player);
                 
-            }else{
-                instance.getGuiManager().getMainGui().open(player);
-                player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
             }
         });
     }

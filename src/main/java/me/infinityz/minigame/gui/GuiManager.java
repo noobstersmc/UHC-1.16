@@ -45,12 +45,14 @@ public class GuiManager implements Listener {
     public void craftAdded(CustomRecipeAddedEvent e){
         mainGui.getEnabledCraftingGui().update();
         mainGui.updateCrafting();
+        mainGui.updateToggleCraftingGui();
     }
 
     @EventHandler
     public void craftRemoved(CustomRecipeRemovedEvent e){
         mainGui.getEnabledCraftingGui().update();
         mainGui.updateCrafting();
+        mainGui.updateToggleCraftingGui();
     }
 
     @EventHandler

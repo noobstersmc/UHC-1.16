@@ -43,6 +43,7 @@ public class MainGui extends CustomGui {
     public MainGui(RapidInv gui) {
         super(gui);
 
+        //scenario toggle gui
         var listCount = instance.getGamemodeManager().getGamemodesList().size();
 
         int count = (int) listCount / 52;
@@ -55,7 +56,7 @@ public class MainGui extends CustomGui {
         for (int i = 0; i < count; i++) {
             var page = new RapidInv(9 * 6, "Scenarios");
 
-            page.setItem(0, new ItemBuilder(Material.KNOWLEDGE_BOOK).name(ChatColor.GREEN + "UHC Game").build(),
+            page.setItem(53, new ItemBuilder(Material.KNOWLEDGE_BOOK).name(ChatColor.GREEN + "UHC Game").build(),
                     action -> {
                         var player = (Player) action.getWhoClicked();
                         instance.getGuiManager().getMainGui().open((Player) action.getWhoClicked());
@@ -81,7 +82,7 @@ public class MainGui extends CustomGui {
 
             final var next = nextPage;
 
-            page.setItem(53, arrow, action -> {
+            page.setItem(52, arrow, action -> {
                 var player = (Player) action.getWhoClicked();
                 next.open(player);
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, SoundCategory.VOICE,
@@ -89,6 +90,15 @@ public class MainGui extends CustomGui {
             });
 
         }
+
+        //crafting
+        toggleCraftingGui.setItem(17, new ItemBuilder(Material.KNOWLEDGE_BOOK).name(ChatColor.GREEN + "UHC Game").build(),
+        action -> {
+            var player = (Player) action.getWhoClicked();
+            instance.getGuiManager().getMainGui().open((Player) action.getWhoClicked());
+            player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE,
+                    SoundCategory.VOICE, 1.0f, 1.0f);
+        });
 
         update();
     }
@@ -101,10 +111,27 @@ public class MainGui extends CustomGui {
         updateSettings();
         updateInfo();
         updateScenarioPages();
+        updateToggleCraftingGui();
     }
 
     public void updateToggleCraftingGui(){
         var gui = toggleCraftingGui;
+        var crafts = instance.getCraftingManager().getAllRecipes();
+        var i = 0;
+        for (var craft : crafts.entrySet()) {
+            var result = craft.getValue().getRecipe().getResult().getType();
+            var item = new ItemBuilder(result).name(ChatColor.YELLOW + craft.getKey());
+
+            if(craft.getValue().isEnabled()) item.enchant(Enchantment.MENDING).flags(ItemFlag.HIDE_ENCHANTS);
+
+            item.addLore(craft.getValue().isEnabled() ? ChatColor.GREEN + "Enabled" : ChatColor.RED + "Disabled");
+
+            gui.setItem(i, item.build(), action->{
+                var player = (Player) action.getWhoClicked();
+                Bukkit.dispatchCommand(player, "crafting toggle " + craft.getKey());
+            });
+            i++;
+        }
         
     }
 
@@ -115,7 +142,7 @@ public class MainGui extends CustomGui {
         for (int i = 0; i < scenarioPages.size(); i++) {
 
             var page = scenarioPages.get(i);
-            for (int slot = 1; slot < 53; slot++) {
+            for (int slot = 0; slot < 52; slot++) {
 
                 if(gm >= igamemodes.size()) return;
 
@@ -153,9 +180,7 @@ public class MainGui extends CustomGui {
                 color1 + "Border to center time: " + ChatColor.WHITE + game.getBorderCenterTime() / 60 + " minutes");
         gui.setItem(0, gameloop.build(), action -> {
             var player = (Player) action.getWhoClicked();
-            if (player.hasPermission(permissionConfig)) {
-                instance.getGuiManager().getMainGui().getGameLoopGui().open(player);
-            }
+            instance.getGuiManager().getMainGui().getGameLoopGui().open(player);
         });
     }
 
@@ -169,7 +194,12 @@ public class MainGui extends CustomGui {
                 });
 
         gui.setItem(1, crafting.build(), action -> {
-            enabledCraftingGui.open((Player) action.getWhoClicked());
+            var player = (Player) action.getWhoClicked();
+            if (action.getClick() == ClickType.RIGHT && player.hasPermission(permissionConfig)) {
+                toggleCraftingGui.open(player);
+            } else {
+                enabledCraftingGui.open(player);
+            }
         });
     }
 

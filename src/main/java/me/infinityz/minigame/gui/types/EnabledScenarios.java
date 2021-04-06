@@ -33,28 +33,24 @@ public class EnabledScenarios extends CustomGui {
             // vanilla+
             var vanilla = new ItemBuilder(Material.CAMPFIRE).name(ChatColor.YELLOW + "Vanilla+")
                     .addLore(ChatColor.WHITE + "Classic Minecraft Vanilla UHC experience.").build();
-            gui.setItem(0, vanilla, action->{
-                var player = (Player) action.getWhoClicked();
-                instance.getGuiManager().getMainGui().open(player);
-                player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
-                
-            });
+            gui.setItem(0, vanilla);
         } else {
             // add them
             int i = 0;
             int size = gui.getInventory().getContents().length;
             for (var gm : gamemodes) {
-                if(i >= size) break;
-                gui.setItem(i, gm.getAsIcon().build(), action->{
-                    var player = (Player) action.getWhoClicked();
-                    instance.getGuiManager().getMainGui().open(player);
-                    player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
-                    
-                });
+                if(i >= size-1) break;
+                gui.setItem(i, gm.getAsIcon().build());
                 i++;
             }
 
         }
+
+        gui.setItem(17, new ItemBuilder(Material.KNOWLEDGE_BOOK).name(ChatColor.GREEN + "UHC Game").build(), action -> {
+            var player = (Player) action.getWhoClicked();
+            instance.getGuiManager().getMainGui().open((Player) action.getWhoClicked());
+            player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
+        });
     }
 
 }

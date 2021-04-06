@@ -9,7 +9,6 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -48,12 +47,6 @@ public class EnabledCrafting extends CustomGui {
 
             tables.put(name, new CustomCraftTable(new RapidInv(InventoryType.DISPENSER, name), list));
         }
-
-        gui.setItem(17, new ItemBuilder(Material.KNOWLEDGE_BOOK).name(ChatColor.GREEN + "UHC Game").build(), action -> {
-            var player = (Player) action.getWhoClicked();
-            instance.getGuiManager().getMainGui().open((Player) action.getWhoClicked());
-            player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
-        });
         
         update();
 
@@ -72,12 +65,7 @@ public class EnabledCrafting extends CustomGui {
             var result = new ItemBuilder(Material.CRAFTING_TABLE).name(ChatColor.YELLOW + "Vanilla Crafts")
                     .flags(ItemFlag.HIDE_ATTRIBUTES).build();
 
-            gui.setItem(0, result, action->{
-                var player = (Player) action.getWhoClicked();
-                instance.getGuiManager().getMainGui().open(player);
-                player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
-                
-            });
+            gui.setItem(0, result);
 
         } else if (!crafts.isEmpty()) {
             // add them
@@ -92,12 +80,7 @@ public class EnabledCrafting extends CustomGui {
 
                 gui.setItem(i, result, action->{
                     var player = (Player) action.getWhoClicked();
-                    if(action.getClick() == ClickType.RIGHT){
-                        tables.get(name).open(player);
-                    }else{
-                        instance.getGuiManager().getMainGui().open(player);
-                        player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
-                    }
+                    tables.get(name).open(player);
                     
                 });
                 
@@ -106,6 +89,13 @@ public class EnabledCrafting extends CustomGui {
             }
 
         }
+
+        gui.setItem(17, new ItemBuilder(Material.KNOWLEDGE_BOOK).name(ChatColor.GREEN + "UHC Game").build(), action -> {
+            var player = (Player) action.getWhoClicked();
+            instance.getGuiManager().getMainGui().open((Player) action.getWhoClicked());
+            player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE, SoundCategory.VOICE, 1.0f, 1.0f);
+        });
+        
     }
 
     public List<ItemStack> getShapedRecipe(ShapedRecipe recipe) {
