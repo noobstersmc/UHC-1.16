@@ -60,6 +60,7 @@ import me.infinityz.minigame.scoreboard.objects.UpdateObject;
 import me.infinityz.minigame.teams.objects.Team;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.noobsters.kern.paper.Kern;
 
 @RequiredArgsConstructor
 public class IngameListeners implements Listener {
@@ -360,7 +361,7 @@ public class IngameListeners implements Listener {
                     Bukkit.getPluginManager().callEvent(new TeamWinEvent(optionalTeam.get().getTeamID(), true));
                     instance.getGame().setHasSomeoneWon(true);
                     Bukkit.getScheduler().runTask(instance, ()->{
-                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "specchat");
+                        Kern.getInstance().getChatManager().setSpecChat(false);
                     });
                 } else if (solos.size() == 1) {
                     var optionalPlayer = solos.get(0);
@@ -368,7 +369,7 @@ public class IngameListeners implements Listener {
                         Bukkit.getPluginManager().callEvent(new PlayerWinEvent(optionalPlayer.getUUID(), true));
                         instance.getGame().setHasSomeoneWon(true);
                         Bukkit.getScheduler().runTask(instance, ()->{
-                            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "specchat");
+                            Kern.getInstance().getChatManager().setSpecChat(false);
                         });
                     }
                 }
@@ -381,7 +382,7 @@ public class IngameListeners implements Listener {
                 Bukkit.getPluginManager().callEvent(new PlayerWinEvent(lastAlivePlayer.getUUID(), true));
                 instance.getGame().setHasSomeoneWon(true);
                 Bukkit.getScheduler().runTask(instance, ()->{
-                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "specchat");
+                    Kern.getInstance().getChatManager().setSpecChat(false);
                 });
             }
 
@@ -412,9 +413,14 @@ public class IngameListeners implements Listener {
                 uhcPlayer.setLastKnownHealth(0.0);
                 uhcPlayer.setLastKnownPositionFromLoc(p.getLocation());
                 uhcPlayer.setLastKnownInventory(inv);
-                var name = uhcPlayer.getPlayer().getName().toString();
+                var name = p.getName().toString();
                 if(!game.isPrivateGame() && game.getWhitelist().containsKey(name)){
                     game.getWhitelist().remove(name);
+                }
+                if(!game.isPrivateGame() && game.getGameTime() > game.getPvpTime() && game.getGameTime() < game.getBorderTime()){
+                    Bukkit.getScheduler().runTaskLater(instance, () -> {
+                        if(!game.getWhitelist().containsKey(name) && !p.hasPermission("uhc.spec.ingame")) p.kickPlayer(ChatColor.WHITE + "Your spectator period is over.\n" + Game.getUpToMVP());
+                    }, 20*60L);
                 }
                 Bukkit.getPluginManager()
                         .callEvent(new UHCPlayerDequalificationEvent(uhcPlayer, DQReason.DEATH, false));
