@@ -69,15 +69,19 @@ public class GameLoop extends BukkitRunnable {
         if (world != null) {
             var worldBorder = world.getWorldBorder();
 
-            if (!instance.getGamemodeManager().isScenarioEnable(GoToHell.class)) {
-                if (!borderShrink && worldBorder.getSize() <= 1000) {
-                    borderShrink = true;
+            if (!borderShrink && worldBorder.getSize() <= 1000
+                    && !instance.getGamemodeManager().isScenarioEnable(UHCRun.class)) {
+                borderShrink = true;
+                if (!instance.getGame().isPrivateGame()) {
+                    instance.getGame().setWhitelistEnabled(false);
+                }
+                if (!instance.getGamemodeManager().isScenarioEnable(GoToHell.class)) {
                     Bukkit.getScheduler().runTask(instance, () -> {
                         Bukkit.getWorlds().forEach(worlds -> {
                             worlds.setGameRule(GameRule.DO_INSOMNIA, false);
                             worlds.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
                             worlds.setTime(5000);
-                            if(!instance.getGamemodeManager().isScenarioEnable(FallOut.class) && !instance.getGamemodeManager().isScenarioEnable(UHCRun.class)) 
+                            if (!instance.getGamemodeManager().isScenarioEnable(FallOut.class))
                                 instance.getGame().setAntiMining(true);
                         });
                         Bukkit.getPluginManager().callEvent(new NetherDisabledEvent());
@@ -103,7 +107,7 @@ public class GameLoop extends BukkitRunnable {
     private void timedEvent(int time) {
 
         var game = instance.getGame();
-        //all schedules are total (moment of the match)
+        // all schedules are total (moment of the match)
         var healTime = game.getHealTime();
         var pvpStart = game.getPvpTime();
         var borderStart = game.getBorderTime();
@@ -133,23 +137,32 @@ public class GameLoop extends BukkitRunnable {
         if (time == pvpStart - 300) {
             // AVISO 5 MINS LEFT FOR PVP
             Bukkit.getOnlinePlayers()
-                    .forEach(all -> all.playSound(all.getLocation(), Sound.BLOCK_NOTE_BLOCK_BIT, 1, 1));
+                    .forEach(players -> players.playSound(players.getLocation(), Sound.BLOCK_NOTE_BLOCK_BIT, 1, 1));
             Bukkit.broadcastMessage(HAVELOCK_BLUE + "PvP will be enabled in 5 minutes.");
 
         }
         if (time == pvpStart) {
             // PVP ON
-            Bukkit.getOnlinePlayers()
-                    .forEach(all -> all.playSound(all.getLocation(), Sound.BLOCK_END_PORTAL_SPAWN, 1, 1.9F));
-            instance.getGame().setPvp(true);
-            Bukkit.broadcastMessage(SHAMROCK_GREEN + "PvP has been enabled.");
 
-            if (instance.getTeamManger().isTeamManagement())
-                Bukkit.getScheduler().runTask(instance, () -> {
-                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "team man false");
+            Bukkit.getScheduler().runTask(instance, () -> {
+                Bukkit.getOnlinePlayers().forEach(players -> {
+                    if (!game.isPrivateGame() && players.getGameMode() == GameMode.SPECTATOR
+                            && !players.hasPermission("uhc.spec.ingame")) {
+                        players.kickPlayer(ChatColor.WHITE + "Spectators have been disabled.\n" + Game.getUpToMVP());
+                    }
+                    players.playSound(players.getLocation(), Sound.BLOCK_END_PORTAL_SPAWN, 1, 1.9F);
                 });
-            var listeners = instance.getListenerManager();
-            listeners.unregisterListener(listeners.getGracePeriodListeners());
+                game.setPvp(true);
+                Bukkit.broadcastMessage(SHAMROCK_GREEN + "PvP has been enabled.");
+
+                if (instance.getTeamManger().isTeamManagement())
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "team man false");
+                if (!instance.getGamemodeManager().isScenarioEnable(UHCRun.class))
+                    game.setWhitelistEnabled(true);
+                var listeners = instance.getListenerManager();
+                listeners.unregisterListener(listeners.getGracePeriodListeners());
+
+            });
 
         }
         if (time == borderStart) {
@@ -171,17 +184,18 @@ public class GameLoop extends BukkitRunnable {
         }
 
         if (secondBorder == 0) {
-            //final border disabled
-        }else if(time == secondBorder){
+            // final border disabled
+        } else if (time == secondBorder) {
             // BORDE FINAL AUTO
             Bukkit.getScheduler().runTask(instance, () -> Bukkit.getWorlds().forEach(worlds -> {
-                worlds.getWorldBorder().setSize(borderCenter/2, 60);
+                worlds.getWorldBorder().setSize(borderCenter / 2, 60);
             }));
         }
 
         if (time == deathMatch && !game.isHasSomeoneWon()) {
             // DEATHMATCH
-            if (!instance.getGame().isDeathMatch()) return;
+            if (!instance.getGame().isDeathMatch())
+                return;
 
             instance.getGame().setDeathMatchDamage(true);
             Bukkit.broadcastMessage(ChatColor.of("#d40c42") + "Death Match has started.");
@@ -312,19 +326,23 @@ public class GameLoop extends BukkitRunnable {
 
                     if (outsideBorderPlayer.getWorld().getEnvironment() == Environment.NORMAL)
                         handleBorderRescue(outsideBorderPlayer);
-                    else if(outsideBorderPlayer.getWorld().getEnvironment() == Environment.NETHER && !instance.getGamemodeManager().isScenarioEnable(GoToHell.class)){
-                            var border = outsideBorderPlayer.getWorld().getWorldBorder();
-                            var loc = outsideBorderPlayer.getLocation();
-                            var distance = Math.abs(distanceToNearestPoint(border, loc));
-                            if (distance >= 10) {
-                                var worldToTeleport = Bukkit.getWorld("world");
-                                var radius = (int) worldToTeleport.getWorldBorder().getSize() / 2;
-                                var newLoc = ChunksManager.centerLocation(ChunksManager.findScatterLocation(worldToTeleport, radius));
-                                
-                                outsideBorderPlayer.teleportAsync(newLoc);
-                                outsideBorderPlayer.sendMessage(ChatColor.of("#1fbd90") + "The gods have decided to give you a second chance.");
-                                outsideBorderPlayer.playSound(newLoc, Sound.ENTITY_ENDERMAN_TELEPORT, SoundCategory.VOICE, 1.0f, 0.5f);
-                            }
+                    else if (outsideBorderPlayer.getWorld().getEnvironment() == Environment.NETHER
+                            && !instance.getGamemodeManager().isScenarioEnable(GoToHell.class)) {
+                        var border = outsideBorderPlayer.getWorld().getWorldBorder();
+                        var loc = outsideBorderPlayer.getLocation();
+                        var distance = Math.abs(distanceToNearestPoint(border, loc));
+                        if (distance >= 10) {
+                            var worldToTeleport = Bukkit.getWorld("world");
+                            var radius = (int) worldToTeleport.getWorldBorder().getSize() / 2;
+                            var newLoc = ChunksManager
+                                    .centerLocation(ChunksManager.findScatterLocation(worldToTeleport, radius));
+
+                            outsideBorderPlayer.teleportAsync(newLoc);
+                            outsideBorderPlayer.sendMessage(
+                                    ChatColor.of("#1fbd90") + "The gods have decided to give you a second chance.");
+                            outsideBorderPlayer.playSound(newLoc, Sound.ENTITY_ENDERMAN_TELEPORT, SoundCategory.VOICE,
+                                    1.0f, 0.5f);
+                        }
                     }
 
                     outsideBorderPlayer

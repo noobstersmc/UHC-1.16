@@ -69,15 +69,17 @@ public class IngameListeners implements Listener {
             .collect(Collectors.toList());
             
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void lateJoinFix(PlayerJoinedLateEvent e){
+    public void lateJoin(PlayerJoinedLateEvent e){
         final var location = e.getPlayer().getLocation();
         var spawn = Game.getLobbySpawn();
         var player = e.getPlayer();
+        var name = player.getName().toString();
+        var uuid = player.getUniqueId().toString();
         player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 10, 20));
         player.teleport(spawn);
         player.teleportAsync(location);
         
-
+        instance.getGame().getWhitelist().put(name, uuid);
     }
     // DEATHMATCH
 
@@ -390,6 +392,7 @@ public class IngameListeners implements Listener {
     public void onDeath(PlayerDeathEvent e) {
         // 3-second timeout to get respawned in spectator mode.
         Player p = e.getEntity();
+        var game = instance.getGame();
 
         p.getActivePotionEffects().forEach(all -> p.removePotionEffect(all.getType()));
         p.setGameMode(GameMode.SPECTATOR);
@@ -409,6 +412,10 @@ public class IngameListeners implements Listener {
                 uhcPlayer.setLastKnownHealth(0.0);
                 uhcPlayer.setLastKnownPositionFromLoc(p.getLocation());
                 uhcPlayer.setLastKnownInventory(inv);
+                var name = uhcPlayer.getPlayer().getName().toString();
+                if(!game.isPrivateGame() && game.getWhitelist().containsKey(name)){
+                    game.getWhitelist().remove(name);
+                }
                 Bukkit.getPluginManager()
                         .callEvent(new UHCPlayerDequalificationEvent(uhcPlayer, DQReason.DEATH, false));
             }

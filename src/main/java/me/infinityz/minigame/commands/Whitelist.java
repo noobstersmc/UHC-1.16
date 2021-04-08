@@ -1,7 +1,7 @@
 package me.infinityz.minigame.commands;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
+import org.bukkit.command.CommandSender;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
@@ -12,9 +12,10 @@ import co.aikar.commands.annotation.Flags;
 import co.aikar.commands.annotation.Subcommand;
 import me.infinityz.minigame.UHC;
 import net.md_5.bungee.api.ChatColor;
+import net.noobsters.kern.paper.utils.PlayerDBUtil;
 
-@CommandPermission("pff.perm")
-@CommandAlias("wwl|wwhitelist")
+@CommandPermission("host.perm")
+@CommandAlias("wl|whitelist")
 public class Whitelist extends BaseCommand {
 
     private UHC instance;
@@ -31,7 +32,16 @@ public class Whitelist extends BaseCommand {
     }
 
     @Default
-    public void defaultCMD(Player sender) {
+    @CommandCompletion("@bool")
+    public void enableDisable(CommandSender sender, Boolean bool) {
+        instance.getGame().setWhitelistEnabled(bool);
+        var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
+        Bukkit.broadcast(senderName + ChatColor.AQUA + "Whitelist " + bool, permissionDebug);
+
+    }
+
+    @Subcommand("info")
+    public void defaultCMD(CommandSender sender) {
         sender.sendMessage("");
         sender.sendMessage(ChatColor.GRAY + "Whitelist is " + instance.getGame().isWhitelistEnabled());
         sender.sendMessage(ChatColor.AQUA + "   /whitelist true/false");
@@ -42,50 +52,73 @@ public class Whitelist extends BaseCommand {
 
     }
 
-    @CommandCompletion("@bool")
-    public void enableDisable(Player sender, Boolean bool) {
-        instance.getGame().setWhitelistEnabled(bool);
-        var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
-        Bukkit.broadcast(senderName + ChatColor.AQUA + "Whitelist " + bool, permissionDebug);
-
-    }
-
     @Subcommand("list")
-    public void list(Player sender) {
+    public void list(CommandSender sender) {
         var whitelist = instance.getGame().getWhitelist();
-        sender.sendMessage(ChatColor.AQUA + "Whitelist: " + whitelist.values().toString());
+        sender.sendMessage(ChatColor.AQUA + "Whitelist: " + whitelist.keySet().toString());
 
     }
 
     @CommandCompletion("@onlineplayers")
     @Subcommand("add")
-    public void add(Player sender, @Flags("other") String target) {
+    public void add(CommandSender sender, @Flags("other") String target){
         var whitelist = instance.getGame().getWhitelist();
-        var player = Bukkit.getPlayer(target);
-        if(player == null){
-            sender.sendMessage(ChatColor.RED + "Player " + target + " doesn't exist.");
-            return;
-        }
+
+        try {
+            PlayerDBUtil.getPlayerObjectAsync(target).thenAccept(player -> {
+                if(player == null){
+                    sender.sendMessage(ChatColor.RED + "Player " + target + " doesn't exist.");
+                    return;
+                }
+                var username = player.get("username").getAsString();
+                var uuid = player.get("id").getAsString();
         
-        whitelist.put(player.getUniqueId().toString(), player.getName().toString());
-        var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
-        Bukkit.broadcast(senderName + ChatColor.AQUA + player.getName().toString() + " added to the whitelist.", permissionDebug);
+                whitelist.put(username, uuid);
+                var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
+                Bukkit.broadcast(senderName + ChatColor.AQUA + username + " added to the whitelist.", permissionDebug);
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            sender.sendMessage(ChatColor.RED + "An error ocurred.");
+        }
 
     }
 
     @CommandCompletion("@whitelist")
     @Subcommand("remove")
-    public void remove(Player sender, @Flags("other") String target) {
+    public void remove(CommandSender sender, @Flags("other") String target) {
         var whitelist = instance.getGame().getWhitelist();
-        var player = Bukkit.getPlayer(target);
-        if(player == null || !whitelist.containsValue(target)){
+        if(!whitelist.containsValue(target)){
             sender.sendMessage(ChatColor.RED + "Player " + target + " is not whitelisted.");
         }else{
-            whitelist.remove(player.getUniqueId().toString());
+            whitelist.remove(target);
             var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
             Bukkit.broadcast(senderName + ChatColor.AQUA + target + " removed from the whitelist.", permissionDebug);
         }
 
+    }
+
+    @Subcommand("clear")
+    public void clear(CommandSender sender) {
+        var whitelist = instance.getGame().getWhitelist();
+        whitelist.clear();
+        var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
+        Bukkit.broadcast(senderName + ChatColor.AQUA + "Whitelist cleared.", permissionDebug);
+        
+    }
+
+    @Subcommand("all")
+    public void all(CommandSender sender) {
+        var whitelist = instance.getGame().getWhitelist();
+        Bukkit.getOnlinePlayers().forEach(player ->{
+            var name = player.getName().toString();
+            var uuid = player.getUniqueId().toString();
+            whitelist.put(name, uuid);
+        });
+        var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
+        Bukkit.broadcast(senderName + ChatColor.AQUA + "All players added to the whitelist.", permissionDebug);
+        
     }
 
 

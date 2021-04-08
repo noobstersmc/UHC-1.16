@@ -9,6 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 
 import me.infinityz.minigame.UHC;
+import me.infinityz.minigame.enums.Stage;
 import me.infinityz.minigame.gamemodes.IGamemode;
 
 public class ChickenFight extends IGamemode implements Listener {
@@ -40,6 +41,8 @@ public class ChickenFight extends IGamemode implements Listener {
 
     @EventHandler
     public void onMountMate(PlayerInteractAtEntityEvent e){
+        if(instance.getGame().getGameStage() != Stage.INGAME) return;
+        
         var entity = e.getRightClicked();
         var rider = e.getPlayer();
         if(entity instanceof Player){

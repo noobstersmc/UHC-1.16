@@ -19,7 +19,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
@@ -98,13 +97,6 @@ public class GlobalListener implements Listener {
     }
 
     @EventHandler
-    public void login(PlayerLoginEvent e) {
-        var player = e.getPlayer();
-        if (player.hasPermission("staff.perm") || player.hasPermission("group.host"))
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "whitelist add " + player.getName().toString());
-    }
-
-    @EventHandler
     public void joinMessage(PlayerJoinEvent e) {
         var player = e.getPlayer();
 
@@ -114,7 +106,6 @@ public class GlobalListener implements Listener {
         if (player.getUniqueId().compareTo(instance.getGame().getHostUUID()) == 0) {
             player.addAttachment(instance).setPermission("group.host", true);
             player.updateCommands();
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "whitelist add " + player.getName().toString());
         }
 
     }
@@ -190,6 +181,9 @@ public class GlobalListener implements Listener {
             if (!instance.getGamemodeManager().isScenarioEnable(UHCMeetup.class))
                 Bukkit.dispatchCommand(players, "config");
 
+            var name = players.getName().toString();
+            var uuid = players.getUniqueId().toString();
+            instance.getGame().getWhitelist().put(name, uuid);
             bar.addPlayer(players);
         });
         Bukkit.broadcastMessage(GameLoop.SHAMROCK_GREEN + "UHC has started!");

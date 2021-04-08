@@ -121,16 +121,13 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
     @CommandAlias("privategame")
     @CommandCompletion("@bool")
     public void gamePrivate(CommandSender sender, @Optional Boolean bool) {
+        var game = instance.getGame();
         if (bool == null)
-            bool = !instance.getGame().isPrivateGame();
+            bool = !game.isPrivateGame();
 
-        instance.getGame().setPrivateGame(bool);
-        if(bool){
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "whitelist add " + instance.getGame().getHostname());
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "whitelist on");
-        }else{
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "whitelist off");
-        }
+        game.setPrivateGame(bool);
+        game.setWhitelistEnabled(bool);
+
         var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
         Bukkit.broadcast(senderName + ChatColor.YELLOW + "Game changed to: " + (bool ? "Private" : "Public"), permissionDebug);
     }

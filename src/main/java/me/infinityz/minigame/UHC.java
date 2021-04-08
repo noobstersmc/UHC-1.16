@@ -365,7 +365,6 @@ public class UHC extends JavaPlugin {
                 game.setHostUUID(config.getHost_uuid());
 
                 game.setPrivateGame(config.isPrivacy());
-                Bukkit.getWhitelistedPlayers().add(Bukkit.getOfflinePlayer(config.getHost_uuid()));
 
                 var team_size = config.getTeam_size();
                 if (team_size > 1) {
