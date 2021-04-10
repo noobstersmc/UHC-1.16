@@ -69,7 +69,7 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
         if (isEnabled())
             return false;
         for (var gm : gamemodes) {
-            gm.callEnable();
+            gm.enableScenario();
         }
 
         instance.getListenerManager().registerListener(this);
@@ -94,7 +94,7 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
 
         for (var gm : gamemodes) {
             if (gm.isEnabled())
-                gm.callDisable();
+                gm.disableScenario();
         }
 
         instance.getGame().setNether(true);

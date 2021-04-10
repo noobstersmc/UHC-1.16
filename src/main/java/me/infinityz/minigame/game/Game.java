@@ -24,6 +24,7 @@ import me.infinityz.minigame.enums.Stage;
 import me.infinityz.minigame.events.ConfigChangeEvent;
 import me.infinityz.minigame.gamemodes.types.UHCMeetup;
 import me.infinityz.minigame.gamemodes.types.UHCRun;
+import net.citizensnpcs.api.npc.NPC;
 import net.md_5.bungee.api.ChatColor;
 
 @Data
@@ -112,6 +113,8 @@ public class Game {
     String teamSize;
     String hostname = "Noobsters";
     String ip = obtainPublicIP() + ":" + Bukkit.getServer().getPort();
+    HashMap<String, NPC> combatLoggers = new HashMap<>();
+    boolean combatLog = false;
 
     @Override
     public String toString() {

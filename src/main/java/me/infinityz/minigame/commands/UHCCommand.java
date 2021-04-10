@@ -386,6 +386,19 @@ public class UHCCommand extends BaseCommand {
         Bukkit.broadcast(senderName + ChatColor.YELLOW + "Anti Mining has been set to: " + bool, permissionDebug);
     }
 
+    @CommandPermission("admin.perm")
+    @Subcommand("combatlog")
+    @CommandAlias("combatlog")
+    @CommandCompletion("@bool")
+    public void combatLog(CommandSender sender, @Optional Boolean bool) {
+        if (bool == null)
+            bool = !instance.getGame().isCombatLog();
+
+        instance.getGame().setCombatLog(bool);
+        var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
+        Bukkit.broadcast(senderName + ChatColor.YELLOW + "CombatLog has been set to: " + bool, permissionDebug);
+    }
+
     @Subcommand("setHost")
     @CommandCompletion("@onlineplayers")
     @CommandPermission("uhc.admin")

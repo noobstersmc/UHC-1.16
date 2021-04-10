@@ -153,10 +153,11 @@ public class GameLoop extends BukkitRunnable {
                     players.playSound(players.getLocation(), Sound.BLOCK_END_PORTAL_SPAWN, 1, 1.9F);
                 });
                 game.setPvp(true);
+                game.setCombatLog(true);
                 Bukkit.broadcastMessage(SHAMROCK_GREEN + "PvP has been enabled.");
 
                 if (instance.getTeamManger().isTeamManagement())
-                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "team man false");
+                    instance.getTeamManger().setTeamManagement(false);
                 if (!instance.getGamemodeManager().isScenarioEnable(UHCRun.class))
                     game.setWhitelistEnabled(true);
                 var listeners = instance.getListenerManager();
@@ -251,6 +252,16 @@ public class GameLoop extends BukkitRunnable {
                                 .callEvent(new UHCPlayerDequalificationEvent(all, DQReason.OFFLINE_DQ));
                         all.setDead(true);
                         all.setAlive(false);
+
+                        var uuid = all.getUUID().toString();
+                        var combatLoggers = instance.getGame().getCombatLoggers();
+
+                        if (combatLoggers.containsKey(uuid)) {
+                            var npc = combatLoggers.get(uuid);
+                            npc.despawn();
+                            combatLoggers.remove(uuid);
+                            npc.destroy();
+                        }
                     }
                 });
     }

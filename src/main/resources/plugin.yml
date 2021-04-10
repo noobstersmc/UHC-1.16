@@ -5,4 +5,4 @@ description: "Redundant and optimized UHC minigame plugin."
 api-version: "1.16"
 api: "1.16"
 authors: [infinityz, aleiv]
-softdepend: [Kern, Chunky, Vault]
+softdepend: [Kern, Chunky, Vault, CitizensAPI]
