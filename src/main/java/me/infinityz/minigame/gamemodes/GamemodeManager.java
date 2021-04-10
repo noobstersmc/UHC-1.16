@@ -81,9 +81,6 @@ public class GamemodeManager {
 
     public GamemodeManager(UHC instance) {
         this.instance = instance;
-        // Scenarios pack
-        registerGamemode(new UHCRun(instance, this));
-        registerGamemode(new MetaGame(instance));
         // Scenarios
         registerGamemode(new Cutclean(instance));
         //registerGamemode(new EnderRespawn(instance));
@@ -144,6 +141,10 @@ public class GamemodeManager {
         registerGamemode(new EnderRespawnLeader(instance));
         registerGamemode(new BleedingSweets(instance));
 
+        // Scenarios pack
+        registerGamemode(new UHCRun(instance, this));
+        registerGamemode(new MetaGame(instance));
+        
         // Invitados
         //registerGamemode(new UHCVandalico(instance));
         //registerGamemode(new UHCLatam(instance));
