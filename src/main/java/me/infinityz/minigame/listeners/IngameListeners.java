@@ -19,6 +19,7 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Skull;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -34,12 +35,14 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import co.aikar.taskchain.TaskChain;
+import fr.mrmicky.fastinv.ItemBuilder;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import me.infinityz.minigame.UHC;
 import me.infinityz.minigame.chunks.ChunksManager;
 import me.infinityz.minigame.enums.DQReason;
+import me.infinityz.minigame.enums.Stage;
 import me.infinityz.minigame.events.GameTickEvent;
 import me.infinityz.minigame.events.PlayerJoinedLateEvent;
 import me.infinityz.minigame.events.PlayerWinEvent;
@@ -58,6 +61,12 @@ import me.infinityz.minigame.scoreboard.IScoreboard;
 import me.infinityz.minigame.scoreboard.IngameScoreboard;
 import me.infinityz.minigame.scoreboard.objects.UpdateObject;
 import me.infinityz.minigame.teams.objects.Team;
+import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.event.NPCDeathEvent;
+import net.citizensnpcs.api.npc.NPC;
+import net.citizensnpcs.api.trait.trait.Equipment;
+import net.citizensnpcs.api.trait.trait.Equipment.EquipmentSlot;
+import net.citizensnpcs.api.trait.trait.Owner;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.noobsters.kern.paper.Kern;
@@ -68,98 +77,116 @@ public class IngameListeners implements Listener {
     private @Getter List<Material> possibleFence = Arrays.stream(Material.values())
             .filter(material -> material.name().contains("FENCE") && !material.name().contains("FENCE_GATE"))
             .collect(Collectors.toList());
-       
-            
-    //COMBATLOG
 
-    /*
+    // COMBATLOG
+
     @EventHandler
-    public void leaveCombatLog(PlayerQuitEvent e){
-        if(!instance.getGame().isCombatLog()) return;
+    public void leaveCombatLog(PlayerQuitEvent e) {
+        if (!instance.getGame().isCombatLog())
+            return;
 
         var player = e.getPlayer();
         var uuid = player.getUniqueId();
         var name = player.getName().toString();
 
-        var uhcPlayer = instance.getPlayerManager().getPlayer(uuid);
+        if (instance.getGameStage() == Stage.INGAME && player.getGameMode() == GameMode.SURVIVAL) {
 
-        if(instance.getGameStage() == Stage.INGAME && uhcPlayer.isAlive()){
-        var combatLoggers = instance.getGame().getCombatLoggers();
+            var combatLoggers = instance.getGame().getCombatLoggers();
 
-        NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.SKELETON, ChatColor.DARK_RED + name + "'s CombatLog");
+            NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.SKELETON, name + "'s CombatLog");
 
-        var head = new ItemBuilder(Material.PLAYER_HEAD).meta(SkullMeta.class, meta-> meta.setOwningPlayer(Bukkit.getOfflinePlayer(player.getUniqueId()))).build();
-        
-        npc.getOrAddTrait(Equipment.class).set(EquipmentSlot.HELMET, head);
+            var head = new ItemBuilder(Material.PLAYER_HEAD)
+                    .meta(SkullMeta.class, meta -> meta.setOwningPlayer(Bukkit.getOfflinePlayer(player.getUniqueId())))
+                    .build();
 
-        npc.data().setPersistent(NPC.DEFAULT_PROTECTED_METADATA, false);
+            npc.getOrAddTrait(Equipment.class).set(EquipmentSlot.HELMET, head);
 
-        npc.data().setPersistent(NPC.SILENT_METADATA, true);
+            npc.data().setPersistent(NPC.DEFAULT_PROTECTED_METADATA, false);
 
-        npc.getOrAddTrait(Owner.class).setOwner(name, uuid);
+            npc.data().setPersistent(NPC.SILENT_METADATA, true);
 
-        npc.spawn(player.getLocation());
+            npc.getOrAddTrait(Owner.class).setOwner(name, uuid);
 
-        combatLoggers.put(uuid.toString(), npc);
+            npc.spawn(player.getLocation());
+
+            combatLoggers.put(uuid.toString(), npc.getUniqueId());
 
         }
     }
 
     @EventHandler
-    public void joinCombatLog(PlayerJoinEvent e){
+    public void preCombatLog(PlayerJoinEvent e) {
         var player = e.getPlayer();
         var uuid = player.getUniqueId().toString();
         var combatLoggers = instance.getGame().getCombatLoggers();
-        var uhcPlayer = instance.getPlayerManager().getPlayer(UUID.fromString(uuid));
 
-        if(uhcPlayer == null) return;
-
-        if(combatLoggers.containsKey(uuid)){
-            var npc = combatLoggers.get(uuid);
-            if(npc.isSpawned()){
-                npc.despawn();
-                player.teleport(npc.getEntity().getLocation());
-
-            }else{
-                Bukkit.getPluginManager().callEvent(new UHCPlayerDequalificationEvent(uhcPlayer, DQReason.COMBATLOG_DQ));
-                uhcPlayer.setDead(true);
-                uhcPlayer.setAlive(false);
-
+        if (combatLoggers.containsKey(uuid)) {
+            var npcID = combatLoggers.get(uuid);
+            var combatlog = CitizensAPI.getNPCRegistry().getByUniqueId(npcID);
+            if (combatlog.isSpawned()) {
+                player.teleport(combatlog.getEntity().getLocation());
+                combatlog.despawn();
+                combatLoggers.remove(uuid);
+                combatlog.destroy();
             }
-            combatLoggers.remove(uuid);
-            npc.destroy();
         }
     }
 
     @EventHandler
-    public void combatLogDeath(NPCDeathEvent e){
+    public void combatLogDeath(NPCDeathEvent e) {
         var npc = e.getNPC();
         var ownerID = npc.getOrAddTrait(Owner.class).getOwnerId();
         var combatLoggers = instance.getGame().getCombatLoggers();
         var killer = e.getEvent().getEntity().getKiller();
         var playerManager = instance.getPlayerManager();
 
-        if(combatLoggers.containsKey(ownerID.toString()) && playerManager.getPlayer(ownerID) != null){
+        if (combatLoggers.containsKey(ownerID.toString())
+                && playerManager.getUhcPlayerMap().containsKey(ownerID.getMostSignificantBits())) {
+
             var uhcPlayer = playerManager.getPlayer(ownerID);
             var items = uhcPlayer.getLastKnownInventory();
-            var xp = uhcPlayer.getLastKnownXP();
             for (var item : items) {
-                if(item != null){
+                if (item != null) {
                     e.getEvent().getDrops().add(item);
                 }
             }
-            var entity = e.getEvent().getEntity();
-            entity.getWorld().spawn(entity.getLocation(), ExperienceOrb.class).setExperience((int) xp);
-            if(killer != null){
-                Bukkit.broadcastMessage(ChatColor.WHITE + (npc.getName() + " was hunted by " + killer.getName().toString()));
-            }else{
+
+            var entity = e.getNPC().getEntity();
+            
+            entity.getWorld().strikeLightningEffect(entity.getLocation());
+
+            if(!instance.getGamemodeManager().isScenarioEnable(GoldenRetreiver.class) || !instance.getGamemodeManager().isScenarioEnable(TiempoBomba.class)){
+                var head = new ItemBuilder(Material.PLAYER_HEAD)
+                    .meta(SkullMeta.class, meta -> meta.setOwningPlayer(Bukkit.getOfflinePlayer(ownerID)))
+                    .build();
+                e.getEvent().getDrops().add(head);
+                
+            }
+
+            uhcPlayer.setDead(true);
+            uhcPlayer.setAlive(false);
+
+            if (killer != null) {
+                Bukkit.broadcastMessage(
+                        ChatColor.WHITE + (npc.getName() + " was hunted by " + killer.getName().toString()));
+                if(playerManager.getUhcPlayerMap().containsKey(killer.getUniqueId().getMostSignificantBits())){
+                    var uhcKiller = playerManager.getPlayer(killer.getUniqueId());
+                    uhcKiller.setKills(uhcKiller.getKills() + 1);
+                }
+            } else {
                 Bukkit.broadcastMessage(ChatColor.WHITE + npc.getName() + " was destroyed.");
             }
+
+            Bukkit.getScheduler().runTaskAsynchronously(instance, task -> {
+                Bukkit.getPluginManager()
+                        .callEvent(new UHCPlayerDequalificationEvent(uhcPlayer, DQReason.COMBATLOG_DQ));
+            });
+
         }
-    }*/
+    }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void lateJoin(PlayerJoinedLateEvent e){
+    public void lateJoin(PlayerJoinedLateEvent e) {
         final var location = e.getPlayer().getLocation();
         var spawn = Game.getLobbySpawn();
         var player = e.getPlayer();
@@ -168,7 +195,7 @@ public class IngameListeners implements Listener {
         player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 10, 20));
         player.teleport(spawn);
         player.teleportAsync(location);
-        
+
         instance.getGame().getWhitelist().put(name, uuid);
     }
     // DEATHMATCH
@@ -176,8 +203,8 @@ public class IngameListeners implements Listener {
     @EventHandler
     public void onDeathMatch(GameTickEvent e) {
         var game = instance.getGame();
-        if (game.isDeathMatch() && !game.isHasSomeoneWon()
-                && instance.getGame().isDeathMatchDamage() && e.getSecond() % 5 == 0) {
+        if (game.isDeathMatch() && !game.isHasSomeoneWon() && instance.getGame().isDeathMatchDamage()
+                && e.getSecond() % 5 == 0) {
             Bukkit.getScheduler().runTask(instance, () -> {
                 Bukkit.getOnlinePlayers().forEach(players -> {
                     if (players.getGameMode() == GameMode.SURVIVAL) {
@@ -191,7 +218,7 @@ public class IngameListeners implements Listener {
 
     }
 
-    //ANTIMINING
+    // ANTIMINING
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onAntiMining(GameTickEvent e) {
@@ -213,11 +240,12 @@ public class IngameListeners implements Listener {
         var block = e.getBlock();
         if (instance.getGame().isAntiMining()) {
             var player = e.getPlayer().getLocation().getY();
-            if (e.getPlayer().getWorld().getEnvironment() != Environment.NETHER && player < 55 && player > block.getLocation().getY()) {
+            if (e.getPlayer().getWorld().getEnvironment() != Environment.NETHER && player < 55
+                    && player > block.getLocation().getY()) {
                 e.setCancelled(true);
                 e.getPlayer().sendMessage(ChatColor.RED + "Mining is not allowed at meetup.");
             }
-            
+
         }
     }
 
@@ -360,6 +388,7 @@ public class IngameListeners implements Listener {
             p.getInventory().clear();
             p.getInventory().setArmorContents(null);
         }
+
     }
 
     @EventHandler
@@ -397,7 +426,7 @@ public class IngameListeners implements Listener {
     public void onDeathHead(PlayerDeathEvent e) {
         final Player p = e.getEntity();
         if (instance.getGamemodeManager().isScenarioEnable(GoldenRetreiver.class)
-                || instance.getGamemodeManager().isScenarioEnable(UHCMeetup.class) 
+                || instance.getGamemodeManager().isScenarioEnable(UHCMeetup.class)
                 || instance.getGamemodeManager().isScenarioEnable(BareBones.class))
             return;
 
@@ -449,7 +478,7 @@ public class IngameListeners implements Listener {
                 if (optionalTeam.isPresent()) {
                     Bukkit.getPluginManager().callEvent(new TeamWinEvent(optionalTeam.get().getTeamID(), true));
                     instance.getGame().setHasSomeoneWon(true);
-                    Bukkit.getScheduler().runTask(instance, ()->{
+                    Bukkit.getScheduler().runTask(instance, () -> {
                         Kern.getInstance().getChatManager().setSpecChat(false);
                     });
                 } else if (solos.size() == 1) {
@@ -457,7 +486,7 @@ public class IngameListeners implements Listener {
                     if (optionalPlayer != null) {
                         Bukkit.getPluginManager().callEvent(new PlayerWinEvent(optionalPlayer.getUUID(), true));
                         instance.getGame().setHasSomeoneWon(true);
-                        Bukkit.getScheduler().runTask(instance, ()->{
+                        Bukkit.getScheduler().runTask(instance, () -> {
                             Kern.getInstance().getChatManager().setSpecChat(false);
                         });
                     }
@@ -470,7 +499,7 @@ public class IngameListeners implements Listener {
             if (lastAlivePlayer != null) {
                 Bukkit.getPluginManager().callEvent(new PlayerWinEvent(lastAlivePlayer.getUUID(), true));
                 instance.getGame().setHasSomeoneWon(true);
-                Bukkit.getScheduler().runTask(instance, ()->{
+                Bukkit.getScheduler().runTask(instance, () -> {
                     Kern.getInstance().getChatManager().setSpecChat(false);
                 });
             }
@@ -487,7 +516,7 @@ public class IngameListeners implements Listener {
         p.getActivePotionEffects().forEach(all -> p.removePotionEffect(all.getType()));
         p.setGameMode(GameMode.SPECTATOR);
         p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
-        
+
         p.getWorld().strikeLightningEffect(p.getLocation());
         p.sendTitle(Title.builder().title("")
                 .subtitle(new ComponentBuilder("YOU ARE DEAD").bold(true).color(ChatColor.DARK_RED).create()).build());
@@ -502,23 +531,43 @@ public class IngameListeners implements Listener {
                 uhcPlayer.setLastKnownHealth(0.0);
                 uhcPlayer.setLastKnownPositionFromLoc(p.getLocation());
                 uhcPlayer.setLastKnownInventory(inv);
-                uhcPlayer.setLastKnownXP(p.getTotalExperience());
                 var name = p.getName().toString();
-                if(!game.isPrivateGame() && game.getWhitelist().containsKey(name)){
+                if (!game.isPrivateGame() && game.getWhitelist().containsKey(name)) {
                     game.getWhitelist().remove(name);
                 }
-                if(!game.isPrivateGame() && game.getGameTime() > game.getPvpTime() && game.getGameTime() < game.getBorderTime()){
+                if (!game.isPrivateGame() && game.getGameTime() > game.getPvpTime()
+                        && game.getGameTime() < game.getBorderTime()) {
                     Bukkit.getScheduler().runTaskLater(instance, () -> {
-                        if(!game.getWhitelist().containsKey(name) && !p.hasPermission("uhc.spec.ingame")) p.kickPlayer(ChatColor.WHITE + "Your spectator period is over.\n" + Game.getUpToMVP());
-                    }, 20*60);
+                        if (!game.getWhitelist().containsKey(name) && !p.hasPermission("uhc.spec.ingame"))
+                            p.kickPlayer(ChatColor.WHITE + "Your spectator period is over.\n" + Game.getUpToMVP());
+                    }, 20 * 60);
                 }
+
+                var combatLoggers = instance.getGame().getCombatLoggers();
+                var uuid = uhcPlayer.getUUID().toString();
+
+                if (combatLoggers.containsKey(uuid)) {
+                    var npcID = combatLoggers.get(uuid);
+                    var combatlog = CitizensAPI.getNPCRegistry().getByUniqueId(npcID);
+                    if (combatlog.isSpawned()) {
+                        combatlog.despawn();
+                        combatLoggers.remove(uuid);
+                        combatlog.destroy();
+                    }
+                }
+
                 Bukkit.getPluginManager()
                         .callEvent(new UHCPlayerDequalificationEvent(uhcPlayer, DQReason.DEATH, false));
+
             }
         }
         if (p.getKiller() != null) {
             Player killer = p.getKiller();
-            Bukkit.getScheduler().runTaskLater(instance, () -> p.setSpectatorTarget(killer), 160L);
+            Bukkit.getScheduler().runTaskLater(instance, () -> {
+                if(p.getGameMode() == GameMode.SPECTATOR && p.isOnline() && killer.getGameMode() == GameMode.SURVIVAL && killer.isOnline()){
+                    p.setSpectatorTarget(killer);
+                }
+            }, 160L);
             UHCPlayer uhcKiller = instance.getPlayerManager().getPlayer(killer.getUniqueId());
             var team = instance.getTeamManger().getPlayerTeam(killer.getUniqueId());
             if (team != null)

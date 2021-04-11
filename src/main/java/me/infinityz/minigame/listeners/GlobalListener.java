@@ -96,7 +96,7 @@ public class GlobalListener implements Listener {
 
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void joinMessage(PlayerJoinEvent e) {
         var player = e.getPlayer();
 

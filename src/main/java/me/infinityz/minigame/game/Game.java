@@ -24,7 +24,6 @@ import me.infinityz.minigame.enums.Stage;
 import me.infinityz.minigame.events.ConfigChangeEvent;
 import me.infinityz.minigame.gamemodes.types.UHCMeetup;
 import me.infinityz.minigame.gamemodes.types.UHCRun;
-import net.citizensnpcs.api.npc.NPC;
 import net.md_5.bungee.api.ChatColor;
 
 @Data
@@ -57,6 +56,8 @@ public class Game {
     private int uhcslots = 60;
     private boolean whitelistEnabled = false;
     private HashMap<String, String> whitelist = new HashMap<>();
+    private HashMap<String, UUID> combatLoggers = new HashMap<>();
+    private boolean combatLog = false;
     private String[] rules = new String[] { ChatColor.YELLOW + "UHC RULES:",
             ChatColor.AQUA + "1. " + ChatColor.WHITE + "Stalking is not allowed. ",
             ChatColor.AQUA + "2. " + ChatColor.WHITE + "Stealing is not allowed. ",
@@ -113,8 +114,6 @@ public class Game {
     String teamSize;
     String hostname = "Noobsters";
     String ip = obtainPublicIP() + ":" + Bukkit.getServer().getPort();
-    HashMap<String, NPC> combatLoggers = new HashMap<>();
-    boolean combatLog = false;
 
     @Override
     public String toString() {

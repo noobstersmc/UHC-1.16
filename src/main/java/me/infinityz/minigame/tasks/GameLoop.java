@@ -32,6 +32,7 @@ import me.infinityz.minigame.gamemodes.types.FallOut;
 import me.infinityz.minigame.gamemodes.types.GoToHell;
 import me.infinityz.minigame.gamemodes.types.UHCRun;
 import me.infinityz.minigame.players.UHCPlayer;
+import net.citizensnpcs.api.CitizensAPI;
 import net.md_5.bungee.api.ChatColor;
 
 @RequiredArgsConstructor
@@ -257,10 +258,11 @@ public class GameLoop extends BukkitRunnable {
                         var combatLoggers = instance.getGame().getCombatLoggers();
 
                         if (combatLoggers.containsKey(uuid)) {
-                            var npc = combatLoggers.get(uuid);
-                            npc.despawn();
+                            var npcID = combatLoggers.get(uuid);
+                            var combatlog = CitizensAPI.getNPCRegistry().getByUniqueId(npcID);
+                            combatlog.despawn();
                             combatLoggers.remove(uuid);
-                            npc.destroy();
+                            combatlog.destroy();
                         }
                     }
                 });

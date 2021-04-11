@@ -30,7 +30,6 @@ public class UHCPlayer {
     private @Getter @Setter boolean alive = false;
     private @Getter @Setter boolean dead = false;
     private @Getter @Setter double lastKnownHealth = 20.0;
-    private @Getter @Setter double lastKnownXP = 0.0;
     private @Getter @Setter PositionObject lastKnownPosition;
     private @Getter @Setter ItemStack[] lastKnownInventory;
     private static Gson gson = new GsonBuilder().setPrettyPrinting()

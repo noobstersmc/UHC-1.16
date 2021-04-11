@@ -25,7 +25,7 @@ public class Whitelist extends BaseCommand {
         this.instance = instance;
 
         instance.getCommandManager().getCommandCompletions().registerAsyncCompletion("whitelist", c -> {
-            return instance.getGame().getWhitelist().values();
+            return instance.getGame().getWhitelist().keySet();
 
         });
 
@@ -89,7 +89,7 @@ public class Whitelist extends BaseCommand {
     @Subcommand("remove")
     public void remove(CommandSender sender, @Flags("other") String target) {
         var whitelist = instance.getGame().getWhitelist();
-        if(!whitelist.containsValue(target)){
+        if(!whitelist.containsKey(target)){
             sender.sendMessage(ChatColor.RED + "Player " + target + " is not whitelisted.");
         }else{
             whitelist.remove(target);
