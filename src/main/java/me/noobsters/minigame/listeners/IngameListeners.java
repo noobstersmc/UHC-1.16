@@ -10,6 +10,7 @@ import com.destroystokyo.paper.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.EntityEffect;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
@@ -29,7 +30,6 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -50,6 +50,7 @@ import me.noobsters.minigame.events.ScoreboardUpdateEvent;
 import me.noobsters.minigame.events.TeamWinEvent;
 import me.noobsters.minigame.events.UHCPlayerDequalificationEvent;
 import me.noobsters.minigame.game.Game;
+import me.noobsters.minigame.gamemodes.interfaces.TimeBombData;
 import me.noobsters.minigame.gamemodes.types.BareBones;
 import me.noobsters.minigame.gamemodes.types.GoldenRetreiver;
 import me.noobsters.minigame.gamemodes.types.SkyHigh;
@@ -62,6 +63,7 @@ import me.noobsters.minigame.scoreboard.IngameScoreboard;
 import me.noobsters.minigame.scoreboard.objects.UpdateObject;
 import me.noobsters.minigame.teams.objects.Team;
 import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.event.NPCDamageEvent;
 import net.citizensnpcs.api.event.NPCDeathEvent;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.trait.Equipment;
@@ -133,6 +135,13 @@ public class IngameListeners implements Listener {
     }
 
     @EventHandler
+    public void onNPCDamage(NPCDamageEvent e) {
+        if (e.getCause() == DamageCause.SUFFOCATION) {
+            e.setCancelled(true);
+        }
+    }
+
+    @EventHandler
     public void combatLogDeath(NPCDeathEvent e) {
         var npc = e.getNPC();
         var ownerID = npc.getOrAddTrait(Owner.class).getOwnerId();
@@ -145,23 +154,71 @@ public class IngameListeners implements Listener {
 
             var uhcPlayer = playerManager.getPlayer(ownerID);
             var items = uhcPlayer.getLastKnownInventory();
-            for (var item : items) {
-                if (item != null) {
-                    e.getEvent().getDrops().add(item);
+
+            var head = new ItemBuilder(Material.PLAYER_HEAD)
+                    .meta(SkullMeta.class, meta -> meta.setOwningPlayer(Bukkit.getOfflinePlayer(ownerID))).build();
+            var goldenHead = new ItemBuilder(Material.GOLDEN_APPLE).name(ChatColor.GOLD + "Golden Head").build();
+
+            var gamemodeManager = instance.getGamemodeManager();
+
+            var loc = e.getEvent().getEntity().getLocation();
+
+            if (gamemodeManager.isScenarioEnable(TiempoBomba.class)) {
+
+                var timebomb = gamemodeManager.getScenario(TiempoBomba.class);
+
+                loc.getBlock().getRelative(BlockFace.UP).setType(Material.AIR);
+                Bukkit.getScheduler().runTaskLater(instance, () -> {
+                    var dc = timebomb.createDoubleChestAt(loc);
+
+                    for (var item : items) {
+                        if (item != null) {
+                            dc.getInventory().addItem(item);
+                        }
+                    }
+                    if (!instance.getGamemodeManager().isScenarioEnable(GoldenRetreiver.class)) {
+
+                        dc.getInventory().addItem(head);
+                    } else {
+                        dc.getInventory().addItem(goldenHead);
+                    }
+
+                    var holoLoc = new Location(loc.getWorld(), loc.getBlockX() + 0.5, loc.getBlockY(), loc.getBlockZ());
+                    var holo = timebomb.createHoloAt(holoLoc, ChatColor.of(timebomb.getColors().get(30 - 1)) + "30s");
+
+                    timebomb.getHologramChestMap().put(
+                            new TimeBombData(holo, loc.getBlock(), loc.clone().add(0, 0, -1).getBlock()),
+                            System.currentTimeMillis());
+
+                }, 1l);
+
+            } else {
+                if (instance.getGamemodeManager().isScenarioEnable(GoldenRetreiver.class)) {
+
+                    e.getEvent().getDrops().add(goldenHead);
+                } else {
+                    loc.getBlock().setType(getRandomFence());
+
+                    Block headBlock = loc.getBlock().getRelative(BlockFace.UP);
+                    headBlock.setType(Material.PLAYER_HEAD);
+
+                    if (headBlock.getState() instanceof Skull) {
+                        Skull skull = (Skull) headBlock.getState();
+                        skull.setOwningPlayer(Bukkit.getOfflinePlayer(ownerID));
+                        skull.update();
+                    }
+                }
+
+                for (var item : items) {
+                    if (item != null) {
+                        e.getEvent().getDrops().add(item);
+                    }
                 }
             }
 
             var entity = e.getNPC().getEntity();
-            
-            entity.getWorld().strikeLightningEffect(entity.getLocation());
 
-            if(!instance.getGamemodeManager().isScenarioEnable(GoldenRetreiver.class) || !instance.getGamemodeManager().isScenarioEnable(TiempoBomba.class)){
-                var head = new ItemBuilder(Material.PLAYER_HEAD)
-                    .meta(SkullMeta.class, meta -> meta.setOwningPlayer(Bukkit.getOfflinePlayer(ownerID)))
-                    .build();
-                e.getEvent().getDrops().add(head);
-                
-            }
+            entity.getWorld().strikeLightningEffect(entity.getLocation());
 
             uhcPlayer.setDead(true);
             uhcPlayer.setAlive(false);
@@ -169,7 +226,7 @@ public class IngameListeners implements Listener {
             if (killer != null) {
                 Bukkit.broadcastMessage(
                         ChatColor.WHITE + (npc.getName() + " was hunted by " + killer.getName().toString()));
-                if(playerManager.getUhcPlayerMap().containsKey(killer.getUniqueId().getMostSignificantBits())){
+                if (playerManager.getUhcPlayerMap().containsKey(killer.getUniqueId().getMostSignificantBits())) {
                     var uhcKiller = playerManager.getPlayer(killer.getUniqueId());
                     uhcKiller.setKills(uhcKiller.getKills() + 1);
                 }
@@ -432,14 +489,10 @@ public class IngameListeners implements Listener {
 
         if (instance.getGamemodeManager().isScenarioEnable(TiempoBomba.class)
                 && !instance.getGamemodeManager().isScenarioEnable(GoldenRetreiver.class)) {
-            var stack = new ItemStack(Material.PLAYER_HEAD);
-            var meta = stack.getItemMeta();
-            if (meta instanceof SkullMeta) {
-                var skullMeta = (SkullMeta) meta;
-                skullMeta.setOwningPlayer(Bukkit.getOfflinePlayer(p.getUniqueId()));
-                stack.setItemMeta(skullMeta);
-            }
-            e.getDrops().add(stack);
+            var head = new ItemBuilder(Material.PLAYER_HEAD)
+                    .meta(SkullMeta.class, meta -> meta.setOwningPlayer(Bukkit.getOfflinePlayer(p.getUniqueId())))
+                    .build();
+            e.getDrops().add(head);
             return;
         }
 
@@ -564,7 +617,8 @@ public class IngameListeners implements Listener {
         if (p.getKiller() != null) {
             Player killer = p.getKiller();
             Bukkit.getScheduler().runTaskLater(instance, () -> {
-                if(p.getGameMode() == GameMode.SPECTATOR && p.isOnline() && killer.getGameMode() == GameMode.SURVIVAL && killer.isOnline()){
+                if (p.getGameMode() == GameMode.SPECTATOR && p.isOnline() && killer.getGameMode() == GameMode.SURVIVAL
+                        && killer.isOnline()) {
                     p.setSpectatorTarget(killer);
                 }
             }, 160L);

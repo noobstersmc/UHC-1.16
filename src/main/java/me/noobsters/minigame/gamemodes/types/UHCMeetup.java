@@ -27,7 +27,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.EnchantingInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionType;
@@ -395,10 +394,7 @@ public class UHCMeetup extends IGamemode implements Listener {
         var loc = e.getEntity().getPlayer().getLocation();
         loc.getWorld().spawn(loc, ExperienceOrb.class).setExperience(12);
 
-        ItemStack goldenHead = new ItemStack(Material.GOLDEN_APPLE);
-        ItemMeta im = goldenHead.getItemMeta();
-        im.setDisplayName(ChatColor.GOLD + "Golden Head");
-        goldenHead.setItemMeta(im);
+        ItemStack goldenHead = new ItemBuilder(Material.GOLDEN_APPLE).name(ChatColor.GOLD + "Golden Head").build();
         e.getDrops().add(goldenHead);
     }
 

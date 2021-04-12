@@ -10,8 +10,8 @@ import org.bukkit.event.entity.VillagerAcquireTradeEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
+import fr.mrmicky.fastinv.ItemBuilder;
 import me.noobsters.minigame.UHC;
 import me.noobsters.minigame.gamemodes.IGamemode;
 import net.md_5.bungee.api.ChatColor;
@@ -48,10 +48,7 @@ public class BareBones extends IGamemode implements Listener {
         e.getDrops().add(new ItemStack(Material.STRING, 2));
         e.getDrops().add(new ItemStack(Material.ARROW, 16));
 
-        ItemStack goldenHead = new ItemStack(Material.GOLDEN_APPLE);
-        ItemMeta im = goldenHead.getItemMeta();
-        im.setDisplayName(ChatColor.GOLD + "Golden Head");
-        goldenHead.setItemMeta(im);
+        ItemStack goldenHead = new ItemBuilder(Material.GOLDEN_APPLE).name(ChatColor.GOLD + "Golden Head").build();
         e.getDrops().add(goldenHead);
     }
 

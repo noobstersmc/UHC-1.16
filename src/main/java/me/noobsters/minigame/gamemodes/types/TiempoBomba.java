@@ -22,10 +22,10 @@ import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.scheduler.BukkitTask;
 
 import gnu.trove.map.hash.THashMap;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import me.noobsters.minigame.UHC;
 import me.noobsters.minigame.gamemodes.IGamemode;
+import me.noobsters.minigame.gamemodes.interfaces.TimeBombData;
 import net.md_5.bungee.api.ChatColor;
 
 /**
@@ -33,8 +33,8 @@ import net.md_5.bungee.api.ChatColor;
  */
 public class TiempoBomba extends IGamemode implements Listener {
     private UHC instance;
-    private THashMap<TimebombData, Long> hologramChestMap = new THashMap<>();
-    private ArrayList<java.awt.Color> colors = new ArrayList<>();
+    private @Getter THashMap<TimeBombData, Long> hologramChestMap = new THashMap<>();
+    private @Getter ArrayList<java.awt.Color> colors = new ArrayList<>();
     private BukkitTask task;
 
     public TiempoBomba(UHC instance) {
@@ -43,14 +43,6 @@ public class TiempoBomba extends IGamemode implements Listener {
         for (int i = 0; i < 30; i++) {
             colors.add(Color.getHSBColor((i*2.5F)/100.0F, 1.0F, 1.0F));            
         }
-    }
-
-    @Data
-    @AllArgsConstructor
-    public class TimebombData {    
-        ArmorStand armorStand;
-        Block left;
-        Block right;        
     }
 
     private void handleHologramSet() {
@@ -64,8 +56,8 @@ public class TiempoBomba extends IGamemode implements Listener {
                 armorStand.remove();
                 // Maybe explode here?
                 Bukkit.getScheduler().runTask(instance, ()->{
-                    entry.getKey().left.setType(Material.AIR);
-                    entry.getKey().right.setType(Material.AIR);
+                    entry.getKey().getLeft().setType(Material.AIR);
+                    entry.getKey().getRight().setType(Material.AIR);
                     armorStand.getLocation().getWorld().createExplosion(armorStand.getLocation(), 6F);
                 });
                 iterator.remove();
@@ -127,7 +119,7 @@ public class TiempoBomba extends IGamemode implements Listener {
             var holoLoc = new Location(loc.getWorld(), loc.getBlockX() + 0.5, loc.getBlockY(), loc.getBlockZ());
             var holo = createHoloAt(holoLoc, ChatColor.of(colors.get(30-1)) + "30s");
     
-            hologramChestMap.put(new TimebombData(holo, loc.getBlock(), loc.clone().add(0, 0, -1).getBlock()), System.currentTimeMillis());
+            hologramChestMap.put(new TimeBombData(holo, loc.getBlock(), loc.clone().add(0, 0, -1).getBlock()), System.currentTimeMillis());
 
         }, 1l);
     }
@@ -146,7 +138,7 @@ public class TiempoBomba extends IGamemode implements Listener {
         }
     }
 
-    private Chest createDoubleChestAt(Location loc) {
+    public Chest createDoubleChestAt(Location loc) {
         Block leftSide = loc.getBlock();
         Block rightSide = loc.clone().add(0, 0, -1).getBlock();
         rightSide.getRelative(BlockFace.UP).setType(Material.AIR);
@@ -173,7 +165,7 @@ public class TiempoBomba extends IGamemode implements Listener {
         return (Chest) leftSide.getState();
     }
 
-    private ArmorStand createHoloAt(Location loc, String name) {
+    public ArmorStand createHoloAt(Location loc, String name) {
         var holo = loc.getWorld().spawn(loc, ArmorStand.class);
         holo.setCollidable(false);
         holo.setAI(false);

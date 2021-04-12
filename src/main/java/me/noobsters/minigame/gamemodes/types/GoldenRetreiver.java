@@ -5,8 +5,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
+import fr.mrmicky.fastinv.ItemBuilder;
 import me.noobsters.minigame.UHC;
 import me.noobsters.minigame.gamemodes.IGamemode;
 import net.md_5.bungee.api.ChatColor;
@@ -39,10 +39,7 @@ public class GoldenRetreiver extends IGamemode implements Listener {
 
     @EventHandler
     public void onDeath(PlayerDeathEvent e){
-        ItemStack goldenHead = new ItemStack(Material.GOLDEN_APPLE);
-        ItemMeta im = goldenHead.getItemMeta();
-        im.setDisplayName(ChatColor.GOLD + "Golden Head");
-        goldenHead.setItemMeta(im);
+        ItemStack goldenHead = new ItemBuilder(Material.GOLDEN_APPLE).name(ChatColor.GOLD + "Golden Head").build();
         e.getDrops().add(goldenHead);
 
     }
