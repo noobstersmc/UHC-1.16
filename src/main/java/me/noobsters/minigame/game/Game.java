@@ -53,7 +53,7 @@ public class Game {
     private boolean hasSomeoneWon = false;
     private boolean deathMatchDamage = false;
     private boolean antiMining = false;
-    private int uhcslots = 60;
+    private int uhcslots = 50;
     private boolean whitelistEnabled = false;
     private HashMap<String, String> whitelist = new HashMap<>();
     private HashMap<String, UUID> combatLoggers = new HashMap<>();
