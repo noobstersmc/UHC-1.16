@@ -32,6 +32,7 @@ import co.aikar.taskchain.TaskChainFactory;
 import fr.mrmicky.fastinv.FastInvManager;
 import lombok.Getter;
 import lombok.Setter;
+import me.noobsters.minigame.Twitter.TweetCMD;
 import me.noobsters.minigame.border.BorderManager;
 import me.noobsters.minigame.chat.ChatManager;
 import me.noobsters.minigame.chunks.ChunksManager;
@@ -235,6 +236,7 @@ public class UHC extends JavaPlugin {
         commandManager.registerCommand(new GameLoopCMD(this));
         commandManager.registerCommand(new ToolCMD(this));
         commandManager.registerCommand(new Whitelist(this));
+        commandManager.registerCommand(new TweetCMD(this));
 
         commandManager.registerCommand(new InventoriesCMD());
 

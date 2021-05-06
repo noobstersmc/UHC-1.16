@@ -95,6 +95,8 @@ public class GuiManager implements Listener {
                 break;
             case POTIONS: configGui.updatePotions();
                 break;
+            case POTIONS_TIER: configGui.updatePotionsTier();
+                break;
             case STRENGTH: configGui.updateStrength();
                 break;
             case STRENGTH_NERF: configGui.updateStrengthNerf();
@@ -106,6 +108,8 @@ public class GuiManager implements Listener {
             case TRIDENT: configGui.updateTrident();
                 break;
             case TEARS: configGui.updateTears();
+                break;
+            case COBWEB: configGui.updateCobWeb();
                 break;
         
             default:

@@ -21,6 +21,7 @@ import fr.mrmicky.fastinv.ItemBuilder;
 import lombok.Getter;
 import lombok.Setter;
 import me.noobsters.minigame.UHC;
+import me.noobsters.minigame.game.Game.GameInfo;
 import me.noobsters.minigame.gui.CustomGui;
 import net.md_5.bungee.api.ChatColor;
 import net.noobsters.kern.paper.guis.RapidInv;
@@ -276,7 +277,9 @@ public class MainGui extends CustomGui {
         var info = new ItemBuilder(Material.LODESTONE).name(ChatColor.DARK_AQUA + "Information");
         info.addLore(color1 + "Host: " + ChatColor.WHITE + instance.getGame().getHostname());
         info.addLore(color1 + "Slots: " + ChatColor.WHITE + instance.getGame().getUhcslots());
-        info.addLore(color1 + "Game: " + ChatColor.WHITE + (instance.getGame().isPrivateGame() ? "Private" : "Public"));
+        info.addLore(color1 + "Game: " + ChatColor.WHITE + (instance.getGame().isPrivateGame() ? "Private" : instance.getGame().getGameInfo().toString()));
+        info.addLore(color1 + "Stats: " + ChatColor.WHITE + (instance.getGame().getGameInfo() == GameInfo.OFFICIAL ? ChatColor.GREEN + "true" : ChatColor.RED + "false"));
+
         gui.setItem(4, info.build(), action -> {
             var player = (Player) action.getWhoClicked();
             if (player.hasPermission(permissionConfig)) {

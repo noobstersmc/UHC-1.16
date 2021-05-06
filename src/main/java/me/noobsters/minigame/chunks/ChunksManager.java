@@ -27,6 +27,7 @@ public class ChunksManager {
     private @Getter @Setter int distanceThresHold = 100;
 
     private final @Getter ArrayList<Location> locations = new ArrayList<>();
+
     private final @Getter LinkedList<ChunkLoadTask> pendingChunkLoadTasks = new LinkedList<>();
     private @Getter BukkitTask autoChunkScheduler;
 

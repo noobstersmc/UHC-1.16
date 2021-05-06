@@ -25,15 +25,15 @@ public class ListenerManager {
         ingameListeners = new IngameListeners(instance);
         gracePeriodListeners = new GracePeriodListeners(instance);
     
-        Bukkit.getPluginManager().registerEvents(new GlobalListener(instance), instance);
-        Bukkit.getPluginManager().registerEvents(new LoginListeners(instance), instance);
-        Bukkit.getPluginManager().registerEvents(new ConfigListener(instance), instance);
-        Bukkit.getPluginManager().registerEvents(new TeamListeners(instance), instance);
-
+        registerListener(new GlobalListener(instance));
+        registerListener(new ConfigListener(instance));
+        registerListener(new ConfigListener(instance));
+        registerListener(new TeamListeners(instance));
+        registerListener(new StatsListener(instance));
         registerListener(new SpectatorListener(instance));
 
-        Bukkit.getPluginManager().registerEvents(lobby, instance);
-        Bukkit.getPluginManager().registerEvents(gracePeriodListeners, instance);
+        registerListener(lobby);
+        registerListener(gracePeriodListeners);
 
     }
 

@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -103,6 +104,7 @@ public class MonstersInc extends IGamemode implements Listener {
     }
 
     private boolean isValidDoorLocation(Location loc){
+        if(loc.getWorld().getEnvironment() == Environment.NETHER && !instance.getGame().isNether()) return false;
         return isDoor(loc.getBlock()) && Bukkit.getWorld(loc.getWorld().getUID()).getWorldBorder().isInside(loc);
     }
 

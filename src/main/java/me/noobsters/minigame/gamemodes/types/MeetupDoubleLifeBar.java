@@ -42,8 +42,10 @@ public class MeetupDoubleLifeBar extends IGamemode implements Listener {
     public void onJoin(PlayerJoinEvent e){
         var player = e.getPlayer();
         var game = instance.getGame();
-        if(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue() < 40 && game.getGameTime() > game.getBorderTime()){
-            player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(40.0);
+        var hp = player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue();
+        if(hp < 40 && game.getGameTime() > game.getBorderTime()){
+            player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(hp+20.0);
+            player.setHealth(player.getHealth()+20.0);
         }
     }   
 
@@ -51,7 +53,8 @@ public class MeetupDoubleLifeBar extends IGamemode implements Listener {
     public void onStart(GameTickEvent e) {
         if (e.getSecond() == instance.getGame().getBorderTime()) {
             Bukkit.getOnlinePlayers().forEach(players -> {
-                players.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(40.0);
+                var hp = players.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue();
+                players.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(hp+20.0);
                 players.setHealth(players.getHealth()+20.0);
             });
         }

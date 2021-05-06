@@ -83,6 +83,68 @@ public class ConfigGui extends CustomGui {
         updateItemsBurn();
         updateTears();
         updateTrades();
+        updatePotionsTier();
+        updateCobWeb();
+    }
+
+    public void updateCobWeb(){
+        var gui = getGui();
+        var game = instance.getGame();
+        var item = new ItemBuilder(Material.COBWEB).name(ChatColor.YELLOW + "Potions Tier II")
+            .addLore((game.isCobweb()? ChatColor.GREEN : ChatColor.RED) + "" + game.isCobweb()).build();
+
+        gui.setItem(15, item, action->{
+            var player = (Player) action.getWhoClicked();
+            if(player.hasPermission(permissionConfig)){
+
+                player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, SoundCategory.VOICE, 1.0f, 0.1f);
+                
+                var confirmationGui = new ConfirmationGui(new RapidInv(InventoryType.HOPPER, "Toggle cobwebs"), 
+                
+                confirm ->{
+                    Bukkit.dispatchCommand(player, "config cobweb "+ !instance.getGame().isCobweb());
+                    gui.open(player);
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_FLUTE, SoundCategory.VOICE, 1.0f, 1);
+                }, deny->{
+                    gui.open(player);
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO, 1, 0.6f);
+                });
+
+                confirmationGui.open(player);
+                
+            }
+        });
+
+    }
+
+    public void updatePotionsTier(){
+        var gui = getGui();
+        var game = instance.getGame();
+        var item = new ItemBuilder(Material.GLOWSTONE_DUST).name(ChatColor.YELLOW + "Potions tier II")
+            .addLore((game.isPotionsTier()? ChatColor.GREEN : ChatColor.RED) + "" + game.isPotionsTier()).build();
+
+        gui.setItem(14, item, action->{
+            var player = (Player) action.getWhoClicked();
+            if(player.hasPermission(permissionConfig)){
+
+                player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, SoundCategory.VOICE, 1.0f, 0.1f);
+                
+                var confirmationGui = new ConfirmationGui(new RapidInv(InventoryType.HOPPER, "Toggle potions tier II"), 
+                
+                confirm ->{
+                    Bukkit.dispatchCommand(player, "config potions-tier "+ !instance.getGame().isPotionsTier());
+                    gui.open(player);
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_FLUTE, SoundCategory.VOICE, 1.0f, 1);
+                }, deny->{
+                    gui.open(player);
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO, 1, 0.6f);
+                });
+
+                confirmationGui.open(player);
+                
+            }
+        });
+
     }
 
     public void updateTrades(){

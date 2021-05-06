@@ -57,13 +57,15 @@ public class ConfigListener implements Listener {
 
     @EventHandler
     public void onItemSpawn(ItemSpawnEvent e) {
-        if (instance.getGame().isTears())
-            return;
         var stack = e.getEntity().getItemStack();
         var type = stack.getType();
-        if (type == Material.GHAST_TEAR) {
+        if (!instance.getGame().isTears() && type == Material.GHAST_TEAR){
             stack.setType(Material.GOLD_INGOT);
+            
+        }else if(!instance.getGame().isCobweb() && type == Material.COBWEB){
+            stack.setType(Material.STRING);
         }
+
     }
 
     @EventHandler
@@ -163,86 +165,17 @@ public class ConfigListener implements Listener {
     }
 
     /**
-     * Strength nerf
+     * Brewing stuff nerf
      */
 
     @EventHandler
     public void strength(BrewEvent e) {
         if (!instance.getGame().isStrength() && e.getContents().getIngredient().getType() == Material.BLAZE_POWDER) {
             e.setCancelled(true);
-            return;
+
+        }else if(!instance.getGame().isPotionsTier() && e.getContents().getIngredient().getType() == Material.GLOWSTONE_DUST){
+            e.setCancelled(true);
         }
-        /*
-        if (instance.getGame().isStrengthNerf()) {
-            var storage = e.getContents().getStorageContents();
-            ItemStack[] potions = {};
-            for (int i = 0; i < storage.length; i++) {
-                var potion = storage[i];
-                if(potion.getItemMeta() instanceof PotionMeta){
-                    PotionMeta potionMeta = (PotionMeta) potion.getItemMeta();
-
-                final var type = potionMeta.getBasePotionData().getType();
-
-                if (type == PotionType.STRENGTH) {
-                    final var upgraded = potionMeta.getBasePotionData().isUpgraded();
-                    final var extended = potionMeta.getBasePotionData().isExtended();
-
-                    final String[] lore = {};
-
-                    switch (potion.getType()) {
-
-                        case LINGERING_POTION:{
-                            if(upgraded){
-                                lore[0] = ChatColor.BLUE + "Strength II (0:22)";
-                                lore[1] = "";
-                                lore[2] = ChatColor.DARK_PURPLE + "When Applied:";
-                                lore[3] = ChatColor.BLUE + "+3 Attack Damage";
-                            }else if(extended){
-                                lore[0] = ChatColor.BLUE + "Strength (2:00)";
-                                lore[1] = "";
-                                lore[2] = ChatColor.DARK_PURPLE + "When Applied:";
-                                lore[3] = ChatColor.BLUE + "+1.5 Attack Damage";
-                            }else{
-                                lore[0] = ChatColor.BLUE + "Strength (0:45)";
-                                lore[1] = "";
-                                lore[2] = ChatColor.DARK_PURPLE + "When Applied:";
-                                lore[3] = ChatColor.BLUE + "+1.5 Attack Damage";
-                            }
-                        }break;
-
-                        default:{
-                            if(upgraded){
-                                lore[0] = ChatColor.BLUE + "Strength II (1:30)";
-                                lore[1] = "";
-                                lore[2] = ChatColor.DARK_PURPLE + "When Applied:";
-                                lore[3] = ChatColor.BLUE + "+3 Attack Damage";
-                            }else if(extended){
-                                lore[0] = ChatColor.BLUE + "Strength (8:00)";
-                                lore[1] = "";
-                                lore[2] = ChatColor.DARK_PURPLE + "When Applied:";
-                                lore[3] = ChatColor.BLUE + "+1.5 Attack Damage";
-                            }else{
-                                lore[0] = ChatColor.BLUE + "Strength (3:00)";
-                                lore[1] = "";
-                                lore[2] = ChatColor.DARK_PURPLE + "When Applied:";
-                                lore[3] = ChatColor.BLUE + "+1.5 Attack Damage";
-                            }
-                        }break;
-
-                        }
-
-                    var item = new ItemBuilder(potion.getType()).addLore(lore)
-                            .meta(PotionMeta.class,
-                                    meta -> meta.setBasePotionData(new PotionData(type, extended, upgraded)))
-                            .flags(ItemFlag.HIDE_POTION_EFFECTS).build();
-
-                    potions[i] = item;
-                }
-                }
-
-            }
-            e.getContents().setStorageContents(potions);
-        }*/
 
     }
 

@@ -77,11 +77,14 @@ public class Game {
     private boolean nether = true;
     private boolean end = false;
     private boolean advancements = false;
-    private boolean potions = true;
     private double appleRate = 0.80f;
     private double flintRate = 3.00f;
     private int maxDisconnectTime = 600;
+    private GameInfo gameInfo = GameInfo.COMMUNITY;
     /* Game Nerfs && Buffers */
+    private boolean cobweb = true;
+    private boolean potions = true;
+    private boolean potionsTier = true;
     private boolean beds = true;
     private boolean strength = true;
     private boolean itemsBurn = true;
@@ -242,6 +245,12 @@ public class Game {
         return instance.getPlayerManager().getAlivePlayers();
     }
 
+    public enum GameInfo {
+        PRIVATE,
+        COMMUNITY,
+        OFFICIAL
+    }
+
     public enum ConfigType {
         APPLE_RATE,
         FLINT_RATE,
@@ -256,6 +265,8 @@ public class Game {
         ITEMS_BURN, 
         TRIDENT, 
         TEARS,
+        POTIONS_TIER,
+        COBWEB,
 
         GAME, 
         HOSTNAME, 
@@ -270,6 +281,17 @@ public class Game {
     }
 
     //change privategame to enum
+
+    public void setCobweb(boolean cobweb) {
+        this.cobweb = cobweb;
+        Bukkit.getPluginManager().callEvent(new ConfigChangeEvent(ConfigType.COBWEB));
+    }
+
+    public void setPotionsTier(boolean potionsTier) {
+        this.potionsTier = potionsTier;
+        Bukkit.getPluginManager().callEvent(new ConfigChangeEvent(ConfigType.POTIONS_TIER));
+    }
+
     public void setPrivateGame(boolean privateGame) {
         this.privateGame = privateGame;
         Bukkit.getPluginManager().callEvent(new ConfigChangeEvent(ConfigType.GAME));

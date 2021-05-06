@@ -10,33 +10,42 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import me.noobsters.minigame.UHC;
 import me.noobsters.minigame.players.serializers.ItemStackSerializers;
 import me.noobsters.minigame.teams.objects.Team;
 
 @RequiredArgsConstructor
-public class UHCPlayer {
+public @Data class UHCPlayer {
     @SuppressWarnings("java:S116")
     private final @Getter UUID UUID;
-    private @Getter @Setter int kills = 0;
-    private @Getter @Setter int minedDiamonds = 0;
-    private @Getter @Setter int minedGold = 0;
-    private @Getter @Setter int minedAncientDebris = 0;
-    private @Getter @Setter boolean thanksHost = false;
-    private @Getter @Setter boolean specInfo = false;
-    private @Getter @Setter boolean alive = false;
-    private @Getter @Setter boolean dead = false;
-    private @Getter @Setter double lastKnownHealth = 20.0;
-    private @Getter @Setter PositionObject lastKnownPosition;
-    private @Getter @Setter ItemStack[] lastKnownInventory;
+    private boolean thanksHost = false;
+    private boolean specInfo = false;
+    private boolean alive = false;
+    private boolean dead = false;
+    private double lastKnownHealth = 20.0;
+    private PositionObject lastKnownPosition;
+    private ItemStack[] lastKnownInventory;
     private static Gson gson = new GsonBuilder().setPrettyPrinting()
             .registerTypeAdapter(ItemStack.class, ItemStackSerializers.getItemStackSerializer())
             .registerTypeAdapter(ItemStack[].class, ItemStackSerializers.getItemStackArraySerializer()).create();
     private static Gson gsonNoInv = new GsonBuilder().setPrettyPrinting()
             .registerTypeAdapter(ItemStack[].class, ItemStackSerializers.getItemStackSerializerNoItems()).create();
+
+    //Stats
+    private int kills = 0;
+    private int projectileShoots = 0;
+    private int projectileHits = 0;
+    private int minedDiamonds = 0;
+    private int minedGold = 0;
+    private int minedAncientDebris = 0;
+    private int hostileMobs = 0;
+    private int peacefulMobs = 0;
+    private int goldenHeads = 0;
+    private int notchApples = 0;
+    private int goldenApples = 0;
 
     @Override
     public String toString() {

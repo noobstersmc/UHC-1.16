@@ -50,6 +50,7 @@ import me.noobsters.minigame.events.ScoreboardUpdateEvent;
 import me.noobsters.minigame.events.TeamWinEvent;
 import me.noobsters.minigame.events.UHCPlayerDequalificationEvent;
 import me.noobsters.minigame.game.Game;
+import me.noobsters.minigame.game.Game.GameInfo;
 import me.noobsters.minigame.gamemodes.interfaces.TimeBombData;
 import me.noobsters.minigame.gamemodes.types.BareBones;
 import me.noobsters.minigame.gamemodes.types.GoldenRetreiver;
@@ -588,7 +589,7 @@ public class IngameListeners implements Listener {
                 if (!game.isPrivateGame() && game.getWhitelist().containsKey(name)) {
                     game.getWhitelist().remove(name);
                 }
-                if (!game.isPrivateGame() && game.getGameTime() > game.getPvpTime()
+                if (!game.isPrivateGame() && instance.getGame().getGameInfo() == GameInfo.OFFICIAL && game.getGameTime() > game.getPvpTime()
                         && game.getGameTime() < game.getBorderTime()) {
                     Bukkit.getScheduler().runTaskLater(instance, () -> {
                         if (!game.getWhitelist().containsKey(name) && !p.hasPermission("uhc.spec.ingame"))

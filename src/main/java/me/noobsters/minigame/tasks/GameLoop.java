@@ -28,6 +28,7 @@ import me.noobsters.minigame.events.GameTickEvent;
 import me.noobsters.minigame.events.NetherDisabledEvent;
 import me.noobsters.minigame.events.UHCPlayerDequalificationEvent;
 import me.noobsters.minigame.game.Game;
+import me.noobsters.minigame.game.Game.GameInfo;
 import me.noobsters.minigame.gamemodes.types.FallOut;
 import me.noobsters.minigame.gamemodes.types.GoToHell;
 import me.noobsters.minigame.gamemodes.types.UHCRun;
@@ -159,7 +160,7 @@ public class GameLoop extends BukkitRunnable {
 
                 if (instance.getTeamManger().isTeamManagement())
                     instance.getTeamManger().setTeamManagement(false);
-                if (!instance.getGamemodeManager().isScenarioEnable(UHCRun.class))
+                if (instance.getGame().getGameInfo() == GameInfo.OFFICIAL)
                     game.setWhitelistEnabled(true);
                 var listeners = instance.getListenerManager();
                 listeners.unregisterListener(listeners.getGracePeriodListeners());

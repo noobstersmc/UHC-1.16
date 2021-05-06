@@ -258,6 +258,32 @@ public @RequiredArgsConstructor class ConfigCommand extends BaseCommand {
     }
 
     @CommandPermission("uhc.config.cmd")
+    @Subcommand("potions-tier")
+    @CommandAlias("potions-tier")
+    @CommandCompletion("@bool")
+    public void changePotionsTier(CommandSender sender, @Optional Boolean bool) {
+        if (bool == null)
+            bool = !instance.getGame().isPotionsTier();
+
+        instance.getGame().setPotionsTier(bool);
+        var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
+        Bukkit.broadcast(senderName + ChatColor.YELLOW + "Potions Tier II has been set to: " + bool, permissionDebug);
+    }
+
+    @CommandPermission("uhc.config.cmd")
+    @Subcommand("cobweb")
+    @CommandAlias("cobweb")
+    @CommandCompletion("@bool")
+    public void changeCobWeb(CommandSender sender, @Optional Boolean bool) {
+        if (bool == null)
+            bool = !instance.getGame().isCobweb();
+
+        instance.getGame().setCobweb(bool);
+        var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
+        Bukkit.broadcast(senderName + ChatColor.YELLOW + "CobWebs has been set to: " + bool, permissionDebug);
+    }
+
+    @CommandPermission("uhc.config.cmd")
     @Subcommand("strength")
     @CommandAlias("strength")
     @CommandCompletion("@bool")
