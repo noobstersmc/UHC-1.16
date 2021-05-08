@@ -26,7 +26,9 @@ public class PlayerManager {
     }
 
     public void updateStats(){
-        
+        uhcPlayerMap.values().parallelStream().forEach(player->{
+
+        });
     }
 
     public UHCPlayer getPlayer(UUID uuid) {
