@@ -25,6 +25,10 @@ public class PlayerManager {
         return uhcPlayerMap.get(uuid.getMostSignificantBits());
     }
 
+    public void updateStats(){
+        
+    }
+
     public UHCPlayer getPlayer(UUID uuid) {
         return uhcPlayerMap.get(uuid.getMostSignificantBits());
     }
