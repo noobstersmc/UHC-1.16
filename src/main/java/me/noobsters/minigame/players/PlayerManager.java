@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
+
 import gnu.trove.map.hash.THashMap;
 import lombok.Getter;
 import lombok.NonNull;
@@ -26,8 +28,9 @@ public class PlayerManager {
     }
 
     public void updateStats(){
+        Bukkit.broadcastMessage("START");
         uhcPlayerMap.values().parallelStream().forEach(player->{
-
+            var kern = instance.getKern().getInstance();
         });
     }
 

@@ -83,7 +83,7 @@ dependencies {
     /** Corpse Plugin */
     compileOnly 'org.kovalski:CorpseMaster:0.2.1'
     /** Added kern */
-    compileOnly 'net.noobsters:kern:0.2D-SNAPSHOT'
+    compileOnly 'net.noobsters:kern:0.2E-SNAPSHOT'
     compileOnly 'net.citizensnpcs:citizens-main:2.0.27-SNAPSHOT'
     //group ID : ARTIFACT ID : VERSION
 }
