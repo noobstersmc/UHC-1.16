@@ -282,6 +282,11 @@ public class Game {
 
     //change privategame to enum
 
+    public void setGameInfo(GameInfo gameInfo){
+        this.gameInfo = gameInfo;
+        Bukkit.getPluginManager().callEvent(new ConfigChangeEvent(ConfigType.GAME));
+    }
+
     public void setCobweb(boolean cobweb) {
         this.cobweb = cobweb;
         Bukkit.getPluginManager().callEvent(new ConfigChangeEvent(ConfigType.COBWEB));

@@ -266,6 +266,12 @@ public class MainGui extends CustomGui {
         if (!game.isTrades())
             settings.addLore(
                     color1 + "Trades: " + (game.isTrades() ? ChatColor.GREEN : ChatColor.RED) + game.isTrades());
+        if (!game.isPotionsTier())
+            settings.addLore(
+                    color1 + "Potions tier II: " + (game.isPotionsTier() ? ChatColor.GREEN : ChatColor.RED) + game.isPotionsTier());
+        if (!game.isCobweb())
+            settings.addLore(
+                    color1 + "Cobweb: " + (game.isCobweb() ? ChatColor.GREEN : ChatColor.RED) + game.isCobweb());
 
         gui.setItem(3, settings.build(), action -> {
             configGui.open((Player) action.getWhoClicked());

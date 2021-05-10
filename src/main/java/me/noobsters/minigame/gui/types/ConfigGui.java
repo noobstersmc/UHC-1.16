@@ -90,7 +90,7 @@ public class ConfigGui extends CustomGui {
     public void updateCobWeb(){
         var gui = getGui();
         var game = instance.getGame();
-        var item = new ItemBuilder(Material.COBWEB).name(ChatColor.YELLOW + "Potions Tier II")
+        var item = new ItemBuilder(Material.COBWEB).name(ChatColor.YELLOW + "Cobwebs")
             .addLore((game.isCobweb()? ChatColor.GREEN : ChatColor.RED) + "" + game.isCobweb()).build();
 
         gui.setItem(15, item, action->{

@@ -39,6 +39,7 @@ import me.noobsters.minigame.chunks.ChunksManager;
 import me.noobsters.minigame.condor.CondorAPI;
 import me.noobsters.minigame.events.PlayerJoinedLateEvent;
 import me.noobsters.minigame.game.Game;
+import me.noobsters.minigame.game.Game.GameInfo;
 import me.noobsters.minigame.game.border.FortniteBorder;
 import me.noobsters.minigame.players.PositionObject;
 import me.noobsters.minigame.players.UHCPlayer;
@@ -399,12 +400,29 @@ public class UHCCommand extends BaseCommand {
         Bukkit.broadcast(senderName + ChatColor.YELLOW + "CombatLog has been set to: " + bool, permissionDebug);
     }
 
+    @CommandPermission("staff.perm")
+    @Subcommand("official")
+    @CommandAlias("official")
+    @CommandCompletion("@bool")
+    public void officialGame(CommandSender sender, @Optional Boolean bool) {
+        if (bool == null)
+            bool = !(instance.getGame().getGameInfo() == GameInfo.OFFICIAL);
+
+        if(bool){
+            instance.getGame().setGameInfo(GameInfo.OFFICIAL);
+        }else{
+            instance.getGame().setGameInfo(GameInfo.COMMUNITY);
+        }
+        var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
+        Bukkit.broadcast(senderName + ChatColor.of("#c76905") + "Official UHC Competitive game has been set to: " + bool, permissionDebug);
+    }
+
     @Subcommand("setHost")
     @CommandCompletion("@onlineplayers")
     @CommandPermission("uhc.admin")
     public void changeHost(CommandSender sender, String newHost) {
         instance.getGame().setHostname(newHost);
-        sender.sendMessage("New host = " + newHost);
+        Bukkit.broadcastMessage(ChatColor.GREEN + "New host: " + sender.getName());
 
     }
 
@@ -429,7 +447,7 @@ public class UHCCommand extends BaseCommand {
     @CommandPermission("staff.perm")
     public void claimHost(CommandSender sender) {
         instance.getGame().setHostname(sender.getName());
-        sender.sendMessage("New host = " + sender.getName());
+        Bukkit.broadcastMessage(ChatColor.GREEN + "New host: " + sender.getName());
     }
 
     @Data

@@ -146,6 +146,13 @@ public class CraftingManager implements Listener {
         ItemMeta itemMeta = e.getItem().getItemMeta();
         if (itemMeta.getDisplayName().equalsIgnoreCase(ChatColor.GOLD + "Golden Head")) {
             e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20 * 10, 1));
+
+            var uuid = e.getPlayer().getUniqueId();
+            var playerManager = instance.getPlayerManager();
+            if(playerManager.getUhcPlayerMap().contains(uuid.getMostSignificantBits())){
+                var player = playerManager.getUhcPlayerMap().get(uuid.getMostSignificantBits());
+                player.setGoldenHeads(player.getGoldenHeads()+1);
+            }
         }
     }
 

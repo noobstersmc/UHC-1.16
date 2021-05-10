@@ -1,5 +1,6 @@
 package me.noobsters.minigame.listeners;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -9,9 +10,14 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import lombok.NonNull;
 import me.noobsters.minigame.UHC;
+import me.noobsters.minigame.events.GameStartedEvent;
+import me.noobsters.minigame.events.PlayerJoinedLateEvent;
+import me.noobsters.minigame.events.UHCPlayerDequalificationEvent;
 
 public class StatsListener implements Listener {
 
@@ -19,6 +25,27 @@ public class StatsListener implements Listener {
 
     public StatsListener(UHC instance) {
         this.instance = instance;
+    }
+
+    @EventHandler
+    public void onItemConsume(PlayerItemConsumeEvent e) {
+        var item = e.getItem().getType();
+        ItemMeta itemMeta = e.getItem().getItemMeta();
+
+        var uuid = e.getPlayer().getUniqueId();
+        var playerManager = instance.getPlayerManager();
+        if (playerManager.getUhcPlayerMap().contains(uuid.getMostSignificantBits())) {
+            var player = playerManager.getUhcPlayerMap().get(uuid.getMostSignificantBits());
+
+            if(item == Material.GOLDEN_APPLE && !itemMeta.hasDisplayName()){
+                player.setGoldenApples(player.getGoldenApples() + 1);
+
+            }else if(item == Material.ENCHANTED_GOLDEN_APPLE){
+                player.setNotchApples(player.getNotchApples() + 1);
+            }
+            
+        }
+
     }
 
     @EventHandler
@@ -51,6 +78,28 @@ public class StatsListener implements Listener {
                 uhcPlayer.setProjectileShoots(uhcPlayer.getProjectileShoots() + 1);
             }
         }
+    }
+
+    @EventHandler
+    public void onStart(GameStartedEvent e) {
+        instance.getPlayerManager().getUhcPlayerMap().values().forEach(player -> {
+            player.setStartToPlay(System.currentTimeMillis());
+        });
+
+    }
+
+    @EventHandler
+    public void onLatePlay(PlayerJoinedLateEvent e) {
+        var uuid = e.getPlayer().getUniqueId();
+        var uhcPlayers = instance.getPlayerManager().getUhcPlayerMap();
+        if (uhcPlayers.containsKey(uuid.getMostSignificantBits())) {
+            uhcPlayers.get(uuid.getMostSignificantBits()).setStartToPlay(System.currentTimeMillis());
+        }
+    }
+
+    @EventHandler
+    public void onStopToPlay(UHCPlayerDequalificationEvent e) {
+        e.getUhcPlayer().setStopToPlay(System.currentTimeMillis());
     }
 
     @EventHandler

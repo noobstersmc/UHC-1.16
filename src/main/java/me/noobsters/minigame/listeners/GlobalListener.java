@@ -33,6 +33,7 @@ import me.noobsters.minigame.events.GameStartedEvent;
 import me.noobsters.minigame.events.NetherDisabledEvent;
 import me.noobsters.minigame.events.TeleportationCompletedEvent;
 import me.noobsters.minigame.game.Game;
+import me.noobsters.minigame.game.Game.GameInfo;
 import me.noobsters.minigame.gamemodes.types.UHCMeetup;
 import me.noobsters.minigame.scoreboard.IngameScoreboard;
 import me.noobsters.minigame.tasks.AntiFallDamage;
@@ -186,7 +187,12 @@ public class GlobalListener implements Listener {
             instance.getGame().getWhitelist().put(name, uuid);
             bar.addPlayer(players);
         });
-        Bukkit.broadcastMessage(GameLoop.SHAMROCK_GREEN + "UHC has started!");
+
+        if(instance.getGame().getGameInfo() == GameInfo.OFFICIAL) 
+            Bukkit.broadcastMessage(ChatColor.of("#c76905") + "Official Competitive UHC game has started.");
+        else 
+            Bukkit.broadcastMessage(GameLoop.SHAMROCK_GREEN + "UHC has started!");
+
         showRules();
 
         new AntiFallDamage(instance, Bukkit.getOnlinePlayers().stream()

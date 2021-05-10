@@ -12,6 +12,8 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import me.noobsters.minigame.UHC;
+import net.md_5.bungee.api.ChatColor;
+import net.noobsters.kern.paper.Kern;
 
 @RequiredArgsConstructor
 public class PlayerManager {
@@ -27,11 +29,52 @@ public class PlayerManager {
         return uhcPlayerMap.get(uuid.getMostSignificantBits());
     }
 
-    public void updateStats(){
-        Bukkit.broadcastMessage("START");
+    public void updateStats(List<UHCPlayer> winners){
         uhcPlayerMap.values().parallelStream().forEach(player->{
-            var kern = instance.getKern().getInstance();
+            var statsManager = Kern.getInstance().getStatsManager();
+            var uuid = player.getUUID().toString();
+
+            if(winners.contains(player)){
+                statsManager.incUHCStats(uuid, "win_streak_count", 1);
+                statsManager.incUHCStats(uuid, "wins", 1);
+            }else{
+                statsManager.setUHCStats(uuid, "win_streak_count", 0);
+            }
+
+            var playerStats = statsManager.incUHCStats(uuid, "deaths", 1);
+            var stats = playerStats.obtainUHCStats();
+
+            if(stats.getWinStreakCount() > stats.getWinStreak()) statsManager.setUHCStats(uuid, "win_streak", stats.getWinStreakCount());
+            
+            statsManager.incUHCStats(uuid, "kills", player.getKills());
+
+            if(stats.getKillRecord() > player.getKills()) statsManager.setUHCStats(uuid, "kill_record", player.getKills());
+
+            var time = player.getStopToPlay() == 0L ? System.currentTimeMillis()-player.getStartToPlay() : player.getStopToPlay()-player.getStartToPlay();
+            statsManager.incUHCStats(uuid, "time_played", time);
+
+            statsManager.incUHCStats(uuid, "hostile_mobs", player.getHostileMobs());
+
+            statsManager.incUHCStats(uuid, "peaceful_mobs", player.getPeacefulMobs());
+
+            statsManager.incUHCStats(uuid, "projectile_shoot", player.getProjectileShoots());
+
+            statsManager.incUHCStats(uuid, "projectile_hit", player.getProjectileHits());
+
+            statsManager.incUHCStats(uuid, "notch_apple", player.getNotchApples());
+
+            statsManager.incUHCStats(uuid, "golden_head", player.getGoldenHeads());
+
+            statsManager.incUHCStats(uuid, "golden_apple", player.getGoldenApples());
+
+            statsManager.incUHCStats(uuid, "diamond", player.getMinedDiamonds());
+
+            statsManager.incUHCStats(uuid, "gold", player.getMinedGold());
+
+            statsManager.incUHCStats(uuid, "netherite", player.getMinedAncientDebris());
         });
+
+        Bukkit.broadcastMessage(ChatColor.of("#c76905") + "UHC statistics updated.");
     }
 
     public UHCPlayer getPlayer(UUID uuid) {

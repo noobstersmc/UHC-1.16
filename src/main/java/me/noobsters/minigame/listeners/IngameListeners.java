@@ -1,5 +1,6 @@
 package me.noobsters.minigame.listeners;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -231,6 +232,11 @@ public class IngameListeners implements Listener {
                     var uhcKiller = playerManager.getPlayer(killer.getUniqueId());
                     uhcKiller.setKills(uhcKiller.getKills() + 1);
                 }
+
+                var team = instance.getTeamManger().getPlayerTeam(killer.getUniqueId());
+                if (team != null)
+                    team.addKills(1);
+                    
             } else {
                 Bukkit.broadcastMessage(ChatColor.WHITE + npc.getName() + " was destroyed.");
             }
@@ -636,14 +642,32 @@ public class IngameListeners implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onPlayerWin(PlayerWinEvent e) {
         var player = e.getPlayer();
+        var uuid = player.getUniqueId();
+        var playerManager = instance.getPlayerManager();
+
         playWinEffect(player);
+
+        List<UHCPlayer> list = new ArrayList<>();
+        list.add(playerManager.getPlayer(uuid));
+
+        if(instance.getGame().getGameInfo() == GameInfo.OFFICIAL){
+            playerManager.updateStats(list);
+        }
 
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onTeamWinEvent(TeamWinEvent e) {
+        var playerManager = instance.getPlayerManager();
         var team = instance.getTeamManger().getTeamMap().get(e.getTeamUUID());
+
         playTeamWinEffect(team);
+
+        var list = team.getMembersUUIDStream().map(id -> instance.getPlayerManager().getPlayer(id)).collect(Collectors.toList());
+
+        if(instance.getGame().getGameInfo() == GameInfo.OFFICIAL){
+            playerManager.updateStats(list);
+        }
     }
 
     /*

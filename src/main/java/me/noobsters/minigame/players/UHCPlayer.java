@@ -34,6 +34,8 @@ public @Data class UHCPlayer {
     private static Gson gsonNoInv = new GsonBuilder().setPrettyPrinting()
             .registerTypeAdapter(ItemStack[].class, ItemStackSerializers.getItemStackSerializerNoItems()).create();
 
+    private long startToPlay = 0L;
+    private long stopToPlay = 0L;
     //Stats
     private int kills = 0;
     private int projectileShoots = 0;
