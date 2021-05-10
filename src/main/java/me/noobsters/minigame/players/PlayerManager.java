@@ -48,7 +48,7 @@ public class PlayerManager {
             
             statsManager.incUHCStats(uuid, "kills", player.getKills());
 
-            if(stats.getKillRecord() > player.getKills()) statsManager.setUHCStats(uuid, "kill_record", player.getKills());
+            if(player.getKills() > stats.getKillRecord()) statsManager.setUHCStats(uuid, "kill_record", player.getKills());
 
             var time = player.getStopToPlay() == 0L ? System.currentTimeMillis()-player.getStartToPlay() : player.getStopToPlay()-player.getStartToPlay();
             statsManager.incUHCStats(uuid, "time_played", time);
