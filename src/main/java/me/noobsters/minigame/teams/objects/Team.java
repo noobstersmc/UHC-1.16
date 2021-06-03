@@ -34,7 +34,7 @@ public class Team {
     private @Getter @Setter UUID teamLeader;
     private @Getter UUID teamID;
     private @Getter @Setter UUID[] members;
-    private @Getter @Setter String teamDisplayName;
+    private @Getter String teamDisplayName;
     private @Getter @Setter int teamKills;
     private @Getter @Setter String teamPrefix = "➤ ";
     private @Getter @Setter int teamColorIndex = 10;
@@ -45,8 +45,18 @@ public class Team {
         this.teamLeader = teamLeader;
         this.teamKills = 0;
         this.teamDisplayName = teamID.toString().substring(0, 6);
-        this.teamColorIndex = localRandom.nextInt(13)+1;
+        this.teamColorIndex = localRandom.nextInt(13) + 1;
         addMember(teamLeader);
+    }
+
+    /**
+     * Function that changes the Team's DisplayName to the provided String with a
+     * limit of 6 characters.
+     * 
+     * @param newDisplayName New displayname, max length of 6 chars.
+     */
+    public void setTeamDisplayName(String newDisplayName) {
+        this.teamDisplayName = newDisplayName.substring(0, (Math.min(6, newDisplayName.length())));
     }
 
     public boolean isMember(UUID uuid) {
@@ -185,7 +195,8 @@ public class Team {
         try {
             var ID = "1" + getIdentifier();
             FastBoard.removeTeam(player, ID);
-            FastBoard.createTeam(player, members, ID, showPrefix ? "["+ getTeamDisplayName() + "] " : "", getTeamColorIndex());
+            FastBoard.createTeam(player, members, ID, showPrefix ? "[" + getTeamDisplayName() + "] " : "",
+                    getTeamColorIndex());
         } catch (ReflectiveOperationException ex) {
             ex.printStackTrace();
         }
@@ -202,15 +213,15 @@ public class Team {
 
     }
 
-    //team inventory
+    // team inventory
 
-    public void createTeamInventory(){
-        teamInventory = Bukkit.createInventory(null, 36, isCustomName() ? 
-        getTeamDisplayName()+ "'s team inventory" : "Team inventory");
+    public void createTeamInventory() {
+        teamInventory = Bukkit.createInventory(null, 36,
+                isCustomName() ? getTeamDisplayName() + "'s team inventory" : "Team inventory");
 
     }
 
-    public void destroyTeamInventory(){
+    public void destroyTeamInventory() {
         teamInventory = null;
     }
 }
