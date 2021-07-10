@@ -26,6 +26,7 @@ import org.bukkit.event.player.PlayerPortalEvent;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandCompletion;
+import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Name;
 import co.aikar.commands.annotation.Subcommand;
@@ -35,6 +36,7 @@ import lombok.Data;
 import me.noobsters.minigame.UHC;
 import net.md_5.bungee.api.ChatColor;
 
+@CommandPermission("admin.uhc")
 @CommandAlias("portals")
 public class PortalListeners extends BaseCommand implements Listener {
 
@@ -206,26 +208,25 @@ public class PortalListeners extends BaseCommand implements Listener {
     // Travel function
     public boolean travelDimensions(Entity entity, Location from, World target, int ratio, boolean go) {
         var calcRatio = new Location(target, from.getX() / ratio, from.getY(), from.getZ() / ratio);
-        if(!go){
+        if (!go) {
             calcRatio = new Location(target, from.getX() * ratio, from.getY(), from.getZ() * ratio);
 
             var worldBorderSize = (int) Bukkit.getWorld("world").getWorldBorder().getSize() / 2;
             var absX = Math.abs(calcRatio.getX());
             var absZ = Math.abs(calcRatio.getZ());
-            if(absX >= worldBorderSize){
-                if(calcRatio.getX() >= 0)
-                    calcRatio.setX(worldBorderSize-10);
+            if (absX >= worldBorderSize) {
+                if (calcRatio.getX() >= 0)
+                    calcRatio.setX(worldBorderSize - 10);
                 else
                     calcRatio.setX(~(worldBorderSize - 10));
             }
-            if(absZ >= worldBorderSize){
-                if(calcRatio.getZ() >= 0)
-                    calcRatio.setZ(worldBorderSize-10);
+            if (absZ >= worldBorderSize) {
+                if (calcRatio.getZ() >= 0)
+                    calcRatio.setZ(worldBorderSize - 10);
                 else
                     calcRatio.setZ(~(worldBorderSize - 10));
             }
         }
-        
 
         final var ratioed_target = calcRatio;
 
