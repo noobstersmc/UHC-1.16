@@ -96,7 +96,7 @@ public @RequiredArgsConstructor class TweetCMD extends BaseCommand {
                 tweet.append("UHC 1.16 " + size + "\n");
                 tweet.append("IP noobsters.net\n");
                 tweet.append("\n");
-                tweet.append(minutes + "m + Meetup in " + timeLeft + "\n");
+                tweet.append(minutes/60 + "m + Meetup in " + timeLeft + "\n");
                 tweet.append(formatted + " (https://time.is/ET)\n");
                 tweet.append("\n");
 
