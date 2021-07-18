@@ -45,15 +45,18 @@ public class TeamListeners implements Listener {
 
             if (e.getDamager() instanceof Player) {
                 var team = instance.getTeamManger().getPlayerTeam(e.getDamager().getUniqueId());
-                if(team.isMember(player.getUniqueId())){
+
+                if(team != null && team.isMember(player.getUniqueId())){
                     p2 = (Player) e.getDamager();
                 }
+
             } else if (e.getDamager() instanceof Projectile) {
                 Projectile proj = (Projectile) e.getDamager();
                 if (proj.getShooter() instanceof Player) {
                     var shooter = (Player) proj.getShooter();
                     var team = instance.getTeamManger().getPlayerTeam(shooter.getUniqueId());
-                    if(team.isMember(player.getUniqueId())){
+
+                    if(team != null && team.isMember(player.getUniqueId())){
                         p2 = (Player) proj.getShooter();
                     }
                 }

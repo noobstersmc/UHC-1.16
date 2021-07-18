@@ -42,7 +42,7 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
         gamemodes.add(gamemodeManager.getScenario(Cutclean.class));
         gamemodes.add(gamemodeManager.getScenario(HasteyBoys.class));
         gamemodes.add(gamemodeManager.getScenario(Timber.class));
-        gamemodes.add(gamemodeManager.getScenario(FastLeaves.class));
+        //gamemodes.add(gamemodeManager.getScenario(FastLeaves.class));
         gamemodes.add(gamemodeManager.getScenario(LuckyLeaves.class));
         gamemodes.add(gamemodeManager.getScenario(FastSmelting.class));
 
@@ -155,13 +155,15 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
 
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(ignoreCancelled = true) 
     public void extraXp(BlockBreakEvent e) {
         if(instance.getGame().isAntiMining()) return;
+
         var loc = e.getBlock().getLocation();
         if (e.getBlock().getType().toString().contains("ORE")) {
             loc.getWorld().spawn(loc, ExperienceOrb.class).setExperience(3);
         }
+
         if (random.nextInt(5) == 0) {
             var block = e.getBlock().getType();
             if (block == Material.GRASS || block == Material.TALL_GRASS || block == Material.SEAGRASS) {

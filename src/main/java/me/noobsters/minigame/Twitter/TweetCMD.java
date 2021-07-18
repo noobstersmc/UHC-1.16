@@ -73,13 +73,14 @@ public @RequiredArgsConstructor class TweetCMD extends BaseCommand {
     @CommandPermission("post.cmd")
     @Subcommand("post")
     @CommandAlias("post")
-    public void post(CommandSender sender, Integer time, String... gameConfig) {
+    public void post(CommandSender sender, Integer time) {
         try {
 
-            var game = "";
-            for (var option : gameConfig) {
-                game = game + option + " ";
-            }
+            var size = instance.getTeamManger().getTeamSize() > 1 ? "Teams of " + instance.getTeamManger().getTeamSize() : "FFA";
+            var scenarios = instance.getGamemodeManager().getEnabledGamemodesToString();
+            var game = size + " " + scenarios;
+            var minutes = instance.getGame().getBorderTime();
+
             sender.sendMessage(game);
 
             var future = getTimeInFuture(time);
@@ -89,12 +90,25 @@ public @RequiredArgsConstructor class TweetCMD extends BaseCommand {
                 sender.sendMessage(ChatColor.RED
                         + "Couldn't post must be more than 10 minutes in advance and less than 30 minutes in advance.");
             } else {
-                String tweet =
 
-                        "UHC 1.16.X" + "\n\n" + game + "\n" + "1h + Meetup \n\n" + timeLeft + "\n" + formatted
-                                + " (https://time.is/ET) \n\n IP noobsters.net";
+                var tweet = new StringBuilder();
 
-                tweet(sender, tweet);
+                tweet.append("UHC 1.16 " + size + "\n");
+                tweet.append("IP noobsters.net\n");
+                tweet.append("\n");
+                tweet.append(minutes + "m + Meetup in " + timeLeft + "\n");
+                tweet.append(formatted + " (https://time.is/ET)\n");
+                tweet.append("\n");
+
+                var iter = instance.getGamemodeManager().getEnabledGamemodes().iterator();
+
+                if(iter.hasNext())
+                    while (iter.hasNext())
+                        tweet.append("- " + iter.next().getName() + "\n");
+                else
+                    tweet.append("- Vanilla+");
+
+                tweet(sender, tweet.toString());
             }
 
         } catch (Exception e) {

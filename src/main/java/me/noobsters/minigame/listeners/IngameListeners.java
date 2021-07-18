@@ -54,7 +54,7 @@ import me.noobsters.minigame.game.Game;
 import me.noobsters.minigame.game.Game.GameInfo;
 import me.noobsters.minigame.gamemodes.interfaces.TimeBombData;
 import me.noobsters.minigame.gamemodes.types.BareBones;
-import me.noobsters.minigame.gamemodes.types.GoldenRetreiver;
+import me.noobsters.minigame.gamemodes.types.GoldenRetriever;
 import me.noobsters.minigame.gamemodes.types.SkyHigh;
 import me.noobsters.minigame.gamemodes.types.TiempoBomba;
 import me.noobsters.minigame.gamemodes.types.UHCMeetup;
@@ -178,7 +178,7 @@ public class IngameListeners implements Listener {
                             dc.getInventory().addItem(item);
                         }
                     }
-                    if (!instance.getGamemodeManager().isScenarioEnable(GoldenRetreiver.class)) {
+                    if (!instance.getGamemodeManager().isScenarioEnable(GoldenRetriever.class)) {
 
                         dc.getInventory().addItem(head);
                     } else {
@@ -195,7 +195,7 @@ public class IngameListeners implements Listener {
                 }, 1l);
 
             } else {
-                if (instance.getGamemodeManager().isScenarioEnable(GoldenRetreiver.class)) {
+                if (instance.getGamemodeManager().isScenarioEnable(GoldenRetriever.class)) {
 
                     e.getEvent().getDrops().add(goldenHead);
                 } else {
@@ -236,7 +236,7 @@ public class IngameListeners implements Listener {
                 var team = instance.getTeamManger().getPlayerTeam(killer.getUniqueId());
                 if (team != null)
                     team.addKills(1);
-                    
+
             } else {
                 Bukkit.broadcastMessage(ChatColor.WHITE + npc.getName() + " was destroyed.");
             }
@@ -299,7 +299,7 @@ public class IngameListeners implements Listener {
 
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onAntiMiningMine(BlockBreakEvent e) {
         var block = e.getBlock();
         if (instance.getGame().isAntiMining()) {
@@ -489,13 +489,13 @@ public class IngameListeners implements Listener {
     @EventHandler
     public void onDeathHead(PlayerDeathEvent e) {
         final Player p = e.getEntity();
-        if (instance.getGamemodeManager().isScenarioEnable(GoldenRetreiver.class)
+        if (instance.getGamemodeManager().isScenarioEnable(GoldenRetriever.class)
                 || instance.getGamemodeManager().isScenarioEnable(UHCMeetup.class)
                 || instance.getGamemodeManager().isScenarioEnable(BareBones.class))
             return;
 
         if (instance.getGamemodeManager().isScenarioEnable(TiempoBomba.class)
-                && !instance.getGamemodeManager().isScenarioEnable(GoldenRetreiver.class)) {
+                && !instance.getGamemodeManager().isScenarioEnable(GoldenRetriever.class)) {
             var head = new ItemBuilder(Material.PLAYER_HEAD)
                     .meta(SkullMeta.class, meta -> meta.setOwningPlayer(Bukkit.getOfflinePlayer(p.getUniqueId())))
                     .build();
@@ -555,13 +555,15 @@ public class IngameListeners implements Listener {
 
         } else if (instance.getPlayerManager().getAlivePlayers() == 1) {
             // FFA Games
-            var lastAlivePlayer = solos.get(0);
-            if (lastAlivePlayer != null) {
-                Bukkit.getPluginManager().callEvent(new PlayerWinEvent(lastAlivePlayer.getUUID(), true));
-                instance.getGame().setHasSomeoneWon(true);
-                Bukkit.getScheduler().runTask(instance, () -> {
-                    Kern.getInstance().getChatManager().setSpecChat(false);
-                });
+            if (!solos.isEmpty()) {
+                var lastAlivePlayer = solos.get(0);
+                if (lastAlivePlayer != null) {
+                    Bukkit.getPluginManager().callEvent(new PlayerWinEvent(lastAlivePlayer.getUUID(), true));
+                    instance.getGame().setHasSomeoneWon(true);
+                    Bukkit.getScheduler().runTask(instance, () -> {
+                        Kern.getInstance().getChatManager().setSpecChat(false);
+                    });
+                }
             }
 
         }
@@ -595,8 +597,8 @@ public class IngameListeners implements Listener {
                 if (!game.isPrivateGame() && game.getWhitelist().containsKey(name)) {
                     game.getWhitelist().remove(name);
                 }
-                if (!game.isPrivateGame() && instance.getGame().getGameInfo() == GameInfo.OFFICIAL && game.getGameTime() > game.getPvpTime()
-                        && game.getGameTime() < game.getBorderTime()) {
+                if (!game.isPrivateGame() && instance.getGame().getGameInfo() == GameInfo.OFFICIAL
+                        && game.getGameTime() > game.getPvpTime() && game.getGameTime() < game.getBorderTime()) {
                     Bukkit.getScheduler().runTaskLater(instance, () -> {
                         if (!game.getWhitelist().containsKey(name) && !p.hasPermission("uhc.spec.ingame"))
                             p.kickPlayer(ChatColor.WHITE + "Your spectator period is over.\n" + Game.getUpToMVP());
@@ -650,7 +652,7 @@ public class IngameListeners implements Listener {
         List<UHCPlayer> list = new ArrayList<>();
         list.add(playerManager.getPlayer(uuid));
 
-        if(instance.getGame().getGameInfo() == GameInfo.OFFICIAL){
+        if (instance.getGame().getGameInfo() == GameInfo.OFFICIAL) {
             playerManager.updateStats(list);
         }
 
@@ -663,9 +665,10 @@ public class IngameListeners implements Listener {
 
         playTeamWinEffect(team);
 
-        var list = team.getMembersUUIDStream().map(id -> instance.getPlayerManager().getPlayer(id)).collect(Collectors.toList());
+        var list = team.getMembersUUIDStream().map(id -> instance.getPlayerManager().getPlayer(id))
+                .collect(Collectors.toList());
 
-        if(instance.getGame().getGameInfo() == GameInfo.OFFICIAL){
+        if (instance.getGame().getGameInfo() == GameInfo.OFFICIAL) {
             playerManager.updateStats(list);
         }
     }

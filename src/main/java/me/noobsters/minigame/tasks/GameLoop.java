@@ -147,21 +147,27 @@ public class GameLoop extends BukkitRunnable {
             // PVP ON
 
             Bukkit.getScheduler().runTask(instance, () -> {
-                Bukkit.getOnlinePlayers().forEach(players -> {
-                    if (!game.isPrivateGame() && players.getGameMode() == GameMode.SPECTATOR
-                            && !players.hasPermission("uhc.spec.ingame")) {
-                        players.kickPlayer(ChatColor.WHITE + "Spectators have been disabled.\n" + Game.getUpToMVP());
-                    }
-                    players.playSound(players.getLocation(), Sound.BLOCK_END_PORTAL_SPAWN, 1, 1.9F);
-                });
+
+                if(!game.isPrivateGame()){
+                    Bukkit.getOnlinePlayers().forEach(players -> {
+                        if (players.getGameMode() == GameMode.SPECTATOR
+                                && !players.hasPermission("uhc.spec.ingame")) {
+                            players.kickPlayer(ChatColor.WHITE + "Spectators have been disabled.\n" + Game.getUpToMVP());
+                        }
+                        players.playSound(players.getLocation(), Sound.BLOCK_END_PORTAL_SPAWN, 1, 1.9F);
+                    });
+                }
+                
                 game.setPvp(true);
                 game.setCombatLog(true);
                 Bukkit.broadcastMessage(SHAMROCK_GREEN + "PvP has been enabled.");
 
                 if (instance.getTeamManger().isTeamManagement())
                     instance.getTeamManger().setTeamManagement(false);
+
                 if (instance.getGame().getGameInfo() == GameInfo.OFFICIAL)
                     game.setWhitelistEnabled(true);
+                    
                 var listeners = instance.getListenerManager();
                 listeners.unregisterListener(listeners.getGracePeriodListeners());
 
@@ -261,7 +267,11 @@ public class GameLoop extends BukkitRunnable {
                         if (combatLoggers.containsKey(uuid)) {
                             var npcID = combatLoggers.get(uuid);
                             var combatlog = CitizensAPI.getNPCRegistry().getByUniqueId(npcID);
-                            combatlog.despawn();
+                            
+                            Bukkit.getScheduler().runTask(instance, task->{
+                                combatlog.despawn();
+                            });
+
                             combatLoggers.remove(uuid);
                             combatlog.destroy();
                         }

@@ -4,6 +4,7 @@ import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 import co.aikar.commands.BaseCommand;
@@ -38,6 +39,11 @@ public class HelpopCommand extends BaseCommand {
 
         Bukkit.broadcast(sunflowerYellow + "[Helpop] " + ChatColor.GRAY + player.getName() + ": " + message,
                 "helpop.hear");
+        Bukkit.getOnlinePlayers().forEach(p ->{
+            if(p.hasPermission("helpop.hear")){
+                p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, 1, 1);
+            }
+        });
     }
 
     @Subcommand("thanks|tk|tks")

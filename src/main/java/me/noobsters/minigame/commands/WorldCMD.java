@@ -117,6 +117,7 @@ public class WorldCMD extends BaseCommand {
 
     private void refreshWorldCMDs(World world) {
         world.setGameRule(GameRule.NATURAL_REGENERATION, false);
+        world.setGameRule(GameRule.DO_FIRE_TICK, false);
         world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
         world.setGameRule(GameRule.DO_PATROL_SPAWNING, false);
         world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, instance.getGame().isAdvancements());

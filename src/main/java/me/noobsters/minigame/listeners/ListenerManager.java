@@ -30,6 +30,7 @@ public class ListenerManager {
         registerListener(new ConfigListener(instance));
         registerListener(new TeamListeners(instance));
         registerListener(new StatsListener(instance));
+        registerListener(new LoginListeners(instance));
         registerListener(new SpectatorListener(instance));
 
         registerListener(lobby);

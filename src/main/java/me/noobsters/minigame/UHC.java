@@ -341,6 +341,7 @@ public class UHC extends JavaPlugin {
 
         Bukkit.getWorlds().forEach(it -> {
             it.setGameRule(GameRule.NATURAL_REGENERATION, false);
+            it.setGameRule(GameRule.DO_FIRE_TICK, false);
             it.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
             it.setGameRule(GameRule.DO_PATROL_SPAWNING, false);
             it.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, game.isAdvancements());

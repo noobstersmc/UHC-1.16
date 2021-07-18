@@ -134,6 +134,12 @@ public class DamageCycle extends IGamemode implements Listener {
 
         @Default
         public void changeDelay(CommandSender sender, Integer newDelay) {
+
+            if(newDelay == 0) {
+                sender.sendMessage(ChatColor.RED + "ERROR: Can't be 0");
+                return;
+            }
+
             delay = newDelay*60;
             var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
             Bukkit.broadcast(senderName + ChatColor.YELLOW + "Damage Cycle delay has change to: " + newDelay + " minutes.", permissionDebug);

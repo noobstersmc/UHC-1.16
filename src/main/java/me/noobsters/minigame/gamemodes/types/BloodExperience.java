@@ -38,7 +38,7 @@ public class BloodExperience extends IGamemode implements Listener {
     public void xpChange(PlayerLevelChangeEvent e){
         var diff = e.getOldLevel()-e.getNewLevel();
         var hp = e.getPlayer().getHealth();
-        if(diff > 0){
+        if(diff > 0 && hp-diff > 0){
             e.getPlayer().setHealth(hp-diff);
             e.getPlayer().damage(0.01);
         }

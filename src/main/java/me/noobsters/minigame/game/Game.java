@@ -58,17 +58,21 @@ public class Game {
     private HashMap<String, String> whitelist = new HashMap<>();
     private HashMap<String, UUID> combatLoggers = new HashMap<>();
     private boolean combatLog = false;
-    private String[] rules = new String[] { ChatColor.YELLOW + "UHC RULES:",
+    private String[] rules = new String[] { 
+            ChatColor.YELLOW + "UHC RULES:",
             ChatColor.AQUA + "1. " + ChatColor.WHITE + "Stalking is not allowed. ",
             ChatColor.AQUA + "2. " + ChatColor.WHITE + "Stealing is not allowed. ",
             ChatColor.AQUA + "3. " + ChatColor.WHITE + "iPvP is not allowed. ",
             ChatColor.AQUA + "4. " + ChatColor.WHITE + "Nether portal camping is not allowed.",
             ChatColor.AQUA + "5. " + ChatColor.WHITE + "Nether portal trapping is not allowed.",
-            ChatColor.AQUA + "6. " + ChatColor.WHITE
-                    + "CrossTeam, Truce or Teaming someone else is not your team is not allowed.",
-            ChatColor.AQUA + "7. " + ChatColor.WHITE + "Meetup starts when border reaches 500 blocks of radius.",
-            ChatColor.AQUA + "8. " + ChatColor.WHITE + "SkyBases are not allowed at meetup.",
-            ChatColor.AQUA + "9. " + ChatColor.WHITE + "Mining is not allowed at meetup.",
+            ChatColor.AQUA + "6. " + ChatColor.WHITE + "CrossTeam, Truce or Teaming someone else is not your team is not allowed.",
+            ChatColor.AQUA + "7. " + ChatColor.WHITE + "Camping is not allowed at meetup.",
+            ChatColor.AQUA + "8. " + ChatColor.WHITE + "Improper actions inciting hate speech are not allowed.",
+            ChatColor.AQUA + "9. " + ChatColor.WHITE + "Inappropriate structures or lag structures are not allowed.",
+            ChatColor.AQUA + "10. " + ChatColor.WHITE + "Account Sharing is not allowed.",
+            ChatColor.AQUA + "11. " + ChatColor.WHITE + "SkyBases are not allowed at meetup.",
+            ChatColor.AQUA + "12. " + ChatColor.WHITE + "Mining is not allowed at meetup.",
+            ChatColor.AQUA + "13. " + ChatColor.WHITE + "Camping is not allowed at meetup.",
             ChatColor.AQUA + "Good Luck!" };
     /* Game config */
     private boolean autoDestruction = true;

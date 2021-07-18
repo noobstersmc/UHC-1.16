@@ -78,7 +78,8 @@ public class InfiniteEnchanter extends IGamemode implements Listener {
     public void onInventoryClick(InventoryClickEvent e) {
         Inventory inv = e.getInventory();
         ItemStack item = e.getCurrentItem();
-        if (inv instanceof EnchantingInventory) {
+
+        if (item != null && inv instanceof EnchantingInventory) {
 
             if (item.getType().equals(lapis.getType())) {
                 e.setCancelled(true);

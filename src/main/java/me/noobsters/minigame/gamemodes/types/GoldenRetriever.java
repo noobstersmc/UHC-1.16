@@ -11,11 +11,11 @@ import me.noobsters.minigame.UHC;
 import me.noobsters.minigame.gamemodes.IGamemode;
 import net.md_5.bungee.api.ChatColor;
 
-public class GoldenRetreiver extends IGamemode implements Listener {
+public class GoldenRetriever extends IGamemode implements Listener {
     private UHC instance;
 
-    public GoldenRetreiver(UHC instance) {
-        super("GoldenRetreiver", "Players drop Golden Heads.", Material.GOLDEN_APPLE);
+    public GoldenRetriever(UHC instance) {
+        super("GoldenRetriever", "Players drop Golden Heads.", Material.GOLDEN_APPLE);
         this.instance = instance;
     }
 
