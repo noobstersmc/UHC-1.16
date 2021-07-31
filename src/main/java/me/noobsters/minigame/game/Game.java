@@ -72,7 +72,7 @@ public class Game {
             COLOR_1 + "7. " + ChatColor.WHITE + "Camping is not allowed at meetup.",
             COLOR_1 + "8. " + ChatColor.WHITE + "Improper actions inciting hate speech are not allowed.",
             COLOR_1 + "9. " + ChatColor.WHITE + "Inappropriate/Lag structures are not allowed.",
-            COLOR_1 + "12. " + ChatColor.WHITE + "SkyBases are not allowed at meetup.",
+            COLOR_1 + "10. " + ChatColor.WHITE + "SkyBases are not allowed at meetup.",
             COLOR_1 + "11. " + ChatColor.WHITE + "Mining is not allowed at meetup.",
             COLOR_2 + "Good Luck!" };
     /* Game config */
