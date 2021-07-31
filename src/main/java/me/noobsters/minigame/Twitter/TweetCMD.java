@@ -20,6 +20,7 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
+import co.aikar.commands.annotation.Optional;
 import co.aikar.commands.annotation.Subcommand;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -73,7 +74,7 @@ public @RequiredArgsConstructor class TweetCMD extends BaseCommand {
     @CommandPermission("post.cmd")
     @Subcommand("post")
     @CommandAlias("post")
-    public void post(CommandSender sender, Integer time) {
+    public void post(CommandSender sender, Integer time, @Optional String optional) {
         try {
 
             var size = instance.getTeamManger().getTeamSize() > 1 ? "Teams of " + instance.getTeamManger().getTeamSize() : "FFA";
@@ -96,7 +97,7 @@ public @RequiredArgsConstructor class TweetCMD extends BaseCommand {
                 tweet.append("UHC 1.16 " + size + "\n");
                 tweet.append("IP noobsters.net\n");
                 tweet.append("\n");
-                tweet.append(minutes/60 + "m + Meetup in " + timeLeft + "\n");
+                tweet.append("[" + minutes/60 + "m + Meetup] " + timeLeft + "\n");
                 tweet.append(formatted + " (https://time.is/ET)\n");
                 tweet.append("\n");
 
@@ -107,6 +108,10 @@ public @RequiredArgsConstructor class TweetCMD extends BaseCommand {
                         tweet.append("- " + iter.next().getName() + "\n");
                 else
                     tweet.append("- Vanilla+");
+
+                if(optional != null){
+                    tweet.append("[" + optional + "]");
+                }
 
                 tweet(sender, tweet.toString());
             }

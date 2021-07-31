@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameRule;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.enchantments.Enchantment;
@@ -84,6 +85,10 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "bordersize 1000");
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "game score RUN");
 
+        Bukkit.getWorlds().forEach(it -> {
+            it.setGameRule(GameRule.RANDOM_TICK_SPEED, 100);
+        });
+
         return true;
     }
 
@@ -109,6 +114,11 @@ public class UHCRun extends IGamemode implements ScenarioPack, Listener {
         instance.getListenerManager().unregisterListener(this);
 
         setEnabled(false);
+
+        Bukkit.getWorlds().forEach(it -> {
+            it.setGameRule(GameRule.RANDOM_TICK_SPEED, 3);
+        });
+
         return true;
     }
 
