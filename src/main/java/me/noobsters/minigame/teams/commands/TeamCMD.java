@@ -22,6 +22,7 @@ import co.aikar.commands.annotation.Optional;
 import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.annotation.Syntax;
 import me.noobsters.minigame.UHC;
+import me.noobsters.minigame.game.Game;
 import me.noobsters.minigame.teams.events.PlayerJoinedTeamEvent;
 import me.noobsters.minigame.teams.events.PlayerKickedFromTeamEvent;
 import me.noobsters.minigame.teams.events.PlayerLeftTeamEvent;
@@ -205,8 +206,16 @@ public class TeamCMD extends BaseCommand {
     @Subcommand("rename|name")
     @Syntax("<teamName> - New name for your team")
     public void teamRename(@Conditions("hasTeam|isTeamLeader") Player player, String teamName) {
+
+        if(player.hasPermission("team.rename")){
+            player.sendMessage(Game.getUpToVIP());
+            return;
+        }
+        
+
         var team = getPlayerTeam(player.getUniqueId());
         team.setTeamDisplayName(teamName);
+        
         if(instance.getTeamManger().isBroacastColor()){
             team.updateDisplay(instance.getTeamManger().isBroacastColor(), instance.getTeamManger().isShowPrefix());
         }

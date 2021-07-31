@@ -39,13 +39,15 @@ public class Team {
     private @Getter @Setter String teamPrefix = "➤ ";
     private @Getter @Setter int teamColorIndex = 10;
     private @Getter Inventory teamInventory;
+    private static int teamNumber = 1;
 
     public Team(UUID teamLeader) {
         this.teamID = UUID.randomUUID();
         this.teamLeader = teamLeader;
         this.teamKills = 0;
-        this.teamDisplayName = teamID.toString().substring(0, 6);
+        this.teamDisplayName = "#" + teamNumber;
         this.teamColorIndex = localRandom.nextInt(13) + 1;
+        teamNumber++;
         addMember(teamLeader);
     }
 

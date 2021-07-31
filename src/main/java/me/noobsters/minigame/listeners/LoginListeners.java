@@ -1,7 +1,6 @@
 package me.noobsters.minigame.listeners;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -18,17 +17,73 @@ public class LoginListeners implements Listener {
     private @NonNull UHC instance;
             
     private static String FULL_MESSAGE = ChatColor.translateAlternateColorCodes('&',
-            "&fY los billetes?! \n &aUpgrade your rank at &6noobsters.buycraft.net");
-    //private static String NOT_IN_WL = ChatColor.WHITE + "You are not in whitelist.\n" + ChatColor.RED + "Request whitelist to the host.";
-    //private static String NOT_PLAYING = ChatColor.WHITE + "You are not in whitelist.\n" + Game.getUpToMVP();
+            "&fServer full! \n &aUpgrade your rank at &6noobsters.buycraft.net");
+    
+    private static String PRIVATE_NO_WL = ChatColor.translateAlternateColorCodes('&',
+            "&fPrivate Game! You need whitelist to enter.");
+    
+    private static String NO_SPEC_RANK = ChatColor.translateAlternateColorCodes('&',
+            "&fY los billetes?! You rank doesn't have spectator mode. \n &aUpgrade your rank at &6noobsters.buycraft.net");
     
     @EventHandler(priority = EventPriority.HIGHEST)
     public void slotLimit(PlayerLoginEvent e) {
         final var player = e.getPlayer();
         
-        if (!shouldLogin(player)){
+        final var uuid = player.getUniqueId().toString();
+        final var online = Bukkit.getOnlinePlayers().size();
+        final var maxSlots = instance.getGame().getUhcslots();
+        
+        var game = instance.getGame();
+        
+        if(player.hasPermission("host.perm")) return;
+
+        if(online >= maxSlots && !player.hasPermission("reserved.slot")){
+
+            //MSG SERVER IS FULL
             e.disallow(org.bukkit.event.player.PlayerLoginEvent.Result.KICK_FULL, FULL_MESSAGE);
             return;
+        }
+        
+        if(game.isPrivateGame()){
+            
+            if(game.isWhitelistEnabled()){
+                if(game.getWhitelist().containsValue(uuid)){
+                    return;
+
+                }else{
+                    //MSG GAME PRIVADO NO ESTAS EN WL
+                    e.disallow(org.bukkit.event.player.PlayerLoginEvent.Result.KICK_FULL, PRIVATE_NO_WL);
+                    return;
+                }
+
+            }else{
+                return;
+            }
+        
+
+        }else{
+
+            if(game.isWhitelistEnabled()){
+                if(game.getWhitelist().containsValue(uuid)){
+                    return;
+
+                }else {
+                    if(player.hasPermission("uhc.spec.ingame")){
+                        
+                        return;
+                    }else{
+                        //MSG NO TIENES RANK PARA SPEC
+                        e.disallow(org.bukkit.event.player.PlayerLoginEvent.Result.KICK_FULL, NO_SPEC_RANK);
+                        return;
+                    }
+
+                }
+
+            }else{
+
+                return;
+            }
+
         }
 
     }
@@ -37,35 +92,64 @@ public class LoginListeners implements Listener {
     public void slotLimit(PlayerJoinEvent e) {
         final var player = e.getPlayer();
 
-        if (!shouldLogin(player)){
-            player.kickPlayer(FULL_MESSAGE);
-            return;
-        }
-
-    }
-
-    private boolean shouldLogin(Player player) {
         final var uuid = player.getUniqueId().toString();
         final var online = Bukkit.getOnlinePlayers().size();
         final var maxSlots = instance.getGame().getUhcslots();
         
         var game = instance.getGame();
+        
+        if(player.hasPermission("host.perm")) return;
 
-        /*Bukkit.broadcastMessage("perm " + player.hasPermission("reserved.slot") + " " + player.hasPermission("host.perm"));
-        Bukkit.broadcastMessage("private? " + !instance.getGame().isPrivateGame() + " " + player.hasPermission("uhc.spec.ingame"));
-        Bukkit.broadcastMessage("online " + (online < maxSlots) + " " +  instance.getGame().getWhitelist().containsValue(uuid));*/
+        if(online >= maxSlots && !player.hasPermission("reserved.slot")){
 
-        if(((!player.hasPermission("host.perm") || !player.hasPermission("reserved.slot")) && online >= maxSlots) 
-            || (game.isPrivateGame() && !player.hasPermission("uhc.spec.ingame")) 
-                || (game.isWhitelistEnabled() && !game.getWhitelist().containsValue(uuid) && !player.hasPermission("host.perm"))){
+            //MSG SERVER IS FULL
+            player.kickPlayer(FULL_MESSAGE);
+            return;
+        }
+        
+        if(game.isPrivateGame()){
+            
+            if(game.isWhitelistEnabled()){
+                if(game.getWhitelist().containsValue(uuid)){
+                    return;
 
-                return false;
+                }else{
+                    //MSG GAME PRIVADO NO ESTAS EN WL
+                    player.kickPlayer(PRIVATE_NO_WL);
+                    return;
+                }
+
+            }else{
+                return;
+            }
+        
+
+        }else{
+
+            if(game.isWhitelistEnabled()){
+                if(game.getWhitelist().containsValue(uuid)){
+                    return;
+
+                }else {
+                    if(player.hasPermission("uhc.spec.ingame")){
+                        
+                        return;
+                    }else{
+                        //MSG NO TIENES RANK PARA SPEC
+                        player.kickPlayer(NO_SPEC_RANK);
+                        return;
+                    }
+
+                }
+
+            }else{
+
+                return;
+            }
+
         }
 
-        return true;
-
     }
-
 
 
 }
