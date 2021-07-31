@@ -208,7 +208,7 @@ public class TeamCMD extends BaseCommand {
     public void teamRename(@Conditions("hasTeam|isTeamLeader") Player player, String teamName) {
 
         if(player.hasPermission("team.rename")){
-            player.sendMessage(Game.getUpToVIP());
+            player.sendMessage(Game.getUpToMVP());
             return;
         }
         
