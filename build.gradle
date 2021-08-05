@@ -9,11 +9,10 @@ plugins {
     id 'maven'
     id 'com.github.johnrengelman.shadow' version '6.0.0'
     id "io.freefair.lombok" version '5.3.0'
-    id "org.sonarqube" version "3.1.1"
 }
 
 group = 'net.noobsters'
-version = '0.8A-SNAPSHOT'
+version = '0.8B-SNAPSHOT'
 description = 'Noobsters UHC Engine'
 java.sourceCompatibility = JavaVersion.VERSION_11
 
@@ -23,31 +22,29 @@ tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
 
-sonarqube {
-  properties {
-    property "sonar.projectKey", "noobstersmc_UHC-1.16"
-    property "sonar.organization", "noobstersmc"
-    property "sonar.host.url", "https://sonarcloud.io"
-  }
-}
-
 compileJava {
     options.compilerArgs += ["-parameters"]
     options.fork = true
     options.forkOptions.executable = 'javac'
 }
-uploadArchives {
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+        }
+    }
     repositories {
-        mavenDeployer{
-            repository(url: "https://hynix-repository.ue.r.appspot.com/") {
-                authentication(userName: "jcedeno", password: "PinchePerro")
+        maven {
+            url 'https://dev.repo.noobsters.net/'
+            credentials {
+                username "${hynx_usr}"
+                password "${hynx_pass}"
             }
-            pom.version = "0.8A-SNAPSHOT"
-            pom.artifactId = "uhc"
-            pom.groupId = "net.noobsters"
         }
     }
 }
+
 repositories {
     mavenLocal()
     mavenCentral()
@@ -60,11 +57,11 @@ repositories {
     maven { url 'https://repo.maven.apache.org/maven2/'}
     maven { url 'https://repo.citizensnpcs.co/'}
     maven {
+        url 'https://dev.repo.noobsters.net/'
         credentials {
-            username 'jcedeno'
-            password 'PinchePerro'
+            username "${hynx_usr}"
+            password "${hynx_pass}"
         }
-        url "https://hynix-repository.ue.r.appspot.com"
     }
 }
 

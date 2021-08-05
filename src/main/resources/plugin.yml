@@ -1,6 +1,6 @@
 main: me.noobsters.minigame.UHC
 name: UHC-1.16
-version: 0.5D
+version: 0.8B
 description: "Redundant and optimized UHC minigame plugin."
 api-version: "1.16"
 api: "1.16"

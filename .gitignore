@@ -21,6 +21,7 @@ lombok.config
 
 ### Gradle & IntelliJ ###
 .gradle/
+gradle.properties
 /.idea/
 build/
 out/
