@@ -83,7 +83,7 @@ public class UHC extends JavaPlugin {
     private @Getter GuiManager guiManager;
     private @Getter @Setter Game game;
     private @Getter BorderManager borderManager;
-    private @Getter CondorManager condorManager;
+//    private @Getter CondorManager condorManager;
     private @Getter JsonObject condorConfig;
     private @Getter PortalListeners portalListeners;
     /* Statics */
@@ -111,7 +111,7 @@ public class UHC extends JavaPlugin {
     public void onLoad() {
         /* Before anything else happens, try to obtain information from condor/lair */
         String condor_secret = null;
-        CONDOR_ID = getCondorID();
+//        CONDOR_ID = getCondorID();
 
         if (JSON_CONFIG != null) {
             var json = JSON_CONFIG.getJsonObject();
@@ -175,24 +175,24 @@ public class UHC extends JavaPlugin {
 
 
         /* Create the base world with the correct seed */
-        try {
-            if (condorDataConfig != null) {
-                var level_seed = condorDataConfig.getLevel_seed();
-                if (level_seed.contains("random")) {
-                    SEED = CondorAPI.getCondorRandomSeed();
-                } else {
-                    SEED = level_seed;
-                }
-            } else {
-                SEED = CondorAPI.getCondorRandomSeed();
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        System.out.println("[CONDOR] Seed will be " + SEED);
-
-        condorManager = new CondorManager(this);
+//        try {
+//            if (condorDataConfig != null) {
+//                var level_seed = condorDataConfig.getLevel_seed();
+//                if (level_seed.contains("random")) {
+//                    SEED = CondorAPI.getCondorRandomSeed();
+//                } else {
+//                    SEED = level_seed;
+//                }
+//            } else {
+//                SEED = CondorAPI.getCondorRandomSeed();
+//            }
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        System.out.println("[CONDOR] Seed will be " + SEED);
+//
+//        condorManager = new CondorManager(this);
 
         try {
             Long.valueOf(SEED);

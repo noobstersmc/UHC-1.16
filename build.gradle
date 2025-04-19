@@ -39,15 +39,7 @@ publishing {
             from components.java
         }
     }
-    repositories {
-        maven {
-            url 'https://dev.repo.noobsters.net/'
-            credentials {
-                username "${hynx_usr}"
-                password "${hynx_pass}"
-            }
-        }
-    }
+
 }
 
 repositories {
@@ -60,32 +52,28 @@ repositories {
     maven { url 'http://nexus.hc.to/content/repositories/pub_releases'}
     maven { url 'https://maven.enginehub.org/repo/'}
     maven { url 'https://repo.maven.apache.org/maven2/'}
-    maven { url 'https://repo.citizensnpcs.co/'}
     maven {
-        url 'https://dev.repo.noobsters.net/'
-        credentials {
-            username "${hynx_usr}"
-            password "${hynx_pass}"
-        }
+        url "https://maven.citizensnpcs.co/repo"
     }
+
 }
 
 dependencies {
-    compile 'redis.clients:jedis:3.3.0'
-    compile 'com.squareup.okhttp3:okhttp:4.9.0'
-    compile 'co.aikar:acf-paper:0.5.0-SNAPSHOT'
-    compile 'co.aikar:taskchain-bukkit:3.7.2'
+    implementation 'redis.clients:jedis:3.3.0'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.0'
+    implementation 'co.aikar:acf-paper:0.5.0-SNAPSHOT'
+    implementation 'co.aikar:taskchain-bukkit:3.7.2'
     compile 'net.sf.trove4j:core:3.1.0'
     compile 'com.github.ben-manes.caffeine:caffeine:2.8.5'
-    compile 'fr.mrmicky:FastInv:3.0.2'
+    implementation 'fr.mrmicky:FastInv:3.0.2'
     compileOnly 'io.papermc:paperlib:1.0.4'
     compileOnly 'com.destroystokyo.paper:paper-api:1.16.4-R0.1-SNAPSHOT'
     compileOnly 'org.projectlombok:lombok:1.18.12'
     compileOnly 'net.milkbowl.vault:VaultAPI:1.7'
 
-    compileOnly 'net.citizensnpcs:citizens-main:2.0.27-SNAPSHOT'
-    
-    compileOnly 'net.noobsters:kern:0.4E'
+    implementation "net.citizensnpcs:citizens-main:2.0.38-SNAPSHOT"
+    compileOnly 'net.noobsters:kern:0.4E-SNAPSHOT'
+
 }
 
 

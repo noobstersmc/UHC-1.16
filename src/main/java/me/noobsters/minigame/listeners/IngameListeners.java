@@ -105,9 +105,9 @@ public class IngameListeners implements Listener {
 
             npc.getOrAddTrait(Equipment.class).set(EquipmentSlot.HELMET, head);
 
-            npc.data().setPersistent(NPC.DEFAULT_PROTECTED_METADATA, false);
+            npc.data().setPersistent(NPC.Metadata.DEFAULT_PROTECTED, false);
 
-            npc.data().setPersistent(NPC.SILENT_METADATA, true);
+            npc.data().setPersistent(NPC.Metadata.SILENT, true);
 
             npc.getOrAddTrait(Owner.class).setOwner(name, uuid);
 
