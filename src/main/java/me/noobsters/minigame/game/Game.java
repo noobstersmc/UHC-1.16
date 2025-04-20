@@ -1,9 +1,5 @@
 package me.noobsters.minigame.game;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -19,7 +15,6 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import me.noobsters.minigame.UHC;
-import me.noobsters.minigame.condor.CondorAPI;
 import me.noobsters.minigame.enums.Stage;
 import me.noobsters.minigame.events.ConfigChangeEvent;
 import me.noobsters.minigame.gamemodes.types.UHCMeetup;
@@ -121,7 +116,7 @@ public class Game {
     int playersOnline;
     String teamSize;
     String hostname = "Noobsters";
-    String ip = obtainPublicIP() + ":" + Bukkit.getServer().getPort();
+    String ip = Bukkit.getIp() + ":" + Bukkit.getServer().getPort();
 
     @Override
     public String toString() {
@@ -147,20 +142,11 @@ public class Game {
             return;
         }
         try {
-            // TODO: Try to ensure server stops emmitting data before deleting.
-            Bukkit.getScheduler().runTaskLater(instance, () -> {
-                try {
-                    CondorAPI.delete("6QR3W05K3F", instance.getGame().getGameID().toString());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }, 1);
             Bukkit.getScheduler().runTaskLater(instance,
                     () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "stop"), 2);
 
         } catch (Exception e) {
             Bukkit.broadcastMessage("Error while autodeleting instance: " + e.getMessage());
-            // TODO: handle exception
         }
     }
 
@@ -212,21 +198,6 @@ public class Game {
             return "MEETUP";
 
         return "UHC";
-    }
-
-    private String obtainPublicIP() {
-        String systemIpAddress = "";
-        try {
-            URL url_name = new URL("http://bot.whatismyipaddress.com");
-
-            BufferedReader sc = new BufferedReader(new InputStreamReader(url_name.openStream()));
-
-            // reads system IPAddress
-            systemIpAddress = sc.readLine().trim();
-        } catch (Exception e) {
-            systemIpAddress = "0.0.0.0";
-        }
-        return systemIpAddress;
     }
 
     double getCurrentBorderSize() {

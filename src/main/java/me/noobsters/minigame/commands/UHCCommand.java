@@ -1,6 +1,5 @@
 package me.noobsters.minigame.commands;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -36,7 +35,6 @@ import lombok.RequiredArgsConstructor;
 import me.noobsters.minigame.UHC;
 import me.noobsters.minigame.chunks.ChunkLoadTask;
 import me.noobsters.minigame.chunks.ChunksManager;
-import me.noobsters.minigame.condor.CondorAPI;
 import me.noobsters.minigame.events.PlayerJoinedLateEvent;
 import me.noobsters.minigame.game.Game;
 import me.noobsters.minigame.game.Game.GameInfo;
@@ -70,13 +68,6 @@ public class UHCCommand extends BaseCommand {
         });
     }
 
-    @CommandAlias("refresh")
-    @CommandPermission("uhc.refresh")
-    public void refreshCommands(Player sender) throws IOException {
-        sender.updateCommands();
-        // instance.restartSystem();
-        CondorAPI.delete("6QR3W05K3F", instance.getGame().getGameID().toString());
-    }
 
     @Data
     @AllArgsConstructor(staticName = "of")

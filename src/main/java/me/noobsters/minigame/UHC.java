@@ -5,10 +5,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Properties;
-import java.util.UUID;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
 import me.noobsters.minigame.gui.RapidManager;
 import org.bukkit.Bukkit;
@@ -40,7 +38,6 @@ import me.noobsters.minigame.commands.ContextConditions;
 import me.noobsters.minigame.commands.GameLoopCMD;
 import me.noobsters.minigame.commands.GameRestoreCMD;
 import me.noobsters.minigame.commands.HelpopCommand;
-import me.noobsters.minigame.commands.InventoriesCMD;
 import me.noobsters.minigame.commands.LatescatterCMD;
 import me.noobsters.minigame.commands.PVP;
 import me.noobsters.minigame.commands.StartCommand;
@@ -48,10 +45,6 @@ import me.noobsters.minigame.commands.ToolCMD;
 import me.noobsters.minigame.commands.UHCCommand;
 import me.noobsters.minigame.commands.Whitelist;
 import me.noobsters.minigame.commands.WorldCMD;
-import me.noobsters.minigame.condor.CondorAPI;
-import me.noobsters.minigame.condor.CondorConfig;
-import me.noobsters.minigame.condor.CondorManager;
-import me.noobsters.minigame.condor.JsonConfig;
 import me.noobsters.minigame.crafting.CraftingManager;
 import me.noobsters.minigame.enums.Stage;
 import me.noobsters.minigame.game.Game;
@@ -64,7 +57,6 @@ import me.noobsters.minigame.portals.PortalListeners;
 import me.noobsters.minigame.scoreboard.ScoreboardManager;
 import me.noobsters.minigame.teams.TeamManager;
 import net.md_5.bungee.api.ChatColor;
-//import net.noobsters.kern.paper.Kern;
 
 public class UHC extends JavaPlugin {
 
@@ -81,63 +73,15 @@ public class UHC extends JavaPlugin {
     private @Getter ChatManager chatManager;
     private @Getter GuiManager guiManager;
     private @Getter @Setter Game game;
-    private @Getter JsonObject condorConfig;
     private @Getter PortalListeners portalListeners;
     /* Statics */
     private static @Getter UHC instance;
     private static @Setter TaskChainFactory taskChainFactory;
 
     /* Condor Pre Boot-up code starts */
-    private @Getter CondorConfig condorDataConfig;
-    private static JsonConfig JSON_CONFIG;
-    private static String CONDOR_ID = null;
     private @Getter static String SEED = System.currentTimeMillis() + "";
 
-    /* Kern */
-//    private @Getter Kern kern;
 
-    static {
-        try {
-            JSON_CONFIG = new JsonConfig("condor.json");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void onLoad() {
-        /* Before anything else happens, try to obtain information from condor/lair */
-        String condor_secret = null;
-//        CONDOR_ID = getCondorID();
-
-        if (JSON_CONFIG != null) {
-            var json = JSON_CONFIG.getJsonObject();
-            var element = json.get("condor_id");
-            if (element != null) {
-                CONDOR_ID = element.getAsString();
-            }
-            var secret = json.get("condor_secret");
-            if (secret != null) {
-                condor_secret = secret.getAsString();
-            }
-        }
-        System.out.println("[CONDOR] Condor id is: " + (CONDOR_ID != null ? CONDOR_ID : " NULL"));
-        if (CONDOR_ID != null) {
-            condorConfig = CondorAPI.getGameJsonConfig(CONDOR_ID, condor_secret != null ? condor_secret : "6QR3W05K3F");
-
-        }
-
-        try {
-            if (condorConfig != null) {
-                System.out.println(condorConfig.toString());
-                condorDataConfig = CondorConfig.ofJson(condorConfig);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
 
     /**
      * Returns an UUID condor_id from properties file if present, otherwise it
@@ -178,17 +122,18 @@ public class UHC extends JavaPlugin {
         }
 
         new WorldCreator("world").seed(Long.valueOf(SEED)).environment(Environment.NORMAL).createWorld();
+
         /**
          * Initialize taskChain, fastInv, and set the game stage to loading
          */
-
         setTaskChainFactory(BukkitTaskChainFactory.create(this));
-        /* Soon to be deprecated */
+
         try {
             FastInvManager.register(this);
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         gameStage = Stage.LOADING;
         instance = this;
 
@@ -210,15 +155,13 @@ public class UHC extends JavaPlugin {
         commandManager.registerCommand(new ToolCMD(this));
         commandManager.registerCommand(new Whitelist(this));
 
-        commandManager.registerCommand(new InventoriesCMD());
-
         /* Initiliaze the game data */
         game = new Game();
 
         /*
          * Initilialize all the managers
          */
-        Game.setBossbar(Bukkit.createBossBar(new NamespacedKey(this, "henix"), "Time", BarColor.RED, BarStyle.SOLID));
+        Game.setBossbar(Bukkit.createBossBar(new NamespacedKey(this, "hynix"), "Time", BarColor.RED, BarStyle.SOLID));
         teamManger = new TeamManager(this);
         scoreboardManager = new ScoreboardManager(this);
         playerManager = new PlayerManager(this);
@@ -230,9 +173,6 @@ public class UHC extends JavaPlugin {
         guiManager = new GuiManager(this);
 
         portalListeners = new PortalListeners(this);
-        /* Install the config */
-        processConfig();
-
         /* Run some startup code */
         runStartUp();
 
@@ -326,37 +266,6 @@ public class UHC extends JavaPlugin {
             it.getWorldBorder().setDamageAmount(0.0);
         });
 
-    }
-
-    void processConfig() {
-        try {
-            if (condorConfig != null) {
-                var config = CondorConfig.ofJson(condorConfig);
-
-                game.setGameID(UUID.fromString(CONDOR_ID));
-
-                game.setHostname(config.getHost());
-                game.setHostUUID(config.getHost_uuid());
-
-                game.setPrivateGame(config.isPrivacy());
-
-                var team_size = config.getTeam_size();
-                if (team_size > 1) {
-                    teamManger.setTeamManagement(true);
-                    teamManger.setTeamSize(team_size);
-                }
-
-                for (var scenarios : config.getScenarios()) {
-                    enableScenario(scenarios);
-                }
-
-                var gameType = config.getGame_type();
-                if (!gameType.equalsIgnoreCase("UHC"))
-                    enableScenario(gameType.replace("-", " "));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     private void enableScenario(String scenarioName) {
