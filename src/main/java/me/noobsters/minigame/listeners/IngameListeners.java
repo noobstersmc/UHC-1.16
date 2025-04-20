@@ -254,7 +254,7 @@ public class IngameListeners implements Listener {
         final var location = e.getPlayer().getLocation();
         var spawn = Game.getLobbySpawn();
         var player = e.getPlayer();
-        var name = player.getName().toString();
+        var name = player.getName();
         var uuid = player.getUniqueId().toString();
         player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 10, 20));
         player.teleport(spawn);

@@ -15,8 +15,8 @@ public class CondorManager {
 
     public CondorManager(UHC instance) {
         this.instance = instance;
-        this.jedis = new Jedis("redis-11764.c73.us-east-1-2.ec2.cloud.redislabs.com", 11764);
-        this.jedis.auth("Gxb1D0sbt3VoyvICOQKC8IwakpVdWegW");
+        this.jedis = new Jedis("localhost", 6379);
+        this.jedis.auth("jcedeno", "very_strong_password");
         Bukkit.getScheduler().runTaskTimerAsynchronously(instance, this::sendData, 0l, 20L);
     }
 

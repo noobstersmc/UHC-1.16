@@ -94,7 +94,7 @@ public class UHC extends JavaPlugin {
     private @Getter CondorConfig condorDataConfig;
     private static JsonConfig JSON_CONFIG;
     private static String CONDOR_ID = null;
-    private @Getter static String SEED = "599751388478452208";
+    private @Getter static String SEED = System.currentTimeMillis() + "";
 
     /* Kern */
     private @Getter Kern kern;
@@ -111,7 +111,7 @@ public class UHC extends JavaPlugin {
     public void onLoad() {
         /* Before anything else happens, try to obtain information from condor/lair */
         String condor_secret = null;
-        CONDOR_ID = getCondorID();
+//        CONDOR_ID = getCondorID();
 
         if (JSON_CONFIG != null) {
             var json = JSON_CONFIG.getJsonObject();
@@ -175,23 +175,23 @@ public class UHC extends JavaPlugin {
 
 
         /* Create the base world with the correct seed */
-        try {
-            if (condorDataConfig != null) {
-                var level_seed = condorDataConfig.getLevel_seed();
-                if (level_seed.contains("random")) {
-                    SEED = CondorAPI.getCondorRandomSeed();
-                } else {
-                    SEED = level_seed;
-                }
-            } else {
-                SEED = CondorAPI.getCondorRandomSeed();
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        System.out.println("[CONDOR] Seed will be " + SEED);
-
+//        try {
+//            if (condorDataConfig != null) {
+//                var level_seed = condorDataConfig.getLevel_seed();
+//                if (level_seed.contains("random")) {
+//                    SEED = CondorAPI.getCondorRandomSeed();
+//                } else {
+//                    SEED = level_seed;
+//                }
+//            } else {
+//                SEED = CondorAPI.getCondorRandomSeed();
+//            }
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        System.out.println("[CONDOR] Seed will be " + SEED);
+//
         condorManager = new CondorManager(this);
 
         try {
