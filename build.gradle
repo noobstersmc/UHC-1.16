@@ -60,7 +60,7 @@ repositories {
 
 dependencies {
     implementation 'redis.clients:jedis:3.3.0'
-    implementation 'com.squareup.okhttp3:okhttp:4.9.0'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.2'
     implementation 'co.aikar:acf-paper:0.5.0-SNAPSHOT'
     implementation 'co.aikar:taskchain-bukkit:3.7.2'
     compile 'net.sf.trove4j:core:3.1.0'

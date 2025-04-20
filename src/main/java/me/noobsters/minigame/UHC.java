@@ -94,7 +94,7 @@ public class UHC extends JavaPlugin {
     private @Getter CondorConfig condorDataConfig;
     private static JsonConfig JSON_CONFIG;
     private static String CONDOR_ID = null;
-    private @Getter static String SEED = "599751388478452208";
+    private @Getter static String SEED = System.currentTimeMillis() + "";
 
     /* Kern */
     private @Getter Kern kern;
