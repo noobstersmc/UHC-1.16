@@ -178,7 +178,7 @@ public class UHC extends JavaPlugin {
         runStartUp();
 
         /* In case the server is already running and it is a reload */
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "worldload");
+//        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "worldload");
 
         /* Lobby stage has been reached */
         gameStage = Stage.LOBBY;

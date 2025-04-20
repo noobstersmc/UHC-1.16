@@ -149,7 +149,7 @@ public class GamemodeManager {
         //registerGamemode(new UHCGuest(instance));
 
         // mode
-        //registerGamemode(new UHCMeetup(instance));
+        registerGamemode(new UHCMeetup(instance));
 
         instance.getCommandManager().getCommandCompletions().registerAsyncCompletion("scenarios",
                 c -> gamemodesList.stream().map(IGamemode::getName).collect(Collectors.toList()));
