@@ -32,8 +32,6 @@ import co.aikar.taskchain.TaskChainFactory;
 import fr.mrmicky.fastinv.FastInvManager;
 import lombok.Getter;
 import lombok.Setter;
-import me.noobsters.minigame.Twitter.TweetCMD;
-import me.noobsters.minigame.border.BorderManager;
 import me.noobsters.minigame.chat.ChatManager;
 import me.noobsters.minigame.chunks.ChunksManager;
 import me.noobsters.minigame.commands.ConfigCommand;
@@ -82,7 +80,6 @@ public class UHC extends JavaPlugin {
     private @Getter ChatManager chatManager;
     private @Getter GuiManager guiManager;
     private @Getter @Setter Game game;
-    private @Getter BorderManager borderManager;
     private @Getter CondorManager condorManager;
     private @Getter JsonObject condorConfig;
     private @Getter PortalListeners portalListeners;
@@ -236,7 +233,6 @@ public class UHC extends JavaPlugin {
         commandManager.registerCommand(new GameLoopCMD(this));
         commandManager.registerCommand(new ToolCMD(this));
         commandManager.registerCommand(new Whitelist(this));
-        commandManager.registerCommand(new TweetCMD(this));
 
         commandManager.registerCommand(new InventoriesCMD());
 
@@ -255,7 +251,6 @@ public class UHC extends JavaPlugin {
         chunkManager = new ChunksManager(this);
         gamemodeManager = new GamemodeManager(this);
         chatManager = new ChatManager(this);
-        borderManager = new BorderManager(this);
         guiManager = new GuiManager(this);
 
         portalListeners = new PortalListeners(this);
