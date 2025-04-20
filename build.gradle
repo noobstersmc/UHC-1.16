@@ -72,7 +72,7 @@ dependencies {
     compileOnly 'net.milkbowl.vault:VaultAPI:1.7'
 
 //    implementation "net.citizensnpcs:citizens-main:2.0.38-SNAPSHOT"
-    compileOnly 'net.noobsters:kern:0.4E-SNAPSHOT'
+//    compileOnly 'net.noobsters:kern:0.4E-SNAPSHOT'
     implementation files('libs/Citizens.jar')
 
 }

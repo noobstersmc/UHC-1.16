@@ -1,5 +1,6 @@
 package me.noobsters.minigame.commands;
 
+import me.noobsters.minigame.utils.PlayerDBUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
@@ -12,7 +13,6 @@ import co.aikar.commands.annotation.Flags;
 import co.aikar.commands.annotation.Subcommand;
 import me.noobsters.minigame.UHC;
 import net.md_5.bungee.api.ChatColor;
-import net.noobsters.kern.paper.utils.PlayerDBUtil;
 
 @CommandPermission("host.perm")
 @CommandAlias("wl|whitelist")
@@ -24,10 +24,7 @@ public class Whitelist extends BaseCommand {
     public Whitelist(UHC instance){
         this.instance = instance;
 
-        instance.getCommandManager().getCommandCompletions().registerAsyncCompletion("whitelist", c -> {
-            return instance.getGame().getWhitelist().keySet();
-
-        });
+        instance.getCommandManager().getCommandCompletions().registerAsyncCompletion("whitelist", c -> instance.getGame().getWhitelist().keySet());
 
     }
 
@@ -65,7 +62,7 @@ public class Whitelist extends BaseCommand {
         var whitelist = instance.getGame().getWhitelist();
 
         try {
-            PlayerDBUtil.getPlayerObjectAsync(target).thenAccept(player -> {
+            PlayerDBUtils.getPlayerObjectAsync(target).thenAccept(player -> {
                 if(player == null){
                     sender.sendMessage(ChatColor.RED + "Player " + target + " doesn't exist.");
                     return;

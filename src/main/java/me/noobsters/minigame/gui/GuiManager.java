@@ -13,7 +13,7 @@ import me.noobsters.minigame.events.ConfigChangeEvent;
 import me.noobsters.minigame.gamemodes.events.GamemodeDisabledEvent;
 import me.noobsters.minigame.gamemodes.events.GamemodeEnabledEvent;
 import me.noobsters.minigame.gui.types.MainGui;
-import net.noobsters.kern.paper.guis.RapidInv;
+import me.noobsters.minigame.gui.RapidInv;
 
 public class GuiManager implements Listener {
 

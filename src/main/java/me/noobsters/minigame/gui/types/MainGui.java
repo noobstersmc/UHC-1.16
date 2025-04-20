@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import me.noobsters.minigame.gui.RapidInv;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Material;
@@ -24,7 +25,6 @@ import me.noobsters.minigame.UHC;
 import me.noobsters.minigame.game.Game.GameInfo;
 import me.noobsters.minigame.gui.CustomGui;
 import net.md_5.bungee.api.ChatColor;
-import net.noobsters.kern.paper.guis.RapidInv;
 
 public class MainGui extends CustomGui {
 

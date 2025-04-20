@@ -65,7 +65,7 @@ import me.noobsters.minigame.portals.PortalListeners;
 import me.noobsters.minigame.scoreboard.ScoreboardManager;
 import me.noobsters.minigame.teams.TeamManager;
 import net.md_5.bungee.api.ChatColor;
-import net.noobsters.kern.paper.Kern;
+//import net.noobsters.kern.paper.Kern;
 
 public class UHC extends JavaPlugin {
 
@@ -97,7 +97,7 @@ public class UHC extends JavaPlugin {
     private @Getter static String SEED = System.currentTimeMillis() + "";
 
     /* Kern */
-    private @Getter Kern kern;
+//    private @Getter Kern kern;
 
     static {
         try {
@@ -170,8 +170,8 @@ public class UHC extends JavaPlugin {
         /* Obtain kern and store it for easy use */
         var kernPlugin = Bukkit.getPluginManager().getPlugin("Kern");
 
-        if (kernPlugin != null && kernPlugin instanceof Kern)
-            this.kern = (Kern) kernPlugin;
+//        if (kernPlugin != null && kernPlugin instanceof Kern)
+//            this.kern = (Kern) kernPlugin;
 
 
         /* Create the base world with the correct seed */

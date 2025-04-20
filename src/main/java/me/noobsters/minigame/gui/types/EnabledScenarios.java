@@ -9,7 +9,7 @@ import fr.mrmicky.fastinv.ItemBuilder;
 import me.noobsters.minigame.UHC;
 import me.noobsters.minigame.gui.CustomGui;
 import net.md_5.bungee.api.ChatColor;
-import net.noobsters.kern.paper.guis.RapidInv;
+import me.noobsters.minigame.gui.RapidInv;
 
 public class EnabledScenarios extends CustomGui {
 

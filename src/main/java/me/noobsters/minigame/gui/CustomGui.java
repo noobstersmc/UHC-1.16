@@ -3,7 +3,7 @@ package me.noobsters.minigame.gui;
 import org.bukkit.entity.Player;
 
 import lombok.Getter;
-import net.noobsters.kern.paper.guis.RapidInv;
+import me.noobsters.minigame.gui.RapidInv;
 
 public abstract class CustomGui {
     @Getter RapidInv gui;

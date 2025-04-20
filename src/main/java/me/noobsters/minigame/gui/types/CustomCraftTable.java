@@ -10,7 +10,7 @@ import org.bukkit.inventory.ItemStack;
 
 import me.noobsters.minigame.UHC;
 import me.noobsters.minigame.gui.CustomGui;
-import net.noobsters.kern.paper.guis.RapidInv;
+import me.noobsters.minigame.gui.RapidInv;
 
 public class CustomCraftTable extends CustomGui {
 

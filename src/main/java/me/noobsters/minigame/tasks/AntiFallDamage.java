@@ -29,7 +29,6 @@ public class AntiFallDamage extends BukkitRunnable implements Listener {
         if(firstFallProtection.isEmpty() || instance.getGame().getGameTime() > 90){
             this.cancel();
             this.instance.getListenerManager().unregisterListener(this);
-            return;
         }
 
     }
