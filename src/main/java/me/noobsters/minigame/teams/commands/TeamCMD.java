@@ -311,6 +311,7 @@ public class TeamCMD extends BaseCommand {
         instance.getTeamManger().setFriendlyFire(!bool);
         var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
         Bukkit.broadcast(senderName + ChatColor.YELLOW + "Friendly fire set to " + bool, permissionDebug);
+        sender.sendMessage(senderName + ChatColor.YELLOW + "Friendly fire set to " + bool);
     }
 
     @Subcommand("chat|tc")
@@ -490,6 +491,7 @@ public class TeamCMD extends BaseCommand {
             instance.getTeamManger().setTeamManagement(bool);
         }
         var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
+        sender.sendMessage(senderName + ChatColor.YELLOW + "Team management has been set to " + instance.getTeamManger().isTeamManagement());
         Bukkit.broadcast(senderName + ChatColor.YELLOW + "Team management has been set to " + instance.getTeamManger().isTeamManagement(), permissionDebug);
 
     }
@@ -571,6 +573,7 @@ public class TeamCMD extends BaseCommand {
 
         var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
         Bukkit.broadcast(senderName + ChatColor.YELLOW + "Team size has been set from " + instance.getTeamManger().getTeamSize() + " to " + number, permissionDebug);
+        sender.sendMessage(senderName + ChatColor.YELLOW + "Team size has been set from " + instance.getTeamManger().getTeamSize() + " to " + number);
         instance.getTeamManger().setTeamSize(number);
     }
 

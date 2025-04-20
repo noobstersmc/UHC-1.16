@@ -79,7 +79,7 @@ public class UHC extends JavaPlugin {
     private static @Setter TaskChainFactory taskChainFactory;
 
     /* Condor Pre Boot-up code starts */
-    private @Getter static String SEED = System.currentTimeMillis() + "";
+    private @Getter @Setter static String SEED = System.currentTimeMillis() + "";
 
 
 
@@ -121,6 +121,7 @@ public class UHC extends JavaPlugin {
             SEED = SEED.substring(0, 16);
         }
 
+        // Create overworld for uhc
         new WorldCreator("world").seed(Long.valueOf(SEED)).environment(Environment.NORMAL).createWorld();
 
         /**

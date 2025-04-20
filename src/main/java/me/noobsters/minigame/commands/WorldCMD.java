@@ -37,8 +37,13 @@ public class WorldCMD extends BaseCommand {
         Bukkit.dispatchCommand(sender, "chunky confirm");
 
         instance.restartSystem();
+        if(seed != null && seed > 0) {
+            new WorldCreator("world").seed(Long.valueOf(seed)).environment(Environment.NORMAL).createWorld();
+        }else{
+            new WorldCreator("world").environment(Environment.NORMAL).createWorld();
+        }
 
-        worldload(sender);
+        wordLoad(sender);
 
         Bukkit.broadcastMessage(ChatColor.GREEN + "Worlds have been recreated.");
 
