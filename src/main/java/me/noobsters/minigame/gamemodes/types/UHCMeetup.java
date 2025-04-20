@@ -118,6 +118,8 @@ public class UHCMeetup extends IGamemode implements Listener {
             });
         }, 5L, 20L);
 
+        Bukkit.getOnlinePlayers().forEach(this::onJoinLogic);
+
         setEnabled(true);
         return true;
     }
@@ -238,15 +240,18 @@ public class UHCMeetup extends IGamemode implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
+        onJoinLogic(e.getPlayer());
+    }
 
+
+    void onJoinLogic(Player p){
         if (!instance.getGameStage().equals(Stage.LOBBY))
             return;
-        var player = e.getPlayer();
-        var uuid = player.getUniqueId().toString();
+        var uuid = p.getUniqueId().toString();
         if (capsules.containsKey(uuid)) {
             var capsule = capsules.get(uuid);
             capsule.setInUse(true);
-            player.teleport(capsule.getLocation());
+            p.teleport(capsule.getLocation());
         } else {
             var neededCap = capsules.values().stream().filter(Capsule::notUsedAndNotCreated).findFirst();
 
@@ -264,13 +269,13 @@ public class UHCMeetup extends IGamemode implements Listener {
 
             capsules.put(uuid, capsule);
 
-            if (player.hasPermission("capsule.plus")) {
+            if (p.hasPermission("capsule.plus")) {
                 capsule.create(Material.EMERALD_BLOCK, Material.SMOOTH_QUARTZ, Material.LIME_STAINED_GLASS_PANE,
                         Material.SMOOTH_QUARTZ_SLAB);
-            } else if (player.hasPermission("capsule.mvp")) {
+            } else if (p.hasPermission("capsule.mvp")) {
                 capsule.create(Material.DIAMOND_BLOCK, Material.PRISMARINE_BRICKS,
                         Material.LIGHT_BLUE_STAINED_GLASS_PANE, Material.PRISMARINE_BRICK_SLAB);
-            } else if (player.hasPermission("capsule.vip")) {
+            } else if (p.hasPermission("capsule.vip")) {
                 capsule.create(Material.GOLD_BLOCK, Material.CHISELED_SANDSTONE, Material.ORANGE_STAINED_GLASS_PANE,
                         Material.CUT_SANDSTONE_SLAB);
             } else {
@@ -278,20 +283,20 @@ public class UHCMeetup extends IGamemode implements Listener {
                         Material.SMOOTH_STONE_SLAB);
             }
 
-            player.teleport(capsule.getLocation());
+            p.teleport(capsule.getLocation());
         }
 
         if (!instance.getGame().isHasAutoStarted()
                 && (instance.getGame().getAutoStart() - Bukkit.getOnlinePlayers().size()) == 1) {
 
-            Bukkit.broadcastMessage(meetupPrefix + ChatColor.WHITE + e.getPlayer().getName() + " joined the game. "
+            Bukkit.broadcastMessage(meetupPrefix + ChatColor.WHITE + p.getName() + " joined the game. "
                     + ChatColor.GREEN + "[" + Bukkit.getOnlinePlayers().size() + "/" + instance.getGame().getUhcslots()
                     + "] \n" + GameLoop.SHAMROCK_GREEN + "1 player needed to start!");
 
         } else if (!instance.getGame().isHasAutoStarted()
                 && (instance.getGame().getAutoStart() - Bukkit.getOnlinePlayers().size()) != 0) {
 
-            Bukkit.broadcastMessage(meetupPrefix + ChatColor.WHITE + e.getPlayer().getName() + " joined the game. "
+            Bukkit.broadcastMessage(meetupPrefix + ChatColor.WHITE + p.getName() + " joined the game. "
                     + ChatColor.GREEN + "[" + Bukkit.getOnlinePlayers().size() + "/" + instance.getGame().getUhcslots()
                     + "] \n" + GameLoop.SHAMROCK_GREEN
                     + (instance.getGame().getAutoStart() - Bukkit.getOnlinePlayers().size())
@@ -300,7 +305,7 @@ public class UHCMeetup extends IGamemode implements Listener {
         } else {
 
             Bukkit.broadcastMessage(
-                    meetupPrefix + ChatColor.WHITE + e.getPlayer().getName() + " joined the game. " + ChatColor.GREEN
+                    meetupPrefix + ChatColor.WHITE + p.getName() + " joined the game. " + ChatColor.GREEN
                             + "[" + Bukkit.getOnlinePlayers().size() + "/" + instance.getGame().getUhcslots() + "] ");
         }
 
@@ -317,7 +322,6 @@ public class UHCMeetup extends IGamemode implements Listener {
                         () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "start"));
             }, 20 * 20);
         }
-
     }
 
     @EventHandler
