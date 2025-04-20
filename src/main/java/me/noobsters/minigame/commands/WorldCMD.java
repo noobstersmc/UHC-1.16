@@ -1,5 +1,6 @@
 package me.noobsters.minigame.commands;
 
+import me.noobsters.minigame.utils.Seeds;
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
 import org.bukkit.World;
@@ -38,9 +39,9 @@ public class WorldCMD extends BaseCommand {
 
         instance.restartSystem();
         if(seed != null && seed > 0) {
-            new WorldCreator("world").seed(Long.valueOf(seed)).environment(Environment.NORMAL).createWorld();
+            new WorldCreator("world").seed(seed).environment(Environment.NORMAL).createWorld();
         }else{
-            new WorldCreator("world").environment(Environment.NORMAL).createWorld();
+            new WorldCreator("world").seed(Long.parseLong(Seeds.getRandomSeed())).environment(Environment.NORMAL).createWorld();
         }
 
         wordLoad(sender);

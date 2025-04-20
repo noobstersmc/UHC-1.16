@@ -9,6 +9,7 @@ import java.util.Properties;
 import com.google.gson.Gson;
 
 import me.noobsters.minigame.gui.RapidManager;
+import me.noobsters.minigame.utils.Seeds;
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
 import org.bukkit.NamespacedKey;
@@ -78,51 +79,16 @@ public class UHC extends JavaPlugin {
     private static @Getter UHC instance;
     private static @Setter TaskChainFactory taskChainFactory;
 
-    /* Condor Pre Boot-up code starts */
-    private @Getter @Setter static String SEED = System.currentTimeMillis() + "";
-
-
-
-    /**
-     * Returns an UUID condor_id from properties file if present, otherwise it
-     * returns null.
-     * 
-     * @return condor-id as String from server.properties or null
-     */
-    private String getCondorID() {
-        var properties = new Properties();
-        var propertiesFile = new File("server.properties");
-
-        try (var is = new FileInputStream(propertiesFile)) {
-            properties.load(is);
-        } catch (Exception ignore) {
-            ignore.printStackTrace();
-        }
-
-        var condor_id = properties.getProperty("condor-id");
-
-        return condor_id != null ? condor_id : "";
-    }
-
-    /* Condor Pre Boot-up code ends */
+    private @Getter @Setter static String SEED = Seeds.getRandomSeed();
 
     @Override
     public void onEnable() {
         /* Obtain kern and store it for easy use */
         RapidManager.register(this);
 
-        try {
-            Long.valueOf(SEED);
-        } catch (Exception e) {
-            var chars = SEED.chars().toArray();
-            SEED = "";
-            for (var c : chars)
-                SEED += ("" + c);
-            SEED = SEED.substring(0, 16);
-        }
 
         // Create overworld for uhc
-        new WorldCreator("world").seed(Long.valueOf(SEED)).environment(Environment.NORMAL).createWorld();
+        new WorldCreator("world").seed(Long.parseLong(SEED)).environment(Environment.NORMAL).createWorld();
 
         /**
          * Initialize taskChain, fastInv, and set the game stage to loading
