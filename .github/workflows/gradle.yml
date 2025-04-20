@@ -23,7 +23,7 @@ jobs:
         restore-keys: ${{ runner.os }}-gradle
     # Make gradlew executable
     - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
+      run: chmod +x ./gradlew
     # Build the project
     - name: Build with Gradle
       run: ./gradlew build
