@@ -71,8 +71,9 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.12'
     compileOnly 'net.milkbowl.vault:VaultAPI:1.7'
 
-    implementation "net.citizensnpcs:citizens-main:2.0.38-SNAPSHOT"
+//    implementation "net.citizensnpcs:citizens-main:2.0.38-SNAPSHOT"
     compileOnly 'net.noobsters:kern:0.4E-SNAPSHOT'
+    implementation files('libs/Citizens.jar')
 
 }
 
@@ -85,7 +86,6 @@ processResources {
 }
 
 shadowJar {
-    minimize()
     relocate 'co.aikar.commands', 'shadded.acf'
     relocate 'fr.mrmicky', 'shadded.gui'
 }

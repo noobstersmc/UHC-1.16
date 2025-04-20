@@ -83,7 +83,7 @@ public class UHC extends JavaPlugin {
     private @Getter GuiManager guiManager;
     private @Getter @Setter Game game;
     private @Getter BorderManager borderManager;
-//    private @Getter CondorManager condorManager;
+    private @Getter CondorManager condorManager;
     private @Getter JsonObject condorConfig;
     private @Getter PortalListeners portalListeners;
     /* Statics */
@@ -192,7 +192,7 @@ public class UHC extends JavaPlugin {
 //        }
 //        System.out.println("[CONDOR] Seed will be " + SEED);
 //
-//        condorManager = new CondorManager(this);
+        condorManager = new CondorManager(this);
 
         try {
             Long.valueOf(SEED);

@@ -16,13 +16,13 @@ public class CondorManager {
     public CondorManager(UHC instance) {
         this.instance = instance;
         this.jedis = new Jedis("localhost", 6379);
-        this.jedis.auth("mypassword");
+        this.jedis.auth("jcedeno", "very_strong_password");
         Bukkit.getScheduler().runTaskTimerAsynchronously(instance, this::sendData, 0l, 20L);
     }
 
     public void sendData() {
         var game = instance.getGame();
-//        instance.getCondorManager().writeExpirableData(game.getGameID(), game.newFormatJson(), 3);
+        instance.getCondorManager().writeExpirableData(game.getGameID(), game.newFormatJson(), 3);
     }
 
 

@@ -105,9 +105,9 @@ public class IngameListeners implements Listener {
 
             npc.getOrAddTrait(Equipment.class).set(EquipmentSlot.HELMET, head);
 
-            npc.data().setPersistent(NPC.Metadata.DEFAULT_PROTECTED, false);
+            npc.data().setPersistent(NPC.DEFAULT_PROTECTED_METADATA, false);
 
-            npc.data().setPersistent(NPC.Metadata.SILENT, true);
+            npc.data().setPersistent(NPC.SILENT_METADATA, true);
 
             npc.getOrAddTrait(Owner.class).setOwner(name, uuid);
 
@@ -254,7 +254,7 @@ public class IngameListeners implements Listener {
         final var location = e.getPlayer().getLocation();
         var spawn = Game.getLobbySpawn();
         var player = e.getPlayer();
-        var name = player.getName().toString();
+        var name = player.getName();
         var uuid = player.getUniqueId().toString();
         player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 10, 20));
         player.teleport(spawn);
