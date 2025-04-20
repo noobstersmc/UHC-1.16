@@ -33,6 +33,7 @@ public class Whitelist extends BaseCommand {
     public void enableDisable(CommandSender sender, Boolean bool) {
         instance.getGame().setWhitelistEnabled(bool);
         var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
+        sender.sendMessage(senderName + ChatColor.AQUA + "Whitelist " + bool);
         Bukkit.broadcast(senderName + ChatColor.AQUA + "Whitelist " + bool, permissionDebug);
 
     }
@@ -73,6 +74,7 @@ public class Whitelist extends BaseCommand {
                 whitelist.put(username, uuid);
                 var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
                 Bukkit.broadcast(senderName + ChatColor.AQUA + username + " added to the whitelist.", permissionDebug);
+                sender.sendMessage(senderName + ChatColor.AQUA + username + " added to the whitelist.");
             });
 
         } catch (Exception e) {
@@ -92,6 +94,7 @@ public class Whitelist extends BaseCommand {
             whitelist.remove(target);
             var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
             Bukkit.broadcast(senderName + ChatColor.AQUA + target + " removed from the whitelist.", permissionDebug);
+            sender.sendMessage(senderName + ChatColor.AQUA + target + " removed from the whitelist.");
         }
 
     }
@@ -102,6 +105,7 @@ public class Whitelist extends BaseCommand {
         whitelist.clear();
         var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
         Bukkit.broadcast(senderName + ChatColor.AQUA + "Whitelist cleared.", permissionDebug);
+        sender.sendMessage(senderName + ChatColor.AQUA + "Whitelist cleared.");
         
     }
 
@@ -115,6 +119,7 @@ public class Whitelist extends BaseCommand {
         });
         var senderName = ChatColor.GRAY + "[" + sender.getName().toString() + "] ";
         Bukkit.broadcast(senderName + ChatColor.AQUA + "All players added to the whitelist.", permissionDebug);
+        sender.sendMessage(ChatColor.AQUA + "All players added to the whitelist.");
         
     }
 
