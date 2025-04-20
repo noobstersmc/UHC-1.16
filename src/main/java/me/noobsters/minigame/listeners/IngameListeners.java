@@ -73,7 +73,7 @@ import net.citizensnpcs.api.trait.trait.Equipment.EquipmentSlot;
 import net.citizensnpcs.api.trait.trait.Owner;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.noobsters.kern.paper.Kern;
+//import net.noobsters.kern.paper.Kern;
 
 @RequiredArgsConstructor
 public class IngameListeners implements Listener {
@@ -538,17 +538,17 @@ public class IngameListeners implements Listener {
                 if (optionalTeam.isPresent()) {
                     Bukkit.getPluginManager().callEvent(new TeamWinEvent(optionalTeam.get().getTeamID(), true));
                     instance.getGame().setHasSomeoneWon(true);
-                    Bukkit.getScheduler().runTask(instance, () -> {
-                        Kern.getInstance().getChatManager().setSpecChat(false);
-                    });
+//                    Bukkit.getScheduler().runTask(instance, () -> {
+//                        Kern.getInstance().getChatManager().setSpecChat(false);
+//                    });
                 } else if (solos.size() == 1) {
                     var optionalPlayer = solos.get(0);
                     if (optionalPlayer != null) {
                         Bukkit.getPluginManager().callEvent(new PlayerWinEvent(optionalPlayer.getUUID(), true));
                         instance.getGame().setHasSomeoneWon(true);
-                        Bukkit.getScheduler().runTask(instance, () -> {
-                            Kern.getInstance().getChatManager().setSpecChat(false);
-                        });
+//                        Bukkit.getScheduler().runTask(instance, () -> {
+//                            Kern.getInstance().getChatManager().setSpecChat(false);
+//                        });
                     }
                 }
             }
@@ -560,9 +560,9 @@ public class IngameListeners implements Listener {
                 if (lastAlivePlayer != null) {
                     Bukkit.getPluginManager().callEvent(new PlayerWinEvent(lastAlivePlayer.getUUID(), true));
                     instance.getGame().setHasSomeoneWon(true);
-                    Bukkit.getScheduler().runTask(instance, () -> {
-                        Kern.getInstance().getChatManager().setSpecChat(false);
-                    });
+//                    Bukkit.getScheduler().runTask(instance, () -> {
+//                        Kern.getInstance().getChatManager().setSpecChat(false);
+//                    });
                 }
             }
 

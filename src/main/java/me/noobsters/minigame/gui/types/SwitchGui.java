@@ -15,7 +15,7 @@ import lombok.Getter;
 import lombok.Setter;
 import me.noobsters.minigame.gui.CustomGui;
 import net.md_5.bungee.api.ChatColor;
-import net.noobsters.kern.paper.guis.RapidInv;
+import me.noobsters.minigame.gui.RapidInv;
 
 public class SwitchGui extends CustomGui {
 

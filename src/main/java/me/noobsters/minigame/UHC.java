@@ -32,8 +32,6 @@ import co.aikar.taskchain.TaskChainFactory;
 import fr.mrmicky.fastinv.FastInvManager;
 import lombok.Getter;
 import lombok.Setter;
-import me.noobsters.minigame.Twitter.TweetCMD;
-import me.noobsters.minigame.border.BorderManager;
 import me.noobsters.minigame.chat.ChatManager;
 import me.noobsters.minigame.chunks.ChunksManager;
 import me.noobsters.minigame.commands.ConfigCommand;
@@ -65,7 +63,7 @@ import me.noobsters.minigame.portals.PortalListeners;
 import me.noobsters.minigame.scoreboard.ScoreboardManager;
 import me.noobsters.minigame.teams.TeamManager;
 import net.md_5.bungee.api.ChatColor;
-import net.noobsters.kern.paper.Kern;
+//import net.noobsters.kern.paper.Kern;
 
 public class UHC extends JavaPlugin {
 
@@ -82,7 +80,6 @@ public class UHC extends JavaPlugin {
     private @Getter ChatManager chatManager;
     private @Getter GuiManager guiManager;
     private @Getter @Setter Game game;
-    private @Getter BorderManager borderManager;
     private @Getter CondorManager condorManager;
     private @Getter JsonObject condorConfig;
     private @Getter PortalListeners portalListeners;
@@ -97,7 +94,7 @@ public class UHC extends JavaPlugin {
     private @Getter static String SEED = System.currentTimeMillis() + "";
 
     /* Kern */
-    private @Getter Kern kern;
+//    private @Getter Kern kern;
 
     static {
         try {
@@ -170,8 +167,8 @@ public class UHC extends JavaPlugin {
         /* Obtain kern and store it for easy use */
         var kernPlugin = Bukkit.getPluginManager().getPlugin("Kern");
 
-        if (kernPlugin != null && kernPlugin instanceof Kern)
-            this.kern = (Kern) kernPlugin;
+//        if (kernPlugin != null && kernPlugin instanceof Kern)
+//            this.kern = (Kern) kernPlugin;
 
 
         /* Create the base world with the correct seed */
@@ -236,7 +233,6 @@ public class UHC extends JavaPlugin {
         commandManager.registerCommand(new GameLoopCMD(this));
         commandManager.registerCommand(new ToolCMD(this));
         commandManager.registerCommand(new Whitelist(this));
-        commandManager.registerCommand(new TweetCMD(this));
 
         commandManager.registerCommand(new InventoriesCMD());
 
@@ -255,7 +251,6 @@ public class UHC extends JavaPlugin {
         chunkManager = new ChunksManager(this);
         gamemodeManager = new GamemodeManager(this);
         chatManager = new ChatManager(this);
-        borderManager = new BorderManager(this);
         guiManager = new GuiManager(this);
 
         portalListeners = new PortalListeners(this);
