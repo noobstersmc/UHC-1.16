@@ -26,6 +26,24 @@ public class WorldCMD extends BaseCommand {
 
     private @NonNull UHC instance;
 
+
+    @CommandAlias("recreate-worlds")
+    @Subcommand("recreate-worlds")
+    @CommandPermission("recreateworlds.cmd")
+    public void recreateWorlds(CommandSender sender, @Optional Long seed){
+        sender.sendMessage("Starting world-recreation.");
+
+        Bukkit.dispatchCommand(sender, "chunky cancel");
+        Bukkit.dispatchCommand(sender, "chunky confirm");
+
+        instance.restartSystem();
+
+        worldload(sender);
+
+        Bukkit.broadcastMessage(ChatColor.GREEN + "Worlds have been recreated.");
+
+    }
+
     @Default
     @CommandPermission("world.cmd")
     @CommandCompletion("@worlds")

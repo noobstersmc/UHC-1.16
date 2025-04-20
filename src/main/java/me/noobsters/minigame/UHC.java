@@ -10,6 +10,7 @@ import java.util.UUID;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import me.noobsters.minigame.gui.RapidManager;
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
 import org.bukkit.NamespacedKey;
@@ -166,6 +167,8 @@ public class UHC extends JavaPlugin {
     public void onEnable() {
         /* Obtain kern and store it for easy use */
         var kernPlugin = Bukkit.getPluginManager().getPlugin("Kern");
+
+        RapidManager.register(this);
 
 //        if (kernPlugin != null && kernPlugin instanceof Kern)
 //            this.kern = (Kern) kernPlugin;
